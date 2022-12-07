@@ -1,4 +1,38 @@
 class Fonts{
-  final egakit = "egakit";
-
+  final title = "title";
+  final subtitle = "subtitle";
+  final subtitle2 = "subtitle2";
+  final subtitle3 = "subtitle3";
+  final skip = "skip";
+  final start = "start";
+  final welcomeBack = "welcomeBack";
+  final emailAddress = "emailAddress";
+  final password = "password";
+  final emailError = "emailError";
+  final passwordError = "passwordError";
+  final signIn = "signIn";
+  final forgotPassword = "forgotPassword";
+  final doNotHaveAccount = "doNotHaveAccount";
+  final signUp = "signUp";
+  final resetPassword = "resetPassword";
+  final resetPasswordDesc = "resetPasswordDesc";
+  final done = "done";
+  final confirmPasswordError = "confirmPasswordError";
+  final confirmPasswordErrorDes = "confirmPasswordErrorDes";
+  final emailValidError = "emailValidError";
+  final passwordLengthError = "passwordLengthError";
+  final letGetStarted = "letGetStarted";
+  final name = "name";
+  final nameError = "nameError";
+  final alreadyAccount = "alreadyAccount";
+  final confirmPassword = "confirmPassword";
+  final phoneDesc = "phoneDesc";
+  final next = "next";
+  final otpError = "otpError";
+  final tryAgain = "tryAgain";
+  final somethingWrong = "somethingWrong";
+  final verifyMobileNumber = "verifyMobileNumber";
+  final otpContain = "otpContain";
+  final mobileNumber = "mobileNumber";
+  final phoneError = "phoneError";
 }

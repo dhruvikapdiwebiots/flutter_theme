@@ -30,7 +30,7 @@ class LanguageScreen extends StatelessWidget {
                             groupValue: appCtrl.currVal,
                             contentPadding: EdgeInsets.zero,
                             title: Text(trans(e.value['name'].toString()),
-                                style: AppCss.montserratSemiBold14
+                                style: AppCss.poppinsSemiBold14
                                     .textColor(appCtrl.appTheme.txt)),
                             onChanged: (int? val) {
                               appCtrl.currVal = val!;

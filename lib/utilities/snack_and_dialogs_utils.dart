@@ -9,7 +9,7 @@ snackBar(message, {context, duration, textColor, backgroundColor, icon}) {
         const HSpace(Sizes.s15),
         Text(
           message,
-          style: AppCss.montserratSemiBold14.textColor(textColor),
+          style: AppCss.poppinsSemiBold14.textColor(textColor),
         ),
       ],
     ),
@@ -58,8 +58,8 @@ dialogMessage(
     title: title,
     middleText: message,
     onConfirm: onConfirm,
-    titleStyle: AppCss.montserratSemiBold16,
-    middleTextStyle: AppCss.montserratRegular12,
+    titleStyle: AppCss.poppinsSemiBold16,
+    middleTextStyle: AppCss.poppinsRegular12,
     confirmTextColor: Colors.white,
     //buttonColor: appColor.primary,
     onCancel: onCancel,
@@ -78,9 +78,9 @@ appUpdateDialog(
   return Get.defaultDialog(
     title: trans('App Update'),
     middleText: message,
-    titleStyle: AppCss.montserratSemiBold16,
+    titleStyle: AppCss.poppinsSemiBold16,
     barrierDismissible: !forceUpdate,
-    middleTextStyle: AppCss.montserratRegular12,
+    middleTextStyle: AppCss.poppinsRegular12,
     contentPadding:
         const EdgeInsets.only(top: 20, bottom: 0, left: 20, right: 20),
     titlePadding: const EdgeInsets.only(top: 15),
@@ -103,7 +103,7 @@ appUpdateDialog(
           ),
           child: Text(
             trans('cancel'),
-            style: AppCss.montserratSemiBold16.copyWith(color: Colors.grey),
+            style: AppCss.poppinsSemiBold16.copyWith(color: Colors.grey),
           ),
         ),
       ElevatedButton(
@@ -122,7 +122,7 @@ appUpdateDialog(
         ),
         child: Text(
           trans('update'),
-          style: AppCss.montserratSemiBold16,
+          style: AppCss.poppinsSemiBold16,
         ),
       ),
     ],
@@ -133,7 +133,7 @@ deleteConfirmation(
     {context, title, message, onConfirm, bool barrierDismissible = true}) {
   // set up the buttons
   Widget cancelButton = TextButton(
-    child: Text(trans('cancel'), style: AppCss.montserratRegular12),
+    child: Text(trans('cancel'), style: AppCss.poppinsRegular12),
     onPressed: () {
       Get.back();
     },
@@ -146,9 +146,9 @@ deleteConfirmation(
   // set up the AlertDialog
   AlertDialog alert = AlertDialog(
     title: Text(title ?? trans('delete_confirmation'),
-        style: AppCss.montserratSemiBold16),
+        style: AppCss.poppinsSemiBold16),
     content: Text(message ?? trans('are_you_sure_delete'),
-        style: AppCss.montserratRegular12),
+        style: AppCss.poppinsRegular12),
     actions: [cancelButton, continueButton],
   );
 

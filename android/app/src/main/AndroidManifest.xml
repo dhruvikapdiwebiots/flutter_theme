@@ -1,5 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.fluttertheme.flutter_theme">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
    <application
         android:label="flutter_theme"
         android:name="${applicationName}"

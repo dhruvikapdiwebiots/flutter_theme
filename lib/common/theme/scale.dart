@@ -116,6 +116,7 @@ class Sizes {
   static const double s30 = 30 * scale;
   static const double s35 = 35 * scale;
   static const double s40 = 40 * scale;
+  static const double s42 = 42 * scale;
   static const double s45 = 45 * scale;
   static const double s48 = 48 * scale;
   static const double s50 = 50 * scale;

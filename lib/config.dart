@@ -21,6 +21,13 @@ export 'package:cached_network_image/cached_network_image.dart';
 export 'controllers/common_controller/app_controller.dart';
 export '../../../controllers/index.dart';
 export 'routes/screen_list.dart';
+export 'widgets/common_button.dart';
+export '../../models/index.dart';
+export 'pages/auth_pages/intro/layouts/page_pop.dart';
+export 'pages/index.dart';
+export 'widgets/common_text_box.dart';
+
+
 
 final appCtrl = Get.isRegistered<AppController>()
     ? Get.find<AppController>()

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_theme/config.dart';
 
 class SplashController extends GetxController{
@@ -28,17 +29,14 @@ class SplashController extends GetxController{
 
   //check whether user login or not
   void navigationPage() async {
-    /*final FirebaseAuth auth = FirebaseAuth.instance;
+    final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
-    print("AAA");
-    print(user);
     if (user == null) {
-      // Cheking if user is already login or not
-      Navigator.of(context).pushReplacementNamed(
-          INTROSLIDER); // Navigate to intro slider if user id is null
+      // Checking if user is already login or not
+     Get.toNamed(routeName.intro);
     } else {
-      _loginNavigation(); // navigate to homepage if user id is not null
-    }*/
+      loginNavigation(); // navigate to homepage if user id is not null
+    }
   }
 
 }

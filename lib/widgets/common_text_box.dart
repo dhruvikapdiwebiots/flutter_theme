@@ -1,0 +1,70 @@
+import '../../../../config.dart';
+
+class CommonTextBox extends StatelessWidget {
+  final TextEditingController? controller;
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
+  final String hinText;
+  final String labelText;
+  final InputBorder? border;
+  final Color? fillColor;
+  final FormFieldValidator<String>? validator;
+  final bool filled;
+  final bool obscureText;
+  final FocusNode? focusNode;
+  final TextInputAction? textInputAction;
+  final TextInputType? keyboardType;
+  final ValueChanged<String>? onFieldSubmitted;
+  final String? errorText;
+
+  const CommonTextBox(
+      {Key? key,
+      this.controller,
+      this.suffixIcon,
+      this.prefixIcon,
+      this.border,
+      this.hinText = "",
+      this.labelText = "",
+      this.fillColor,
+      this.validator,
+      this.focusNode,
+      this.errorText,
+      this.obscureText = false,
+      this.keyboardType,
+      this.textInputAction,
+      this.onFieldSubmitted,
+      this.filled = false})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    InputBorder inputBorder = UnderlineInputBorder(
+        borderSide: BorderSide(color: appCtrl.appTheme.accent));
+    return GetBuilder<AppController>(builder: (appCtrl) {
+      return TextFormField(
+          controller: controller,
+          validator: validator,
+          focusNode: focusNode,
+          keyboardType: keyboardType,
+          textInputAction: textInputAction,
+          obscureText: obscureText,
+          onFieldSubmitted: onFieldSubmitted,
+          decoration: InputDecoration(
+              filled: filled,
+              fillColor: fillColor,
+              hintText: trans(hinText),
+              labelText: trans(labelText),
+              errorText:errorText,
+              hintStyle:
+                  AppCss.poppinsMedium16.textColor(appCtrl.appTheme.primary),
+              labelStyle:
+              AppCss.poppinsMedium16.textColor(appCtrl.appTheme.primary),
+              border: inputBorder,
+
+              contentPadding:
+                  const EdgeInsets.fromLTRB(Insets.i20, 0.0, Insets.i20, 0.0),
+              prefixIcon: prefixIcon,
+              suffixIcon: suffixIcon));
+    });
+  }
+}
