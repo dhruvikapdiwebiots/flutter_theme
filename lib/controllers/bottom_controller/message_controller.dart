@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_theme/config.dart';
+import 'package:fluttercontactpicker/fluttercontactpicker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -15,6 +16,12 @@ class MessageController extends GetxController {
   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
+
+  PhoneContact? phoneContact;
+  EmailContact? emailContact;
+  String? contact;
+  Image? contactPhoto;
+
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -59,7 +66,7 @@ class MessageController extends GetxController {
   }
 
   Future _showNotificationWithDefaultSound() async {
-    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+    var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
         'your channel id', 'your channel name',
         importance: Importance.max, priority: Priority.high);
     var platformChannelSpecifics = NotificationDetails(
@@ -79,7 +86,7 @@ class MessageController extends GetxController {
       context: Get.context!,
       builder: (_) {
         return AlertDialog(
-          title: Text("PayLoad"),
+          title: const Text("PayLoad"),
           content: Text("Payload : $payload"),
         );
       },
@@ -90,7 +97,7 @@ class MessageController extends GetxController {
 
   void configLocalNotification() {
     var initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+        const AndroidInitializationSettings('@mipmap/ic_launcher');
 
     var initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
@@ -121,7 +128,7 @@ class MessageController extends GetxController {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text("Are you sure you want to exit from the app"),
+                const Text("Are you sure you want to exit from the app"),
               ],
             ),
             actions: <Widget>[
@@ -150,22 +157,26 @@ class MessageController extends GetxController {
     } else {
       return Container(
         decoration:
-            BoxDecoration(border: Border(bottom: BorderSide(width: 0.2))),
+            const BoxDecoration(border: Border(bottom: BorderSide(width: 0.2))),
+        padding: const EdgeInsets.fromLTRB(25.0, 10.0, 25.0, 10.0),
+        margin: const EdgeInsets.only(bottom: 10.0, left: 5.0, right: 5.0),
         child: TextButton(
           child: Row(
             children: <Widget>[
               Material(
+                borderRadius: const BorderRadius.all(Radius.circular(25.0)),
+                clipBehavior: Clip.hardEdge,
                 child: document['image'] != null
                     ? CachedNetworkImage(
                         placeholder: (context, url) => Container(
+                          width: 50.0,
+                          height: 50.0,
+                          padding: const EdgeInsets.all(10.0),
                           child: CircularProgressIndicator(
                             strokeWidth: 1.0,
                             valueColor:
                                 AlwaysStoppedAnimation<Color>(appCtrl.appTheme.primary),
                           ),
-                          width: 50.0,
-                          height: 50.0,
-                          padding: EdgeInsets.all(10.0),
                         ),
                         imageUrl: document['image'],
                         width: 40.0,
@@ -177,24 +188,22 @@ class MessageController extends GetxController {
                         size: 50.0,
                         color: appCtrl.appTheme.grey,
                       ),
-                borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                clipBehavior: Clip.hardEdge,
               ),
               Flexible(
                 child: Container(
+                  margin: const EdgeInsets.only(left: 10.0),
                   child: Column(
                     children: <Widget>[
                       Container(
+                        alignment: Alignment.centerLeft,
+                        margin: const EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 5.0),
                         child: Text(
                           document['name'],
                           style: TextStyle(color: appCtrl.appTheme.primary, fontSize: 16),
                         ),
-                        alignment: Alignment.centerLeft,
-                        margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 5.0),
                       ),
                     ],
                   ),
-                  margin: EdgeInsets.only(left: 10.0),
                 ),
               ),
             ],
@@ -210,8 +219,6 @@ class MessageController extends GetxController {
           },
           /*padding: EdgeInsets.fromLTRB(25.0, 10.0, 25.0, 10.0),*/
         ),
-        padding: EdgeInsets.fromLTRB(25.0, 10.0, 25.0, 10.0),
-        margin: EdgeInsets.only(bottom: 10.0, left: 5.0, right: 5.0),
       );
     }
   }

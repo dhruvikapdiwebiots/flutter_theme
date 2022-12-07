@@ -1,5 +1,6 @@
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/pages/bottom_pages/message/message.dart';
+import 'package:flutter_theme/pages/bottom_pages/setting/setting.dart';
 
 class DashboardController extends GetxController{
   int selectedIndex = 0;
@@ -10,9 +11,9 @@ class DashboardController extends GetxController{
 
 //list of bottommost page
   List<Widget> widgetOptions = <Widget>[
-    Message(),
     Text("Message"),
-    Text("Setting"),
+    Message(),
+    Setting(),
   ];
 
   //on tap select
