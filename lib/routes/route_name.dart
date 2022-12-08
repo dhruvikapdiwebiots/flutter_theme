@@ -6,4 +6,6 @@ class RouteName {
   final String signup = '/signup';
   final String phone = '/phone';
   final String otp = '/otp';
+  final String editProfile = '/editProfile';
+  final String chat = '/chat';
 }

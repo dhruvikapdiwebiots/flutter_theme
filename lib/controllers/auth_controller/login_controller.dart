@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:flutter_theme/config.dart';
@@ -8,7 +9,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginController extends GetxController {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
+  final formKey = GlobalKey<FormState>();
   bool emailValidate = false;
   bool passwordValidation = false;
   bool passEye = true;
@@ -27,47 +28,15 @@ class LoginController extends GetxController {
   User? currentUser;
   var userId = '';
 
-  homeNavigation(userid) async {
-    await storage.write("id", userid);
+  homeNavigation(user) async {
+    await storage.write("id", user["id"]);
+    await storage.write("user", user);
     Get.toNamed(routeName.dashboard);
   }
 
   var emailError = 'Please Enter Email ID';
   var passwordError = 'Please Enter Password';
 
-  Pattern pattern =
-      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-
-// CHECK VALIDATION
-
-  void checkValidation() async {
-    RegExp regex =  RegExp(pattern.toString());
-    if (emailText.text.isEmpty) {
-      emailValidate = true;
-      passwordValidation = false;
-      showToast(emailError);
-    } else if (!regex.hasMatch(emailText.text)) {
-      emailValidate = true;
-      passwordValidation = false;
-      emailError = 'Please Enter Valid Email ID';
-      showToast(emailError);
-    } else if (passwordText.text.isEmpty) {
-      emailValidate = false;
-      passwordValidation = true;
-      showToast(passwordError);
-    } else if (passwordText.text.length < 8) {
-      emailValidate = false;
-      passwordValidation = true;
-      passwordError = "Password must be longer than 8 characters";
-      showToast(passwordError);
-    } else {
-      isLoading = true;
-      dismissKeyBoard();
-      emailValidate = false;
-      passwordValidation = false;
-      signIn(emailText.text, passwordText.text);
-    }
-  }
 
   showToast(error) {
     Fluttertoast.showToast(msg: error);
@@ -106,7 +75,12 @@ class LoginController extends GetxController {
     if (user == null) {
       log("null");
     } else {
-      homeNavigation(userId);
+      dynamic resultData = await getUserData(user);
+      if (resultData["phone"] == "") {
+        Get.toNamed(routeName.editProfile, arguments: resultData);
+      } else {
+        homeNavigation(resultData);
+      }
     }
   }
 
@@ -114,12 +88,13 @@ class LoginController extends GetxController {
     return Positioned(
       child: isLoading
           ? Container(
-        color: appCtrl.appTheme.accent.withOpacity(0.8),
-        child: Center(
-          child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(appCtrl.appTheme.primary)),
-        ),
-      )
+              color: appCtrl.appTheme.accent.withOpacity(0.8),
+              child: Center(
+                child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                        appCtrl.appTheme.primary)),
+              ),
+            )
           : Container(),
     );
   }
@@ -141,10 +116,10 @@ class LoginController extends GetxController {
       case "G":
         try {
           GoogleSignInAccount? googleSignInAccount =
-          await _googleSignIn.signIn();
+              await _googleSignIn.signIn();
           log('googleSignInAccount : $googleSignInAccount');
           GoogleSignInAuthentication googleAuth =
-          await googleSignInAccount!.authentication;
+              await googleSignInAccount!.authentication;
           log('googleAuth : $googleAuth');
           final googleAuthCred = GoogleAuthProvider.credential(
               idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
@@ -152,7 +127,13 @@ class LoginController extends GetxController {
           User? user =
               (await firebaseAuth.signInWithCredential(googleAuthCred)).user;
           isLoading = false;
-          homeNavigation(user!.uid);
+          dynamic resultData = await getUserData(user!);
+          if (resultData["phone"] == "") {
+            Get.toNamed(routeName.editProfile, arguments: resultData);
+          } else {
+            homeNavigation(resultData);
+          }
+
           log("google : $user");
           return 1;
         } catch (error) {
@@ -170,9 +151,16 @@ class LoginController extends GetxController {
     isLoading = true;
     try {
       await FirebaseAuth.instance.signInAnonymously();
-      FirebaseAuth.instance.authStateChanges().listen((firebaseUser) {
+      FirebaseAuth.instance.authStateChanges().listen((firebaseUser)async {
         isLoading = false;
-        homeNavigation(firebaseUser!.uid);
+        User? user = firebaseUser;
+        getUserData(user!);
+        dynamic resultData = await getUserData(user);
+        if (resultData["phone"] == "") {
+          Get.toNamed(routeName.editProfile, arguments: resultData);
+        } else {
+          homeNavigation(resultData);
+        }
       });
     } catch (e) {
       log("catch : $e");
@@ -195,15 +183,20 @@ class LoginController extends GetxController {
         final facebookAuthCred = FacebookAuthProvider.credential(token);
         final user =
             (await firebaseAuth.signInWithCredential(facebookAuthCred)).user;
-        homeNavigation(user!.uid);
+        dynamic resultData = await getUserData(user!);
+        if (resultData["phone"] == "") {
+          Get.toNamed(routeName.editProfile, arguments: resultData);
+        } else {
+          homeNavigation(resultData);
+        }
         log("user : $user");
 
         break;
       case FacebookLoginStatus.cancel:
-      // User cancel log in
+        // User cancel log in
         break;
       case FacebookLoginStatus.error:
-      // Log in failed
+        // Log in failed
         log('Error while log in: ${result.error}');
         break;
     }
@@ -219,7 +212,14 @@ class LoginController extends GetxController {
       assert(user.user!.uid == currentUser.uid);
       isLoading = false;
       cleartext();
-      homeNavigation(user.user!.uid);
+      log('login : ${user.user}');
+      dynamic resultData = await getUserData(user.user!);
+
+      if (resultData["phone"] == "") {
+        Get.toNamed(routeName.editProfile, arguments: resultData);
+      } else {
+        homeNavigation(resultData);
+      }
       return user.user;
     } catch (e) {
       isLoading = false;
@@ -228,6 +228,21 @@ class LoginController extends GetxController {
     }
     update();
     return null;
+  }
+
+  Future<Object?> getUserData(User user) async {
+    final result = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .get();
+    print("result : ${result.data()}");
+    dynamic resultData ;
+    if (result.exists) {
+      Map<String, dynamic>? data = result.data();
+      resultData = data;
+      return resultData;
+    }
+    return resultData;
   }
 
   @override

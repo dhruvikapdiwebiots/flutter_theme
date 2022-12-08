@@ -9,3 +9,6 @@ export 'auth_controller/phone_controller.dart';
 export 'auth_controller/otp_controller.dart';
 export 'bottom_controller/dashboard_controller.dart';
 export 'bottom_controller/message_controller.dart';
+export 'bottom_controller/setting_controller.dart';
+export 'theme_controller/edit_profile_controller.dart';
+export 'theme_controller/chat_controller.dart';

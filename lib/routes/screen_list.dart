@@ -6,3 +6,5 @@ export '../pages/auth_pages/signup/signup.dart';
 export '../pages/auth_pages/phone/phone.dart';
 export '../pages/auth_pages/otp/otp.dart';
 export '../pages/bottom_pages/dashboard/dashboard.dart';
+export '../pages/theme_pages/edit_profile/edit_profile.dart';
+export '../pages/theme_pages/chat/chat.dart';

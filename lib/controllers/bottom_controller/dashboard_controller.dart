@@ -1,13 +1,13 @@
+
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/pages/bottom_pages/message/message.dart';
 import 'package:flutter_theme/pages/bottom_pages/setting/setting.dart';
 
-class DashboardController extends GetxController{
+class DashboardController extends GetxController {
   int selectedIndex = 0;
 
   late int iconCount = 0;
   List bottomList = [];
-
 
 //list of bottommost page
   List<Widget> widgetOptions = <Widget>[
@@ -17,7 +17,7 @@ class DashboardController extends GetxController{
   ];
 
   //on tap select
-  onTapSelect (val)async {
+  onTapSelect(val) async {
     selectedIndex = val;
     update();
   }

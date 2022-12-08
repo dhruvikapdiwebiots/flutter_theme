@@ -25,12 +25,21 @@ class PasswordTextBox extends StatelessWidget {
         obscureText: passEye!,
         focusNode: focusNode,
         textInputAction: TextInputAction.done,
+        validator: (val){
+          if(val!.isEmpty){
+            return fonts.passwordError.tr;
+          }else  if(val.length < 8){
+            return fonts.passwordLengthError.tr;
+          }else{
+            return null;
+          }
+        },
         keyboardType: TextInputType.name,
         suffixIcon: IconButton(
           iconSize: Sizes.s20,
           onPressed: onPressed,
           icon: const Icon(Icons.remove_red_eye),
         ),
-        errorText: passwordValidation! ? fonts.passwordError : null);
+    );
   }
 }

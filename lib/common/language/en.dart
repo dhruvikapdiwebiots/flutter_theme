@@ -35,4 +35,12 @@ final dynamic en = {
   "somethingWrong": "Something went wrong",
   "mobileNumber": "Mobile Number",
   "verifyMobileNumber": "Verify mobile Number",
+  "setting": "Setting",
+  "calls": "Calls",
+  "chats": "Chats",
+  "deleteAccount": "Delete Account",
+  "logout": "Logout",
+  "inviteFriend": "Invite friend",
+  "saveProfile": "Save Profile",
+  "status": "Status",
 };

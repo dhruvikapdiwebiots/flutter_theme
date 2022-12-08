@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">chatter</string>
+    <string name="facebook_app_id">524632901790181</string>
+    <string name="fb_login_protocol_scheme">fb524632901790181</string>
+    <string name="facebook_client_token">4787b58de0a35fecca9d6454e40c0f34</string>
+</resources>

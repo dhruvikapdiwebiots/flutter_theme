@@ -35,4 +35,7 @@ class Fonts{
   final otpContain = "otpContain";
   final mobileNumber = "mobileNumber";
   final phoneError = "phoneError";
+  final setting = "setting";
+  final saveProfile = "saveProfile";
+  final status = "status";
 }

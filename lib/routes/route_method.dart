@@ -1,4 +1,6 @@
 //app file
+
+
 import '../config.dart';
 import 'route_name.dart';
 
@@ -12,6 +14,8 @@ class AppRoute {
     GetPage(name: _routeName.signup, page: () => Signup()),
     GetPage(name: _routeName.phone, page: () => Phone()),
     GetPage(name: _routeName.otp, page: () => Otp()),
-    GetPage(name: _routeName.dashboard, page: () => Dashboard()),
+    GetPage(name: _routeName.dashboard, page: () =>const Dashboard()),
+    GetPage(name: _routeName.editProfile, page: () => EditProfile()),
+    GetPage(name: _routeName.chat, page: () => Chat()),
   ];
 }

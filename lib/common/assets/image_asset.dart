@@ -9,6 +9,7 @@ class ImageAssets{
   final String phone = 'assets/images/phone.png';
   final String back = 'assets/images/back.png';
   final String chatBg = 'assets/images/chat_bg.jpg';
+  final String user = 'assets/images/user.png';
   final String logo1 =
       'https://pngimage.net/wp-content/uploads/2018/06/user-logo-png-4.png';
 

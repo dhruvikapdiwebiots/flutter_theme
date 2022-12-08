@@ -16,6 +16,7 @@ class CommonTextBox extends StatelessWidget {
   final TextInputType? keyboardType;
   final ValueChanged<String>? onFieldSubmitted;
   final String? errorText;
+  final int? maxLength;
 
   const CommonTextBox(
       {Key? key,
@@ -32,6 +33,7 @@ class CommonTextBox extends StatelessWidget {
       this.obscureText = false,
       this.keyboardType,
       this.textInputAction,
+      this.maxLength,
       this.onFieldSubmitted,
       this.filled = false})
       : super(key: key);
@@ -49,6 +51,7 @@ class CommonTextBox extends StatelessWidget {
           textInputAction: textInputAction,
           obscureText: obscureText,
           onFieldSubmitted: onFieldSubmitted,
+          maxLength: maxLength,
           decoration: InputDecoration(
               filled: filled,
               fillColor: fillColor,
@@ -56,10 +59,10 @@ class CommonTextBox extends StatelessWidget {
               labelText: trans(labelText),
               errorText:errorText,
               hintStyle:
-                  AppCss.poppinsMedium16.textColor(appCtrl.appTheme.primary),
+                  AppCss.poppinsMedium14.textColor(appCtrl.appTheme.primary),
               labelStyle:
-              AppCss.poppinsMedium16.textColor(appCtrl.appTheme.primary),
-              border: inputBorder,
+              AppCss.poppinsMedium14.textColor(appCtrl.appTheme.primary),
+              border: border ?? inputBorder,
 
               contentPadding:
                   const EdgeInsets.fromLTRB(Insets.i20, 0.0, Insets.i20, 0.0),

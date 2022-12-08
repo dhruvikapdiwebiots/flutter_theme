@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
@@ -16,12 +18,11 @@ class MessageController extends GetxController {
   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
-
+  String? groupId;
   PhoneContact? phoneContact;
   EmailContact? emailContact;
-  String? contact;
+  FullContact? contact;
   Image? contactPhoto;
-
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -47,15 +48,15 @@ class MessageController extends GetxController {
     firebaseMessaging.requestPermission();
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       _showNotificationWithDefaultSound();
-      print('onMessage: $message');
+
       return;
     });
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('onMessageOpenedApp: $message');
+
       return;
     });
     firebaseMessaging.getToken().then((token) {
-      print('token: $token');
+
       FirebaseFirestore.instance
           .collection('users')
           .doc(currentUserId)
@@ -105,8 +106,6 @@ class MessageController extends GetxController {
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
-  // SHOW NOTIFICATION STUCTURE
-
   // BOTTOM TABLAYOUT ICON CLICKED
 
   void onBottomIconPressed(int index) {
@@ -127,8 +126,8 @@ class MessageController extends GetxController {
             content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                const Text("Are you sure you want to exit from the app"),
+              children: const <Widget>[
+                Text("Are you sure you want to exit from the app"),
               ],
             ),
             actions: <Widget>[
@@ -152,7 +151,7 @@ class MessageController extends GetxController {
 
   // LOAD USERDATA LIST
   Widget loadUser(BuildContext context, DocumentSnapshot document) {
-    if (document['id'] == currentUserId) {
+    if (document['id'].contains(currentUserId)) {
       return Container();
     } else {
       return Container(
@@ -174,8 +173,8 @@ class MessageController extends GetxController {
                           padding: const EdgeInsets.all(10.0),
                           child: CircularProgressIndicator(
                             strokeWidth: 1.0,
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(appCtrl.appTheme.primary),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                appCtrl.appTheme.primary),
                           ),
                         ),
                         imageUrl: document['image'],
@@ -199,7 +198,8 @@ class MessageController extends GetxController {
                         margin: const EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 5.0),
                         child: Text(
                           document['name'],
-                          style: TextStyle(color: appCtrl.appTheme.primary, fontSize: 16),
+                          style: TextStyle(
+                              color: appCtrl.appTheme.primary, fontSize: 16),
                         ),
                       ),
                     ],
@@ -209,7 +209,12 @@ class MessageController extends GetxController {
             ],
           ),
           onPressed: () {
-          /*  Navigator.push(
+            var data={
+              "pId":document.id,
+              "pName": document["name"]
+            };
+            Get.toNamed(routeName.chat,arguments: data);
+            /*  Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => Chat(
@@ -227,23 +232,70 @@ class MessageController extends GetxController {
     String groupChatId = "";
     String lastSeen = "";
     // Wait for all documents to arrive, first.
-    final result = await FirebaseFirestore.instance.collection('users').get();
-    result.docs.forEach((doc) async {
+    final result = await FirebaseFirestore.instance.collection('messages').get();
+    result.docs.map((doc) async {
       String id = doc.data()['id'];
-      if (id.hashCode <= currentUserId.hashCode) {
-        groupChatId = '$id-$currentUserId';
-      } else {
-        groupChatId = '$currentUserId-$id';
-      }
+      groupChatId = '$currentUserId-$id';
       final m = await FirebaseFirestore.instance
           .collection('messages')
           .doc(groupChatId)
           .collection(groupChatId)
           .get();
-      if (m.docs.length > 0) {
+      if (m.docs.isNotEmpty) {
         lastSeen = m.docs.first.data()['content'];
         // lastSeen = m.docs.first.data['content'];
       }
     });
+  }
+
+  saveContactInChat() async {
+    // Add your onPressed code here!
+    final granted = await FlutterContactPicker.hasPermission();
+
+    if (granted) {
+      final FullContact contactPick =
+          (await FlutterContactPicker.pickFullContact());
+      contact = contactPick;
+      contactPhoto = contactPick.photo?.asWidget();
+
+      update();
+    } else {
+      await FlutterContactPicker.requestPermission().then((value) async {
+        final FullContact contactPick =
+            (await FlutterContactPicker.pickFullContact());
+        contact = contactPick;
+        contactPhoto = contactPick.photo?.asWidget();
+        update();
+      });
+    }
+    String phone = contact!.phones[0].number!;
+
+    if (phone.length > 10) {
+
+      if (phone.contains("-")) {
+        phone = phone.replaceAll("-", "");
+      }else if(phone.contains(" ")){
+        phone = phone.replaceAll(" ", "");
+      }
+      if (phone.length > 10) {
+        phone = phone.substring(3);
+      }
+    }
+    update();
+
+    final m = await FirebaseFirestore.instance
+        .collection('users')
+        .where('phone', isEqualTo: phone)
+        .limit(1).get();
+    if (m.docs.isEmpty) {
+      print('No User');
+    }else{
+
+      var data ={
+        "pId": m.docs[0].id,
+        "pName":m.docs[0].data()["name"]
+      };
+      Get.toNamed(routeName.chat,arguments: data);
+    }
   }
 }
