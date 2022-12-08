@@ -1,8 +1,6 @@
-import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_theme/config.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 
 class OtpController extends GetxController {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;

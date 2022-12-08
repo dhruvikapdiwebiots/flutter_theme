@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_theme/config.dart';
 
@@ -22,42 +20,74 @@ class Message extends StatelessWidget {
             ),
             body: SafeArea(
                 child: Stack(fit: StackFit.expand, children: <Widget>[
+              /* SingleChildScrollView(
+                child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height - 50,
+                    decoration: BoxDecoration(color: appCtrl.appTheme.accent),
+                    child: StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection('users')
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return Center(
+                                child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  appCtrl.appTheme.primary),
+                            ));
+                          } else {
+                            return StreamBuilder(
+                                stream: FirebaseFirestore.instance
+                                    .collection('users')
+                                    .snapshots(),
+                                builder: (context, snapShot) {
+                                  return ListView.builder(
+                                    padding: const EdgeInsets.all(10.0),
+                                    itemBuilder: (context, index) =>
+                                        messageCtrl.loadUser(context,
+                                            (snapshot.data!).docs[index]),
+                                    itemCount: (snapshot.data!).docs.length,
+                                  );
+                                });
+                          }
+                        })),
+              ),*/
               SingleChildScrollView(
                 child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height - 50,
-                  decoration: BoxDecoration(color: appCtrl.appTheme.accent),
-                  child: StreamBuilder(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height - 50,
+                    decoration: BoxDecoration(color: appCtrl.appTheme.accent),
+                    child: StreamBuilder(
                     stream: FirebaseFirestore.instance
                         .collection('users')
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
                         return Center(
-                          child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                                appCtrl.appTheme.primary),
-                          ),
-                        );
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  appCtrl.appTheme.primary),
+                            ));
                       } else {
-                        return StreamBuilder(
-                          stream: FirebaseFirestore.instance
-                              .collection('users')
-                              .snapshots(),
-                          builder: (context,snapShot) {
-                            return ListView.builder(
-                              padding: const EdgeInsets.all(10.0),
-                              itemBuilder: (context, index) => messageCtrl.loadUser(
-                                  context, (snapshot.data!).docs[index]),
-                              itemCount: (snapshot.data!).docs.length,
-                            );
 
-                          }
-                        );
+                        return StreamBuilder(
+                            stream: FirebaseFirestore.instance
+                                .collection('messages')
+                                .snapshots(),
+                            builder: (context, snapShot) {
+                              return ListView.builder(
+                                padding: const EdgeInsets.all(10.0),
+                                itemBuilder: (context, index) {
+
+                                  return  messageCtrl.loadUser(context,
+                                      (snapshot.data!).docs[index]);
+                                },
+                                itemCount: (snapshot.data!).docs.length,
+                              );
+                            });
                       }
-                    },
-                  ),
-                ),
+                    })),
               ),
             ]))),
       );

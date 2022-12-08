@@ -1,10 +1,5 @@
-import 'dart:async';
-import 'dart:developer';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_login_facebook/flutter_login_facebook.dart';
+
 import 'package:flutter_theme/config.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 class PhoneController extends GetxController {
   bool mobileNumber = false;

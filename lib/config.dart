@@ -26,6 +26,7 @@ export '../../models/index.dart';
 export 'pages/auth_pages/intro/layouts/page_pop.dart';
 export 'pages/index.dart';
 export 'widgets/common_text_box.dart';
+export 'pages/plugin_route.dart';
 
 
 

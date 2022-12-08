@@ -1,11 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_login_facebook/flutter_login_facebook.dart';
+
 import 'package:flutter_theme/config.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginController extends GetxController {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -28,15 +24,12 @@ class LoginController extends GetxController {
   User? currentUser;
   var userId = '';
 
+  //navigate to home
   homeNavigation(user) async {
     await storage.write("id", user["id"]);
     await storage.write("user", user);
     Get.toNamed(routeName.dashboard);
   }
-
-  var emailError = 'Please Enter Email ID';
-  var passwordError = 'Please Enter Password';
-
 
   showToast(error) {
     Fluttertoast.showToast(msg: error);
@@ -110,6 +103,7 @@ class LoginController extends GetxController {
     });
   }
 
+  //sign in
   Future<int> _handleSignIn(String type) async {
     log('googleAuth : $type');
     switch (type) {
@@ -146,12 +140,11 @@ class LoginController extends GetxController {
   }
 
   // SIGN IN WITH ANONYMOUS
-
   Future<void> signInAnonymously() async {
     isLoading = true;
     try {
       await FirebaseAuth.instance.signInAnonymously();
-      FirebaseAuth.instance.authStateChanges().listen((firebaseUser)async {
+      FirebaseAuth.instance.authStateChanges().listen((firebaseUser) async {
         isLoading = false;
         User? user = firebaseUser;
         getUserData(user!);
@@ -236,7 +229,7 @@ class LoginController extends GetxController {
         .doc(user.uid)
         .get();
     print("result : ${result.data()}");
-    dynamic resultData ;
+    dynamic resultData;
     if (result.exists) {
       Map<String, dynamic>? data = result.data();
       resultData = data;

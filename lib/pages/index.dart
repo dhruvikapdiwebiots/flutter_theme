@@ -8,11 +8,22 @@ export 'auth_pages/signup/layouts/name_text_box.dart';
 export 'auth_pages/signup/layouts/signup_widget.dart';
 export 'auth_pages/signup/layouts/signup_text_box.dart';
 export 'auth_pages/otp/layouts/otp_body.dart';
-
-export 'bottom_pages/bottom_bar/bottom_nav_bar.dart';
-export 'bottom_pages/bottom_bar/bottom_bar.dart';
-export 'bottom_pages/bottom_bar/item_bar.dart';
-
+export 'bottom_pages/message/layout/message_card.dart';
+export 'bottom_pages/message/layout/alert_back.dart';
+export 'theme_pages/edit_profile/layouts/edit_profile_text_box.dart';
+export 'theme_pages/chat/layouts/build_loader.dart';
+export 'theme_pages/chat/layouts/input_box.dart';
+export 'theme_pages/chat/layouts/message_box.dart';
+export 'bottom_pages/bottom_nav_bar/bottom_nav_bar.dart';
+export 'bottom_pages/message/message.dart';
+export 'bottom_pages/setting/setting.dart';
+export 'theme_pages/chat/layouts/sender/content.dart';
+export 'theme_pages/chat/layouts/sender/sender_image.dart';
+export 'theme_pages/chat/layouts/receiver/receiver_content.dart';
+export 'theme_pages/chat/layouts/receiver/receiver_image.dart';
+export 'theme_pages/chat/layouts/delete_alert.dart';
+export 'theme_pages/chat/layouts/receiver_message.dart';
+export 'theme_pages/chat/layouts/sender_message.dart';
 
 export '/models/bottom_nav_bar_model.dart';
 export '../widgets/email_text_box.dart';
