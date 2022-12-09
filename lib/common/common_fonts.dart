@@ -38,4 +38,11 @@ class Fonts{
   final setting = "setting";
   final saveProfile = "saveProfile";
   final status = "status";
+  final contact = "contact";
+  final location = "location";
+  final audio = "audio";
+  final gallery = "gallery";
+  final video = "video";
+  final document = "document";
+  final camera = "camera";
 }

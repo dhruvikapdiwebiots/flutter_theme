@@ -4,12 +4,13 @@ class IconCreation extends StatelessWidget {
   final IconData? icons;
   final Color? color;
   final String? text;
-  const IconCreation({Key? key,this.text,this.color,this.icons}) : super(key: key);
+  final GestureTapCallback? onTap;
+  const IconCreation({Key? key,this.text,this.color,this.icons,this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap:onTap,
       child: Column(
         children: [
           CircleAvatar(
@@ -22,10 +23,10 @@ class IconCreation extends StatelessWidget {
               color: appCtrl.appTheme.whiteColor,
             ),
           ),
-          const VSpace(Sizes.s5),
+          const VSpace(Sizes.s8),
           Text(
             text!,
-            style: AppCss.poppinsblack14.textColor(appCtrl.appTheme.whiteColor),
+            style: AppCss.poppinsblack14.textColor(appCtrl.appTheme.primary),
           )
         ],
       ),

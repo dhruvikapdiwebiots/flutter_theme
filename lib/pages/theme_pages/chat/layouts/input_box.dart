@@ -29,10 +29,10 @@ class InputBox extends StatelessWidget {
               ),
             ),
             IconButton(
-              icon: new Icon(
+              icon: const Icon(
                 Icons.attachment_outlined
               ),
-              padding: EdgeInsets.all(0.0),
+              padding: const EdgeInsets.all(0.0),
               onPressed: () {
                 chatCtrl.shareMedia(context);
               },

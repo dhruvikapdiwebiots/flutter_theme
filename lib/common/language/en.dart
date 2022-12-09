@@ -43,4 +43,11 @@ final dynamic en = {
   "inviteFriend": "Invite friend",
   "saveProfile": "Save Profile",
   "status": "Status",
+  "contact": "Contact",
+  "location": "Location",
+  "audio": "Audio",
+  "gallery": "Gallery",
+  "video": "Video",
+  "document": "Document",
+  "camera": "Camera",
 };

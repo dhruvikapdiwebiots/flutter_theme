@@ -24,7 +24,18 @@ export 'theme_pages/chat/layouts/receiver/receiver_image.dart';
 export 'theme_pages/chat/layouts/delete_alert.dart';
 export 'theme_pages/chat/layouts/receiver_message.dart';
 export 'theme_pages/chat/layouts/sender_message.dart';
+export 'theme_pages/chat/layouts/icon_creation.dart';
+export 'theme_pages/chat/layouts/file_bottom_sheet.dart';
+export 'theme_pages/chat/layouts/image_picker.dart';
+export 'theme_pages/chat/layouts/contact_list_tile.dart';
+export 'theme_pages/chat/layouts/audio_doc.dart';
+export 'theme_pages/chat/layouts/contact_layout.dart';
+export 'theme_pages/chat/layouts/location_layout.dart';
+export 'theme_pages/chat/layouts/video_doc.dart';
+export 'theme_pages/chat/layouts/last_seen.dart';
 
+
+export '/utilities/type_list.dart';
 export '/models/bottom_nav_bar_model.dart';
 export '../widgets/email_text_box.dart';
 export '../widgets/password_text_box.dart';
