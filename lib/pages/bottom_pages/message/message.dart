@@ -20,7 +20,7 @@ class Message extends StatelessWidget {
             ),
             body: SafeArea(
                 child: Stack(fit: StackFit.expand, children: <Widget>[
-              /* SingleChildScrollView(
+               SingleChildScrollView(
                 child: Container(
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height - 50,
@@ -52,42 +52,6 @@ class Message extends StatelessWidget {
                                 });
                           }
                         })),
-              ),*/
-              SingleChildScrollView(
-                child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height - 50,
-                    decoration: BoxDecoration(color: appCtrl.appTheme.accent),
-                    child: StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection('users')
-                        .snapshots(),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return Center(
-                            child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                  appCtrl.appTheme.primary),
-                            ));
-                      } else {
-
-                        return StreamBuilder(
-                            stream: FirebaseFirestore.instance
-                                .collection('messages')
-                                .snapshots(),
-                            builder: (context, snapShot) {
-                              return ListView.builder(
-                                padding: const EdgeInsets.all(10.0),
-                                itemBuilder: (context, index) {
-
-                                  return  messageCtrl.loadUser(context,
-                                      (snapshot.data!).docs[index]);
-                                },
-                                itemCount: (snapshot.data!).docs.length,
-                              );
-                            });
-                      }
-                    })),
               ),
             ]))),
       );

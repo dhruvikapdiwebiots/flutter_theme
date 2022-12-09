@@ -15,15 +15,7 @@ class InputBox extends StatelessWidget {
             color: Colors.white),
         child: Row(
           children: <Widget>[
-            Material(
-              color: Colors.white,
-              child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 1.0),
-                  child: IconButton(
-                      icon: const Icon(Icons.image),
-                      onPressed: chatCtrl.getImage,
-                      color: appCtrl.appTheme.primary)),
-            ),
+          const HSpace(Sizes.s15),
             Flexible(
               child: TextField(
                 style:
@@ -36,6 +28,16 @@ class InputBox extends StatelessWidget {
                 focusNode: chatCtrl.focusNode,
               ),
             ),
+            IconButton(
+              icon: new Icon(
+                Icons.attachment_outlined
+              ),
+              padding: EdgeInsets.all(0.0),
+              onPressed: () {
+                chatCtrl.shareMedia(context);
+              },
+              color: appCtrl.appTheme.primary,
+            ),
             Material(
               color: Colors.white,
               child: Container(
@@ -43,7 +45,7 @@ class InputBox extends StatelessWidget {
                 child: IconButton(
                   icon: const Icon(Icons.send),
                   onPressed: () => chatCtrl.onSendMessage(
-                      chatCtrl.textEditingController.text, 0),
+                      chatCtrl.textEditingController.text, MessageType.text),
                   color: appCtrl.appTheme.primary,
                 ),
               ),
