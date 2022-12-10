@@ -31,7 +31,7 @@ class SenderMessage extends StatelessWidget {
                   ),
                 if (document!["type"] == MessageType.image.name)
                   SenderImage(
-                      url: document!['content'],
+                      document: document,
                       onLongPress: () {
                         showDialog(
                           context: Get.context!,
@@ -50,15 +50,18 @@ class SenderMessage extends StatelessWidget {
                       },
                       document: document),
                 if (document!["type"] == MessageType.location.name)
-                  LocationLayout(onLongPress: () {
-                    launchUrl(Uri.parse(document!["content"]));
-                  }, onTap: () {
-                    showDialog(
-                      context: Get.context!,
-                      builder: (BuildContext context) =>
-                          chatCtrl.buildPopupDialog(context, document!),
-                    );
-                  }),
+                  LocationLayout(
+                      document: document,
+                      onLongPress: () {
+                        showDialog(
+                          context: Get.context!,
+                          builder: (BuildContext context) =>
+                              chatCtrl.buildPopupDialog(context, document!),
+                        );
+                      },
+                      onTap: () {
+                        launchUrl(Uri.parse(document!["content"]));
+                      }),
                 if (document!["type"] == MessageType.video.name)
                   VideoDoc(document: document),
                 if (document!["type"] == MessageType.audio.name)

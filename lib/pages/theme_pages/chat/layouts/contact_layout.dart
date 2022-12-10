@@ -1,4 +1,6 @@
 
+import 'package:intl/intl.dart';
+
 import '../../../../config.dart';
 
 class ContactLayout extends StatelessWidget {
@@ -17,12 +19,20 @@ class ContactLayout extends StatelessWidget {
               color: appCtrl.appTheme.primary,
               borderRadius: BorderRadius.circular(AppRadius.r15),
             ),
-            width: Sizes.s250,
+            width: Sizes.s280,
             height: Sizes.s120,
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  ContactListTile(document: document,),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Expanded(child: ContactListTile(document: document,)),
+                      Text(DateFormat('HH:mm a').format(
+                          DateTime.fromMillisecondsSinceEpoch(
+                              int.parse(document!['timestamp']))),style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.whiteColor),).marginSymmetric(horizontal: Insets.i10)
+                    ],
+                  ),
                   Divider(
                       height: 7,
                       color: appCtrl.appTheme.whiteColor.withOpacity(.2)),

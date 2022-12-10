@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter_theme/models/position_item.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../config.dart';
 
@@ -56,5 +59,20 @@ class PermissionHandlerController extends GetxController{
   void updatePositionList(PositionItemType type, String displayValue) {
     _positionItems.add(PositionItem(type, displayValue));
     update();
+  }
+
+  static Future<bool> checkAndRequestPermission(Permission permission) {
+    Completer<bool> completer = Completer<bool>();
+    permission.request().then((status) {
+      if (status != PermissionStatus.granted) {
+        permission.request().then((status) {
+          bool granted = status == PermissionStatus.granted;
+          completer.complete(granted);
+        });
+      } else {
+        completer.complete(true);
+      }
+    });
+    return completer.future;
   }
 }

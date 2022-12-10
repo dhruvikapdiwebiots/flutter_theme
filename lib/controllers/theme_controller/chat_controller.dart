@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:dartx/dartx_io.dart';
 import 'package:flutter_theme/config.dart';
+import 'package:flutter_theme/pages/theme_pages/chat/layouts/audio_recording_plugin.dart';
 import 'package:flutter_theme/utilities/utils/handler/all_permission_handler.dart';
 
 class ChatController extends GetxController {
@@ -58,10 +60,12 @@ class ChatController extends GetxController {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
 
     if (result != null) {
-      File file = File(result!.files.single.path.toString());
-      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+      File file = File(result.files.single.path.toString());
+      String fileName = "${file.name}-${DateTime.now().millisecondsSinceEpoch.toString()}";
       Reference reference = FirebaseStorage.instance.ref().child(fileName);
       UploadTask uploadTask = reference.putFile(file);
+      print("fileName : $fileName");
+      print("file : $file");
       uploadTask.then((res) {
         res.ref.getDownloadURL().then((downloadUrl) {
           imageUrl = downloadUrl;
@@ -159,6 +163,25 @@ class ChatController extends GetxController {
         '${contactPick.name!.nickName}-BREAK-${contactPick.phones[0].number}-BREAK-${contactPick.photo!}',
         MessageType.contact);
     update();
+  }
+
+  void audioRecording(BuildContext context, String type, int index) {
+    showModalBottomSheet(
+      context: Get.context!,
+      isDismissible: false,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext bc) {
+        return Container(
+          margin: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
+          child: AudioRecordingPlugin(
+            type: type,
+            index: index,
+          ),
+        );
+      },
+    );
   }
 
   Future<Position> getCurrentPosition() async {

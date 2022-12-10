@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 import '../../../../../config.dart';
 
 class Content extends StatelessWidget {
@@ -11,7 +13,7 @@ class Content extends StatelessWidget {
     return InkWell(
       onLongPress: onLongPress,
       child: Container(
-          padding: const EdgeInsets.all(Insets.i12),
+padding: const EdgeInsets.symmetric(horizontal: Insets.i15,vertical: Insets.i10),
           width: Sizes.s220,
           decoration: BoxDecoration(
               color: appCtrl.appTheme.primary,
@@ -24,11 +26,19 @@ class Content extends StatelessWidget {
                   ? Insets.i10
                   : Insets.i10,
               right: Insets.i10),
-          child: Text(
-            document!['content'],
-            style: TextStyle(
-                color: appCtrl.appTheme.accent,
-                fontSize: 14.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                document!['content'],
+                style:  AppCss.poppinsMedium14.textColor(appCtrl.appTheme.accent)
+
+              ),
+
+              Text(DateFormat('HH:mm a').format(
+                  DateTime.fromMillisecondsSinceEpoch(
+                      int.parse(document!['timestamp']))),style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.whiteColor),)
+            ],
           )),
     );
   }

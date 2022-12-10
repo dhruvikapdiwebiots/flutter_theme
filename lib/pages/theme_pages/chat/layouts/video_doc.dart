@@ -1,10 +1,12 @@
+import 'package:intl/intl.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../../config.dart';
 
 class VideoDoc extends StatefulWidget {
   final DocumentSnapshot? document;
-  const VideoDoc({Key? key,this.document}) : super(key: key);
+
+  const VideoDoc({Key? key, this.document}) : super(key: key);
 
   @override
   State<VideoDoc> createState() => _VideoDocState();
@@ -12,15 +14,8 @@ class VideoDoc extends StatefulWidget {
 
 class _VideoDocState extends State<VideoDoc> {
   VideoPlayerController? videoController;
-  Future<void>? initializeVideoPlayerFuture;
+  late Future<void> initializeVideoPlayerFuture;
   bool startedPlaying = false;
-
-  Future<bool> started() async {
-    await videoController!.initialize();
-    await videoController!.play();
-    startedPlaying = true;
-    return true;
-  }
 
   @override
   void initState() {
@@ -29,40 +24,71 @@ class _VideoDocState extends State<VideoDoc> {
       videoController = VideoPlayerController.network(
         widget.document!["content"],
       );
+      initializeVideoPlayerFuture = videoController!.initialize();
     }
+    setState(() {});
+
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ChatController>(
-      builder: (chatCtrl) {
-        return FutureBuilder<bool>(
-          future: started(),
-          builder:
-              (BuildContext context, AsyncSnapshot<bool> snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return AspectRatio(
-                aspectRatio: videoController!.value.aspectRatio,
-                child: VideoPlayer(
-                  videoController!,
+    return GetBuilder<ChatController>(builder: (chatCtrl) {
+      return FutureBuilder(
+        future: initializeVideoPlayerFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            // If the VideoPlayerController has finished initialization, use
+            // the data it provides to limit the aspect ratio of the video.
+            return Stack(
+              alignment: Alignment.bottomRight,
+              children: [
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    AspectRatio(
+                      aspectRatio: videoController!.value.aspectRatio,
+                      // Use the VideoPlayer widget to display the video.
+                      child: VideoPlayer(videoController!),
+                    ).height(Sizes.s250),
+                    IconButton(
+                        icon: Icon(
+                                videoController!.value.isPlaying
+                                    ? Icons.pause
+                                    : Icons.play_arrow,
+                                color: appCtrl.appTheme.whiteColor)
+                            .marginAll(Insets.i3)
+                            .decorated(
+                                color: appCtrl.appTheme.secondary,
+                                shape: BoxShape.circle),
+                        onPressed: () {
+                          if (videoController!.value.isPlaying) {
+                            videoController!.pause();
+                          } else {
+                            // If the video is paused, play it.
+                            videoController!.play();
+                          }
+                          setState(() {});
+                        }),
+
+                  ],
                 ),
-              ).height(Sizes.s200).gestures(onLongPress: () {
-                showDialog(
-                  context: Get.context!,
-                  builder: (BuildContext context) => chatCtrl
-                      .buildPopupDialog(context, widget.document!),
-                );
-              });
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          },
-        );
-      }
-    );
+                Text(DateFormat('HH:mm a').format(
+                    DateTime.fromMillisecondsSinceEpoch(
+                        int.parse(widget.document!['timestamp']))),style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.whiteColor),).marginAll(Insets.i10)
+              ],
+            ).inkWell(onTap: (){
+              launchUrl(Uri.parse(widget.document!["content"]));
+            });
+          } else {
+            // If the VideoPlayerController is still initializing, show a
+            // loading spinner.
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      );
+    });
   }
 }

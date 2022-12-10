@@ -37,7 +37,7 @@ class CommonFileRowList extends StatelessWidget {
           IconCreation(
               onTap: () {
                 Get.back();
-                chatCtrl.imagePickerOption(Get.context!);
+                chatCtrl.audioRecording(context,"audio",0);
               },
               icons: Icons.headset,
               color: Colors.orange,
