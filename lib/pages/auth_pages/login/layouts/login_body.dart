@@ -8,7 +8,7 @@ class LoginBody extends StatelessWidget {
     return GetBuilder<LoginController>(builder: (loginCtrl) {
       return Form(
         key: loginCtrl.formKey,
-        child: Column(
+        child: loginCtrl.usageControls != null && loginCtrl.usageControls != "" ? Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -40,12 +40,12 @@ class LoginBody extends StatelessWidget {
               const VSpace(Sizes.s20),
 
               //sign in button
-              LoginWidget()
-                  .signInButton(onTap: () {
-                    if(loginCtrl.formKey.currentState!.validate()){
-                      loginCtrl.dismissKeyBoard();
-                      loginCtrl.signIn(loginCtrl.emailText.text, loginCtrl.passwordText.text);
-                    }
+              LoginWidget().signInButton(onTap: () {
+                if (loginCtrl.formKey.currentState!.validate()) {
+                  loginCtrl.dismissKeyBoard();
+                  loginCtrl.signIn(
+                      loginCtrl.emailText.text, loginCtrl.passwordText.text);
+                }
               }),
               const VSpace(Sizes.s12),
 
@@ -55,17 +55,19 @@ class LoginBody extends StatelessWidget {
                   .inkWell(onTap: () => Get.toNamed(routeName.forgotPassword)),
               const VSpace(Sizes.s15),
 
-              //don't have account
-              LoginWidget().noAccount(),
-              const VSpace(Sizes.s15),
-
+              if (!loginCtrl.usageControls["existence_users"])
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  //don't have account
+                  LoginWidget().noAccount(),
+                  const VSpace(Sizes.s15),
+                ]),
               //or layout
               LoginWidget().orLayout(),
               const HSpace(Sizes.s10),
 
               //social layout
               const SocialLayout()
-            ]),
+            ]):Container(),
       );
     });
   }

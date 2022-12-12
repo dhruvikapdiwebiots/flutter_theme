@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -34,10 +35,16 @@ class EditProfileController extends GetxController {
   bool isLoading = false;
   bool isLoggedIn = false;
   User? currentUser;
+  XFile? imageFile;
+  String imageUrl = "";
   var userId = '';
 
   homeNavigation(userid) async {
     await storage.write("id", userid);
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(user["id"])
+        .update({'status': "Online"});
     Get.offAllNamed(routeName.dashboard);
   }
 
@@ -112,5 +119,66 @@ class EditProfileController extends GetxController {
     statusText.text = user["statusDesc"] ?? "";
     update();
     super.onReady();
+  }
+
+// GET IMAGE FROM GALLERY
+  Future getImage(source) async {
+    final ImagePicker picker = ImagePicker();
+    imageFile = (await picker.pickImage(source: source))!;
+    log("imageFile : $imageFile");
+    if (imageFile != null) {
+      update();
+      uploadFile();
+    }
+  }
+
+// UPLOAD SELECTED IMAGE TO FIREBASE
+  Future uploadFile() async {
+    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    Reference reference = FirebaseStorage.instance.ref().child(fileName);
+    log("reference : $reference");
+    var file = File(imageFile!.path);
+    UploadTask uploadTask = reference.putFile(file);
+    log("uploadTask : ${uploadTask}");
+    uploadTask.then((res) {
+      log("res : $res");
+      res.ref.getDownloadURL().then((downloadUrl) async{
+        user["image"] = imageUrl;
+        await storage.write("user", user);
+        imageUrl = downloadUrl;
+        log(user["id"]);
+       await  FirebaseFirestore.instance
+            .collection('users')
+            .doc(user["id"])
+            .update({'image': imageUrl});
+        update();
+        log(user["image"]);
+
+        update();
+      }, onError: (err) {
+        update();
+        Fluttertoast.showToast(msg: 'Image is Not Valid');
+      });
+    });
+  }
+
+  //image picker option
+  imagePickerOption(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+          borderRadius:
+              BorderRadius.vertical(top: Radius.circular(AppRadius.r25)),
+        ),
+        builder: (BuildContext context) {
+          // return your layout
+          return ImagePickerLayout(cameraTap: () {
+            getImage(ImageSource.camera);
+            Get.back();
+          }, galleryTap: () {
+            getImage(ImageSource.gallery);
+            Get.back();
+          });
+        });
   }
 }

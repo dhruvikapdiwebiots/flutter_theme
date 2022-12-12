@@ -14,8 +14,8 @@ class LanguageController extends GetxController {
       Get.updateLocale(locale);
       Get.forceAppUpdate();
       appCtrl.languageVal = "en";
-      storage.write(Session.languageCode, "en");
-      storage.write(Session.countryCode, "US");
+      storage.write(session.languageCode, "en");
+      storage.write(session.countryCode, "US");
     } else if (e['name'] == "arabic" ||
         e['name'] == 'अरबी' ||
         e['name'] == 'عربي' ||
@@ -25,8 +25,8 @@ class LanguageController extends GetxController {
       Get.updateLocale(locale);
       Get.forceAppUpdate();
       appCtrl.languageVal = "ar";
-      storage.write(Session.languageCode, "ar");
-      storage.write(Session.countryCode, "AE");
+      storage.write(session.languageCode, "ar");
+      storage.write(session.countryCode, "AE");
     } else if (e['name'] == "korean" ||
         e['name'] == 'कोरियाई' ||
         e['name'] == 'كوري' ||
@@ -36,8 +36,8 @@ class LanguageController extends GetxController {
       Get.updateLocale(locale);
       Get.forceAppUpdate();
       appCtrl.languageVal = "ko";
-      storage.write(Session.languageCode, "ko");
-      storage.write(Session.countryCode, "KR");
+      storage.write(session.languageCode, "ko");
+      storage.write(session.countryCode, "KR");
     } else if (e['name'] == "hindi" ||
         e['name'] == 'हिंदी' ||
         e['name'] == 'هندي' ||
@@ -47,8 +47,8 @@ class LanguageController extends GetxController {
       var locale = const Locale("hi", 'IN');
       Get.updateLocale(locale);
       Get.forceAppUpdate();
-      storage.write(Session.languageCode, "hi");
-      storage.write(Session.countryCode, "IN");
+      storage.write(session.languageCode, "hi");
+      storage.write(session.countryCode, "IN");
     } else if (e['name'] == "french" ||
         e['name'] == 'Français' ||
         e['name'] == 'فرنسي' ||
@@ -58,8 +58,8 @@ class LanguageController extends GetxController {
       var locale = const Locale("fr", 'FR');
       Get.updateLocale(locale);
       Get.forceAppUpdate();
-      storage.write(Session.languageCode, "fr");
-      storage.write(Session.countryCode, "FR");
+      storage.write(session.languageCode, "fr");
+      storage.write(session.countryCode, "FR");
     }
     update();
     appCtrl.update();

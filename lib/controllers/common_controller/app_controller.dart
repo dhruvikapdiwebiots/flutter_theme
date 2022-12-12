@@ -1,5 +1,6 @@
 
 
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
@@ -18,6 +19,8 @@ class AppController extends GetxController {
   List drawerList = [];
   int currVal = 1;
   String deviceName= "";
+  String device= "";
+  dynamic adminPermission;
 
 
 //list of bottommost page
@@ -37,6 +40,7 @@ class AppController extends GetxController {
     getData();
     initPlatformState();
     update();
+    getAdminPermission();
     super.onReady();
   }
 
@@ -57,6 +61,17 @@ class AppController extends GetxController {
     Get.forceAppUpdate();
   }
 
+  getAdminPermission()async{
+    final usageControls =await FirebaseFirestore.instance.collection(collectionName.admin).doc(collectionName.usageControls).get();
+    log("admin : ${usageControls.data()}");
+    appCtrl.storage.write(session.usageControls, usageControls.data());
+    update();
+    final userAppSettings =await FirebaseFirestore.instance.collection(collectionName.admin).doc(collectionName.userAppSettings).get();
+    log("admin : ${userAppSettings.data()}");
+    appCtrl.storage.write(session.userAppSettings, userAppSettings.data());
+    update();
+  }
+
   Future<void> initPlatformState() async {
     var deviceData = <String, dynamic>{};
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
@@ -66,10 +81,12 @@ class AppController extends GetxController {
 
         AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
         deviceName =androidInfo.model;
+        device ="android";
         print('Running on ${androidInfo.model}');
       } else if (Platform.isIOS) {
         IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
         deviceName =iosInfo.utsname.machine.toString();
+        device ="ios";
         print('Running on ${iosInfo.utsname.machine}');  // e.g.
       }
     } on PlatformException {

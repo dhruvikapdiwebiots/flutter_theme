@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dartx/dartx_io.dart';
@@ -7,8 +8,9 @@ import 'package:flutter_theme/pages/theme_pages/chat/layouts/audio_recording_plu
 import 'package:flutter_theme/utilities/utils/handler/all_permission_handler.dart';
 
 class ChatController extends GetxController {
-  String? pId, id, pName, groupId, imageUrl, peerNo;
+  String? pId, id, pName, groupId, imageUrl, peerNo,status,statusLastSeen;
   dynamic message;
+  dynamic pData;
   final permissionHandelCtrl = Get.put(PermissionHandlerController());
   bool positionStreamStarted = false;
   XFile? imageFile;
@@ -26,46 +28,47 @@ class ChatController extends GetxController {
     isLoading = false;
     imageUrl = '';
     var data = Get.arguments;
-    pId = data["pId"];
-    pName = data["pName"];
+    pData = data;
+    pId = data["id"];
+    pName = data["name"];
     readLocal();
-
+    getPeerStatus();
     update();
     super.onReady();
   }
 
-
+  getPeerStatus() {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(pId).get().then((value) {
+      print("statsy : ${value.data()!["status"]}" );
+      status = value.data()!["status"].toString();
+      statusLastSeen = value.data()!["lastSeen"].toString();
+    });
+    update();
+    return status;
+  }
 
 //read local data
   readLocal() async {
     id = appCtrl.storage.read('id') ?? '';
-    if (id.hashCode <= pId.hashCode) {
-      groupId = '$id-$pId';
-    } else {
-      groupId = '$pId-$id';
-    }
+    groupId = '$id-$pId';
+    log("groupId : $groupId");
     FirebaseFirestore.instance
         .collection(
             'users') // Your collection name will be whatever you have given in firestore database
         .doc(id)
         .update({'chattingWith': pId});
     textEditingController.addListener(() {
-      if (textEditingController.text.isNotEmpty && typing == false) {
-        FirebaseFirestore.instance
-            .collection("users")
-            .doc(id)
-            .update(
-          {"status": "Online"},
+      if (textEditingController.text.isNotEmpty) {
+        FirebaseFirestore.instance.collection("users").doc(id).update(
+          {"status": "typing...","lastSeen": DateTime.now().millisecondsSinceEpoch.toString()},
         );
         typing = true;
       }
       if (textEditingController.text.isEmpty && typing == true) {
-
-        FirebaseFirestore.instance
-            .collection("users")
-            .doc(id)
-            .update(
-          {"status": "typing..."},
+        FirebaseFirestore.instance.collection("users").doc(id).update(
+          {"status": "Online","lastSeen": DateTime.now().millisecondsSinceEpoch.toString()},
         );
         typing = false;
       }
@@ -85,7 +88,8 @@ class ChatController extends GetxController {
 
     if (result != null) {
       File file = File(result.files.single.path.toString());
-      String fileName = "${file.name}-${DateTime.now().millisecondsSinceEpoch.toString()}";
+      String fileName =
+          "${file.name}-${DateTime.now().millisecondsSinceEpoch.toString()}";
       Reference reference = FirebaseStorage.instance.ref().child(fileName);
       UploadTask uploadTask = reference.putFile(file);
       print("fileName : $fileName");
@@ -198,7 +202,8 @@ class ChatController extends GetxController {
         return Container(
           margin: const EdgeInsets.all(10),
           padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(10)),
           child: AudioRecordingPlugin(
             type: type,
             index: index,
@@ -226,27 +231,51 @@ class ChatController extends GetxController {
   }
 
   // SEND MESSAGE CLICK
-  void onSendMessage(String content, MessageType type) async {
+  void onSendMessage(String content, MessageType type, {groupId}) async {
     if (content.trim() != '') {
       textEditingController.clear();
-      var documentReference = FirebaseFirestore.instance
+      FirebaseFirestore.instance
           .collection('messages')
-          .doc(groupId)
-          .collection(groupId!)
-          .doc(DateTime.now().millisecondsSinceEpoch.toString());
-
-      await FirebaseFirestore.instance.runTransaction((transaction) async {
-        transaction.set(
-          documentReference,
-          {
-            'idFrom': id,
-            'idTo': pId,
-            'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-            'content': content,
-            'type': type.name
-          },
-        );
+          .doc(collectionName.chatWith)
+          .set({
+        'idFrom': id,
+        'idTo': pId,
+        'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+        'content': content,
+        'type': type.name,
+        "groupId": groupId ?? "",
       });
+
+      final msgList = await FirebaseFirestore.instance
+          .collection("contacts")
+          .doc("$id-$pId")
+          .get();
+      if (msgList.exists) {
+        FirebaseFirestore.instance
+            .collection('contacts')
+            .doc("$id-$pId")
+            .update({
+          "updateStamp": DateTime.now().millisecondsSinceEpoch.toString(),
+          "lastMessage": content
+        });
+      } else {
+        dynamic user = appCtrl.storage.read("user");
+
+        FirebaseFirestore.instance.collection('contacts').doc("$id-$pId").set({
+          'sender': {
+            "id": user["id"],
+            "name": user["name"],
+            "image": user["image"]
+          },
+          'receiver': {"id": pId, "name": pName, "image": pData["image"]},
+          'receiverId': pId,
+          'senderId': user["id"],
+          'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+          "lastMessage": content,
+          "isGroup": groupId ?? "",
+          "updateStamp": DateTime.now().millisecondsSinceEpoch.toString()
+        });
+      }
       listScrollController.animateTo(0.0,
           duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
     } else {
@@ -287,13 +316,12 @@ class ChatController extends GetxController {
 
   // CHECK IF IT IS SENDER SIDE OR NOT
   bool isLastMessageRight(int index) {
-     if ((index > 0 && message != null && message![index - 1]['idFrom'] != id) ||
+    if ((index > 0 && message != null && message![index - 1]['idFrom'] != id) ||
         index == 0) {
       return true;
     } else {
       return false;
     }
-
   }
 
   // ON BACKPRESS
@@ -317,7 +345,14 @@ class ChatController extends GetxController {
         ),
         builder: (BuildContext context) {
           // return your layout
-          return const ImagePickerLayout();
+          return ImagePickerLayout(cameraTap: () {
+            dismissKeyboard();
+            getImage(ImageSource.camera);
+            Get.back();
+          }, galleryTap: () {
+            getImage(ImageSource.gallery);
+            Get.back();
+          });
         });
   }
 }

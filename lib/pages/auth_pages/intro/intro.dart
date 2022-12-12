@@ -1,9 +1,23 @@
 import '../../../config.dart';
 
-class Intro extends StatelessWidget {
+class Intro extends StatefulWidget {
+
+  const Intro({Key? key}) : super(key: key);
+
+  @override
+  State<Intro> createState() => _IntroState();
+}
+
+class _IntroState extends State<Intro> {
   final introCtrl = Get.put(IntroController());
 
-  Intro({Key? key}) : super(key: key);
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    introCtrl.sliderTimer.cancel();
+    introCtrl.pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

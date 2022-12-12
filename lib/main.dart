@@ -8,7 +8,8 @@ import 'config.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Firebase.initializeApp();
+  await Firebase.initializeApp();
+  GetStorage.init();
   Get.put(AppController());
   runApp(const MyApp());
 }

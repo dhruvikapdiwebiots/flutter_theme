@@ -20,17 +20,33 @@ class Setting extends StatelessWidget {
               children: [
                 Hero(
                   tag: "user",
-                  child: Container(
-                    height: Sizes.s60,
-                    width: Sizes.s60,
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.all(Insets.i15),
-                    decoration: BoxDecoration(
-                        color: appCtrl.appTheme.gray.withOpacity(.2),
-
-                        image: DecorationImage(image: AssetImage(imageAssets.user),),
-                        shape: BoxShape.circle),
-                  ),
+                  child: settingCtrl.user["image"] != null &&
+                          settingCtrl.user["image"] != ""
+                      ? Container(
+                          height: Sizes.s60,
+                          width: Sizes.s60,
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.all(Insets.i15),
+                          decoration: BoxDecoration(
+                              color: appCtrl.appTheme.gray.withOpacity(.2),
+                              image: DecorationImage(
+                                  image:
+                                      NetworkImage(settingCtrl.user["image"]),
+                                  fit: BoxFit.fill),
+                              shape: BoxShape.circle),
+                        )
+                      : Container(
+                          height: Sizes.s60,
+                          width: Sizes.s60,
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.all(Insets.i15),
+                          decoration: BoxDecoration(
+                              color: appCtrl.appTheme.gray.withOpacity(.2),
+                              image: DecorationImage(
+                                image: AssetImage(imageAssets.user),
+                              ),
+                              shape: BoxShape.circle),
+                        ),
                 ),
                 const HSpace(Sizes.s20),
                 Column(
@@ -48,7 +64,7 @@ class Setting extends StatelessWidget {
                   ],
                 )
               ],
-            ).inkWell(onTap: () => Get.toNamed(routeName.editProfile)),
+            ).inkWell(onTap: () => settingCtrl.editProfile()),
             const VSpace(Sizes.s20),
             ...settingCtrl.settingList
                 .asMap()

@@ -18,6 +18,8 @@ class LoginController extends GetxController {
   var firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final facebookLogin = FacebookLogin(debug: true);
+  dynamic usageControls;
+  dynamic userAppSettings;
 
   bool isLoading = false;
   bool isLoggedIn = false;
@@ -26,12 +28,14 @@ class LoginController extends GetxController {
 
   //navigate to home
   homeNavigation(user) async {
+
     await storage.write("id", user["id"]);
     await storage.write("user", user);
     FirebaseFirestore.instance
         .collection('users')
         .doc(user["id"])
-        .update({'deviceName': appCtrl.deviceName});
+        .update({'status': "Online"});
+
     Get.toNamed(routeName.dashboard);
   }
 
@@ -124,8 +128,10 @@ class LoginController extends GetxController {
           log('googleAuthCred : $googleAuthCred');
           User? user =
               (await firebaseAuth.signInWithCredential(googleAuthCred)).user;
+          await userRegister(user!);
           isLoading = false;
-          dynamic resultData = await getUserData(user!);
+          dynamic resultData = await getUserData(user);
+          log("resultData : $resultData");
           if (resultData["phone"] == "") {
             Get.toNamed(routeName.editProfile, arguments: resultData);
           } else {
@@ -141,6 +147,27 @@ class LoginController extends GetxController {
         }
     }
     return 0;
+  }
+
+
+  userRegister(User user)async{
+    final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+    firebaseMessaging.getToken().then((token) async{
+      await FirebaseFirestore.instance.collection('users').doc(user!.uid).set({
+        'chattingWith': null,
+        'id': user.uid,
+        'image': user.photoURL ?? "",
+        'name': user.displayName,
+        'pushToken': token,
+        'status': "Offline",
+        "typeStatus": "Offline",
+        "phone": user.phoneNumber ?? "",
+        "email": user.email,
+        "deviceName":appCtrl.deviceName,
+        "device":appCtrl.device,
+        "statusDesc":"Hello, I am using Chatter"
+      });
+    });
   }
 
   // SIGN IN WITH ANONYMOUS
@@ -242,10 +269,19 @@ class LoginController extends GetxController {
     return resultData;
   }
 
+  getPermissionData()async{
+    usageControls = appCtrl.storage.read(session.usageControls);
+    userAppSettings = appCtrl.storage.read(session.userAppSettings);
+    update();
+    getData();
+  }
+
   @override
   void onReady() {
     // TODO: implement onReady
-    getData();
+    getPermissionData();
+
+
     super.onReady();
   }
 }

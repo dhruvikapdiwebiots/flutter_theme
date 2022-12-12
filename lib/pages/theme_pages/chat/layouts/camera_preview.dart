@@ -1,11 +1,21 @@
 import 'dart:io';
 
-import 'package:camera/camera.dart';
+//import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../../config.dart';
 
+class CameraPreviewLayout extends StatelessWidget {
+  const CameraPreviewLayout({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+/*
 class CameraPreviewLayout extends StatefulWidget {
   const CameraPreviewLayout({super.key});
 
@@ -285,4 +295,4 @@ class _VideoPageState extends State<VideoPage> {
       ),
     );
   }
-}
+}*/

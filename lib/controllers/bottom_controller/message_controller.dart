@@ -1,12 +1,6 @@
 import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_theme/config.dart';
-import 'package:fluttercontactpicker/fluttercontactpicker.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class MessageController extends GetxController {
@@ -125,11 +119,10 @@ class MessageController extends GetxController {
 
   // LOAD USERDATA LIST
   Widget loadUser(BuildContext context, DocumentSnapshot document) {
-    if (document['id'].contains(currentUserId)) {
-      return Container();
-    } else {
-      return MessageCard(document: document);
-    }
+    return MessageCard(
+      document: document,
+      currentUserId: currentUserId,
+    );
   }
 
   //fetch data
@@ -162,12 +155,14 @@ class MessageController extends GetxController {
 
     for (int i = 0; i < contactLists.docs.length; i++) {
       if (contactLists.docs[i].id != currentUserId) {
-      print(contactLists.docs[i]["id"]);
-      print(currentUserId);
-        final msgList =
-            await FirebaseFirestore.instance.collection("messages").doc("$currentUserId-${contactLists.docs[i]["id"]}").get();
+        print(contactLists.docs[i]["id"]);
+        print(currentUserId);
+        final msgList = await FirebaseFirestore.instance
+            .collection("messages")
+            .doc("$currentUserId-${contactLists.docs[i]["id"]}")
+            .get();
         print(msgList);
-        if(msgList.exists) {
+        if (msgList.exists) {
           contactList.add(contactLists.docs[i]);
         }
       }
@@ -219,7 +214,8 @@ class MessageController extends GetxController {
       log('No User');
     } else {
       var data = {"pId": m.docs[0].id, "pName": m.docs[0].data()["name"]};
-      Get.toNamed(routeName.chat, arguments: data);
+      print(m.docs[0].data());
+      Get.toNamed(routeName.chat, arguments: m.docs[0].data());
     }
   }
 }

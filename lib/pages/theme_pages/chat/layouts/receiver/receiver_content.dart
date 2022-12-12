@@ -1,8 +1,13 @@
+import 'package:intl/intl.dart';
+
 import '../../../../../config.dart';
 
 class ReceiverContent extends StatelessWidget {
-  final String? content;
-  const ReceiverContent({Key? key,this.content}) : super(key: key);
+  final DocumentSnapshot? document;
+  final GestureLongPressCallback? onLongPress;
+  final bool? isLastMessageRight;
+
+  const ReceiverContent({Key? key,this.document,this.isLastMessageRight,this.onLongPress}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +22,21 @@ class ReceiverContent extends StatelessWidget {
               bottomLeft: Radius.circular(Insets.i20),
               bottomRight: Radius.circular(Insets.i20))),
       margin: const EdgeInsets.only(left: 2.0),
-      child: Text(
-        content!,
-        style: TextStyle(
-            color: appCtrl.appTheme.primary, fontSize: 14.0),
+      child:  Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(document!['content'],
+              style: AppCss.poppinsMedium14
+                  .textColor(appCtrl.appTheme.primary)),
+          Text(
+            DateFormat('HH:mm a').format(
+                DateTime.fromMillisecondsSinceEpoch(
+                    int.parse(document!['timestamp']))),
+            style: AppCss.poppinsMedium12
+                .textColor(appCtrl.appTheme.primary),
+          )
+        ],
       ),
     );
   }

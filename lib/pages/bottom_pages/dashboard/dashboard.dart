@@ -12,7 +12,6 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard>
     with
         WidgetsBindingObserver,
-        AutomaticKeepAliveClientMixin,
         TickerProviderStateMixin {
   final dashboardCtrl = Get.put(DashboardController());
 
@@ -35,20 +34,20 @@ class _DashboardState extends State<Dashboard>
   void setIsActive() async {
     String userId = appCtrl.storage.read("id");
     await FirebaseFirestore.instance.collection("users").doc(userId).update(
-      {"status": "Online"},
+      {"status": "Online","lastSeen": DateTime.now().millisecondsSinceEpoch.toString()},
     );
   }
 
   void setLastSeen() async {
     String userId = appCtrl.storage.read("id");
     await FirebaseFirestore.instance.collection("users").doc(userId).update(
-      {"status": DateTime.now().millisecondsSinceEpoch, "isLastSeen": true},
+      {"status": "Offline","lastSeen": DateTime.now().millisecondsSinceEpoch.toString()},
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
+
     return GetBuilder<DashboardController>(builder: (_) {
       return WillPopScope(
           onWillPop: () async {
@@ -64,7 +63,4 @@ class _DashboardState extends State<Dashboard>
     });
   }
 
-  @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
 }

@@ -135,19 +135,23 @@ class SignupController extends GetxController {
 
   //REGISTER USER DATA
   void userRegister(User? user) async {
-    String token = firebaseMessaging.getToken().toString();
 
-    await FirebaseFirestore.instance.collection('users').doc(user!.uid).set({
-      'chattingWith': null,
-      'id': user.uid,
-      'image': user.photoURL ?? "",
-      'name': user.displayName ?? nameText.text,
-      'pushToken': token,
-      'status': "Online",
-      "typeStatus": "Online",
-      "phone": user.phoneNumber ?? "",
-      "email": user.email,
-      "statusDesc":"Hello, I am using Chatter"
+    firebaseMessaging.getToken().then((token) async{
+      await FirebaseFirestore.instance.collection('users').doc(user!.uid).set({
+        'chattingWith': null,
+        'id': user.uid,
+        'image': user.photoURL ?? "",
+        'name': user.displayName ?? nameText.text,
+        'pushToken': token,
+        'status': "Offline",
+        "typeStatus": "Offline",
+        "phone": user.phoneNumber ?? "",
+        "email": user.email,
+        "deviceName":appCtrl.deviceName,
+        "device":appCtrl.device,
+        "statusDesc":"Hello, I am using Chatter"
+      });
     });
+
   }
 }

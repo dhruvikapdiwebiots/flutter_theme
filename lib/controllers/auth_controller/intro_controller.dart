@@ -67,6 +67,8 @@ class IntroController extends GetxController{
     // TODO: implement dispose
     sliderTimer.cancel();
     pageController.dispose();
+
+    update();
     super.dispose();
   }
 
