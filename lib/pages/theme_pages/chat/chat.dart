@@ -84,7 +84,7 @@ class _ChatState extends State<Chat>  with
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    chatCtrl.pName!,
+                    chatCtrl.pName ?? "",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         color: appCtrl.appTheme.accent,
@@ -103,21 +103,31 @@ class _ChatState extends State<Chat>  with
                     stream: FirebaseFirestore.instance
                         .collection('users').where("id", isEqualTo: chatCtrl.pId).snapshots(),
                     builder: (context, snapshot) {
-                      log("ssss : ${snapshot.data!.docs[0]["status"]}");
-                      if (!snapshot.hasData) {
+                      if(snapshot.data != null) {
+                        if (!snapshot.hasData) {
+                          return Center(
+                              child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      appCtrl.appTheme.primary)));
+                        } else {
+                          chatCtrl.message = (snapshot.data!).docs;
+                          return Text(
+                            snapshot.data!.docs[0]["status"] == "Offline"
+                                ? DateFormat('HH:mm a').format(
+                                DateTime.fromMillisecondsSinceEpoch(
+                                    int.parse(
+                                        snapshot.data!.docs[0]['lastSeen'])))
+                                : snapshot.data!.docs[0]["status"],
+                            textAlign: TextAlign.center,
+                            style: AppCss.poppinsMedium14.textColor(
+                                appCtrl.appTheme.whiteColor),
+                          );
+                        }
+                      }else{
                         return Center(
                             child: CircularProgressIndicator(
                                 valueColor: AlwaysStoppedAnimation<Color>(
                                     appCtrl.appTheme.primary)));
-                      } else {
-                        chatCtrl.  message = (snapshot.data!).docs;
-                        return Text(
-                          snapshot.data!.docs[0]["status"] == "Offline" ? DateFormat('HH:mm a').format(
-                              DateTime.fromMillisecondsSinceEpoch(
-                                  int.parse(snapshot.data!.docs[0]['lastSeen']))): snapshot.data!.docs[0]["status"],
-                          textAlign: TextAlign.center,
-                          style:AppCss.poppinsMedium14.textColor(appCtrl.appTheme.whiteColor),
-                        );
                       }
                     },
                   )

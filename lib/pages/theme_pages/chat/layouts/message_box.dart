@@ -29,6 +29,7 @@ class MessageBox extends StatelessWidget {
                           valueColor: AlwaysStoppedAnimation<Color>(
                               appCtrl.appTheme.primary)));
                 } else {
+                  print(";ength : ${(snapshot.data!).docs.length}");
                   chatCtrl.  message = (snapshot.data!).docs;
                   return ListView.builder(
                     padding: const EdgeInsets.all(10.0),

@@ -8,7 +8,7 @@ import 'package:flutter_theme/pages/theme_pages/chat/layouts/audio_recording_plu
 import 'package:flutter_theme/utilities/utils/handler/all_permission_handler.dart';
 
 class ChatController extends GetxController {
-  String? pId, id, pName, groupId, imageUrl, peerNo,status,statusLastSeen;
+  String? pId, id, pName, groupId, imageUrl, peerNo, status, statusLastSeen;
   dynamic message;
   dynamic pData;
   final permissionHandelCtrl = Get.put(PermissionHandlerController());
@@ -38,12 +38,12 @@ class ChatController extends GetxController {
   }
 
   getPeerStatus() {
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(pId).get().then((value) {
-      print("statsy : ${value.data()!["status"]}" );
-      status = value.data()!["status"].toString();
-      statusLastSeen = value.data()!["lastSeen"].toString();
+    FirebaseFirestore.instance.collection('users').doc(pId).get().then((value) {
+      print("statsy : ${value.data()!["status"]}");
+      if(value.data()!.isNotEmpty) {
+        status = value.data()!["status"].toString();
+        statusLastSeen = value.data()!["lastSeen"].toString();
+      }
     });
     update();
     return status;
@@ -62,13 +62,19 @@ class ChatController extends GetxController {
     textEditingController.addListener(() {
       if (textEditingController.text.isNotEmpty) {
         FirebaseFirestore.instance.collection("users").doc(id).update(
-          {"status": "typing...","lastSeen": DateTime.now().millisecondsSinceEpoch.toString()},
+          {
+            "status": "typing...",
+            "lastSeen": DateTime.now().millisecondsSinceEpoch.toString()
+          },
         );
         typing = true;
       }
       if (textEditingController.text.isEmpty && typing == true) {
         FirebaseFirestore.instance.collection("users").doc(id).update(
-          {"status": "Online","lastSeen": DateTime.now().millisecondsSinceEpoch.toString()},
+          {
+            "status": "Online",
+            "lastSeen": DateTime.now().millisecondsSinceEpoch.toString()
+          },
         );
         typing = false;
       }
@@ -128,18 +134,24 @@ class ChatController extends GetxController {
 
   //share media
   shareMedia(BuildContext context) {
-    showModalBottomSheet(
-        backgroundColor: Colors.transparent,
-        context: context,
-        shape: const RoundedRectangleBorder(
-          borderRadius:
-              BorderRadius.vertical(top: Radius.circular(AppRadius.r25)),
-        ),
-        builder: (BuildContext context) {
-          // return your layout
+   var useControl = appCtrl.storage.read(session.usageControls);
+   print(useControl);
+    if (useControl["media_send_allowed"]) {
+      showModalBottomSheet(
+          backgroundColor: Colors.transparent,
+          context: context,
+          shape: const RoundedRectangleBorder(
+            borderRadius:
+                BorderRadius.vertical(top: Radius.circular(AppRadius.r25)),
+          ),
+          builder: (BuildContext context) {
+            // return your layout
 
-          return const FileBottomSheet();
-        });
+            return const FileBottomSheet();
+          });
+    } else {
+      Fluttertoast.showToast(msg: "Not Allow until Admin give access");
+    }
   }
 
 // GET IMAGE FROM GALLERY
@@ -236,7 +248,7 @@ class ChatController extends GetxController {
       textEditingController.clear();
       FirebaseFirestore.instance
           .collection('messages')
-          .doc(collectionName.chatWith)
+          .doc("$id-$pId")
           .set({
         'idFrom': id,
         'idTo': pId,
@@ -250,7 +262,8 @@ class ChatController extends GetxController {
           .collection("contacts")
           .doc("$id-$pId")
           .get();
-      if (msgList.exists) {
+      print("msgList : ${msgList.exists}");
+    /*  if (msgList.exists) {
         FirebaseFirestore.instance
             .collection('contacts')
             .doc("$id-$pId")
@@ -275,7 +288,7 @@ class ChatController extends GetxController {
           "isGroup": groupId ?? "",
           "updateStamp": DateTime.now().millisecondsSinceEpoch.toString()
         });
-      }
+      }*/
       listScrollController.animateTo(0.0,
           duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
     } else {

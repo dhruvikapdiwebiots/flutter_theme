@@ -25,7 +25,7 @@ class ImagePickerLayout extends StatelessWidget {
                 icons: Icons.image,
                 color: appCtrl.appTheme.primary,
                 text: fonts.gallery.tr,
-                onTap:cameraTap),
+                onTap:galleryTap),
 
           ],
         ),
