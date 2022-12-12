@@ -1,14 +1,17 @@
 import 'dart:async';
+import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_theme/config.dart';
 
 class SplashController extends GetxController{
-
-
   @override
   void onReady() {
     // TODO: implement onReady
     //Firebase.initializeApp();
     startTime();
+
     super.onReady();
   }
 

@@ -1,3 +1,5 @@
+import 'package:flutter_theme/pages/theme_pages/chat/layouts/camera_preview.dart';
+
 import '../../../../../../config.dart';
 
 class CommonFileRowList extends StatelessWidget {
@@ -21,6 +23,7 @@ class CommonFileRowList extends StatelessWidget {
               onTap: () {
                 chatCtrl.dismissKeyboard();
                 Get.back();
+                Get.to(CameraPreviewLayout());
               }),
           const HSpace(Sizes.s40),
           IconCreation(

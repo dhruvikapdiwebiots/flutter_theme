@@ -28,6 +28,10 @@ class LoginController extends GetxController {
   homeNavigation(user) async {
     await storage.write("id", user["id"]);
     await storage.write("user", user);
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(user["id"])
+        .update({'deviceName': appCtrl.deviceName});
     Get.toNamed(routeName.dashboard);
   }
 

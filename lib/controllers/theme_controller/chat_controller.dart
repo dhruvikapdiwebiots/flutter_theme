@@ -13,6 +13,7 @@ class ChatController extends GetxController {
   bool positionStreamStarted = false;
   XFile? imageFile;
   bool? isLoading;
+  bool typing = false;
 
   TextEditingController textEditingController = TextEditingController();
   ScrollController listScrollController = ScrollController();
@@ -33,6 +34,8 @@ class ChatController extends GetxController {
     super.onReady();
   }
 
+
+
 //read local data
   readLocal() async {
     id = appCtrl.storage.read('id') ?? '';
@@ -46,6 +49,27 @@ class ChatController extends GetxController {
             'users') // Your collection name will be whatever you have given in firestore database
         .doc(id)
         .update({'chattingWith': pId});
+    textEditingController.addListener(() {
+      if (textEditingController.text.isNotEmpty && typing == false) {
+        FirebaseFirestore.instance
+            .collection("users")
+            .doc(id)
+            .update(
+          {"status": "Online"},
+        );
+        typing = true;
+      }
+      if (textEditingController.text.isEmpty && typing == true) {
+
+        FirebaseFirestore.instance
+            .collection("users")
+            .doc(id)
+            .update(
+          {"status": "typing..."},
+        );
+        typing = false;
+      }
+    });
     update();
   }
 

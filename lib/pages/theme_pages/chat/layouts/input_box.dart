@@ -26,6 +26,9 @@ class InputBox extends StatelessWidget {
                   hintStyle: TextStyle(color: appCtrl.appTheme.gray),
                 ),
                 focusNode: chatCtrl.focusNode,
+                onChanged: (val){
+
+                },
               ),
             ),
             IconButton(

@@ -1,5 +1,10 @@
 
 
+import 'dart:io';
+
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/services.dart';
+
 import '../../config.dart';
 
 class AppController extends GetxController {
@@ -12,6 +17,8 @@ class AppController extends GetxController {
   String languageVal = "in";
   List drawerList = [];
   int currVal = 1;
+  String deviceName= "";
+
 
 //list of bottommost page
   List<Widget> widgetOptions = <Widget>[
@@ -28,7 +35,7 @@ class AppController extends GetxController {
   void onReady() {
     // TODO: implement onReady
     getData();
-
+    initPlatformState();
     update();
     super.onReady();
   }
@@ -48,6 +55,29 @@ class AppController extends GetxController {
     ThemeService().switchTheme(isTheme);
     update();
     Get.forceAppUpdate();
+  }
+
+  Future<void> initPlatformState() async {
+    var deviceData = <String, dynamic>{};
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    try {
+      if (Platform.isAndroid) {
+
+
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        deviceName =androidInfo.model;
+        print('Running on ${androidInfo.model}');
+      } else if (Platform.isIOS) {
+        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+        deviceName =iosInfo.utsname.machine.toString();
+        print('Running on ${iosInfo.utsname.machine}');  // e.g.
+      }
+    } on PlatformException {
+      deviceData = <String, dynamic>{
+        'Error:': 'Failed to get platform version.'
+      };
+    }
+    update();
   }
 
 }
