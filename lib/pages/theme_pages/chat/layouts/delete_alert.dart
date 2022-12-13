@@ -30,9 +30,7 @@ class DeleteAlert extends StatelessWidget {
 
                 FirebaseFirestore.instance
                     .collection('messages')
-                    .doc(chatCtrl.groupId)
-                    .collection(chatCtrl.groupId!)
-                    .doc(documentReference!.id)
+                    .doc(collectionName.chatWith)
                     .delete();
                 await FirebaseFirestore.instance
                     .runTransaction((transaction) async {});

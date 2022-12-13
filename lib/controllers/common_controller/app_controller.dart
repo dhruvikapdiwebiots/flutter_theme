@@ -20,7 +20,8 @@ class AppController extends GetxController {
   int currVal = 1;
   String deviceName= "";
   String device= "";
-  dynamic adminPermission;
+  dynamic userAppSettingsVal;
+  dynamic usageControlsVal;
 
 
 //list of bottommost page
@@ -64,10 +65,12 @@ class AppController extends GetxController {
   getAdminPermission()async{
     final usageControls =await FirebaseFirestore.instance.collection(collectionName.admin).doc(collectionName.usageControls).get();
     log("admin : ${usageControls.data()}");
+    usageControlsVal = usageControls.data();
     appCtrl.storage.write(session.usageControls, usageControls.data());
     update();
     final userAppSettings =await FirebaseFirestore.instance.collection(collectionName.admin).doc(collectionName.userAppSettings).get();
     log("admin : ${userAppSettings.data()}");
+    userAppSettingsVal = userAppSettings.data();
     appCtrl.storage.write(session.userAppSettings, userAppSettings.data());
     update();
   }
