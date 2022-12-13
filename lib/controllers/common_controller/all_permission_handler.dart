@@ -15,6 +15,7 @@ class PermissionHandlerController extends GetxController{
   final GeolocatorPlatform geoLocatorPlatform = GeolocatorPlatform.instance;
   final List<PositionItem> _positionItems = <PositionItem>[];
 
+  //location
   Future<bool> handlePermission() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -56,11 +57,13 @@ class PermissionHandlerController extends GetxController{
     return true;
   }
 
+  //update position
   void updatePositionList(PositionItemType type, String displayValue) {
     _positionItems.add(PositionItem(type, displayValue));
     update();
   }
 
+  //location permission check and request
   static Future<bool> checkAndRequestPermission(Permission permission) {
     Completer<bool> completer = Completer<bool>();
     permission.request().then((status) {
@@ -74,5 +77,48 @@ class PermissionHandlerController extends GetxController{
       }
     });
     return completer.future;
+  }
+
+
+//get contact permission
+  Future<PermissionStatus> getContactPermission() async {
+    PermissionStatus permission = await Permission.contacts.status;
+    if (permission != PermissionStatus.granted &&
+        permission != PermissionStatus.permanentlyDenied) {
+      PermissionStatus permissionStatus = await Permission.contacts.request();
+      return permissionStatus;
+    } else {
+      return permission;
+    }
+  }
+
+  //handle invalid permission
+  void handleInvalidPermissions(PermissionStatus permissionStatus) {
+    if (permissionStatus == PermissionStatus.denied) {
+      final snackBar = SnackBar(content: Text(fonts.accessDenied.tr));
+      ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);
+    } else if (permissionStatus == PermissionStatus.permanentlyDenied) {
+      final snackBar =
+      SnackBar(content: Text(fonts.contactDataNotAvailable.tr));
+      ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);
+    }
+  }
+
+  // get location
+  Future<Position> getCurrentPosition() async {
+    final hasPermission = await handlePermission();
+
+    if (!hasPermission) {
+      return Geolocator.getCurrentPosition();
+    }
+
+    final position =
+    await geoLocatorPlatform.getCurrentPosition();
+    updatePositionList(
+      PositionItemType.position,
+      position.toString(),
+    );
+
+    return position;
   }
 }

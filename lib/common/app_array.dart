@@ -19,6 +19,13 @@ class AppArray{
     {'icon': Icons.settings, 'title': "status"},
   ];
 
+  //action list
+  var actionList = [
+    {'title': "broadCast"},
+    {'title': "newGroup"},
+    {'title': "setting"},
+  ];
+
   //setting list
   var settingList = [
     {'icon': Icons.message, 'title': "chats"},

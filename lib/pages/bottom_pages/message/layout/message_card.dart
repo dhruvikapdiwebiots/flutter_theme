@@ -59,7 +59,7 @@ final String? currentUserId;
         ),
         onPressed: () {
 
-          Get.toNamed(routeName.chat, arguments: document);
+
         },
       ),*/
       child: TextButton(

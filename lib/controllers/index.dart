@@ -1,5 +1,6 @@
 export 'common_controller/app_controller.dart';
 export 'common_controller/language_controller.dart';
+export 'common_controller/firebase_common_controller.dart';
 export 'auth_controller/splash_controller.dart';
 export 'auth_controller/login_controller.dart';
 export 'auth_controller/intro_controller.dart';
@@ -12,3 +13,7 @@ export 'bottom_controller/message_controller.dart';
 export 'bottom_controller/setting_controller.dart';
 export 'theme_controller/edit_profile_controller.dart';
 export 'theme_controller/chat_controller.dart';
+export 'theme_controller/contact_list_controller.dart';
+export 'theme_controller/group_chat_controller.dart';
+export 'common_controller/all_permission_handler.dart';
+export 'common_controller/notification_controller.dart';

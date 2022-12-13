@@ -18,47 +18,18 @@ class Setting extends StatelessWidget {
           children: [
             Row(
               children: [
-                Hero(
-                  tag: "user",
-                  child: settingCtrl.user["image"] != null &&
-                          settingCtrl.user["image"] != ""
-                      ? Container(
-                          height: Sizes.s60,
-                          width: Sizes.s60,
-                          alignment: Alignment.center,
-                          padding: const EdgeInsets.all(Insets.i15),
-                          decoration: BoxDecoration(
-                              color: appCtrl.appTheme.gray.withOpacity(.2),
-                              image: DecorationImage(
-                                  image:
-                                      NetworkImage(settingCtrl.user["image"]),
-                                  fit: BoxFit.fill),
-                              shape: BoxShape.circle),
-                        )
-                      : Container(
-                          height: Sizes.s60,
-                          width: Sizes.s60,
-                          alignment: Alignment.center,
-                          padding: const EdgeInsets.all(Insets.i15),
-                          decoration: BoxDecoration(
-                              color: appCtrl.appTheme.gray.withOpacity(.2),
-                              image: DecorationImage(
-                                image: AssetImage(imageAssets.user),
-                              ),
-                              shape: BoxShape.circle),
-                        ),
-                ),
+               UserImage(image: settingCtrl.user["image"],),
                 const HSpace(Sizes.s20),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'dhruvi kapdi',
+                      settingCtrl.user["name"],
                       style: AppCss.poppinsblack16
                           .textColor(appCtrl.appTheme.blackColor),
                     ),
                     const VSpace(Sizes.s10),
-                    Text('Hello, I am using Chatter',
+                    Text(settingCtrl.user["statu"],
                         style: AppCss.poppinsMedium14
                             .textColor(appCtrl.appTheme.grey)),
                   ],

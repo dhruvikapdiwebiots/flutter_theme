@@ -22,6 +22,7 @@ class AppController extends GetxController {
   String device= "";
   dynamic userAppSettingsVal;
   dynamic usageControlsVal;
+  final firebaseCtrl = Get.isRegistered<FirebaseCommonController>() ? Get.find<FirebaseCommonController>() : Get.put(FirebaseCommonController());
 
 
 //list of bottommost page
@@ -81,16 +82,14 @@ class AppController extends GetxController {
     try {
       if (Platform.isAndroid) {
 
-
         AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
         deviceName =androidInfo.model;
         device ="android";
-        print('Running on ${androidInfo.model}');
       } else if (Platform.isIOS) {
         IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
         deviceName =iosInfo.utsname.machine.toString();
         device ="ios";
-        print('Running on ${iosInfo.utsname.machine}');  // e.g.
+
       }
     } on PlatformException {
       deviceData = <String, dynamic>{

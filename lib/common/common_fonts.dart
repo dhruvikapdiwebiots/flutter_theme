@@ -45,4 +45,11 @@ class Fonts{
   final video = "video";
   final document = "document";
   final camera = "camera";
+  final selectContacts = "selectContacts";
+  final contacts = "contacts";
+  final calls = "calls";
+  final chats = "chats";
+  final accessDenied = "accessDenied";
+  final audioProcess = "audioProcess";
+  final contactDataNotAvailable = "contactDataNotAvailable";
 }

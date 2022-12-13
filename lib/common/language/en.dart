@@ -50,4 +50,11 @@ final dynamic en = {
   "video": "Video",
   "document": "Document",
   "camera": "Camera",
+  "selectContacts": "Select Contacts",
+  "contacts": "Contacts",
+  "broadCast": "BroadCast",
+  "newGroup": "New Group",
+  "accessDenied": "Access to contact data denied",
+  "contactDataNotAvailable": "Contact data not available on device",
+  "audioProcess": "audio is processing...",
 };

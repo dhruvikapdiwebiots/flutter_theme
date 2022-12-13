@@ -30,6 +30,7 @@ export 'pages/plugin_route.dart';
 
 
 
+
 final appCtrl = Get.isRegistered<AppController>()
     ? Get.find<AppController>()
     : Get.put(AppController());

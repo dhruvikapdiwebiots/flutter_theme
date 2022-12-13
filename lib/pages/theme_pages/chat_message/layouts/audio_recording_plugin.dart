@@ -2,10 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
-import 'package:flutter_sound/public/flutter_sound_recorder.dart';
-import 'package:flutter_theme/common/theme/app_css.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:path_provider/path_provider.dart';
@@ -34,7 +31,7 @@ class AudioRecordingPluginState extends State<AudioRecordingPlugin> {
   String mPath = 'tau_file.mp4';
   Timer? _timer;
   int recordingTime = 0;
-  bool mPlayerIsInited = false;
+  bool mPlayerIsInit = false;
   bool mRecorderIsInited = false;
   File? recordedFile;
   FlutterSoundPlayer? mPlayer = FlutterSoundPlayer();
@@ -44,7 +41,7 @@ class AudioRecordingPluginState extends State<AudioRecordingPlugin> {
 
   Future<String> getFilePath() async {
     Directory storageDirectory = await getApplicationDocumentsDirectory();
-    String sdPath = storageDirectory.path + "/record";
+    String sdPath = "${storageDirectory.path}/record";
     var d = Directory(sdPath);
     if (!d.existsSync()) {
       d.createSync(recursive: true);
@@ -57,7 +54,7 @@ class AudioRecordingPluginState extends State<AudioRecordingPlugin> {
         DateTime.now().minute.toString() +
         DateTime.now().second.toString() +
         DateTime.now().millisecond.toString();
-    return sdPath + "/$fileName.mp3";
+    return "$sdPath/$fileName.mp3";
   }
 
   Future<void> checkPermission() async {
@@ -106,7 +103,7 @@ class AudioRecordingPluginState extends State<AudioRecordingPlugin> {
   void initState() {
     // TODO: implement initState
     mPlayer!.openPlayer().then((value) {
-      mPlayerIsInited = true;
+      mPlayerIsInit = true;
       setState(() {});
     });
 
@@ -120,7 +117,7 @@ class AudioRecordingPluginState extends State<AudioRecordingPlugin> {
 
   // play recorded audio
   getPlaybackFn() {
-    if (!mPlayerIsInited || !mPlaybackReady || !mRecorder!.isStopped) {
+    if (!mPlayerIsInit || !mPlaybackReady || !mRecorder!.isStopped) {
       return null;
     }
     return mPlayer != null
@@ -132,7 +129,7 @@ class AudioRecordingPluginState extends State<AudioRecordingPlugin> {
 
   // play recorded audio
   void play() {
-    assert(mPlayerIsInited &&
+    assert(mPlayerIsInit &&
         mPlaybackReady &&
         mRecorder!.isStopped &&
         mPlayer!.isStopped);
@@ -167,97 +164,79 @@ class AudioRecordingPluginState extends State<AudioRecordingPlugin> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text("Audio Instruction", style: AppCss.poppinsBold12),
-            InkWell(
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          InkWell(
               onTap: () {
                 Get.back();
               },
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5),
-                child: Text(
-                  "X",
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 10),
-        const SizedBox(height: 10),
+              child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5),
+                  child: Icon(Icons.cancel)))
+        ]),
+        const SizedBox(height: 20),
         Container(
-          width: MediaQuery.of(context).size.width * 0.95,
-          decoration: BoxDecoration(
-            color: Colors.grey[300],
-            borderRadius: const BorderRadius.all(
-              Radius.circular(30),
-            ),
-          ),
-          padding: const EdgeInsets.all(0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Container(
-                height: 50,
-                width: 50,
-                decoration: BoxDecoration(
-                  color: appCtrl.appTheme.primary,
-                  borderRadius: const BorderRadius.all(Radius.circular(100)),
-                ),
-                child: IconButton(
-                  onPressed: getRecorderFn(),
-                  icon: mRecorder != null
-                      ? mRecorder!.isRecording
-                          ? const Icon(Icons.stop, color: Colors.white)
-                          : const Icon(Icons.settings_voice,
-                              color: Colors.white)
-                      : const Icon(Icons.settings_voice, color: Colors.white),
-                ),
-              ),
-              Text(
-                recordingTime.toString(),
-              ),
-              Container(
-                height: 50,
-                width: 50,
-                decoration: BoxDecoration(
-                  color: appCtrl.appTheme.primary,
-                  borderRadius: const BorderRadius.all(Radius.circular(100)),
-                ),
-                child: IconButton(
-                  onPressed: getPlaybackFn(),
-                  color: Colors.black,
-                  icon: Icon(
-                    mPlayer != null
-                        ? mPlayer!.isPlaying
-                            ? Icons.stop
-                            : Icons.play_arrow
-                        : Icons.play_arrow,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+            width: MediaQuery.of(context).size.width * 0.95,
+            decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius:
+                    const BorderRadius.all(Radius.circular(AppRadius.r30))),
+            padding: const EdgeInsets.all(0),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(
+                      height: Sizes.s50,
+                      width: Sizes.s50,
+                      decoration: BoxDecoration(
+                        color: appCtrl.appTheme.primary,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(100)),
+                      ),
+                      child: IconButton(
+                          onPressed: getRecorderFn(),
+                          icon: mRecorder != null
+                              ? mRecorder!.isRecording
+                                  ? const Icon(Icons.stop, color: Colors.white)
+                                  : const Icon(Icons.settings_voice,
+                                      color: Colors.white)
+                              : const Icon(Icons.settings_voice,
+                                  color: Colors.white))),
+                  Text(recordingTime.toString()),
+                  Container(
+                      height: 50,
+                      width: 50,
+                      decoration: BoxDecoration(
+                        color: appCtrl.appTheme.primary,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(100)),
+                      ),
+                      child: IconButton(
+                          onPressed: getPlaybackFn(),
+                          color: Colors.black,
+                          icon: Icon(
+                            mPlayer != null
+                                ? mPlayer!.isPlaying
+                                    ? Icons.stop
+                                    : Icons.play_arrow
+                                : Icons.play_arrow,
+                            color: Colors.white,
+                          )))
+                ])),
         const SizedBox(height: 10),
         if (isLoading)
           Padding(
             padding: const EdgeInsets.all(10),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(
-                  height: 20,
-                  width: 20,
-                  child: CircularProgressIndicator(),
-                ),
-                const SizedBox(width: 10),
-                const Text("audio is processing...")
-              ],
-            ),
-          ),
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const SizedBox(
+                      height: Sizes.s20,
+                      width: Sizes.s20,
+                      child: CircularProgressIndicator()),
+                  const HSpace(Sizes.s10),
+                  Text(fonts.audioProcess.tr)
+                ]),
+          )
       ],
     );
   }

@@ -19,7 +19,7 @@ class SettingController extends GetxController {
 
   editProfile() {
     user = appCtrl.storage.read("user");
-    print(user);
+    
     Get.toNamed(routeName.editProfile, arguments: user);
   }
 

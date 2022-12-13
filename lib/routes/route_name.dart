@@ -9,4 +9,6 @@ class RouteName {
   final String editProfile = '/editProfile';
   final String chat = '/chat';
   final String setting = '/setting';
+  final String contactList = '/contactList';
+  final String groupChat = '/groupChat';
 }

@@ -12,4 +12,7 @@ export 'package:image_picker/image_picker.dart';
 export 'package:file_picker/file_picker.dart';
 export 'package:url_launcher/url_launcher.dart';
 export 'package:geolocator/geolocator.dart';
+export 'package:contacts_service/contacts_service.dart';
+
+
 

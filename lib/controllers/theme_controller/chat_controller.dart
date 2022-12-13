@@ -2,23 +2,28 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:contacts_service/contacts_service.dart';
 import 'package:dartx/dartx_io.dart';
 import 'package:flutter_theme/config.dart';
-import 'package:flutter_theme/pages/theme_pages/chat/layouts/audio_recording_plugin.dart';
-import 'package:flutter_theme/utilities/utils/handler/all_permission_handler.dart';
+import 'package:flutter_theme/controllers/common_controller/picker_controller.dart';
+import 'package:flutter_theme/controllers/common_controller/picker_controller.dart';
+import 'package:flutter_theme/controllers/common_controller/picker_controller.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ChatController extends GetxController {
   String? pId, id, pName, groupId, imageUrl, peerNo, status, statusLastSeen;
   dynamic message;
   dynamic pData;
-  final permissionHandelCtrl = Get.put(PermissionHandlerController());
   bool positionStreamStarted = false;
   XFile? imageFile;
+  File? image;
   bool? isLoading;
   bool typing = false;
-
+  final permissionHandelCtrl = Get.isRegistered<PermissionHandlerController>()
+      ? Get.find<PermissionHandlerController>()
+      : Get.put(PermissionHandlerController());
+  final pickerCtrl = Get.isRegistered<PickerController>()
+      ? Get.find<PickerController>()
+      : Get.put(PickerController());
   TextEditingController textEditingController = TextEditingController();
   ScrollController listScrollController = ScrollController();
   FocusNode focusNode = FocusNode();
@@ -50,6 +55,25 @@ class ChatController extends GetxController {
     return status;
   }
 
+  setTyping() async {
+    textEditingController.addListener(() {
+      if (textEditingController.text.isNotEmpty) {
+        FirebaseFirestore.instance.collection("users").doc(id).update({
+          "status": "typing...",
+          "lastSeen": DateTime.now().millisecondsSinceEpoch.toString()
+        });
+        typing = true;
+      }
+      if (textEditingController.text.isEmpty && typing == true) {
+        FirebaseFirestore.instance.collection("users").doc(id).update({
+          "status": "Online",
+          "lastSeen": DateTime.now().millisecondsSinceEpoch.toString()
+        });
+        typing = false;
+      }
+    });
+  }
+
 //read local data
   readLocal() async {
     id = appCtrl.storage.read('id') ?? '';
@@ -62,34 +86,20 @@ class ChatController extends GetxController {
         .update({'chattingWith': pId});
     textEditingController.addListener(() {
       if (textEditingController.text.isNotEmpty) {
-        FirebaseFirestore.instance.collection("users").doc(id).update(
-          {
-            "status": "typing...",
-            "lastSeen": DateTime.now().millisecondsSinceEpoch.toString()
-          },
-        );
+        appCtrl.firebaseCtrl.setTyping();
         typing = true;
       }
       if (textEditingController.text.isEmpty && typing == true) {
-        FirebaseFirestore.instance.collection("users").doc(id).update(
-          {
-            "status": "Online",
-            "lastSeen": DateTime.now().millisecondsSinceEpoch.toString()
-          },
-        );
+        appCtrl.firebaseCtrl.setIsActive();
         typing = false;
       }
     });
     update();
   }
 
-// FOR Dismiss KEYBOARD
-  void dismissKeyboard() {
-    FocusScope.of(Get.context!).requestFocus(FocusNode());
-  }
 
   documentShare() async {
-    dismissKeyboard();
+   pickerCtrl. dismissKeyboard();
     Get.back();
     FilePickerResult? result = await FilePicker.platform.pickFiles();
 
@@ -124,9 +134,9 @@ class ChatController extends GetxController {
 
   //location share
   locationShare() async {
-    dismissKeyboard();
+    pickerCtrl.dismissKeyboard();
     Get.back();
-    await getCurrentPosition().then((value) async {
+    await permissionHandelCtrl.getCurrentPosition().then((value) async {
       var locationString =
           'https://www.google.com/maps/search/?api=1&query=${value.latitude},${value.longitude}';
       onSendMessage(locationString, MessageType.location);
@@ -182,44 +192,19 @@ class ChatController extends GetxController {
 
   //pick up contact and share
   saveContactInChat() async {
-    PermissionStatus permissionStatus = await _getContactPermission();
-    print(permissionStatus);
+    PermissionStatus permissionStatus =
+        await permissionHandelCtrl.getContactPermission();
     if (permissionStatus == PermissionStatus.granted) {
-      Get.to(ContactListPage())!.then((value) async{
-        log("ccc : ${value}");
+      Get.toNamed(routeName.contactList)!.then((value) async {
         Contact contact = value;
-        log("contact : ${contact.phones![0].value}");
         onSendMessage(
             '${contact.displayName}-BREAK-${contact.phones![0].value}-BREAK-${contact.avatar!}',
             MessageType.contact);
       });
     } else {
-      _handleInvalidPermissions(permissionStatus);
+      permissionHandelCtrl.handleInvalidPermissions(permissionStatus);
     }
     update();
-  }
-
-
-  Future<PermissionStatus> _getContactPermission() async {
-    PermissionStatus permission = await Permission.contacts.status;
-    if (permission != PermissionStatus.granted &&
-        permission != PermissionStatus.permanentlyDenied) {
-      PermissionStatus permissionStatus = await Permission.contacts.request();
-      return permissionStatus;
-    } else {
-      return permission;
-    }
-  }
-
-  void _handleInvalidPermissions(PermissionStatus permissionStatus) {
-    if (permissionStatus == PermissionStatus.denied) {
-      final snackBar = SnackBar(content: Text('Access to contact data denied'));
-      ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);
-    } else if (permissionStatus == PermissionStatus.permanentlyDenied) {
-      final snackBar =
-      SnackBar(content: Text('Contact data not available on device'));
-      ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);
-    }
   }
 
   void audioRecording(BuildContext context, String type, int index) {
@@ -233,31 +218,12 @@ class ChatController extends GetxController {
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
               color: Colors.white, borderRadius: BorderRadius.circular(10)),
-          child: AudioRecordingPlugin(
-            type: type,
-            index: index,
-          ),
+          child: AudioRecordingPlugin(type: type, index: index)
         );
       },
     );
   }
 
-  Future<Position> getCurrentPosition() async {
-    final hasPermission = await permissionHandelCtrl.handlePermission();
-
-    if (!hasPermission) {
-      return Geolocator.getCurrentPosition();
-    }
-
-    final position =
-        await permissionHandelCtrl.geoLocatorPlatform.getCurrentPosition();
-    permissionHandelCtrl.updatePositionList(
-      PositionItemType.position,
-      position.toString(),
-    );
-
-    return position;
-  }
 
   // SEND MESSAGE CLICK
   void onSendMessage(String content, MessageType type, {groupId}) async {
@@ -287,7 +253,8 @@ class ChatController extends GetxController {
             final snapshot = value.docs[i].data();
             log("dd : ${snapshot["senderId"] == id && snapshot["receiverId"] == pId}");
             log("dd : ${snapshot["senderId"] == id}");
-            if (snapshot["senderId"] == id && snapshot["receiverId"] == pId || snapshot["senderId"] == pId && snapshot["receiverId"] == id) {
+            if (snapshot["senderId"] == id && snapshot["receiverId"] == pId ||
+                snapshot["senderId"] == pId && snapshot["receiverId"] == id) {
               log("es : ${value.docs[i].id}");
               FirebaseFirestore.instance
                   .collection('contacts')
@@ -316,32 +283,6 @@ class ChatController extends GetxController {
             }
           }
 
-          /*if (msgList.exists) {
-        FirebaseFirestore.instance
-            .collection('contacts')
-            .doc(msgList.id)
-            .update({
-          "updateStamp": DateTime.now().millisecondsSinceEpoch.toString(),
-          "lastMessage": content
-        });
-      } else {
-        dynamic user = appCtrl.storage.read("user");
-
-        FirebaseFirestore.instance.collection('contacts').add({
-          'sender': {
-            "id": user["id"],
-            "name": user["name"],
-            "image": user["image"]
-          },
-          'receiver': {"id": pId, "name": pName, "image": pData["image"]},
-          'receiverId': pId,
-          'senderId': user["id"],
-          'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-          "lastMessage": content,
-          "isGroup": groupId ?? "",
-          "updateStamp": DateTime.now().millisecondsSinceEpoch.toString()
-        });
-      }*/
           listScrollController.animateTo(0.0,
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeOut);
@@ -367,7 +308,7 @@ class ChatController extends GetxController {
     }
   }
 
-  //delete chat
+  //delete chat layout
   Widget buildPopupDialog(
       BuildContext context, DocumentSnapshot documentReference) {
     return DeleteAlert(
@@ -410,7 +351,7 @@ class ChatController extends GetxController {
         builder: (BuildContext context) {
           // return your layout
           return ImagePickerLayout(cameraTap: () {
-            dismissKeyboard();
+            pickerCtrl.dismissKeyboard();
             getImage(ImageSource.camera);
             Get.back();
           }, galleryTap: () {

@@ -1,4 +1,3 @@
-import 'package:flutter_theme/pages/theme_pages/chat/layouts/camera_preview.dart';
 
 import '../../../../../../config.dart';
 
@@ -21,7 +20,7 @@ class CommonFileRowList extends StatelessWidget {
               color: Colors.pink,
               text: fonts.video.tr,
               onTap: () {
-                chatCtrl.dismissKeyboard();
+                chatCtrl.pickerCtrl.dismissKeyboard();
                 Get.back();
                 Get.to(CameraPreviewLayout());
               }),
@@ -29,7 +28,10 @@ class CommonFileRowList extends StatelessWidget {
           IconCreation(
               onTap: () {
                 Get.back();
-                chatCtrl.imagePickerOption(Get.context!);
+                chatCtrl.pickerCtrl.imagePickerOption(Get.context!);
+                chatCtrl.imageFile = chatCtrl.pickerCtrl.imageFile;
+                chatCtrl.update();
+                chatCtrl.uploadFile();
               },
               icons: Icons.insert_photo,
               color: Colors.purple,
@@ -57,7 +59,7 @@ class CommonFileRowList extends StatelessWidget {
               color: Colors.blue,
               text: fonts.contact.tr,
               onTap: () {
-                chatCtrl.dismissKeyboard();
+                chatCtrl.pickerCtrl.dismissKeyboard();
                 Get.back();
                 chatCtrl.saveContactInChat();
               })

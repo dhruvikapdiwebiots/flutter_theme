@@ -11,6 +11,7 @@ void main() async {
   await Firebase.initializeApp();
   GetStorage.init();
   Get.put(AppController());
+  Get.put(FirebaseCommonController());
   runApp(const MyApp());
 }
 
