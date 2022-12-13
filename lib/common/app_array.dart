@@ -16,7 +16,7 @@ class AppArray{
   var bottomList = [
     {'icon': Icons.call, 'title': "calls"},
     {'icon': Icons.message, 'title': "chats"},
-    {'icon': Icons.settings, 'title': "setting"},
+    {'icon': Icons.settings, 'title': "status"},
   ];
 
   //setting list

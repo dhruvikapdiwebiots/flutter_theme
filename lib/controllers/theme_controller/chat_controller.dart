@@ -2,13 +2,15 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:contacts_service/contacts_service.dart';
 import 'package:dartx/dartx_io.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/pages/theme_pages/chat/layouts/audio_recording_plugin.dart';
 import 'package:flutter_theme/utilities/utils/handler/all_permission_handler.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class ChatController extends GetxController {
-  String? pId, id, pName, groupId, imageUrl, peerNo,status,statusLastSeen;
+  String? pId, id, pName, groupId, imageUrl, peerNo, status, statusLastSeen;
   dynamic message;
   dynamic pData;
   final permissionHandelCtrl = Get.put(PermissionHandlerController());
@@ -38,12 +40,11 @@ class ChatController extends GetxController {
   }
 
   getPeerStatus() {
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(pId).get().then((value) {
-      print("statsy : ${value.data()!["status"]}" );
-      status = value.data()!["status"].toString();
-      statusLastSeen = value.data()!["lastSeen"].toString();
+    FirebaseFirestore.instance.collection('users').doc(pId).get().then((value) {
+      if (value.data()!.isNotEmpty) {
+        status = value.data()!["status"].toString();
+        statusLastSeen = value.data()!["lastSeen"].toString();
+      }
     });
     update();
     return status;
@@ -62,13 +63,19 @@ class ChatController extends GetxController {
     textEditingController.addListener(() {
       if (textEditingController.text.isNotEmpty) {
         FirebaseFirestore.instance.collection("users").doc(id).update(
-          {"status": "typing...","lastSeen": DateTime.now().millisecondsSinceEpoch.toString()},
+          {
+            "status": "typing...",
+            "lastSeen": DateTime.now().millisecondsSinceEpoch.toString()
+          },
         );
         typing = true;
       }
       if (textEditingController.text.isEmpty && typing == true) {
         FirebaseFirestore.instance.collection("users").doc(id).update(
-          {"status": "Online","lastSeen": DateTime.now().millisecondsSinceEpoch.toString()},
+          {
+            "status": "Online",
+            "lastSeen": DateTime.now().millisecondsSinceEpoch.toString()
+          },
         );
         typing = false;
       }
@@ -175,22 +182,44 @@ class ChatController extends GetxController {
 
   //pick up contact and share
   saveContactInChat() async {
-    // Add your onPressed code here!
-    final granted = await FlutterContactPicker.hasPermission();
-    if (granted) {
-      update();
-    } else {
-      await FlutterContactPicker.requestPermission().then((value) async {
-        update();
+    PermissionStatus permissionStatus = await _getContactPermission();
+    print(permissionStatus);
+    if (permissionStatus == PermissionStatus.granted) {
+      Get.to(ContactListPage())!.then((value) async{
+        log("ccc : ${value}");
+        Contact contact = value;
+        log("contact : ${contact.phones![0].value}");
+        onSendMessage(
+            '${contact.displayName}-BREAK-${contact.phones![0].value}-BREAK-${contact.avatar!}',
+            MessageType.contact);
       });
+    } else {
+      _handleInvalidPermissions(permissionStatus);
     }
-    final FullContact contactPick =
-        (await FlutterContactPicker.pickFullContact());
-
-    onSendMessage(
-        '${contactPick.name!.nickName}-BREAK-${contactPick.phones[0].number}-BREAK-${contactPick.photo!}',
-        MessageType.contact);
     update();
+  }
+
+
+  Future<PermissionStatus> _getContactPermission() async {
+    PermissionStatus permission = await Permission.contacts.status;
+    if (permission != PermissionStatus.granted &&
+        permission != PermissionStatus.permanentlyDenied) {
+      PermissionStatus permissionStatus = await Permission.contacts.request();
+      return permissionStatus;
+    } else {
+      return permission;
+    }
+  }
+
+  void _handleInvalidPermissions(PermissionStatus permissionStatus) {
+    if (permissionStatus == PermissionStatus.denied) {
+      final snackBar = SnackBar(content: Text('Access to contact data denied'));
+      ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);
+    } else if (permissionStatus == PermissionStatus.permanentlyDenied) {
+      final snackBar =
+      SnackBar(content: Text('Contact data not available on device'));
+      ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);
+    }
   }
 
   void audioRecording(BuildContext context, String type, int index) {
@@ -234,26 +263,63 @@ class ChatController extends GetxController {
   void onSendMessage(String content, MessageType type, {groupId}) async {
     if (content.trim() != '') {
       textEditingController.clear();
-      FirebaseFirestore.instance
-          .collection('messages')
-          .doc(collectionName.chatWith)
-          .set({
-        'idFrom': id,
-        'idTo': pId,
-        'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+
+      FirebaseFirestore.instance.collection('messages').add({
+        'sender': id,
+        'receiver': pId,
+        // user ID you want to read message
         'content': content,
-        'type': type.name,
         "groupId": groupId ?? "",
+        'type': type.name,
+        'messageType': "sender",
+        // i dont know why you need this ?
+        'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+        // I dont know why you called it just timestamp i changed it on created and passed an function with serverTimestamp()
       });
 
       final msgList = await FirebaseFirestore.instance
           .collection("contacts")
-          .doc("$id-$pId")
-          .get();
-      if (msgList.exists) {
+          .get()
+          .then((value) {
+        log("exist : ${value}");
+        if (value.docs.isNotEmpty) {
+          for (var i = 0; i < value.docs.length; i++) {
+            final snapshot = value.docs[i].data();
+            log("dd : ${snapshot["senderId"] == id && snapshot["receiverId"] == pId}");
+            log("dd : ${snapshot["senderId"] == id}");
+            if (snapshot["senderId"] == id && snapshot["receiverId"] == pId || snapshot["senderId"] == pId && snapshot["receiverId"] == id) {
+              log("es : ${value.docs[i].id}");
+              FirebaseFirestore.instance
+                  .collection('contacts')
+                  .doc(value.docs[i].id)
+                  .update({
+                "updateStamp": DateTime.now().millisecondsSinceEpoch.toString(),
+                "lastMessage": content
+              });
+            } else {
+              dynamic user = appCtrl.storage.read("user");
+
+              FirebaseFirestore.instance.collection('contacts').add({
+                'sender': {
+                  "id": user["id"],
+                  "name": user["name"],
+                  "image": user["image"]
+                },
+                'receiver': {"id": pId, "name": pName, "image": pData["image"]},
+                'receiverId': pId,
+                'senderId': user["id"],
+                'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+                "lastMessage": content,
+                "isGroup": groupId ?? "",
+                "updateStamp": DateTime.now().millisecondsSinceEpoch.toString()
+              });
+            }
+          }
+
+          /*if (msgList.exists) {
         FirebaseFirestore.instance
             .collection('contacts')
-            .doc("$id-$pId")
+            .doc(msgList.id)
             .update({
           "updateStamp": DateTime.now().millisecondsSinceEpoch.toString(),
           "lastMessage": content
@@ -261,7 +327,7 @@ class ChatController extends GetxController {
       } else {
         dynamic user = appCtrl.storage.read("user");
 
-        FirebaseFirestore.instance.collection('contacts').doc("$id-$pId").set({
+        FirebaseFirestore.instance.collection('contacts').add({
           'sender': {
             "id": user["id"],
             "name": user["name"],
@@ -275,11 +341,29 @@ class ChatController extends GetxController {
           "isGroup": groupId ?? "",
           "updateStamp": DateTime.now().millisecondsSinceEpoch.toString()
         });
-      }
-      listScrollController.animateTo(0.0,
-          duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
-    } else {
-      Fluttertoast.showToast(msg: 'Nothing to send');
+      }*/
+          listScrollController.animateTo(0.0,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOut);
+        } else {
+          dynamic user = appCtrl.storage.read("user");
+
+          FirebaseFirestore.instance.collection('contacts').add({
+            'sender': {
+              "id": user["id"],
+              "name": user["name"],
+              "image": user["image"]
+            },
+            'receiver': {"id": pId, "name": pName, "image": pData["image"]},
+            'receiverId': pId,
+            'senderId': user["id"],
+            'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+            "lastMessage": content,
+            "isGroup": groupId ?? "",
+            "updateStamp": DateTime.now().millisecondsSinceEpoch.toString()
+          });
+        }
+      });
     }
   }
 
@@ -293,7 +377,7 @@ class ChatController extends GetxController {
 
 // BUILD ITEM MESSAGE BOX FOR RECEIVER AND SENDER BOX DESIGN
   Widget buildItem(int index, DocumentSnapshot document) {
-    if (document['idFrom'] == id) {
+    if (document['sender'] == id) {
       return SenderMessage(
         document: document,
         index: index,
@@ -301,26 +385,6 @@ class ChatController extends GetxController {
     } else {
       // RECEIVER MESSAGE
       return ReceiverMessage(document: document, index: index);
-    }
-  }
-
-  // CHECK IF IT IS RECEIVER SIDE OR NOT
-  bool isLastMessageLeft(int index) {
-    if ((index > 0 && message != null && message![index - 1]['idFrom'] == id) ||
-        index == 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  // CHECK IF IT IS SENDER SIDE OR NOT
-  bool isLastMessageRight(int index) {
-    if ((index > 0 && message != null && message![index - 1]['idFrom'] != id) ||
-        index == 0) {
-      return true;
-    } else {
-      return false;
     }
   }
 

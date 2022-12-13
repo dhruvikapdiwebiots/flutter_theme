@@ -5,9 +5,8 @@ import '../../../../../config.dart';
 class ReceiverContent extends StatelessWidget {
   final DocumentSnapshot? document;
   final GestureLongPressCallback? onLongPress;
-  final bool? isLastMessageRight;
 
-  const ReceiverContent({Key? key,this.document,this.isLastMessageRight,this.onLongPress}) : super(key: key);
+  const ReceiverContent({Key? key,this.document,this.onLongPress}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

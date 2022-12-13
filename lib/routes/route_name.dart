@@ -8,4 +8,5 @@ class RouteName {
   final String otp = '/otp';
   final String editProfile = '/editProfile';
   final String chat = '/chat';
+  final String setting = '/setting';
 }

@@ -5,10 +5,9 @@ import '../../../../../config.dart';
 class Content extends StatelessWidget {
   final DocumentSnapshot? document;
   final GestureLongPressCallback? onLongPress;
-  final bool? isLastMessageRight;
 
   const Content(
-      {Key? key, this.document, this.onLongPress, this.isLastMessageRight})
+      {Key? key, this.document, this.onLongPress})
       : super(key: key);
 
   @override
@@ -26,7 +25,7 @@ class Content extends StatelessWidget {
                   topLeft: Radius.circular(Insets.i20),
                   bottomLeft: Radius.circular(Insets.i20))),
           margin: EdgeInsets.only(
-              bottom: isLastMessageRight! ? Insets.i10 : Insets.i10,
+              bottom:  Insets.i10,
               right: Insets.i10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

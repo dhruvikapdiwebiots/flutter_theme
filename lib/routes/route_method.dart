@@ -17,5 +17,6 @@ class AppRoute {
     GetPage(name: _routeName.dashboard, page: () =>const Dashboard()),
     GetPage(name: _routeName.editProfile, page: () => EditProfile()),
     GetPage(name: _routeName.chat, page: () => Chat()),
+    GetPage(name: _routeName.setting, page: () => Setting()),
   ];
 }

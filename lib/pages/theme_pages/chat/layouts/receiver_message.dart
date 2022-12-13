@@ -28,12 +28,11 @@ class ReceiverMessage extends StatelessWidget {
                             chatCtrl.buildPopupDialog(context, document!),
                       );
                     },
-                      document: document,
-                      isLastMessageRight: chatCtrl.isLastMessageRight(index!),),
+                      document: document,),
 
                   // MESSAGE BOX FOR IMAGE
                   if (document!["type"] == MessageType.image.name)
-                    ReceiverImage(image: document!['content']),
+                    ReceiverImage(document: document,),
 
                   if (document!["type"] == MessageType.contact.name)
                     ContactLayout(
@@ -71,23 +70,6 @@ class ReceiverMessage extends StatelessWidget {
                         })
                 ],
               ),
-
-              // STORE TIME ZONE FOR BACKAND DATABASE
-              chatCtrl.isLastMessageLeft(index!)
-                  ? Container(
-                      margin: const EdgeInsets.only(
-                          left: 10.0, top: 5.0, bottom: 5.0),
-                      child: Text(
-                        DateFormat('dd MMM kk:mm').format(
-                            DateTime.fromMillisecondsSinceEpoch(
-                                int.parse(document!['timestamp']))),
-                        style: TextStyle(
-                            color: appCtrl.appTheme.primary,
-                            fontSize: 12.0,
-                            fontStyle: FontStyle.italic),
-                      ),
-                    )
-                  : Container()
             ]),
       );
     });

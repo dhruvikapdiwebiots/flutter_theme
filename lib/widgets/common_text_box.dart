@@ -58,6 +58,7 @@ class CommonTextBox extends StatelessWidget {
               hintText: trans(hinText),
               labelText: trans(labelText),
               errorText:errorText,
+              counterText: "",
               hintStyle:
                   AppCss.poppinsMedium14.textColor(appCtrl.appTheme.primary),
               labelStyle:

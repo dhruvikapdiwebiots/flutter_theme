@@ -11,6 +11,5 @@ export 'package:google_sign_in/google_sign_in.dart';
 export 'package:image_picker/image_picker.dart';
 export 'package:file_picker/file_picker.dart';
 export 'package:url_launcher/url_launcher.dart';
-export 'package:fluttercontactpicker/fluttercontactpicker.dart';
 export 'package:geolocator/geolocator.dart';
 

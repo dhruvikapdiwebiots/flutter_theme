@@ -26,8 +26,7 @@ class SenderMessage extends StatelessWidget {
                             chatCtrl.buildPopupDialog(context, document!),
                       );
                     },
-                    document: document,
-                    isLastMessageRight: chatCtrl.isLastMessageRight(index!),
+                    document: document
                   ),
                 if (document!["type"] == MessageType.image.name)
                   SenderImage(
@@ -74,12 +73,6 @@ class SenderMessage extends StatelessWidget {
                                 chatCtrl.buildPopupDialog(context, document!));
                       })
               ]),
-              // STORE TIME ZONE FOR BACKAND DATABASE
-              chatCtrl.isLastMessageRight(index!)
-                  ? LastSeen(
-                      document: document,
-                    )
-                  : Container()
             ],
           ));
     });

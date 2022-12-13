@@ -26,29 +26,31 @@ class _ChatState extends State<Chat>  with
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     log("state : ${AppLifecycleState.resumed}");
+    log("chatCtrl : ${chatCtrl.pId}");
+    log("chatCtrl : ${chatCtrl.id}");
     if (state == AppLifecycleState.resumed) {
       setIsActive();
       setTyping();
+
       chatCtrl.getPeerStatus();
     }else {
       setLastSeen();
       chatCtrl.getPeerStatus();
       log("message : ${chatCtrl.status}");
     }
-    setState(() {
 
-    });
   }
 
   void setIsActive() async {
     String userId = appCtrl.storage.read("id");
-    await FirebaseFirestore.instance.collection("users").doc(userId).update(
+    await FirebaseFirestore.instance.collection("users").doc(chatCtrl.id).update(
       {"status": "Online","lastSeen": DateTime.now().millisecondsSinceEpoch.toString()},
     );
   }
 
   setTyping()async {
-    String userId = appCtrl.storage.read("id");
+    log("use : ${chatCtrl.pId}");
+    log("use : ${chatCtrl.id}");
     chatCtrl.textEditingController.addListener(() {
       if (chatCtrl.textEditingController.text.isNotEmpty) {
         FirebaseFirestore.instance.collection("users").doc(chatCtrl.id).update(
@@ -66,8 +68,7 @@ class _ChatState extends State<Chat>  with
   }
 
   void setLastSeen() async {
-    String userId = appCtrl.storage.read("id");
-    await FirebaseFirestore.instance.collection("users").doc(userId).update(
+    await FirebaseFirestore.instance.collection("users").doc(chatCtrl.id).update(
       {"status": "Offline","lastSeen": DateTime.now().millisecondsSinceEpoch.toString()},
     );
   }
@@ -99,11 +100,12 @@ class _ChatState extends State<Chat>  with
                     textAlign: TextAlign.center,
                     style:AppCss.poppinsMedium14.textColor(appCtrl.appTheme.whiteColor),
                   ),*/
+
                   StreamBuilder(
                     stream: FirebaseFirestore.instance
                         .collection('users').where("id", isEqualTo: chatCtrl.pId).snapshots(),
                     builder: (context, snapshot) {
-                      log("ssss : ${snapshot.data!.docs[0]["status"]}");
+
                       if (!snapshot.hasData) {
                         return Center(
                             child: CircularProgressIndicator(

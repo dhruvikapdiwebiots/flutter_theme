@@ -11,7 +11,7 @@ class DashboardController extends GetxController {
   List<Widget> widgetOptions = <Widget>[
     Text("Message"),
     Message(),
-    Setting(),
+    Text("Status"),
   ];
 
   //on tap select
