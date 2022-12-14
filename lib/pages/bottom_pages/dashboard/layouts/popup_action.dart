@@ -8,7 +8,6 @@ class PopUpAction extends StatelessWidget {
     return GetBuilder<DashboardController>(
       builder: (dashboardCtrl) {
         return PopupMenuButton(
-
             itemBuilder: (context) {
               return [
                 ...dashboardCtrl.actionList
@@ -16,6 +15,10 @@ class PopUpAction extends StatelessWidget {
                     .entries
                     .map((e) => PopupMenuItem<int>(
                   value: 0,
+                  onTap: (){
+                    dashboardCtrl.selectedPopTap = e.key;
+                    dashboardCtrl.update();
+                  },
                   child: Text(trans(e.value["title"])),
                 ))
                     .toList(),

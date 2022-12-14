@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/pages/theme_pages/group_chat/layouts/create_group.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class GroupChatController extends GetxController {
   List<Contact>? contacts;
@@ -11,28 +12,60 @@ class GroupChatController extends GetxController {
   final formKey = GlobalKey<FormState>();
   File? image;
   XFile? imageFile;
+  String imageUrl = "";
   TextEditingController txtGroupName = TextEditingController();
+  final pickerCtrl = Get.isRegistered<PickerController>()
+      ? Get.find<PickerController>()
+      : Get.put(PickerController());
+  final permissionHandelCtrl = Get.isRegistered<PermissionHandlerController>()
+      ? Get.find<PermissionHandlerController>()
+      : Get.put(PermissionHandlerController());
 
   Future<void> refreshContacts() async {
-    // Load without thumbnails initially.
-    var contacts = (await ContactsService.getContacts(
-        withThumbnails: false, iOSLocalizedLabels: false));
+    PermissionStatus permissionStatus =
+        await permissionHandelCtrl.getContactPermission();
+    print(permissionStatus);
+    if (permissionStatus == PermissionStatus.granted) {
+// Load without thumbnails initially.
+      var contacts = (await ContactsService.getContacts(
+          withThumbnails: false, iOSLocalizedLabels: false));
 
-    contacts = contacts;
-    update();
+      contacts = contacts;
+      update();
 
-    // Lazy load thumbnails after rendering initial contacts.
-    for (final contact in contacts) {
-      ContactsService.getAvatar(contact).then((avatar) {
-        if (avatar == null) return; // Don't redraw if no change.
-        contact.avatar = avatar;
+// Lazy load thumbnails after rendering initial contacts.
+      for (final contact in contacts) {
+        ContactsService.getAvatar(contact).then((avatar) {
+          if (avatar == null) return; // Don't redraw if no change.
+          contact.avatar = avatar;
+          update();
+        });
+      }
+      getFirebaseContact(contacts);
+    } else {
+      await permissionHandelCtrl.handleInvalidPermissions(permissionStatus);
+      if (permissionStatus == PermissionStatus.granted) {
+// Load without thumbnails initially.
+        var contacts = (await ContactsService.getContacts(
+            withThumbnails: false, iOSLocalizedLabels: false));
+
+        contacts = contacts;
         update();
-      });
+
+// Lazy load thumbnails after rendering initial contacts.
+        for (final contact in contacts) {
+          ContactsService.getAvatar(contact).then((avatar) {
+            if (avatar == null) return; // Don't redraw if no change.
+            contact.avatar = avatar;
+            update();
+          });
+        }
+        getFirebaseContact(contacts);
+      }
     }
-    getFirebaseContact();
   }
 
-  getFirebaseContact() async {
+  getFirebaseContact(contacts) async {
     final msgList = await FirebaseFirestore.instance.collection("users").get();
 
     for (final user in msgList.docs) {
@@ -78,7 +111,7 @@ class GroupChatController extends GetxController {
     image = File(imageFile!.path);
   }
 
-  //image picker option
+//image picker option
   imagePickerOption(BuildContext context) {
     showModalBottomSheet(
         context: context,
@@ -87,12 +120,12 @@ class GroupChatController extends GetxController {
               BorderRadius.vertical(top: Radius.circular(AppRadius.r25)),
         ),
         builder: (BuildContext context) {
-          // return your layout
-          return ImagePickerLayout(cameraTap: () {
-            getImage(ImageSource.camera);
+// return your layout
+          return ImagePickerLayout(cameraTap: () async {
+            await getImage(ImageSource.camera);
             Get.back();
-          }, galleryTap: () {
-            getImage(ImageSource.gallery);
+          }, galleryTap: () async {
+            await getImage(ImageSource.gallery);
             Get.back();
           });
         });
@@ -115,14 +148,14 @@ class GroupChatController extends GetxController {
           borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
         ),
         builder: (BuildContext context) {
-          // return your layout
+// return your layout
           return const CreateGroup();
         });
   }
 
   @override
   void onReady() {
-    // TODO: implement onReady
+// TODO: implement onReady
     super.onReady();
     refreshContacts();
   }

@@ -22,8 +22,8 @@ export 'theme_pages/chat_message/layouts/sender/sender_image.dart';
 export 'theme_pages/chat_message/layouts/receiver/receiver_content.dart';
 export 'theme_pages/chat_message/layouts/receiver/receiver_image.dart';
 export 'theme_pages/chat_message/layouts/delete_alert.dart';
-export 'theme_pages/chat_message/layouts/receiver_message.dart';
-export 'theme_pages/chat_message/layouts/sender_message.dart';
+export 'theme_pages/chat_message/layouts/receiver/receiver_message.dart';
+export 'theme_pages/chat_message/layouts/sender/sender_message.dart';
 export 'theme_pages/chat_message/layouts/icon_creation.dart';
 export 'theme_pages/chat_message/layouts/file_bottom_sheet.dart';
 export 'theme_pages/chat_message/layouts/image_picker.dart';
@@ -40,6 +40,13 @@ export 'bottom_pages/message/layout/chat_card.dart';
 export 'bottom_pages/setting/layouts/user_image.dart';
 export 'theme_pages/chat_message/layouts/user_last_seen.dart';
 export 'theme_pages/chat_message/layouts/chat_message_app_bar.dart';
+export 'theme_pages/group_chat_message/layouts/group_audio_doc.dart';
+export 'theme_pages/group_chat_message/layouts/group_sender/group_content.dart';
+export 'theme_pages/group_chat_message/layouts/group_sender/group_sender_image.dart';
+export 'theme_pages/group_chat_message/layouts/group_video_doc.dart';
+export 'theme_pages/group_chat_message/layouts/group_receiver/group_receiver_content.dart';
+export 'theme_pages/group_chat_message/layouts/group_receiver/group_receiver_image.dart';
+
 
 
 export '/utilities/type_list.dart';

@@ -2,6 +2,7 @@
 
 
 
+
 import '../config.dart';
 import 'route_name.dart';
 
@@ -17,9 +18,10 @@ class AppRoute {
     GetPage(name: _routeName.otp, page: () => Otp()),
     GetPage(name: _routeName.dashboard, page: () =>const Dashboard()),
     GetPage(name: _routeName.editProfile, page: () => EditProfile()),
-    GetPage(name: _routeName.chat, page: () => Chat()),
+    GetPage(name: _routeName.chat, page: () =>const Chat()),
     GetPage(name: _routeName.setting, page: () => Setting()),
     GetPage(name: _routeName.contactList, page: () => ContactList()),
     GetPage(name: _routeName.groupChat, page: () => GroupChat()),
+    GetPage(name: _routeName.groupChatMessage, page: () =>const GroupChatMessage()),
   ];
 }

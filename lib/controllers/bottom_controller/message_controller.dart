@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:flutter_theme/pages/bottom_pages/message/layout/group_message_card.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_theme/config.dart';
 
@@ -28,7 +29,8 @@ class MessageController extends GetxController {
   @override
   void onReady() {
     // TODO: implement onReady
-    currentUserId = appCtrl.storage.read("id");
+    final data  = appCtrl.storage.read("user");
+    currentUserId = data["id"];
     update();
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User user = auth.currentUser!;
@@ -64,10 +66,31 @@ class MessageController extends GetxController {
 
   // LOAD USERDATA LIST
   Widget loadUser(BuildContext context, DocumentSnapshot document) {
-    return MessageCard(
-      document: document,
-      currentUserId: currentUserId,
-    );
+
+    if (document["isGroup"] == false) {
+      return MessageCard(
+        document: document,
+        currentUserId: currentUserId,
+      );
+    } else {
+      bool isEmpty = true;
+      print("currentUserId : $currentUserId");
+      if (document["isGroup"] == true) {
+        List user  = document["receiverId"];
+        print(user);
+        isEmpty = user.where((element) {
+          print("check  : ${element["id"] == currentUserId}");
+          return element["id"] == currentUserId;
+        }).isNotEmpty;
+        print("isEmpty : $isEmpty");
+        print("isEmpty : ${document["group"]}");
+      }
+
+      return !isEmpty ? Container() : GroupMessageCard(
+        document: document,
+        currentUserId: currentUserId,
+      );
+    }
   }
 
   //fetch data

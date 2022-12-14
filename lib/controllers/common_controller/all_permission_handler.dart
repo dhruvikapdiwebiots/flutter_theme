@@ -93,7 +93,7 @@ class PermissionHandlerController extends GetxController{
   }
 
   //handle invalid permission
-  void handleInvalidPermissions(PermissionStatus permissionStatus) {
+  handleInvalidPermissions(PermissionStatus permissionStatus) {
     if (permissionStatus == PermissionStatus.denied) {
       final snackBar = SnackBar(content: Text(fonts.accessDenied.tr));
       ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);

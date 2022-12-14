@@ -11,8 +11,11 @@ class PickerController extends GetxController {
     final ImagePicker picker = ImagePicker();
     imageFile = (await picker.pickImage(source: source))!;
     if (imageFile != null) {
+      image = File(imageFile!.path);
       update();
     }
+    Get.forceAppUpdate();
+    print("image : $image");
   }
 
 // FOR Dismiss KEYBOARD
@@ -30,12 +33,12 @@ class PickerController extends GetxController {
         ),
         builder: (BuildContext context) {
           // return your layout
-          return ImagePickerLayout(cameraTap: () {
+          return ImagePickerLayout(cameraTap: () async {
             dismissKeyboard();
-            getImage(ImageSource.camera);
+            await getImage(ImageSource.camera);
             Get.back();
-          }, galleryTap: () {
-            getImage(ImageSource.gallery);
+          }, galleryTap: () async {
+            await getImage(ImageSource.gallery);
             Get.back();
           });
         });

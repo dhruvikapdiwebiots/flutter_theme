@@ -18,12 +18,12 @@ class ChatController extends GetxController {
   File? image;
   bool? isLoading;
   bool typing = false;
-  final permissionHandelCtrl = Get.isRegistered<PermissionHandlerController>()
-      ? Get.find<PermissionHandlerController>()
-      : Get.put(PermissionHandlerController());
   final pickerCtrl = Get.isRegistered<PickerController>()
       ? Get.find<PickerController>()
       : Get.put(PickerController());
+  final permissionHandelCtrl = Get.isRegistered<PermissionHandlerController>()
+      ? Get.find<PermissionHandlerController>()
+      : Get.put(PermissionHandlerController());
   TextEditingController textEditingController = TextEditingController();
   ScrollController listScrollController = ScrollController();
   FocusNode focusNode = FocusNode();
@@ -277,7 +277,8 @@ class ChatController extends GetxController {
                 'senderId': user["id"],
                 'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
                 "lastMessage": content,
-                "isGroup": groupId ?? "",
+                "isGroup": false,
+                "groupId":groupId ?? "",
                 "updateStamp": DateTime.now().millisecondsSinceEpoch.toString()
               });
             }

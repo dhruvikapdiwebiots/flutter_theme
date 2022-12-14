@@ -3,6 +3,7 @@ import 'package:flutter_theme/config.dart';
 
 class DashboardController extends GetxController {
   int selectedIndex = 0;
+  int selectedPopTap = 0;
 
   late int iconCount = 0;
   List bottomList = [];
@@ -33,11 +34,12 @@ class DashboardController extends GetxController {
 
 
   popupMenuTap(value){
-    if (value == 0) {
+    print(value);
+    if (selectedPopTap == 0) {
       print("My account menu is selected.");
-    } else if (value == 1) {
+    } else if (selectedPopTap == 1) {
       Get.toNamed(routeName.groupChat);
-    } else if (value == 2) {
+    } else if (selectedPopTap == 2) {
       Get.toNamed(routeName.setting);
     }
   }

@@ -11,8 +11,8 @@ class GroupChat extends StatelessWidget {
         return GetBuilder<MessageController>(builder: (chatCtrl) {
           return WillPopScope(
             onWillPop: () async {
-              chatCtrl.selectedContact = [];
-              chatCtrl.update();
+              groupChatCtrl.selectedContact = [];
+              groupChatCtrl.update();
               return true;
             },
             child: Scaffold(
@@ -22,7 +22,7 @@ class GroupChat extends StatelessWidget {
                 title: Text(fonts.selectContacts.tr,
                     style: AppCss.poppinsMedium18.textColor(appCtrl.appTheme.whiteColor)),
               ),
-              floatingActionButton: chatCtrl.selectedContact.isNotEmpty
+              floatingActionButton: groupChatCtrl.selectedContact.isNotEmpty
                   ? FloatingActionButton(
                 onPressed: () => groupChatCtrl.addGroupBottomSheet(),
                 backgroundColor: appCtrl.appTheme.primary,
@@ -34,7 +34,7 @@ class GroupChat extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (chatCtrl.selectedContact.isNotEmpty)
+                      if (groupChatCtrl.selectedContact.isNotEmpty)
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Row(
@@ -96,8 +96,8 @@ class GroupChat extends StatelessWidget {
                                     top: 5,
                                     child: new InkWell(
                                       onTap: () {
-                                        chatCtrl.selectedContact.remove(e.value);
-                                        chatCtrl.update();
+                                        groupChatCtrl.selectedContact.remove(e.value);
+                                        groupChatCtrl.update();
                                       },
                                       child: new Container(
                                         width: 20.0,
@@ -126,12 +126,12 @@ class GroupChat extends StatelessWidget {
                             ...groupChatCtrl.contactList.asMap().entries.map((e) {
                               return ListTile(
                                 onTap: () {
-                                  if (chatCtrl.selectedContact.contains(e.value)) {
-                                    chatCtrl.selectedContact.remove(e.value);
+                                  if (groupChatCtrl.selectedContact.contains(e.value)) {
+                                    groupChatCtrl.selectedContact.remove(e.value);
                                   } else {
-                                    chatCtrl.selectedContact.add(e.value);
+                                    groupChatCtrl.selectedContact.add(e.value);
                                   }
-                                  chatCtrl.update();
+                                  groupChatCtrl.update();
                                 },
                                 trailing: Container(
                                     decoration: BoxDecoration(
@@ -141,7 +141,7 @@ class GroupChat extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(5),
                                     ),
                                     child: Icon(
-                                      chatCtrl.selectedContact.contains(e.value)
+                                      groupChatCtrl.selectedContact.contains(e.value)
                                           ? Icons.check
                                           : null,
                                       size: 19.0,

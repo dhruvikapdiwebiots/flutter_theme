@@ -1,4 +1,3 @@
-
 import 'package:flutter/services.dart';
 import 'package:flutter_theme/config.dart';
 
@@ -40,8 +39,7 @@ class _DashboardState extends State<Dashboard>
           child: Scaffold(
               appBar: AppBar(
                   actions: [
-                    if (dashboardCtrl.selectedIndex == 1)
-                    const  PopUpAction(),
+                    if (dashboardCtrl.selectedIndex == 1) const PopUpAction(),
                   ],
                   automaticallyImplyLeading: false,
                   title: Text(dashboardCtrl.selectedIndex == 0
