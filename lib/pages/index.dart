@@ -16,7 +16,7 @@ export 'theme_pages/chat_message/layouts/input_box.dart';
 export 'theme_pages/chat_message/layouts/message_box.dart';
 export 'bottom_pages/bottom_nav_bar/bottom_nav_bar.dart';
 export 'bottom_pages/message/message.dart';
-export 'bottom_pages/setting/setting.dart';
+export 'theme_pages/setting/setting.dart';
 export 'theme_pages/chat_message/layouts/sender/content.dart';
 export 'theme_pages/chat_message/layouts/sender/sender_image.dart';
 export 'theme_pages/chat_message/layouts/receiver/receiver_content.dart';
@@ -37,7 +37,7 @@ export 'theme_pages/chat_message/layouts/camera_preview.dart';
 export 'theme_pages/chat_message/layouts/audio_recording_plugin.dart';
 export 'bottom_pages/dashboard/layouts/popup_action.dart';
 export 'bottom_pages/message/layout/chat_card.dart';
-export 'bottom_pages/setting/layouts/user_image.dart';
+export 'theme_pages/setting/layouts/user_image.dart';
 export 'theme_pages/chat_message/layouts/user_last_seen.dart';
 export 'theme_pages/chat_message/layouts/chat_message_app_bar.dart';
 export 'theme_pages/group_chat_message/layouts/group_audio_doc.dart';
@@ -46,6 +46,9 @@ export 'theme_pages/group_chat_message/layouts/group_sender/group_sender_image.d
 export 'theme_pages/group_chat_message/layouts/group_video_doc.dart';
 export 'theme_pages/group_chat_message/layouts/group_receiver/group_receiver_content.dart';
 export 'theme_pages/group_chat_message/layouts/group_receiver/group_receiver_image.dart';
+export 'theme_pages/group_chat/layouts/all_registered_contact.dart';
+export 'theme_pages/group_chat/layouts/selected_contact_list.dart';
+
 
 
 

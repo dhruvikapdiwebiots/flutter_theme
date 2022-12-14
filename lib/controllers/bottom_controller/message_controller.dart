@@ -66,6 +66,18 @@ class MessageController extends GetxController {
 
   // LOAD USERDATA LIST
   Widget loadUser(BuildContext context, DocumentSnapshot document) {
+    bool isEmpty = true;
+    print("currentUserId : ${document["isGroup"]}");
+    if (document["isGroup"] == true) {
+      List user  = document["receiverId"];
+      print(user);
+      isEmpty = user.where((element) {
+        print("check  : ${element["id"] == currentUserId}");
+        return element["id"] == currentUserId;
+      }).isNotEmpty;
+      print("isEmpty : $isEmpty");
+      print("isEmpty : ${document["group"]}");
+    }
 
     if (document["isGroup"] == false) {
       return MessageCard(
@@ -73,18 +85,6 @@ class MessageController extends GetxController {
         currentUserId: currentUserId,
       );
     } else {
-      bool isEmpty = true;
-      print("currentUserId : $currentUserId");
-      if (document["isGroup"] == true) {
-        List user  = document["receiverId"];
-        print(user);
-        isEmpty = user.where((element) {
-          print("check  : ${element["id"] == currentUserId}");
-          return element["id"] == currentUserId;
-        }).isNotEmpty;
-        print("isEmpty : $isEmpty");
-        print("isEmpty : ${document["group"]}");
-      }
 
       return !isEmpty ? Container() : GroupMessageCard(
         document: document,

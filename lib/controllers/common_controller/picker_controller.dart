@@ -15,7 +15,6 @@ class PickerController extends GetxController {
       update();
     }
     Get.forceAppUpdate();
-    print("image : $image");
   }
 
 // FOR Dismiss KEYBOARD
