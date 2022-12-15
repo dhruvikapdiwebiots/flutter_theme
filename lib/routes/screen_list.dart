@@ -9,5 +9,5 @@ export '../pages/bottom_pages/dashboard/dashboard.dart';
 export '../pages/theme_pages/edit_profile/edit_profile.dart';
 export '../pages/theme_pages/chat_message/chat_message.dart';
 export '../pages/theme_pages/contact_list/contact_list.dart';
-export '../pages/theme_pages/group_chat/group_chat.dart';
+export '../pages/theme_pages/create_group/create_group.dart';
 export '../pages/theme_pages/group_chat_message/group_chat_message.dart';

@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter_theme/pages/bottom_pages/message/layout/group_message_card.dart';
+import 'package:flutter_theme/pages/bottom_pages/message/layout/receiver_message_card.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_theme/config.dart';
 
@@ -29,7 +30,7 @@ class MessageController extends GetxController {
   @override
   void onReady() {
     // TODO: implement onReady
-    final data  = appCtrl.storage.read("user");
+    final data = appCtrl.storage.read("user");
     currentUserId = data["id"];
     update();
     final FirebaseAuth auth = FirebaseAuth.instance;
@@ -66,17 +67,30 @@ class MessageController extends GetxController {
 
   // LOAD USERDATA LIST
   Widget loadUser(BuildContext context, DocumentSnapshot document) {
-    bool isEmpty = true;
+    print(document["senderId"]);
+    if (document["isGroup"] == false) {
+      return document["senderId"]  == currentUserId ?ReceiverMessageCard( document: document,
+          currentUserId: currentUserId):  MessageCard(
+        document: document,
+        currentUserId: currentUserId,
+      );
+    } else {
+      List user = document["receiverId"];
+      return user.where((element) => element["id"] == currentUserId).isNotEmpty
+          ? GroupMessageCard(
+              document: document,
+              currentUserId: currentUserId,
+            )
+          : Container();
+    }
+  }
+
+  // LOAD USERDATA LIST
+  Widget groupUser(BuildContext context, DocumentSnapshot document) {
+    /* bool isEmpty = true;
     print("currentUserId : ${document["isGroup"]}");
     if (document["isGroup"] == true) {
-      List user  = document["receiverId"];
-      print(user);
-      isEmpty = user.where((element) {
-        print("check  : ${element["id"] == currentUserId}");
-        return element["id"] == currentUserId;
-      }).isNotEmpty;
-      print("isEmpty : $isEmpty");
-      print("isEmpty : ${document["group"]}");
+
     }
 
     if (document["isGroup"] == false) {
@@ -90,7 +104,22 @@ class MessageController extends GetxController {
         document: document,
         currentUserId: currentUserId,
       );
-    }
+
+    }*/
+    bool isEmpty = true;
+    List user = document["users"];
+    print(user);
+    isEmpty = user.where((element) {
+      print("check  : ${element["id"] == currentUserId}");
+      return element["id"] == currentUserId;
+    }).isNotEmpty;
+    print("isEmpty : $isEmpty");
+    return isEmpty
+        ? Container()
+        : GroupMessageCard(
+            document: document,
+            currentUserId: currentUserId,
+          );
   }
 
   //fetch data
@@ -147,12 +176,14 @@ class MessageController extends GetxController {
           log("contact : ${contact.phones![0].value}");
           String phone = contact.phones![0].value!;
           if (phone.length > 10) {
+            if (phone.contains(" ")) {
+              phone = phone.replaceAll(" ", "");
+            }
             if (phone.contains("-")) {
               phone = phone.replaceAll("-", "");
-            } else if (phone.contains("+")) {
-              phone = phone.replaceAll("+", "");
-            } else if (phone.contains(" ")) {
-              phone = phone.replaceAll(" ", "");
+            }
+            if (phone.contains("+")) {
+              phone = phone.replaceAll("+91", "");
             }
             if (phone.length > 10) {
               phone = phone.substring(3);

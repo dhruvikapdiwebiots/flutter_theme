@@ -12,4 +12,6 @@ class RouteName {
   final String contactList = '/contactList';
   final String groupChat = '/groupChat';
   final String groupChatMessage = '/groupChatMessage';
+  final String confirmationScreen = '/confirmationScreen';
+  final String statusView = '/statusView';
 }

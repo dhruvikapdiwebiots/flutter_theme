@@ -10,8 +10,10 @@ class GroupMessageBox extends StatelessWidget {
         child:
             StreamBuilder(
                 stream: FirebaseFirestore.instance
-                    .collection('messages')
-                    .orderBy('timestamp', descending: true)
+                    .collection('groupMessage')
+                    .doc(chatCtrl.pId)
+                    .collection('chats')
+                    .orderBy('timestamp',descending: true)
                     .limit(20)
                     .snapshots(),
                 builder: (context, snapshot) {
@@ -20,7 +22,7 @@ class GroupMessageBox extends StatelessWidget {
                     return Container();
                   } else {
                     chatCtrl.message = (snapshot.data!).docs;
-                    return ListView.builder(
+                    return  ListView.builder(
                       padding: const EdgeInsets.all(10.0),
                       itemBuilder: (context, index) => chatCtrl.buildItem(
                           index, (snapshot.data!).docs[index]),

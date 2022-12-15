@@ -1,4 +1,4 @@
-import 'package:flutter_theme/pages/theme_pages/group_chat/layouts/selected_users.dart';
+
 
 import '../../../../config.dart';
 
@@ -7,7 +7,7 @@ class SelectedContactList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<GroupChatController>(builder: (groupChatCtrl) {
+    return GetBuilder<CreateGroupController>(builder: (groupChatCtrl) {
       return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(

@@ -17,16 +17,16 @@ class ContactList extends StatelessWidget {
           ),
         ),
         body: SafeArea(
-          child: contactCtrl.contacts != null
+          child: contactCtrl.contactList != null
               ? ListView.builder(
-                  itemCount: contactCtrl.contacts?.length ?? 0,
+                  itemCount: contactCtrl.contactList?.length ?? 0,
                   itemBuilder: (BuildContext context, int index) {
-                    Contact c = contactCtrl.contacts!.elementAt(index);
+                    Contact c = contactCtrl.contactList!.elementAt(index);
                     return ListTile(
                       onTap: () {
-                        var id = contactCtrl.contacts!
+                        var id = contactCtrl.contactList!
                             .indexWhere((c) => c.identifier == c.identifier);
-                        contactCtrl.contacts![id] = c;
+                        contactCtrl.contactList![id] = c;
                         Get.back(result: c);
                       },
                       leading: (c.avatar != null && c.avatar!.isNotEmpty)

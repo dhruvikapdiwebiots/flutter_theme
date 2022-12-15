@@ -1,13 +1,13 @@
 
 import '../../../../../../config.dart';
 
-class CommonFileRowList extends StatelessWidget {
+class GroupFileRowList extends StatelessWidget {
 
-  const CommonFileRowList({Key? key}) : super(key: key);
+  const GroupFileRowList({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ChatController>(builder: (chatCtrl) {
+    return GetBuilder<GroupChatMessageController>(builder: (chatCtrl) {
       return Column(children: [
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           IconCreation(
@@ -42,7 +42,7 @@ class CommonFileRowList extends StatelessWidget {
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           IconCreation(
               onTap: () {
-                Get.back();
+
                 chatCtrl.audioRecording(context,"audio",0);
               },
               icons: Icons.headset,

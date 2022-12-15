@@ -24,6 +24,7 @@ class AudioRecordingPluginState extends State<AudioRecordingPlugin> {
   bool isLoading = false;
   Codec codec = Codec.aacMP4;
   late String recordFilePath;
+  int counter = 0;
   String statusText = "";
   bool isRecording = false;
   bool isComplete = false;
@@ -31,6 +32,7 @@ class AudioRecordingPluginState extends State<AudioRecordingPlugin> {
   String mPath = 'tau_file.mp4';
   Timer? _timer;
   int recordingTime = 0;
+  String? filePath;
   bool mPlayerIsInit = false;
   bool mRecorderIsInited = false;
   File? recordedFile;
@@ -85,9 +87,26 @@ class AudioRecordingPluginState extends State<AudioRecordingPlugin> {
   }
 
   // record audio
-  void record() {
-    mRecorder!.startRecorder(toFile: mPath, codec: codec).then((value) {
+  void record() async {
+    Directory directory = await getApplicationDocumentsDirectory();
+    String filepath =
+        '${directory.path}/${DateTime.now().millisecondsSinceEpoch}.aac';
+    mPath = filepath;
+    mRecorder!.startRecorder(toFile: filepath, codec: codec).then((value) {
       setState(() {});
+    });
+    recordFilePath = await getFilePath();
+    startTimer();
+    setState(() {});
+  }
+
+  startTimer(){
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(oneSec, (timer) {
+      recordingTime++;
+      setState(() {
+
+      });
     });
   }
 
@@ -95,6 +114,8 @@ class AudioRecordingPluginState extends State<AudioRecordingPlugin> {
   void stopRecorder() async {
     await mRecorder!.stopRecorder().then((value) {
       mPlaybackReady = true;
+      _timer!.cancel();
+      recordedFile = File(mPath);
       setState(() {});
     });
   }
@@ -117,6 +138,7 @@ class AudioRecordingPluginState extends State<AudioRecordingPlugin> {
 
   // play recorded audio
   getPlaybackFn() {
+    print("tap");
     if (!mPlayerIsInit || !mPlaybackReady || !mRecorder!.isStopped) {
       return null;
     }
@@ -220,9 +242,14 @@ class AudioRecordingPluginState extends State<AudioRecordingPlugin> {
                                     : Icons.play_arrow
                                 : Icons.play_arrow,
                             color: Colors.white,
-                          )))
+                          ))),
+
                 ])),
         const SizedBox(height: 10),
+        CommonButton(title: fonts.done.tr,style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.whiteColor),onTap: (){
+          stopPlayer();
+          Get.back(result: recordedFile);
+        },),
         if (isLoading)
           Padding(
             padding: const EdgeInsets.all(10),

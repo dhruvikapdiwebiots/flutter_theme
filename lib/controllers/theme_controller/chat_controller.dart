@@ -16,7 +16,7 @@ class ChatController extends GetxController {
   bool positionStreamStarted = false;
   XFile? imageFile;
   File? image;
-  bool? isLoading;
+  bool? isLoading = true;
   bool typing = false;
   final pickerCtrl = Get.isRegistered<PickerController>()
       ? Get.find<PickerController>()
@@ -137,11 +137,13 @@ class ChatController extends GetxController {
     pickerCtrl.dismissKeyboard();
     Get.back();
     await permissionHandelCtrl.getCurrentPosition().then((value) async {
-      var locationString =
-          'https://www.google.com/maps/search/?api=1&query=${value.latitude},${value.longitude}';
-      onSendMessage(locationString, MessageType.location);
+
+      /*var locationString =
+          'https://www.google.com/maps/search/?api=1&query=${value.latitude},${value.longitude}';*/
+      //onSendMessage(locationString, MessageType.location);
     });
   }
+
 
   //share media
   shareMedia(BuildContext context) {
@@ -226,7 +228,7 @@ class ChatController extends GetxController {
 
 
   // SEND MESSAGE CLICK
-  void onSendMessage(String content, MessageType type, {groupId}) async {
+  void onSendMessage(String content, MessageType type) async {
     if (content.trim() != '') {
       textEditingController.clear();
 
@@ -235,7 +237,6 @@ class ChatController extends GetxController {
         'receiver': pId,
         // user ID you want to read message
         'content': content,
-        "groupId": groupId ?? "",
         'type': type.name,
         'messageType': "sender",
         // i dont know why you need this ?
@@ -301,7 +302,8 @@ class ChatController extends GetxController {
             'senderId': user["id"],
             'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
             "lastMessage": content,
-            "isGroup": groupId ?? "",
+            "isGroup": false,
+            "groupId":groupId ?? "",
             "updateStamp": DateTime.now().millisecondsSinceEpoch.toString()
           });
         }

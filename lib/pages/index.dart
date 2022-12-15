@@ -46,10 +46,10 @@ export 'theme_pages/group_chat_message/layouts/group_sender/group_sender_image.d
 export 'theme_pages/group_chat_message/layouts/group_video_doc.dart';
 export 'theme_pages/group_chat_message/layouts/group_receiver/group_receiver_content.dart';
 export 'theme_pages/group_chat_message/layouts/group_receiver/group_receiver_image.dart';
-export 'theme_pages/group_chat/layouts/all_registered_contact.dart';
-export 'theme_pages/group_chat/layouts/selected_contact_list.dart';
-
-
+export 'theme_pages/create_group/layouts/all_registered_contact.dart';
+export 'theme_pages/create_group/layouts/selected_contact_list.dart';
+export 'theme_pages/create_group/layouts/selected_users.dart';
+export 'theme_pages/create_group/layouts/create_group.dart';
 
 
 export '/utilities/type_list.dart';

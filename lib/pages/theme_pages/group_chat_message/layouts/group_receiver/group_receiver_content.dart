@@ -21,20 +21,28 @@ class GroupReceiverContent extends StatelessWidget {
               bottomLeft: Radius.circular(Insets.i20),
               bottomRight: Radius.circular(Insets.i20))),
       margin: const EdgeInsets.only(left: 2.0),
-      child:  Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        mainAxisSize: MainAxisSize.min,
+      child:  Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(document!['content'],
+          Text(document!['senderName'],
               style: AppCss.poppinsMedium14
                   .textColor(appCtrl.appTheme.primary)),
-          Text(
-            DateFormat('HH:mm a').format(
-                DateTime.fromMillisecondsSinceEpoch(
-                    int.parse(document!['timestamp']))),
-            style: AppCss.poppinsMedium12
-                .textColor(appCtrl.appTheme.primary),
-          )
+          const VSpace(Sizes.s10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(document!['content'],
+                  style: AppCss.poppinsMedium14
+                      .textColor(appCtrl.appTheme.primary)),
+              Text(
+                DateFormat('HH:mm a').format(
+                    DateTime.fromMillisecondsSinceEpoch(
+                        int.parse(document!['timestamp']))),
+                style: AppCss.poppinsMedium12
+                    .textColor(appCtrl.appTheme.primary),
+              )
+            ],
+          ),
         ],
       ),
     );

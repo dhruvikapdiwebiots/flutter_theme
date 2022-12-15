@@ -7,6 +7,8 @@ import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/controllers/common_controller/picker_controller.dart';
 import 'package:flutter_theme/controllers/common_controller/picker_controller.dart';
 import 'package:flutter_theme/controllers/common_controller/picker_controller.dart';
+import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_delete_alert.dart';
+import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_file_bottom_sheet.dart';
 import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_receiver/group_receiver_message.dart';
 import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_sender/sender_message.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -144,11 +146,15 @@ class GroupChatMessageController extends GetxController {
   locationShare() async {
     pickerCtrl.dismissKeyboard();
     Get.back();
-    await permissionHandelCtrl.getCurrentPosition().then((value) async {
+   Position? position = await permissionHandelCtrl.getCurrentPosition().then((value) async {
+     print(value);
       var locationString =
-          'https://www.google.com/maps/search/?api=1&query=${value.latitude},${value.longitude}';
+          'https://www.google.com/maps/search/?api=1&query=${value!.latitude},${value.longitude}';
+      print(locationString);
       onSendMessage(locationString, MessageType.location);
+      return null;
     });
+
   }
 
   //share media
@@ -163,7 +169,7 @@ class GroupChatMessageController extends GetxController {
         builder: (BuildContext context) {
           // return your layout
 
-          return const FileBottomSheet();
+          return const GroupBottomSheet();
         });
   }
 
@@ -228,16 +234,44 @@ class GroupChatMessageController extends GetxController {
                 color: Colors.white, borderRadius: BorderRadius.circular(10)),
             child: AudioRecordingPlugin(type: type, index: index));
       },
-    );
+    ).then((value) {
+      Get.back();
+      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+      Reference reference = FirebaseStorage.instance.ref().child(fileName);
+      var file = File(value.path);
+      UploadTask uploadTask = reference.putFile(file);
+      uploadTask.then((res) {
+        res.ref.getDownloadURL().then((downloadUrl) {
+          imageUrl = downloadUrl;
+          isLoading = false;
+          onSendMessage(
+              imageUrl!,
+              MessageType.audio);
+          update();
+        }, onError: (err) {
+          isLoading = false;
+          update();
+          Fluttertoast.showToast(msg: 'Not Upload');
+        });
+      });
+      onSendMessage(value, MessageType.audio);
+    });
   }
 
   // SEND MESSAGE CLICK
   void onSendMessage(String content, MessageType type, {groupId}) async {
+    print("object");
     if (content.trim() != '') {
       textEditingController.clear();
-
-      FirebaseFirestore.instance.collection('messages').add({
+      var user = appCtrl.storage.read("user");
+      id = user["id"];
+      FirebaseFirestore.instance
+          .collection('groupMessage')
+          .doc(pId)
+          .collection("chats")
+          .add({
         'sender': id,
+        'senderName': user["name"],
         'receiver': pData["users"],
         // user ID you want to read message
         'content': content,
@@ -249,7 +283,7 @@ class GroupChatMessageController extends GetxController {
         // I dont know why you called it just timestamp i changed it on created and passed an function with serverTimestamp()
       });
 
-      await FirebaseFirestore.instance
+      final msgList = await FirebaseFirestore.instance
           .collection("contacts")
           .get()
           .then((value) {
@@ -257,21 +291,44 @@ class GroupChatMessageController extends GetxController {
         if (value.docs.isNotEmpty) {
           for (var i = 0; i < value.docs.length; i++) {
             final snapshot = value.docs[i].data();
-            if (snapshot["isGroup"] == true && snapshot["groupId"] == pId) {
-              log("es : ${value.docs[i].id}");
-              FirebaseFirestore.instance
-                  .collection('contacts')
-                  .doc(value.docs[i].id)
-                  .update({
-                "updateStamp": DateTime.now().millisecondsSinceEpoch.toString(),
-                "lastMessage": content
-              });
+            log("dd : ${snapshot["groupId"] == id}");
+            if(snapshot["isGroup"] == true){
+              if(snapshot["groupId"] == pId){
+                List receiver = value.docs[i].data()["receiverId"];
+                receiver.add(user);
+                FirebaseFirestore.instance
+                    .collection('contacts')
+                    .doc(value.docs[i].id)
+                    .update({
+                  "updateStamp": DateTime.now().millisecondsSinceEpoch.toString(),
+                  "lastMessage": content,
+                  "senderId": id,
+                });
+              }
             }
           }
 
           listScrollController.animateTo(0.0,
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeOut);
+        } else {
+          dynamic user = appCtrl.storage.read("user");
+
+          FirebaseFirestore.instance.collection('contacts').add({
+            'sender': {
+              "id": user["id"],
+              "name": user["name"],
+              "image": user["image"]
+            },
+            'receiver': {"id": pId, "name": pName, "image": pData["image"]},
+            'receiverId': pId,
+            'senderId': user["id"],
+            'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+            "lastMessage": content,
+            "isGroup": false,
+            "groupId":groupId ?? "",
+            "updateStamp": DateTime.now().millisecondsSinceEpoch.toString()
+          });
         }
       });
     }
@@ -280,7 +337,7 @@ class GroupChatMessageController extends GetxController {
   //delete chat layout
   Widget buildPopupDialog(
       BuildContext context, DocumentSnapshot documentReference) {
-    return DeleteAlert(
+    return GroupDeleteAlert(
       documentReference: documentReference,
     );
   }
@@ -290,7 +347,7 @@ class GroupChatMessageController extends GetxController {
     print("groupId : ${document['groupId']}");
     return Column(
       children: [
-        (document['sender'] == id && document['groupId'] == pId)
+        (document['sender'] == id)
             ? GroupSenderMessage(
                 document: document,
                 index: index,
@@ -298,8 +355,8 @@ class GroupChatMessageController extends GetxController {
               )
             :
             // RECEIVER MESSAGE
-        document['groupId'] != "" ?
-         GroupReceiverMessage(document: document, index: index):Container()
+
+            GroupReceiverMessage(document: document, index: index)
       ],
     );
   }

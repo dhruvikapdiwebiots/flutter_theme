@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 import '../../../../config.dart';
 
 class GroupMessageCard extends StatelessWidget {
@@ -15,7 +17,7 @@ class GroupMessageCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: Insets.i10),
       margin: const EdgeInsets.only(
           bottom: Insets.i10, left: Insets.i5, right: Insets.i5),
-      child: TextButton(
+   /*   child: TextButton(
         child: Row(
           children: <Widget>[
             Material(
@@ -72,6 +74,38 @@ class GroupMessageCard extends StatelessWidget {
         onPressed: () {
           Get.toNamed(routeName.groupChatMessage,arguments: document!["group"]);
         },
+      ),*/
+      child: ListTile(
+        onTap: ()=> Get.toNamed(routeName.groupChatMessage,arguments: document!["group"]),
+        contentPadding: EdgeInsets.zero,
+        title: Text(
+            document!["group"]['name'],
+            style: AppCss.poppinsblack16
+                .textColor(appCtrl.appTheme.primary)
+        ),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(top: 6.0),
+          child: Text(
+            currentUserId == document!["senderId"]
+                ? "You Create this group ${document!["group"]['name']}"
+                : "${document!["sender"]['name']} added you",
+            style: AppCss.poppinsMedium14
+                .textColor(appCtrl.appTheme.grey)
+          ),
+        ),
+        leading:document!["group"]['image'] != null && document!["group"]['image'] != "" ?  CircleAvatar(
+          backgroundImage: NetworkImage(
+              document!["group"]['image']
+          ) ,
+          radius: 25,
+        ): CircleAvatar(backgroundImage: AssetImage(imageAssets.user), radius: 25,),
+        trailing: Text(
+            DateFormat('HH:mm a').format(
+                DateTime.fromMillisecondsSinceEpoch(
+                    int.parse(document!['timestamp']))),
+            style:  AppCss.poppinsMedium12
+                .textColor(appCtrl.appTheme.primary)
+        ),
       ),
     );
   }

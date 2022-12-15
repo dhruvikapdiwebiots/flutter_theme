@@ -3,11 +3,11 @@ import 'package:intl/intl.dart';
 
 import '../../../../config.dart';
 
-class ContactLayout extends StatelessWidget {
+class GroupContactLayout extends StatelessWidget {
   final DocumentSnapshot? document;
   final VoidCallback? onLongPress;
-
-  const ContactLayout({Key? key, this.document, this.onLongPress})
+final String? currentUserId;
+  const GroupContactLayout({Key? key, this.document, this.onLongPress,this.currentUserId})
       : super(key: key);
 
   @override
@@ -24,6 +24,10 @@ class ContactLayout extends StatelessWidget {
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  if(document!["sender"] != currentUserId)
+                  Text(document!['senderName'],
+                      style: AppCss.poppinsMedium14
+                          .textColor(appCtrl.appTheme.whiteColor)).alignment(Alignment.bottomLeft).paddingAll(Insets.i15),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [

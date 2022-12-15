@@ -1,3 +1,6 @@
+import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_contact_layout.dart';
+import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_location_layout.dart';
+
 import '../../../../../config.dart';
 
 class GroupReceiverMessage extends StatelessWidget {
@@ -9,7 +12,7 @@ class GroupReceiverMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ChatController>(builder: (chatCtrl) {
+    return GetBuilder<GroupChatMessageController>(builder: (chatCtrl) {
       return Container(
         margin: const EdgeInsets.only(bottom: 10.0),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
@@ -32,7 +35,8 @@ class GroupReceiverMessage extends StatelessWidget {
                 GroupReceiverImage(document: document),
 
               if (document!["type"] == MessageType.contact.name)
-                ContactLayout(
+                GroupContactLayout(
+                    currentUserId: chatCtrl.id,
                     onLongPress: () {
                       showDialog(
                           context: Get.context!,
@@ -41,8 +45,9 @@ class GroupReceiverMessage extends StatelessWidget {
                     },
                     document: document),
               if (document!["type"] == MessageType.location.name)
-                LocationLayout(
+                GroupLocationLayout(
                     document: document,
+                    currentUserId: chatCtrl.id,
                     onLongPress: () {
                       showDialog(
                           context: Get.context!,
@@ -53,7 +58,15 @@ class GroupReceiverMessage extends StatelessWidget {
                       launchUrl(Uri.parse(document!["content"]));
                     }),
               if (document!["type"] == MessageType.video.name)
-                GroupVideoDoc(document: document),
+                GroupVideoDoc(
+                  document: document,
+                  onLongPress: () {
+                    showDialog(
+                        context: Get.context!,
+                        builder: (BuildContext context) =>
+                            chatCtrl.buildPopupDialog(context, document!));
+                  },
+                ),
               if (document!["type"] == MessageType.audio.name)
                 GroupAudioDoc(
                     document: document,

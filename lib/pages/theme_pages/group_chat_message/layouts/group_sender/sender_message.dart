@@ -1,4 +1,6 @@
 
+import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_contact_layout.dart';
+import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_location_layout.dart';
 import 'package:http/http.dart' as http;
 import '../../../../../config.dart';
 
@@ -43,7 +45,8 @@ class GroupSenderMessage extends StatelessWidget {
                         );
                       }),
                 if (document!["type"] == MessageType.contact.name)
-                  ContactLayout(
+                  GroupContactLayout(
+                    currentUserId: currentUserId,
                       onLongPress: () {
                         showDialog(
                           context: Get.context!,
@@ -53,8 +56,9 @@ class GroupSenderMessage extends StatelessWidget {
                       },
                       document: document),
                 if (document!["type"] == MessageType.location.name)
-                  LocationLayout(
+                  GroupLocationLayout(
                       document: document,
+                      currentUserId: chatCtrl.id,
                       onLongPress: () {
                         showDialog(
                           context: Get.context!,

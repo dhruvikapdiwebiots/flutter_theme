@@ -2,10 +2,9 @@ import 'dart:io';
 
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter_theme/config.dart';
-import 'package:flutter_theme/pages/theme_pages/group_chat/layouts/create_group.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class GroupChatController extends GetxController {
+class CreateGroupController extends GetxController {
   List<Contact>? contacts;
   List selectedContact = [];
   List contactList = [];
@@ -109,6 +108,17 @@ class GroupChatController extends GetxController {
     Reference reference = FirebaseStorage.instance.ref().child(fileName);
     var file = File(imageFile!.path);
     image = File(imageFile!.path);
+    UploadTask uploadTask = reference.putFile(file);
+    await uploadTask.then((res) {
+      res.ref.getDownloadURL().then((downloadUrl) {
+        imageUrl = downloadUrl;
+        print("imageUrl : $imageUrl");
+        update();
+      }, onError: (err) {
+        update();
+        Fluttertoast.showToast(msg: 'Image is Not Valid');
+      });
+    });
   }
 
 //image picker option

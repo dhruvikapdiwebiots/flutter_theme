@@ -10,7 +10,7 @@ class CreateGroup extends StatelessWidget {
   Widget build(BuildContext context) {
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
-      return GetBuilder<GroupChatController>(builder: (groupCtrl) {
+      return GetBuilder<CreateGroupController>(builder: (groupCtrl) {
         return Padding(
           padding:
               EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -99,12 +99,15 @@ class CreateGroup extends StatelessWidget {
                         margin: 0,
                         onTap: () async {
                           groupCtrl.imageFile = groupCtrl.pickerCtrl.imageFile;
+                          await groupCtrl.uploadFile();
+                          String? image = groupCtrl.imageUrl;
                           groupCtrl.update();
                           final now = DateTime.now();
                           String id = now.microsecondsSinceEpoch.toString();
-                          await groupCtrl.uploadFile();
-                          final user = appCtrl.storage.read("user");
 
+                          final user = appCtrl.storage.read("user");
+                          await Future.delayed(Durations.s3);
+                          print("image : ${groupCtrl.imageUrl}");
                           await FirebaseFirestore.instance
                               .collection('groups')
                               .doc(id)
@@ -121,12 +124,12 @@ class CreateGroup extends StatelessWidget {
                             // I dont know why you called it just timestamp i changed it on created and passed an function with serverTimestamp()
                           });
 
+                          groupCtrl.selectedContact.add(user);
                           await FirebaseFirestore.instance
-                              .collection("contacts")
+                              .collection("groups")
                               .doc(id)
                               .get()
                               .then((value) async {
-                            log("group : ${value.data()}");
                             await FirebaseFirestore.instance
                                 .collection('contacts')
                                 .add({
@@ -135,7 +138,7 @@ class CreateGroup extends StatelessWidget {
                               'group': {
                                 "id": value.id,
                                 "name": groupCtrl.txtGroupName.text,
-                                "image": groupCtrl.imageUrl
+                                "image": image
                               },
                               'receiverId': groupCtrl.selectedContact,
                               'senderId': user["id"],
@@ -151,9 +154,6 @@ class CreateGroup extends StatelessWidget {
                             });
 
                             groupCtrl.selectedContact = [];
-                            groupCtrl.imageUrl = "";
-                            groupCtrl.imageFile = null;
-                            groupCtrl.image = null;
                             groupCtrl.txtGroupName.text = "";
                             groupCtrl.update();
                             Get.back();

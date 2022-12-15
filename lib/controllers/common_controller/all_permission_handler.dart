@@ -105,20 +105,22 @@ class PermissionHandlerController extends GetxController{
   }
 
   // get location
-  Future<Position> getCurrentPosition() async {
+  Future<Position?> getCurrentPosition() async {
     final hasPermission = await handlePermission();
-
+    print(hasPermission);
     if (!hasPermission) {
-      return Geolocator.getCurrentPosition();
+      LocationPermission permission = await Geolocator.requestPermission();
+      getCurrentPosition();
+    }else {
+      final position =
+      await geoLocatorPlatform.getCurrentPosition();
+      updatePositionList(
+        PositionItemType.position,
+        position.toString(),
+      );
+      return position;
     }
+    return null;
 
-    final position =
-    await geoLocatorPlatform.getCurrentPosition();
-    updatePositionList(
-      PositionItemType.position,
-      position.toString(),
-    );
-
-    return position;
   }
 }

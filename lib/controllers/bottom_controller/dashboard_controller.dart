@@ -1,5 +1,6 @@
 
 import 'package:flutter_theme/config.dart';
+import 'package:flutter_theme/pages/bottom_pages/status/status.dart';
 
 class DashboardController extends GetxController {
   int selectedIndex = 0;
@@ -13,7 +14,7 @@ class DashboardController extends GetxController {
   List<Widget> widgetOptions = <Widget>[
     Text("Message"),
     Message(),
-    Text("Status"),
+    StatusList(),
   ];
 
   //on tap select
