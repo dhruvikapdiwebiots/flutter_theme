@@ -3,7 +3,9 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  agora_rtc_engine
   geolocator_windows
+  iris_event
   permission_handler_windows
   share_plus
   url_launcher_windows

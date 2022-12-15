@@ -4,7 +4,9 @@ import 'package:flutter_theme/config.dart';
 
 class PickerController extends GetxController {
   XFile? imageFile;
+  XFile? videoFile;
   File? image;
+  File? video;
 
 // GET IMAGE FROM GALLERY
   Future getImage(source) async {
@@ -38,6 +40,40 @@ class PickerController extends GetxController {
             Get.back();
           }, galleryTap: () async {
             await getImage(ImageSource.gallery);
+            Get.back();
+          });
+        });
+  }
+
+
+  //video picker option
+  videoPickerOption(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+          borderRadius:
+          BorderRadius.vertical(top: Radius.circular(AppRadius.r25)),
+        ),
+        builder: (BuildContext context) {
+          // return your layout
+          return ImagePickerLayout(cameraTap: () async {
+            dismissKeyboard();
+            final ImagePicker picker = ImagePicker();
+            videoFile = (await picker.pickVideo(source: ImageSource.camera))!;
+            if (videoFile != null) {
+              video = File(videoFile!.path);
+
+              update();
+              print("vvv : $video");
+            }
+            Get.back(result: video);
+          }, galleryTap: () async {
+            final ImagePicker picker = ImagePicker();
+            videoFile = (await picker.pickImage(source: ImageSource.gallery))!;
+            if (videoFile != null) {
+              video = File(videoFile!.path);
+              update();
+            }
             Get.back();
           });
         });

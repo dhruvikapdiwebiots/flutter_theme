@@ -2,11 +2,26 @@ import '../../../../config.dart';
 
 class ChatMessageAppBar extends StatelessWidget with PreferredSizeWidget{
   final String? name;
-  const ChatMessageAppBar({Key? key,this.name}) : super(key: key);
+  final GestureTapCallback? callTap;
+  const ChatMessageAppBar({Key? key,this.name,this.callTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return  AppBar(
+        actions: [
+          IconButton(
+            onPressed: (){},
+            icon: const Icon(Icons.video_call),
+          ),
+          IconButton(
+            onPressed: callTap,
+            icon: const Icon(Icons.call),
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.more_vert),
+          ),
+        ],
         title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

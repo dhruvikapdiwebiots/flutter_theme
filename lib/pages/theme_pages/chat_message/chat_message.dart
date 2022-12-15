@@ -12,11 +12,15 @@ class Chat extends StatefulWidget {
 class _ChatState extends State<Chat>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   final chatCtrl = Get.put(ChatController());
-
+  dynamic receiverData;
   @override
   void initState() {
     // TODO: implement initState
     WidgetsBinding.instance.addObserver(this);
+    receiverData = Get.arguments;
+    setState(() {
+
+    });
     super.initState();
   }
 
@@ -32,6 +36,30 @@ class _ChatState extends State<Chat>
     }
   }
 
+  makeCall()async{
+    var user = appCtrl.storage.read("user");
+    await FirebaseFirestore.instance
+        .collection('call')
+        .doc(user["id"])
+        .set(user);
+    await FirebaseFirestore.instance
+        .collection('call')
+        .doc(receiverData["id"])
+        .set(receiverData);
+
+   /* Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CallScreen(
+          channelId: senderCallData.callId,
+          call: senderCallData,
+          isGroupChat: false,
+        ),
+      ),
+    );*/
+    Get.toNamed(routeName.callScreen,arguments:user );
+  }
+
   @override
   Widget build(BuildContext context) {
     log("use : ${chatCtrl.getPeerStatus()}");
@@ -39,8 +67,9 @@ class _ChatState extends State<Chat>
       return WillPopScope(
           onWillPop: chatCtrl.onBackPress,
           child: Scaffold(
-              appBar: ChatMessageAppBar(name: chatCtrl.pName),
+              appBar: ChatMessageAppBar(name: chatCtrl.pName,callTap: ()=> makeCall()),
               backgroundColor: Colors.white,
+
               body: Stack(children: [
                 Container(
                     decoration: BoxDecoration(

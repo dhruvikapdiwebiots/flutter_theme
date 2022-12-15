@@ -20,10 +20,11 @@ class CommonFileRowList extends StatelessWidget {
               icons: Icons.video_collection_sharp,
               color: Colors.pink,
               text: fonts.video.tr,
-              onTap: () {
+              onTap: ()async {
+                print("object");
                 chatCtrl.pickerCtrl.dismissKeyboard();
                 Get.back();
-                Get.to(CameraPreviewLayout());
+                chatCtrl.videoSend();
               }),
           const HSpace(Sizes.s40),
           IconCreation(

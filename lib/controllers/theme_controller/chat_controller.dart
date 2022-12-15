@@ -4,18 +4,17 @@ import 'dart:io';
 
 import 'package:dartx/dartx_io.dart';
 import 'package:flutter_theme/config.dart';
-import 'package:flutter_theme/controllers/common_controller/picker_controller.dart';
-import 'package:flutter_theme/controllers/common_controller/picker_controller.dart';
-import 'package:flutter_theme/controllers/common_controller/picker_controller.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ChatController extends GetxController {
-  String? pId, id, pName, groupId, imageUrl, peerNo, status, statusLastSeen;
+  String? pId, id, pName, groupId, imageUrl, peerNo, status, statusLastSeen,videoUrl;
   dynamic message;
   dynamic pData;
   bool positionStreamStarted = false;
   XFile? imageFile;
+  XFile? videoFile;
   File? image;
+  File? video;
   bool? isLoading = true;
   bool typing = false;
   final pickerCtrl = Get.isRegistered<PickerController>()
@@ -192,6 +191,32 @@ class ChatController extends GetxController {
     });
   }
 
+
+
+  videoSend()async{
+    await pickerCtrl.videoPickerOption(Get.context!);
+    videoFile = pickerCtrl.videoFile;
+    update();
+    const Duration(seconds: 2);
+    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    Reference reference = FirebaseStorage.instance.ref().child(fileName);
+    var file = File(videoFile!.path);
+    UploadTask uploadTask = reference.putFile(file);
+
+    uploadTask.then((res) {
+      res.ref.getDownloadURL().then((downloadUrl) {
+        videoUrl = downloadUrl;
+        isLoading = false;
+        onSendMessage(videoUrl!, MessageType.video);
+        update();
+      }, onError: (err) {
+        isLoading = false;
+        update();
+        Fluttertoast.showToast(msg: 'Image is Not Valid');
+      });
+    });
+  }
+
   //pick up contact and share
   saveContactInChat() async {
     PermissionStatus permissionStatus =
@@ -244,8 +269,11 @@ class ChatController extends GetxController {
         // I dont know why you called it just timestamp i changed it on created and passed an function with serverTimestamp()
       });
 
+        print(FirebaseFirestore.instance
+            .collection("contacts").where("id",isEqualTo: id)
+            .get());
       final msgList = await FirebaseFirestore.instance
-          .collection("contacts")
+          .collection("contacts").where("id",isEqualTo: id)
           .get()
           .then((value) {
         log("exist : ${value}");

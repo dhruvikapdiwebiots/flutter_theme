@@ -20,17 +20,19 @@ class DeleteAlert extends StatelessWidget {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Get.back();
               },
               child: const Text('Close'),
             ),
             TextButton(
               onPressed: () async {
-                Navigator.of(context).pop();
-
+                Get.back();
+                print(documentReference!.id);
+                print(FirebaseFirestore.instance
+                    .collection('messages').doc());
                 FirebaseFirestore.instance
                     .collection('messages')
-                    .doc(collectionName.chatWith)
+                    .doc(documentReference!.id)
                     .delete();
                 await FirebaseFirestore.instance
                     .runTransaction((transaction) async {});

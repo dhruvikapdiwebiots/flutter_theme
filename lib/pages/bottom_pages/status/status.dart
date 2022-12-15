@@ -50,36 +50,33 @@ class _StatusListState extends State<StatusList>
                 height: MediaQuery.of(context).size.height - 50,
                 decoration: BoxDecoration(color: appCtrl.appTheme.accent),
                 child: StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection("status")
-                        .snapshots(),
+                    stream: statusCtrl.generateNumbers,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const CircularProgressIndicator();
                       }
 
                       return ListView.builder(
-                        itemCount: (snapshot.data!).docs.length,
+                        itemCount: (snapshot.data!).length,
                         itemBuilder: (context, index) {
                           return Column(
                             children: [
                               InkWell(
                                 onTap: () {
-                                  print((snapshot.data!).docs[index]);
+                                  print((snapshot.data!)[index]);
                                   Get.toNamed(routeName.statusView,
-                                      arguments: (snapshot.data!).docs[index]);
+                                      arguments: (snapshot.data!)[index]);
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.only(
                                       bottom: 8.0, top: Insets.i10),
                                   child: ListTile(
                                     title: Text(
-                                      (snapshot.data!).docs[index]["username"],
+                                      (snapshot.data!)[index].username,
                                     ),
                                     leading: CircleAvatar(
                                       backgroundImage: NetworkImage(
-                                        (snapshot.data!).docs[index]
-                                            ["profilePic"],
+                                        (snapshot.data!)[index].profilePic,
                                       ),
                                       radius: 30,
                                     ),

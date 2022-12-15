@@ -5,6 +5,7 @@
 
 import 'package:flutter_theme/pages/bottom_pages/status/layouts/confirmation_screen.dart';
 import 'package:flutter_theme/pages/bottom_pages/status/layouts/status_view.dart';
+import 'package:flutter_theme/pages/theme_pages/call/call.dart';
 
 import '../config.dart';
 import 'route_name.dart';
@@ -28,5 +29,6 @@ class AppRoute {
     GetPage(name: _routeName.groupChatMessage, page: () =>const GroupChatMessage()),
     GetPage(name: _routeName.confirmationScreen, page: () =>const ConfirmStatusScreen()),
     GetPage(name: _routeName.statusView, page: () =>const StatusScreenView()),
+    GetPage(name: _routeName.callScreen, page: () =>const CallScreen()),
   ];
 }

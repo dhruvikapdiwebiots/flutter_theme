@@ -121,26 +121,6 @@ class CreateGroupController extends GetxController {
     });
   }
 
-//image picker option
-  imagePickerOption(BuildContext context) {
-    showModalBottomSheet(
-        context: context,
-        shape: const RoundedRectangleBorder(
-          borderRadius:
-              BorderRadius.vertical(top: Radius.circular(AppRadius.r25)),
-        ),
-        builder: (BuildContext context) {
-// return your layout
-          return ImagePickerLayout(cameraTap: () async {
-            await getImage(ImageSource.camera);
-            Get.back();
-          }, galleryTap: () async {
-            await getImage(ImageSource.gallery);
-            Get.back();
-          });
-        });
-  }
-
   void updateContact() async {
     Contact ninja = contacts!
         .firstWhere((contact) => contact.familyName!.startsWith("Ninja"));

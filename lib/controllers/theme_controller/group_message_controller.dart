@@ -14,7 +14,7 @@ import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group
 import 'package:permission_handler/permission_handler.dart';
 
 class GroupChatMessageController extends GetxController {
-  String? pId, id, pName, groupId, imageUrl, peerNo, status, statusLastSeen;
+  String? pId, id, pName, groupId, imageUrl, peerNo, status, statusLastSeen,videoUrl;
   dynamic message;
   dynamic pData;
   bool positionStreamStarted = false;
@@ -195,6 +195,25 @@ class GroupChatMessageController extends GetxController {
         imageUrl = downloadUrl;
         isLoading = false;
         onSendMessage(imageUrl!, MessageType.image);
+        update();
+      }, onError: (err) {
+        isLoading = false;
+        update();
+        Fluttertoast.showToast(msg: 'Image is Not Valid');
+      });
+    });
+  }
+
+  videoSend()async{
+    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    Reference reference = FirebaseStorage.instance.ref().child(fileName);
+    var file = File(imageFile!.path);
+    UploadTask uploadTask = reference.putFile(file);
+    uploadTask.then((res) {
+      res.ref.getDownloadURL().then((downloadUrl) {
+        videoUrl = downloadUrl;
+        isLoading = false;
+        onSendMessage(videoUrl!, MessageType.image);
         update();
       }, onError: (err) {
         isLoading = false;

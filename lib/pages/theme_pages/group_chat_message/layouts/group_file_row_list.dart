@@ -1,8 +1,6 @@
-
 import '../../../../../../config.dart';
 
 class GroupFileRowList extends StatelessWidget {
-
   const GroupFileRowList({Key? key}) : super(key: key);
 
   @override
@@ -20,10 +18,11 @@ class GroupFileRowList extends StatelessWidget {
               icons: Icons.video_collection_sharp,
               color: Colors.pink,
               text: fonts.video.tr,
-              onTap: () {
+              onTap: () async {
                 chatCtrl.pickerCtrl.dismissKeyboard();
                 Get.back();
-                Get.to(CameraPreviewLayout());
+                await chatCtrl.pickerCtrl.videoPickerOption(context);
+                chatCtrl.videoSend();
               }),
           const HSpace(Sizes.s40),
           IconCreation(
@@ -42,8 +41,7 @@ class GroupFileRowList extends StatelessWidget {
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           IconCreation(
               onTap: () {
-
-                chatCtrl.audioRecording(context,"audio",0);
+                chatCtrl.audioRecording(context, "audio", 0);
               },
               icons: Icons.headset,
               color: Colors.orange,

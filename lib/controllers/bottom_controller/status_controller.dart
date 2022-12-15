@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,6 +6,10 @@ import 'package:flutter_theme/pages/bottom_pages/message/layout/group_message_ca
 import 'package:flutter_theme/pages/bottom_pages/message/layout/receiver_message_card.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_theme/config.dart';
+
+final permissionHandelCtrl = Get.isRegistered<PermissionHandlerController>()
+    ? Get.find<PermissionHandlerController>()
+    : Get.put(PermissionHandlerController());
 
 class StatusController extends GetxController {
   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
@@ -15,9 +20,7 @@ class StatusController extends GetxController {
   XFile? imageFile;
   File? image;
   List selectedContact = [];
-  final permissionHandelCtrl = Get.isRegistered<PermissionHandlerController>()
-      ? Get.find<PermissionHandlerController>()
-      : Get.put(PermissionHandlerController());
+
   final notificationCtrl = Get.isRegistered<NotificationController>()
       ? Get.find<NotificationController>()
       : Get.put(NotificationController());
@@ -57,7 +60,7 @@ class StatusController extends GetxController {
         )
         .get();
 
-  print("object : ${statusesSnapshot.docs.isNotEmpty}");
+    print("object : ${statusesSnapshot.docs.isNotEmpty}");
     if (statusesSnapshot.docs.isNotEmpty) {
       Status status = Status.fromMap(statusesSnapshot.docs[0].data());
       statusImageUrls = status.photoUrl;
@@ -97,6 +100,50 @@ class StatusController extends GetxController {
     update();
   }
 
+  Stream<List<Status>> generateNumbers = (() async* {
+    PermissionStatus permissionStatus =
+        await permissionHandelCtrl.getContactPermission();
+    await Future<void>.delayed(const Duration(seconds: 2));
+    List<Status> statusData = [];
+    List<Contact> contacts = [];
+
+    if (permissionStatus == PermissionStatus.granted) {
+      contacts = (await ContactsService.getContacts(
+          withThumbnails: false, iOSLocalizedLabels: false));
+      for (int i = 0; i < contacts.length; i++) {
+        String phone = contacts[i].phones![0].value.toString();
+        if (phone.length > 10) {
+          if (phone.contains(" ")) {
+            phone = phone.replaceAll(" ", "");
+          }
+          if (phone.contains("-")) {
+            phone = phone.replaceAll("-", "");
+          }
+          if (phone.contains("+")) {
+            phone = phone.replaceAll("+91", "");
+          }
+        }
+        var statusesSnapshot = await FirebaseFirestore.instance
+            .collection('status')
+            .where('phoneNumber', isEqualTo: phone)
+            .where(
+              'createdAt',
+              isGreaterThan: DateTime.now()
+                  .subtract(const Duration(hours: 24))
+                  .millisecondsSinceEpoch,
+            )
+            .get();
+        print("statusesSnapshot : $statusesSnapshot");
+        for (var tempData in statusesSnapshot.docs) {
+          Status tempStatus = Status.fromMap(tempData.data());
+          statusData.add(tempStatus);
+        }
+      }
+      print(statusData);
+      yield statusData;
+    }
+  })();
+
   getStatus() async {
     dynamic snapShot;
     try {
@@ -132,9 +179,6 @@ class StatusController extends GetxController {
     return snapShot;
   }
 }
-
-
-
 
 class Status {
   final String uid;
