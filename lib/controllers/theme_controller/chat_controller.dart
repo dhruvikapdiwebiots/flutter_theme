@@ -11,6 +11,7 @@ class ChatController extends GetxController {
   dynamic message;
   dynamic pData;
   bool positionStreamStarted = false;
+  bool isUserAvailable =true;
   XFile? imageFile;
   XFile? videoFile;
   File? image;
@@ -34,15 +35,21 @@ class ChatController extends GetxController {
     isLoading = false;
     imageUrl = '';
     var data = Get.arguments;
-    pData = data;
-    pId = data["id"];
-    pName = data["name"];
-    readLocal();
-    getPeerStatus();
+    if(data == "No User"){
+      isUserAvailable = false;
+    }else {
+      pData = data;
+      pId = data["id"];
+      pName = data["name"];
+      readLocal();
+      getPeerStatus();
+      isUserAvailable = true;
+    }
     update();
     super.onReady();
   }
 
+  //get user online, offline, typing status
   getPeerStatus() {
     FirebaseFirestore.instance.collection('users').doc(pId).get().then((value) {
       if (value.data()!.isNotEmpty) {
@@ -54,6 +61,7 @@ class ChatController extends GetxController {
     return status;
   }
 
+  //update typing status
   setTyping() async {
     textEditingController.addListener(() {
       if (textEditingController.text.isNotEmpty) {
@@ -108,8 +116,6 @@ class ChatController extends GetxController {
           "${file.name}-${DateTime.now().millisecondsSinceEpoch.toString()}";
       Reference reference = FirebaseStorage.instance.ref().child(fileName);
       UploadTask uploadTask = reference.putFile(file);
-      print("fileName : $fileName");
-      print("file : $file");
       uploadTask.then((res) {
         res.ref.getDownloadURL().then((downloadUrl) {
           imageUrl = downloadUrl;
@@ -135,11 +141,11 @@ class ChatController extends GetxController {
   locationShare() async {
     pickerCtrl.dismissKeyboard();
     Get.back();
-    await permissionHandelCtrl.getCurrentPosition().then((value) async {
-
-      /*var locationString =
-          'https://www.google.com/maps/search/?api=1&query=${value.latitude},${value.longitude}';*/
-      //onSendMessage(locationString, MessageType.location);
+    Position? position = await permissionHandelCtrl.getCurrentPosition().then((value) async {
+      var locationString =
+          'https://www.google.com/maps/search/?api=1&query=${value!.latitude},${value.longitude}';
+      onSendMessage(locationString, MessageType.location);
+      return null;
     });
   }
 
@@ -191,8 +197,7 @@ class ChatController extends GetxController {
     });
   }
 
-
-
+  //send video after recording or pick from media
   videoSend()async{
     await pickerCtrl.videoPickerOption(Get.context!);
     videoFile = pickerCtrl.videoFile;
@@ -234,6 +239,7 @@ class ChatController extends GetxController {
     update();
   }
 
+  //audio recording
   void audioRecording(BuildContext context, String type, int index) {
     showModalBottomSheet(
       context: Get.context!,
@@ -273,18 +279,14 @@ class ChatController extends GetxController {
             .collection("contacts").where("id",isEqualTo: id)
             .get());
       final msgList = await FirebaseFirestore.instance
-          .collection("contacts").where("id",isEqualTo: id)
+          .collection("contacts")
           .get()
           .then((value) {
-        log("exist : ${value}");
         if (value.docs.isNotEmpty) {
           for (var i = 0; i < value.docs.length; i++) {
             final snapshot = value.docs[i].data();
-            log("dd : ${snapshot["senderId"] == id && snapshot["receiverId"] == pId}");
-            log("dd : ${snapshot["senderId"] == id}");
             if (snapshot["senderId"] == id && snapshot["receiverId"] == pId ||
                 snapshot["senderId"] == pId && snapshot["receiverId"] == id) {
-              log("es : ${value.docs[i].id}");
               FirebaseFirestore.instance
                   .collection('contacts')
                   .doc(value.docs[i].id)

@@ -49,23 +49,9 @@ class LanguageController extends GetxController {
       Get.forceAppUpdate();
       storage.write(session.languageCode, "hi");
       storage.write(session.countryCode, "IN");
-    } else if (e['name'] == "french" ||
-        e['name'] == 'Français' ||
-        e['name'] == 'فرنسي' ||
-        e['name'] == 'फ्रेंच' ||
-        e['name'] == '프랑스 국민') {
-      appCtrl.languageVal = "fr";
-      var locale = const Locale("fr", 'FR');
-      Get.updateLocale(locale);
-      Get.forceAppUpdate();
-      storage.write(session.languageCode, "fr");
-      storage.write(session.countryCode, "FR");
     }
     update();
     appCtrl.update();
-
-    Get.forceAppUpdate();
-
     Get.forceAppUpdate();
     Get.back();
   }

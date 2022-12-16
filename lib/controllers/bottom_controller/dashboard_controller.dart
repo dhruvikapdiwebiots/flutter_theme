@@ -9,12 +9,20 @@ class DashboardController extends GetxController {
   late int iconCount = 0;
   List bottomList = [];
   List actionList = [];
-
+/*
 //list of bottommost page
   List<Widget> widgetOptions = <Widget>[
     Text("Message"),
     Message(),
     StatusList(),
+  ];*/
+
+
+//list of bottommost page
+  List<Widget> widgetOptions = <Widget>[
+    StatusList(),
+    Message(),
+    Setting(),
   ];
 
   //on tap select

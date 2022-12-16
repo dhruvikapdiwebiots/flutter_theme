@@ -15,4 +15,5 @@ class RouteName {
   final String confirmationScreen = '/confirmationScreen';
   final String statusView = '/statusView';
   final String callScreen = '/callScreen';
+  final String otherSetting = '/otherSetting';
 }

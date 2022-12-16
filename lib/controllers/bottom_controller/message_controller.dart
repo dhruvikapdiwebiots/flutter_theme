@@ -4,6 +4,7 @@ import 'package:flutter_theme/pages/bottom_pages/message/layout/group_message_ca
 import 'package:flutter_theme/pages/bottom_pages/message/layout/receiver_message_card.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_theme/config.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class MessageController extends GetxController {
   String? currentUserId;
@@ -67,7 +68,6 @@ class MessageController extends GetxController {
 
   // LOAD USERDATA LIST
   Widget loadUser(BuildContext context, DocumentSnapshot document) {
-    print(document["senderId"]);
     if (document["isGroup"] == false) {
       return document["senderId"]  == currentUserId ?ReceiverMessageCard( document: document,
           currentUserId: currentUserId):  MessageCard(
@@ -87,33 +87,11 @@ class MessageController extends GetxController {
 
   // LOAD USERDATA LIST
   Widget groupUser(BuildContext context, DocumentSnapshot document) {
-    /* bool isEmpty = true;
-    print("currentUserId : ${document["isGroup"]}");
-    if (document["isGroup"] == true) {
-
-    }
-
-    if (document["isGroup"] == false) {
-      return MessageCard(
-        document: document,
-        currentUserId: currentUserId,
-      );
-    } else {
-
-      return !isEmpty ? Container() : GroupMessageCard(
-        document: document,
-        currentUserId: currentUserId,
-      );
-
-    }*/
     bool isEmpty = true;
     List user = document["users"];
-    print(user);
     isEmpty = user.where((element) {
-      print("check  : ${element["id"] == currentUserId}");
       return element["id"] == currentUserId;
     }).isNotEmpty;
-    print("isEmpty : $isEmpty");
     return isEmpty
         ? Container()
         : GroupMessageCard(
@@ -146,10 +124,10 @@ class MessageController extends GetxController {
     return null;
   }
 
+  //get all users
   getUser() async {
     final contactLists =
         await FirebaseFirestore.instance.collection("users").get();
-
     for (int i = 0; i < contactLists.docs.length; i++) {
       if (contactLists.docs[i].id != currentUserId) {
         final msgList = await FirebaseFirestore.instance
@@ -197,9 +175,12 @@ class MessageController extends GetxController {
               .limit(1)
               .get();
           if (m.docs.isEmpty) {
-            log('No User');
+            if (Platform.isAndroid) {
+              final uri = Uri(scheme: 'Download the Chatter', path: phone);
+              await launchUrl(uri);
+            }
           } else {
-            Get.toNamed(routeName.chat, arguments: m.docs[0].data());
+            Get.toNamed(routeName.chat, arguments: m.docs.isEmpty  ? "No User" : m.docs[0].data());
           }
         }
       });

@@ -30,6 +30,7 @@ class MessageBox extends StatelessWidget {
                     print("object : ${(snapshot.data!).docs.length}");
                     return ListView.builder(
                       padding: const EdgeInsets.all(10.0),
+
                       itemBuilder: (context, index) => chatCtrl.buildItem(
                           index, (snapshot.data!).docs[index]),
                       itemCount: (snapshot.data!).docs.length,

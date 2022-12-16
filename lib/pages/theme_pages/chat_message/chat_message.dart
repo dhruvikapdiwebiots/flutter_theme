@@ -47,16 +47,6 @@ class _ChatState extends State<Chat>
         .doc(receiverData["id"])
         .set(receiverData);
 
-   /* Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => CallScreen(
-          channelId: senderCallData.callId,
-          call: senderCallData,
-          isGroupChat: false,
-        ),
-      ),
-    );*/
     Get.toNamed(routeName.callScreen,arguments:user );
   }
 
@@ -70,7 +60,7 @@ class _ChatState extends State<Chat>
               appBar: ChatMessageAppBar(name: chatCtrl.pName,callTap: ()=> makeCall()),
               backgroundColor: Colors.white,
 
-              body: Stack(children: [
+              body: chatCtrl.isUserAvailable ?  Stack(children: [
                 Container(
                     decoration: BoxDecoration(
                         image: DecorationImage(
@@ -88,7 +78,9 @@ class _ChatState extends State<Chat>
                   // Loading
                   const BuildLoader()
                 ])
-              ])));
+              ]): Center(
+                child: CommonButton(title: "Invite",onTap: (){},),
+              )));
     });
   }
 }

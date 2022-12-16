@@ -94,9 +94,16 @@ class OtpController extends GetxController {
 
     firebaseAuth
         .signInWithCredential(authCredential)
-        .then((UserCredential value) {
+        .then((UserCredential value) async{
       if (value.user != null) {
-        homeNavigation(value.user!.uid);
+        await userRegister(value.user!);
+        dynamic resultData = await getUserData(value.user!);
+
+        if (resultData["name"] == "") {
+          Get.toNamed(routeName.editProfile, arguments: resultData);
+        } else {
+          homeNavigation(resultData);
+        }
       } else {
         showToast(fonts.otpError.tr, Colors.red);
       }
@@ -104,4 +111,42 @@ class OtpController extends GetxController {
       showToast(fonts.somethingWrong.tr, Colors.red);
     });
   }
+
+  //get data
+  Future<Object?> getUserData(User user) async {
+    final result = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .get();
+    print("result : ${result.data()}");
+    dynamic resultData;
+    if (result.exists) {
+      Map<String, dynamic>? data = result.data();
+      resultData = data;
+      return resultData;
+    }
+    return resultData;
+  }
+
+  //user register
+  userRegister(User user)async{
+    final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+    firebaseMessaging.getToken().then((token) async{
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+        'chattingWith': null,
+        'id': user.uid,
+        'image': user.photoURL ?? "",
+        'name': user.displayName ?? "",
+        'pushToken': token,
+        'status': "Offline",
+        "typeStatus": "Offline",
+        "phone": user.phoneNumber ?? "",
+        "email": user.email,
+        "deviceName":appCtrl.deviceName,
+        "device":appCtrl.device,
+        "statusDesc":"Hello, I am using Chatter"
+      });
+    });
+  }
+
 }

@@ -26,10 +26,12 @@ final dynamic en = {
   "nameError": "Please Enter Name",
   "alreadyAccount": "Already have an Account",
   "confirmPassword": "Confirm Password",
-  "phoneDesc": "Let's enter your mobile number will send you OTP for confirm your number",
+  "phoneDesc":
+      "Let's enter your mobile number will send you OTP for confirm your number",
   "phoneError": "Please Enter Mobile Number",
   "next": "Next",
-  "otpContain": "OTP has been sent to you on your mobile number please enter it below.",
+  "otpContain":
+      "OTP has been sent to you on your mobile number please enter it below.",
   "otpError": "Error validating OTP, try again",
   "tryAgain": "Try again in sometime",
   "somethingWrong": "Something went wrong",
@@ -57,4 +59,10 @@ final dynamic en = {
   "accessDenied": "Access to contact data denied",
   "contactDataNotAvailable": "Contact data not available on device",
   "audioProcess": "audio is processing...",
+  "theme": "Theme",
+  "language": "Language",
+  "english": "English",
+  "arabic": "Arabic",
+  "hindi": "Hindi",
+  "korean": "Korean",
 };

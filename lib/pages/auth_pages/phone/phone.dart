@@ -34,6 +34,7 @@ class Phone extends StatelessWidget {
                         controller: phoneCtrl.phone,
                         textInputAction: TextInputAction.done,
                         keyboardType: TextInputType.phone,
+                        maxLength: 10,
                         errorText: phoneCtrl.mobileNumber
                             ? fonts.phoneError.tr
                             : null),

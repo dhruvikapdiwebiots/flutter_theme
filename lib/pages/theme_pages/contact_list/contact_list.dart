@@ -22,7 +22,7 @@ class ContactList extends StatelessWidget {
                   itemCount: contactCtrl.contactList?.length ?? 0,
                   itemBuilder: (BuildContext context, int index) {
                     Contact c = contactCtrl.contactList!.elementAt(index);
-                    return ListTile(
+                    return c.phones!.isNotEmpty ? ListTile(
                       onTap: () {
                         var id = contactCtrl.contactList!
                             .indexWhere((c) => c.identifier == c.identifier);
@@ -35,7 +35,7 @@ class ContactList extends StatelessWidget {
                           : CircleAvatar(child: Text(c.initials())),
                       title: Text(c.displayName ?? ""),
                       subtitle: Text(c.phones![0].value ?? ""),
-                    );
+                    ):Container();
                   },
                 )
               : const Center(

@@ -41,13 +41,11 @@ class _MessageState extends State<Message>
             ),
             body: SafeArea(
                 child: Stack(fit: StackFit.expand, children: <Widget>[
-              SingleChildScrollView(
-                child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height - 50,
-                    decoration: BoxDecoration(color: appCtrl.appTheme.accent),
-                    child: const ChatCard()),
-              ),
+              Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height - 50,
+                  decoration: BoxDecoration(color: appCtrl.appTheme.accent),
+                  child: const ChatCard()),
             ]))),
       );
     });

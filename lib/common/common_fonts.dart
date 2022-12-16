@@ -52,4 +52,6 @@ class Fonts{
   final accessDenied = "accessDenied";
   final audioProcess = "audioProcess";
   final contactDataNotAvailable = "contactDataNotAvailable";
+  final theme = "theme";
+  final language = "language";
 }

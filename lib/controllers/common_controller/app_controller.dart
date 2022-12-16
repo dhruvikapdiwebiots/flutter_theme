@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_theme/pages/theme_pages/language/language.dart';
 
 import '../../config.dart';
 
@@ -99,4 +100,29 @@ class AppController extends GetxController {
     update();
   }
 
+}
+
+language() async {
+  Get.generalDialog(
+    pageBuilder: (context, anim1, anim2) {
+      return Align(
+        alignment: Alignment.center,
+        child: Container(
+          height: Sizes.s280,
+          decoration:
+          BoxDecoration(borderRadius: BorderRadius.circular(AppRadius.r8)),
+          margin: const EdgeInsets.symmetric(horizontal: Insets.i50),
+          child: LanguageScreen(),
+        ),
+      );
+    },
+    transitionBuilder: (context, anim1, anim2, child) {
+      return SlideTransition(
+        position: Tween(begin: const Offset(0, -1), end: const Offset(0, 0))
+            .animate(anim1),
+        child: child,
+      );
+    },
+    transitionDuration: const Duration(milliseconds: 300),
+  );
 }

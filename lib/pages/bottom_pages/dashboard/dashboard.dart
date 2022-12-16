@@ -38,6 +38,7 @@ class _DashboardState extends State<Dashboard>
           },
           child: Scaffold(
               appBar: AppBar(
+                backgroundColor: appCtrl.appTheme.primary,
                   actions: [
                     if (dashboardCtrl.selectedIndex == 1) const PopUpAction(),
                   ],
@@ -46,7 +47,7 @@ class _DashboardState extends State<Dashboard>
                       ? fonts.calls.tr
                       : dashboardCtrl.selectedIndex == 1
                           ? fonts.chats.tr
-                          : fonts.status.tr)),
+                          : fonts.status.tr,style: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.whiteColor),)),
               body: dashboardCtrl.widgetOptions
                   .elementAt(dashboardCtrl.selectedIndex),
               bottomNavigationBar: dashboardCtrl.bottomList.isNotEmpty

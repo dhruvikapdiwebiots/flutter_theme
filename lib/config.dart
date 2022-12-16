@@ -13,6 +13,7 @@ export 'common/theme/index.dart';
 export 'common/language/index.dart';
 export '../../routes/index.dart';
 export 'extensions/spacing.dart';
+export '../widgets/directionality_rtl.dart';
 export 'extensions/text_extension.dart';
 export 'extensions/text_span_extension.dart';
 export 'extensions/textstyle_extensions.dart';

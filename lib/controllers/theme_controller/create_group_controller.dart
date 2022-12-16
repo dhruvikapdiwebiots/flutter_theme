@@ -11,6 +11,7 @@ class CreateGroupController extends GetxController {
   final formKey = GlobalKey<FormState>();
   File? image;
   XFile? imageFile;
+
   String imageUrl = "";
   TextEditingController txtGroupName = TextEditingController();
   final pickerCtrl = Get.isRegistered<PickerController>()
