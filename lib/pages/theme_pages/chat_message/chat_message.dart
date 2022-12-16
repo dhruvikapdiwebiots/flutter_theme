@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter_theme/config.dart';
+import 'package:flutter_theme/pages/theme_pages/call_screen/layouts/call_utility.dart';
 
 class Chat extends StatefulWidget {
   const Chat({Key? key}) : super(key: key);
@@ -37,7 +38,7 @@ class _ChatState extends State<Chat>
   }
 
   makeCall()async{
-    var user = appCtrl.storage.read("user");
+    /*var user = appCtrl.storage.read("user");
     await FirebaseFirestore.instance
         .collection('call')
         .doc(user["id"])
@@ -47,7 +48,25 @@ class _ChatState extends State<Chat>
         .doc(receiverData["id"])
         .set(receiverData);
 
-    Get.toNamed(routeName.callScreen,arguments:user );
+    Get.toNamed(routeName.callScreen,arguments:user );*/
+  }
+
+  call( bool isVideoCall) async {
+    var data = appCtrl.storage.read("user");
+    var myNickName = data["name"];
+
+    var myphotoUrl = data["image"];
+
+    CallUtils.dial(
+        currentuseruid: chatCtrl.pId,
+        fromDp: myphotoUrl,
+        toDp: data["image"],
+        fromUID: data["id"],
+        fromFullname: data["name"],
+        toUID: chatCtrl.pId,
+        toFullname: chatCtrl.pName,
+        context: context,
+        isVideoCall: isVideoCall);
   }
 
   @override
@@ -57,7 +76,7 @@ class _ChatState extends State<Chat>
       return WillPopScope(
           onWillPop: chatCtrl.onBackPress,
           child: Scaffold(
-              appBar: ChatMessageAppBar(name: chatCtrl.pName,callTap: ()=> makeCall()),
+              appBar: ChatMessageAppBar(name: chatCtrl.pName,callTap:()=> call(false)),
               backgroundColor: Colors.white,
 
               body: chatCtrl.isUserAvailable ?  Stack(children: [

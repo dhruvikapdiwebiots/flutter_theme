@@ -14,7 +14,15 @@ import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group
 import 'package:permission_handler/permission_handler.dart';
 
 class GroupChatMessageController extends GetxController {
-  String? pId, id, pName, groupId, imageUrl, peerNo, status, statusLastSeen,videoUrl;
+  String? pId,
+      id,
+      pName,
+      groupId,
+      imageUrl,
+      peerNo,
+      status,
+      statusLastSeen,
+      videoUrl;
   dynamic message;
   dynamic pData;
   bool positionStreamStarted = false;
@@ -146,15 +154,15 @@ class GroupChatMessageController extends GetxController {
   locationShare() async {
     pickerCtrl.dismissKeyboard();
     Get.back();
-   Position? position = await permissionHandelCtrl.getCurrentPosition().then((value) async {
-     print(value);
+    Position? position =
+        await permissionHandelCtrl.getCurrentPosition().then((value) async {
+      print(value);
       var locationString =
           'https://www.google.com/maps/search/?api=1&query=${value!.latitude},${value.longitude}';
       print(locationString);
       onSendMessage(locationString, MessageType.location);
       return null;
     });
-
   }
 
   //share media
@@ -204,7 +212,7 @@ class GroupChatMessageController extends GetxController {
     });
   }
 
-  videoSend()async{
+  videoSend() async {
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     Reference reference = FirebaseStorage.instance.ref().child(fileName);
     var file = File(imageFile!.path);
@@ -263,9 +271,7 @@ class GroupChatMessageController extends GetxController {
         res.ref.getDownloadURL().then((downloadUrl) {
           imageUrl = downloadUrl;
           isLoading = false;
-          onSendMessage(
-              imageUrl!,
-              MessageType.audio);
+          onSendMessage(imageUrl!, MessageType.audio);
           update();
         }, onError: (err) {
           isLoading = false;
@@ -279,7 +285,6 @@ class GroupChatMessageController extends GetxController {
 
   // SEND MESSAGE CLICK
   void onSendMessage(String content, MessageType type, {groupId}) async {
-    print("object");
     if (content.trim() != '') {
       textEditingController.clear();
       var user = appCtrl.storage.read("user");
@@ -311,15 +316,16 @@ class GroupChatMessageController extends GetxController {
           for (var i = 0; i < value.docs.length; i++) {
             final snapshot = value.docs[i].data();
             log("dd : ${snapshot["groupId"] == id}");
-            if(snapshot["isGroup"] == true){
-              if(snapshot["groupId"] == pId){
+            if (snapshot["isGroup"] == true) {
+              if (snapshot["groupId"] == pId) {
                 List receiver = value.docs[i].data()["receiverId"];
                 receiver.add(user);
                 FirebaseFirestore.instance
                     .collection('contacts')
                     .doc(value.docs[i].id)
                     .update({
-                  "updateStamp": DateTime.now().millisecondsSinceEpoch.toString(),
+                  "updateStamp":
+                      DateTime.now().millisecondsSinceEpoch.toString(),
                   "lastMessage": content,
                   "senderId": id,
                 });
@@ -345,7 +351,7 @@ class GroupChatMessageController extends GetxController {
             'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
             "lastMessage": content,
             "isGroup": false,
-            "groupId":groupId ?? "",
+            "groupId": groupId ?? "",
             "updateStamp": DateTime.now().millisecondsSinceEpoch.toString()
           });
         }
@@ -363,7 +369,6 @@ class GroupChatMessageController extends GetxController {
 
 // BUILD ITEM MESSAGE BOX FOR RECEIVER AND SENDER BOX DESIGN
   Widget buildItem(int index, DocumentSnapshot document) {
-    print("groupId : ${document['groupId']}");
     return Column(
       children: [
         (document['sender'] == id)
@@ -389,26 +394,5 @@ class GroupChatMessageController extends GetxController {
         .update({'chattingWith': null});
     Get.back();
     return Future.value(false);
-  }
-
-  //image picker option
-  imagePickerOption(BuildContext context) {
-    showModalBottomSheet(
-        context: context,
-        shape: const RoundedRectangleBorder(
-          borderRadius:
-              BorderRadius.vertical(top: Radius.circular(AppRadius.r25)),
-        ),
-        builder: (BuildContext context) {
-          // return your layout
-          return ImagePickerLayout(cameraTap: () {
-            pickerCtrl.dismissKeyboard();
-            getImage(ImageSource.camera);
-            Get.back();
-          }, galleryTap: () {
-            getImage(ImageSource.gallery);
-            Get.back();
-          });
-        });
   }
 }

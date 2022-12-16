@@ -51,6 +51,8 @@ dependencies:
   story_view: ^0.14.0
   #agora_uikit: ^1.1.0
   agora_rtc_engine: ^6.0.0
+  audioplayers: ^1.1.1
+
 
   smooth_page_indicator: ^1.0.0+2
   google_sign_in: ^5.4.1

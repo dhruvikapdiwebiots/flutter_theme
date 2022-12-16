@@ -54,4 +54,5 @@ class Fonts{
   final contactDataNotAvailable = "contactDataNotAvailable";
   final theme = "theme";
   final language = "language";
+  final yourStatus = "yourStatus";
 }

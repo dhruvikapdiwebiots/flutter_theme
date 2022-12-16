@@ -1,6 +1,8 @@
 
 
 
+import 'dart:io';
+
 import '../config.dart';
 
 /*
@@ -48,3 +50,18 @@ Future imagePreView(context, url) {
   );
 }
 */
+
+Future<File?> pickImageFromGallery(BuildContext context) async {
+  File? image;
+  try {
+    final pickedImage =
+    await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (pickedImage != null) {
+      image = File(pickedImage.path);
+    }
+  } catch (e) {
+    Fluttertoast.showToast(msg: e.toString());
+  }
+  return image;
+}

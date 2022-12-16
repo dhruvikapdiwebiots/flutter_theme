@@ -149,7 +149,6 @@ class LoginController extends GetxController {
     return 0;
   }
 
-
   userRegister(User user)async{
     final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
     firebaseMessaging.getToken().then((token) async{

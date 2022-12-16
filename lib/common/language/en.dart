@@ -65,4 +65,5 @@ final dynamic en = {
   "arabic": "Arabic",
   "hindi": "Hindi",
   "korean": "Korean",
+  "yourStatus": "Your status",
 };

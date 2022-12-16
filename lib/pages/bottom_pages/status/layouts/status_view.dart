@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
+
 import 'package:story_view/story_view.dart';
 
 import '../../../../config.dart';
-import '../../../../controllers/bottom_controller/status_controller.dart';
 
 class StatusScreenView extends StatefulWidget {
   static const String routeName = '/status-screen';
