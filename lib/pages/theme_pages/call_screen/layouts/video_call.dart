@@ -12,14 +12,14 @@ import 'package:wakelock/wakelock.dart';
 
 class VideoCall extends StatefulWidget {
   final String? channelName;
-  final String? currentuseruid;
+  final String? currentUserUid;
 
   final Call call;
   final ClientRoleType? role;
 
   const VideoCall({Key? key,
     required this.call,
-    required this.currentuseruid,
+    required this.currentUserUid,
     this.channelName,
     this.role})
       : super(key: key);
@@ -64,7 +64,7 @@ class _VideoCallState extends State<VideoCall> {
     initialize();
     stream = FirebaseFirestore.instance
         .collection("calls")
-        .doc(widget.currentuseruid == widget.call.callerId
+        .doc(widget.currentUserUid == widget.call.callerId
         ? widget.call.receiverId
         : widget.call.callerId)
         .collection("history")
@@ -356,7 +356,7 @@ class _VideoCallState extends State<VideoCall> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    widget.call.receiverId == widget.currentuseruid
+                    widget.call.receiverId == widget.currentUserUid
                         ? 'connecting'
                         : 'calling',
                     style: TextStyle(
@@ -483,7 +483,7 @@ class _VideoCallState extends State<VideoCall> {
         'CALLHISTORY',
         FirebaseFirestore.instance
             .collection(DbPaths.collectionusers)
-            .doc(widget.currentuseruid)
+            .doc(widget.currentUserUid)
             .collection(DbPaths.collectioncallhistory)
             .orderBy('TIME', descending: true)
             .limit(14),
@@ -499,7 +499,7 @@ class _VideoCallState extends State<VideoCall> {
     _engine.muteLocalAudioStream(muted);
     FirebaseFirestore.instance
         .collection("calls")
-        .doc(widget.currentuseruid)
+        .doc(widget.currentUserUid)
         .collection("history")
         .doc(widget.call.timestamp.toString())
         .set({'ISMUTED': muted}, SetOptions(merge: true));

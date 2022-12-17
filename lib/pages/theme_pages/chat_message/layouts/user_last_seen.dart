@@ -7,11 +7,11 @@ class UserLastSeen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<GroupChatMessageController>(
+    return GetBuilder<ChatController>(
       builder: (chatCtrl) {
         return StreamBuilder(
             stream: FirebaseFirestore.instance
-                .collection('groups')
+                .collection('users')
                 .where("id", isEqualTo: chatCtrl.pId)
                 .snapshots(),
             builder: (context, snapshot) {

@@ -7,11 +7,19 @@ import 'package:flutter_theme/config.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ChatController extends GetxController {
-  String? pId, id, pName, groupId, imageUrl, peerNo, status, statusLastSeen,videoUrl;
+  String? pId,
+      id,
+      pName,
+      groupId,
+      imageUrl,
+      peerNo,
+      status,
+      statusLastSeen,
+      videoUrl;
   dynamic message;
   dynamic pData;
   bool positionStreamStarted = false;
-  bool isUserAvailable =true;
+  bool isUserAvailable = true;
   XFile? imageFile;
   XFile? videoFile;
   File? image;
@@ -35,9 +43,9 @@ class ChatController extends GetxController {
     isLoading = false;
     imageUrl = '';
     var data = Get.arguments;
-    if(data == "No User"){
+    if (data == "No User") {
       isUserAvailable = false;
-    }else {
+    } else {
       pData = data;
       pId = data["id"];
       pName = data["name"];
@@ -47,6 +55,72 @@ class ChatController extends GetxController {
     }
     update();
     super.onReady();
+  }
+
+  Future getMessage() async {
+    List statusData = [];
+    try {
+      PermissionStatus permissionStatus =
+          await permissionHandelCtrl.getContactPermission();
+      if (permissionStatus == PermissionStatus.granted) {
+        var contacts = (await ContactsService.getContacts(
+            withThumbnails: false, iOSLocalizedLabels: false));
+        print(contacts.length);
+        statusData = await getMessageList(contacts);
+        print("ddd ${statusData.length}");
+      }
+    } catch (e) {
+      log("message : $e");
+    }
+    return statusData;
+  }
+
+  getMessageList(List<Contact> contacts) async {
+    List message = [];
+    var statusesSnapshot =
+        await FirebaseFirestore.instance.collection('users').get();
+    for (int i = 0; i < statusesSnapshot.docs.length; i++) {
+      for (int j = 0; j < contacts.length; j++) {
+        if (contacts[j].phones!.isNotEmpty) {
+          String phone = contacts[j].phones![0].value.toString();
+          if (phone.length > 10) {
+            if (phone.contains(" ")) {
+              phone = phone.replaceAll(" ", "");
+            }
+            if (phone.contains("-")) {
+              phone = phone.replaceAll("-", "");
+            }
+            if (phone.contains("+")) {
+              phone = phone.replaceAll("+91", "");
+            }
+          }
+          var storageUser = appCtrl.storage.read("user");
+
+          if (storageUser["phone"] != statusesSnapshot.docs[i].data()["phone"]) {
+            if (phone == statusesSnapshot.docs[i].data()["phone"]) {
+              print("user : ${statusesSnapshot.docs[i].data()}");
+              var messageSnapshot = await FirebaseFirestore.instance
+                  .collection('messages')
+                  .orderBy("timestamp", descending: true)
+                  .get();
+              for (int a = 0; a < messageSnapshot.docs.length; a++) {
+
+                if (messageSnapshot.docs[a].data()["sender"] == id) {
+                  print(messageSnapshot.docs[a].data()["receiver"] == statusesSnapshot.docs[i].data()["id"]);
+                 if(messageSnapshot.docs[a].data()["receiver"] == statusesSnapshot.docs[i].data()["id"]){
+                   print("ok success");
+                   message.add(messageSnapshot.docs[a].data());
+                  }
+                }
+              }
+              print(" : $message");
+            }
+          }
+        }
+      }
+    }
+
+    return message;
   }
 
   //get user online, offline, typing status
@@ -104,9 +178,8 @@ class ChatController extends GetxController {
     update();
   }
 
-
   documentShare() async {
-   pickerCtrl. dismissKeyboard();
+    pickerCtrl.dismissKeyboard();
     Get.back();
     FilePickerResult? result = await FilePicker.platform.pickFiles();
 
@@ -141,14 +214,14 @@ class ChatController extends GetxController {
   locationShare() async {
     pickerCtrl.dismissKeyboard();
     Get.back();
-    Position? position = await permissionHandelCtrl.getCurrentPosition().then((value) async {
+    Position? position =
+        await permissionHandelCtrl.getCurrentPosition().then((value) async {
       var locationString =
           'https://www.google.com/maps/search/?api=1&query=${value!.latitude},${value.longitude}';
       onSendMessage(locationString, MessageType.location);
       return null;
     });
   }
-
 
   //share media
   shareMedia(BuildContext context) {
@@ -198,7 +271,7 @@ class ChatController extends GetxController {
   }
 
   //send video after recording or pick from media
-  videoSend()async{
+  videoSend() async {
     await pickerCtrl.videoPickerOption(Get.context!);
     videoFile = pickerCtrl.videoFile;
     update();
@@ -247,23 +320,21 @@ class ChatController extends GetxController {
       backgroundColor: Colors.transparent,
       builder: (BuildContext bc) {
         return Container(
-          margin: const EdgeInsets.all(10),
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-              color: Colors.white, borderRadius: BorderRadius.circular(10)),
-          child: AudioRecordingPlugin(type: type, index: index)
-        );
+            margin: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(10)),
+            child: AudioRecordingPlugin(type: type, index: index));
       },
     );
   }
-
 
   // SEND MESSAGE CLICK
   void onSendMessage(String content, MessageType type) async {
     if (content.trim() != '') {
       textEditingController.clear();
 
-      FirebaseFirestore.instance.collection('messages').add({
+      FirebaseFirestore.instance.collection('messages').doc(pId).collection("chat").doc(id).collection("messages").add({
         'sender': id,
         'receiver': pId,
         // user ID you want to read message
@@ -275,15 +346,13 @@ class ChatController extends GetxController {
         // I dont know why you called it just timestamp i changed it on created and passed an function with serverTimestamp()
       });
 
-        print(FirebaseFirestore.instance
-            .collection("contacts").where("id",isEqualTo: id)
-            .get());
       final msgList = await FirebaseFirestore.instance
           .collection("contacts")
           .get()
           .then((value) {
         if (value.docs.isNotEmpty) {
           for (var i = 0; i < value.docs.length; i++) {
+            dynamic user = appCtrl.storage.read("user");
             final snapshot = value.docs[i].data();
             if (snapshot["senderId"] == id && snapshot["receiverId"] == pId ||
                 snapshot["senderId"] == pId && snapshot["receiverId"] == id) {
@@ -292,11 +361,17 @@ class ChatController extends GetxController {
                   .doc(value.docs[i].id)
                   .update({
                 "updateStamp": DateTime.now().millisecondsSinceEpoch.toString(),
-                "lastMessage": content
+                "lastMessage": content,
+                "senderId": id,
+                'sender': {
+                  "id": user["id"],
+                  "name": user["name"],
+                  "image": user["image"]
+                },
+                'receiver': {"id": pId, "name": pName, "image": pData["image"]},
+                'receiverId': pId,
               });
             } else {
-              dynamic user = appCtrl.storage.read("user");
-
               FirebaseFirestore.instance.collection('contacts').add({
                 'sender': {
                   "id": user["id"],
@@ -309,7 +384,7 @@ class ChatController extends GetxController {
                 'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
                 "lastMessage": content,
                 "isGroup": false,
-                "groupId":groupId ?? "",
+                "groupId": "",
                 "updateStamp": DateTime.now().millisecondsSinceEpoch.toString()
               });
             }
@@ -333,7 +408,7 @@ class ChatController extends GetxController {
             'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
             "lastMessage": content,
             "isGroup": false,
-            "groupId":groupId ?? "",
+            "groupId": "",
             "updateStamp": DateTime.now().millisecondsSinceEpoch.toString()
           });
         }
@@ -350,7 +425,7 @@ class ChatController extends GetxController {
   }
 
 // BUILD ITEM MESSAGE BOX FOR RECEIVER AND SENDER BOX DESIGN
-  Widget buildItem(int index, DocumentSnapshot document) {
+  Widget buildItem(int index, document) {
     if (document['sender'] == id) {
       return SenderMessage(
         document: document,
@@ -358,8 +433,67 @@ class ChatController extends GetxController {
       );
     } else {
       // RECEIVER MESSAGE
+
       return ReceiverMessage(document: document, index: index);
     }
+  }
+
+  Future<bool> getContact(document) async {
+    List<Contact>? contactList;
+    bool isExist = false;
+    try {
+      PermissionStatus permissionStatus =
+          await permissionHandelCtrl.getContactPermission();
+      if (permissionStatus == PermissionStatus.granted) {
+        var contacts = (await ContactsService.getContacts(
+            withThumbnails: false, iOSLocalizedLabels: false));
+        contactList = contacts;
+        print(contactList.length);
+        isExist = await getContactList(contactList, document);
+      }
+    } catch (e) {
+      log("message : $e");
+    }
+    return isExist;
+  }
+
+  getContactList(List<Contact> contacts, DocumentSnapshot document) async {
+    var statusesSnapshot =
+        await FirebaseFirestore.instance.collection('users').get();
+    log("statusesSnapshot : ${statusesSnapshot.docs.length}");
+    List<Status> statusData = [];
+    for (int i = 0; i < statusesSnapshot.docs.length; i++) {
+      for (int j = 0; j < contacts.length; j++) {
+        if (contacts[j].phones!.isNotEmpty) {
+          print("phonephonephone : ${contacts[j].phones![0].value}");
+          String phone = contacts[j].phones![0].value.toString();
+          if (phone.length > 10) {
+            if (phone.contains(" ")) {
+              phone = phone.replaceAll(" ", "");
+            }
+            if (phone.contains("-")) {
+              phone = phone.replaceAll("-", "");
+            }
+            if (phone.contains("+")) {
+              phone = phone.replaceAll("+91", "");
+            }
+          }
+          print("phone : $phone");
+          print(phone == statusesSnapshot.docs[i]["phone"]);
+          if (phone == statusesSnapshot.docs[i]["phone"]) {
+            if (statusesSnapshot.docs[i]["id"] == document["receiver"]) {
+              return true;
+            } else {
+              return false;
+            }
+          } else {
+            return false;
+          }
+        }
+      }
+    }
+
+    return statusData;
   }
 
   // ON BACKPRESS

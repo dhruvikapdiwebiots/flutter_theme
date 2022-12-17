@@ -8,11 +8,8 @@ class ChatCard extends StatelessWidget {
     return GetBuilder<MessageController>(builder: (messageCtrl) {
       return Column(
         children: [
-          StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection('contacts')
-                  .orderBy('timestamp')
-                  .snapshots(),
+          FutureBuilder(
+              future: messageCtrl.getMessage(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Center(
@@ -21,17 +18,15 @@ class ChatCard extends StatelessWidget {
                         AlwaysStoppedAnimation<Color>(appCtrl.appTheme.primary),
                   ));
                 } else {
-                  return (snapshot.data!).docs.isNotEmpty
-                      ? ListView.builder(
+                  return ListView.builder(
                           shrinkWrap: true,
                           padding: const EdgeInsets.all(10.0),
                           itemBuilder: (context, index) {
                             return messageCtrl.loadUser(
-                                context, (snapshot.data!).docs[index]);
+                                context, snapshot.data![index]);
                           },
-                          itemCount: (snapshot.data!).docs.length,
-                        )
-                      : Container();
+                          itemCount: snapshot.data!.length,
+                        );
                 }
               }),
 

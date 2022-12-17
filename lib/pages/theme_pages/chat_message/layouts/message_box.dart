@@ -14,6 +14,7 @@ class MessageBox extends StatelessWidget {
                         appCtrl.appTheme.primary)))
             : StreamBuilder(
                 stream: FirebaseFirestore.instance
+                    .collection('messages').doc(chatCtrl.pId).collection("chat").doc(chatCtrl.id)
                     .collection('messages')
                     .orderBy('timestamp', descending: true)
                     .limit(20)

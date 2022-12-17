@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter_theme/config.dart';
+import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_app_bar.dart';
 import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_build_loader.dart';
 import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_input_box.dart';
 import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_message_box.dart';
@@ -42,7 +43,7 @@ class _GroupChatMessageState extends State<GroupChatMessage>
       return WillPopScope(
           onWillPop: chatCtrl.onBackPress,
           child: Scaffold(
-              appBar: ChatMessageAppBar(name: chatCtrl.pName),
+              appBar: GroupChatMessageAppBar(name: chatCtrl.pName),
               backgroundColor: Colors.white,
               body: Stack(children: [
                 Container(

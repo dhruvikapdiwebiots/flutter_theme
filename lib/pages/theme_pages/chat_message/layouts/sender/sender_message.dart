@@ -2,7 +2,7 @@ import 'package:http/http.dart' as http;
 import '../../../../../config.dart';
 
 class SenderMessage extends StatelessWidget {
-  final DocumentSnapshot? document;
+  final dynamic document;
   final int? index;
 
   const SenderMessage({Key? key, this.document, this.index}) : super(key: key);

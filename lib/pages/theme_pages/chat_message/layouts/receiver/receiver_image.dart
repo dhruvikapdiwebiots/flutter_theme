@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import '../../../../../config.dart';
 
 class ReceiverImage extends StatelessWidget {
-  final DocumentSnapshot? document;
+  final dynamic document;
   final GestureLongPressCallback? onLongPress;
   const ReceiverImage({Key? key,this.document,this.onLongPress}) : super(key: key);
 

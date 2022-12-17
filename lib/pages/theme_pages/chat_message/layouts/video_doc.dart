@@ -4,7 +4,7 @@ import 'package:video_player/video_player.dart';
 import '../../../../config.dart';
 
 class VideoDoc extends StatefulWidget {
-  final DocumentSnapshot? document;
+  final dynamic document;
 
   const VideoDoc({Key? key, this.document}) : super(key: key);
 

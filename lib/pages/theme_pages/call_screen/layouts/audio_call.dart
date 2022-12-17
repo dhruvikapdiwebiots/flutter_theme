@@ -14,26 +14,26 @@ import 'package:wakelock/wakelock.dart';
 class AudioCall extends StatefulWidget {
   final String? channelName;
   final Call call;
-  final String? currentuseruid;
+  final String? currentUserUid;
   final ClientRoleType? role;
 
   const AudioCall({Key? key,
     required this.call,
-    required this.currentuseruid,
+    required this.currentUserUid,
     this.channelName,
     this.role})
       : super(key: key);
 
   @override
-  _AudioCallState createState() => _AudioCallState();
+  AudioCallState createState() => AudioCallState();
 }
 
-class _AudioCallState extends State<AudioCall> {
+class AudioCallState extends State<AudioCall> {
   final _users = <int>[];
   final _infoStrings = <String>[];
   bool muted = false;
   late RtcEngine _engine;
-  ChannelProfileType _channelProfileType =
+  ChannelProfileType channelProfileType =
       ChannelProfileType.channelProfileLiveBroadcasting;
 
 
@@ -61,7 +61,7 @@ class _AudioCallState extends State<AudioCall> {
     initialize();
     stream = FirebaseFirestore.instance
         .collection("calls")
-        .doc(widget.currentuseruid == widget.call.callerId
+        .doc(widget.currentUserUid == widget.call.callerId
         ? widget.call.receiverId
         : widget.call.callerId)
         .collection("history")
@@ -97,20 +97,20 @@ class _AudioCallState extends State<AudioCall> {
         channelId: widget.channelName!,
         uid: 0,
         options: ChannelMediaOptions(
-          channelProfile: _channelProfileType,
+          channelProfile: channelProfileType,
           clientRoleType: ClientRoleType.clientRoleBroadcaster,
         ));
   }
 
   Future<void> _initAgoraRtcEngine() async {
-    _engine = await createAgoraRtcEngine();
+    _engine =  createAgoraRtcEngine();
     await _engine.setEnableSpeakerphone(isspeaker);
     await _engine.setChannelProfile(
         ChannelProfileType.channelProfileLiveBroadcasting);
     await _engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
   }
 
-  bool isalreadyendedcall = false;
+  bool isAlreadyEndedCall = false;
 
   void _addAgoraEventHandlers() {
     /*_engine.setEventHandler(RtcEngineEventHandler(error: (code) {
@@ -119,7 +119,7 @@ class _AudioCallState extends State<AudioCall> {
         _infoStrings.add(info);
       });
     }, joinChannelSuccess: (channel, uid, elapsed) {
-      if (widget.call.callerId == widget.currentuseruid) {
+      if (widget.call.callerId == widget.currentUserUid) {
         _playCallingTone();
         setState(() {
           final info = 'onJoinChannel: $channel, uid: $uid';
@@ -172,7 +172,7 @@ class _AudioCallState extends State<AudioCall> {
         _infoStrings.add('onLeaveChannel');
         _users.clear();
       });
-      if (isalreadyendedcall == false) {
+      if (isAlreadyEndedCall == false) {
         FirebaseFirestore.instance
             .collection(DbPaths.collectionusers)
             .doc(widget.call.callerId)
@@ -212,7 +212,7 @@ class _AudioCallState extends State<AudioCall> {
         _infoStrings.add(info);
         _users.add(uid);
       });
-      if (widget.currentuseruid == widget.call.callerId) {
+      if (widget.currentUserUid == widget.call.callerId) {
         _stopCallingSound();
         FirebaseFirestore.instance
             .collection(DbPaths.collectionusers)
@@ -260,7 +260,7 @@ class _AudioCallState extends State<AudioCall> {
         _users.remove(uid);
       });
       _stopCallingSound();
-      if (isalreadyendedcall == false) {
+      if (isAlreadyEndedCall == false) {
         FirebaseFirestore.instance
             .collection(DbPaths.collectionusers)
             .doc(widget.call.callerId)
@@ -325,7 +325,7 @@ class _AudioCallState extends State<AudioCall> {
           RawMaterialButton(
             onPressed: () async {
               setState(() {
-                isalreadyendedcall =
+                isAlreadyEndedCall =
                 status == 'ended' || status == 'rejected' ? true : false;
               });
 
@@ -428,7 +428,7 @@ class _AudioCallState extends State<AudioCall> {
                       SizedBox(
                         width: w / 1.1,
                         child: Text(
-                          widget.call.callerId == widget.currentuseruid
+                          widget.call.callerId == widget.currentUserUid
                               ? widget.call.receiverName!
                               : widget.call.callerName!,
                           maxLines: 1,
@@ -442,7 +442,7 @@ class _AudioCallState extends State<AudioCall> {
                       ),
                       SizedBox(height: 7),
                       Text(
-                        widget.call.callerId == widget.currentuseruid
+                        widget.call.callerId == widget.currentUserUid
                             ? widget.call.receiverId!
                             : widget.call.callerId!,
                         style: TextStyle(
@@ -471,7 +471,7 @@ class _AudioCallState extends State<AudioCall> {
                       ? 'calling'
                       : status == 'calling'
                       ? widget.call.receiverId ==
-                      widget.currentuseruid
+                      widget.currentUserUid
                       ? 'connecting'
                       : 'calling'
                       : status == 'pickedup'
@@ -492,7 +492,7 @@ class _AudioCallState extends State<AudioCall> {
           ),
           Stack(
             children: [
-              widget.call.callerId == widget.currentuseruid
+              widget.call.callerId == widget.currentUserUid
                   ? widget.call.receiverPic == null ||
                   widget.call.receiverPic == '' ||
                   status == 'ended' ||
@@ -519,7 +519,7 @@ class _AudioCallState extends State<AudioCall> {
                       color: Colors.white12,
                       child: CachedNetworkImage(
                         imageUrl: widget.call.callerId ==
-                            widget.currentuseruid
+                            widget.currentUserUid
                             ? widget.call.receiverPic!
                             : widget.call.callerPic!,
                         fit: BoxFit.cover,
@@ -589,7 +589,7 @@ class _AudioCallState extends State<AudioCall> {
                       width: w,
                       child: CachedNetworkImage(
                         imageUrl: widget.call.callerId ==
-                            widget.currentuseruid
+                            widget.currentUserUid
                             ? widget.call.receiverPic!
                             : widget.call.callerPic!,
                         fit: BoxFit.cover,
@@ -634,7 +634,7 @@ class _AudioCallState extends State<AudioCall> {
                   ),
                 ],
               ),
-              // widget.call.callerId == widget.currentuseruid
+              // widget.call.callerId == widget.currentUserUid
               //     ? widget.call.receiverPic == null ||
               //             widget.call.receiverPic == '' ||
               //             status == 'ended' ||
@@ -727,7 +727,7 @@ class _AudioCallState extends State<AudioCall> {
     await CallUtils.callMethods.endCall(call: widget.call);
     DateTime now = DateTime.now();
     _stopCallingSound();
-    if (isalreadyendedcall == false) {
+    if (isAlreadyEndedCall == false) {
       await FirebaseFirestore.instance
           .collection(DbPaths.collectionusers)
           .doc(widget.call.callerId)
@@ -759,7 +759,7 @@ class _AudioCallState extends State<AudioCall> {
         'CALLHISTORY',
         FirebaseFirestore.instance
             .collection(DbPaths.collectionusers)
-            .doc(widget.currentuseruid)
+            .doc(widget.currentUserUid)
             .collection(DbPaths.collectioncallhistory)
             .orderBy('TIME', descending: true)
             .limit(14),
@@ -775,7 +775,7 @@ class _AudioCallState extends State<AudioCall> {
     _engine.muteLocalAudioStream(muted);
   /*  FirebaseFirestore.instance
         .collection(DbPaths.collectionusers)
-        .doc(widget.currentuseruid)
+        .doc(widget.currentUserUid)
         .collection(DbPaths.collectioncallhistory)
         .doc(widget.call.timeepoch.toString())
         .set({'ISMUTED': muted}, SetOptions(merge: true));*/

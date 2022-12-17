@@ -14,7 +14,7 @@ Future<Directory?> _getDownloadDirectory() async {
 
 class AudioDoc extends StatelessWidget {
   final VoidCallback? onLongPress;
-  final DocumentSnapshot? document;
+  final dynamic document;
 
   const AudioDoc({Key? key, this.onLongPress, this.document}) : super(key: key);
 

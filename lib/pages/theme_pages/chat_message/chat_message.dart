@@ -53,18 +53,11 @@ class _ChatState extends State<Chat>
 
   call( bool isVideoCall) async {
     var data = appCtrl.storage.read("user");
-    var myNickName = data["name"];
-
-    var myphotoUrl = data["image"];
 
     CallUtils.dial(
-        currentuseruid: chatCtrl.pId,
-        fromDp: myphotoUrl,
-        toDp: data["image"],
-        fromUID: data["id"],
-        fromFullname: data["name"],
-        toUID: chatCtrl.pId,
-        toFullname: chatCtrl.pName,
+        currentUserUid: chatCtrl.pId,
+        fromData: data,
+        toData: chatCtrl.pData,
         context: context,
         isVideoCall: isVideoCall);
   }

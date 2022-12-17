@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import '../../../../config.dart';
 
 class ContactLayout extends StatelessWidget {
-  final DocumentSnapshot? document;
+  final dynamic document;
   final VoidCallback? onLongPress;
 
   const ContactLayout({Key? key, this.document, this.onLongPress})

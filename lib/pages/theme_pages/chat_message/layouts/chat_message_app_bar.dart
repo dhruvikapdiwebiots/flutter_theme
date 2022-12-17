@@ -34,7 +34,7 @@ class ChatMessageAppBar extends StatelessWidget with PreferredSizeWidget{
                     fontSize: 16),
               ),
               const VSpace(Sizes.s10),
-             // const UserLastSeen()
+              const UserLastSeen()
             ]));
   }
 

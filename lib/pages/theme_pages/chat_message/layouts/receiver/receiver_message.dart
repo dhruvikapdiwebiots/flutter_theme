@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import '../../../../../config.dart';
 
 class ReceiverMessage extends StatelessWidget {
-  final DocumentSnapshot? document;
+  final dynamic document;
   final int? index;
 
   const ReceiverMessage({Key? key, this.index, this.document})

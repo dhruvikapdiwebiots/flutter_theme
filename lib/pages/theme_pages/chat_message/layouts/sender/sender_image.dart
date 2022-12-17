@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import '../../../../../config.dart';
 
 class SenderImage extends StatelessWidget {
-  final DocumentSnapshot? document;
+  final dynamic document;
   final VoidCallback? onPressed, onLongPress;
 
   const SenderImage({Key? key, this.document, this.onPressed, this.onLongPress})

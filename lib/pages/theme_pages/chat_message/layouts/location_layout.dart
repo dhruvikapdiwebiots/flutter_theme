@@ -5,7 +5,7 @@ import '../../../../config.dart';
 class LocationLayout extends StatelessWidget {
   final GestureTapCallback? onTap;
   final VoidCallback? onLongPress;
-  final DocumentSnapshot? document;
+  final dynamic document;
 
   const LocationLayout({Key? key, this.onLongPress, this.onTap, this.document})
       : super(key: key);

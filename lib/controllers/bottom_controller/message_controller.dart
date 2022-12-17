@@ -12,6 +12,7 @@ class MessageController extends GetxController {
   User? currentUser;
   bool isHomePageSelected = true;
   List contactList = [];
+  List<Contact> contactUserList = [];
   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
   String? groupId;
@@ -66,14 +67,36 @@ class MessageController extends GetxController {
         false;
   }
 
+  Future getMessage() async {
+    List statusData = [];
+    try {
+      PermissionStatus permissionStatus =
+          await permissionHandelCtrl.getContactPermission();
+      if (permissionStatus == PermissionStatus.granted) {
+        var contacts = (await ContactsService.getContacts(
+            withThumbnails: false, iOSLocalizedLabels: false));
+        print(contacts.length);
+        statusData = await getContactList(contacts);
+        print("statusData $statusData");
+      }
+    } catch (e) {
+      log("message : $e");
+    }
+    return statusData;
+  }
+
   // LOAD USERDATA LIST
   Widget loadUser(BuildContext context, DocumentSnapshot document) {
     if (document["isGroup"] == false) {
-      return document["senderId"]  == currentUserId ?ReceiverMessageCard( document: document,
-          currentUserId: currentUserId):  MessageCard(
-        document: document,
-        currentUserId: currentUserId,
-      );
+      if (document["senderId"] == currentUserId) {
+        return ReceiverMessageCard(
+            document: document, currentUserId: currentUserId);
+      } else {
+        return MessageCard(
+          document: document,
+          currentUserId: currentUserId,
+        );
+      }
     } else {
       List user = document["receiverId"];
       return user.where((element) => element["id"] == currentUserId).isNotEmpty
@@ -83,6 +106,49 @@ class MessageController extends GetxController {
             )
           : Container();
     }
+  }
+
+  getContactList(List<Contact> contacts) async {
+    List message = [];
+    var statusesSnapshot =
+        await FirebaseFirestore.instance.collection('users').get();
+    for (int i = 0; i < statusesSnapshot.docs.length; i++) {
+      for (int j = 0; j < contacts.length; j++) {
+        if (contacts[j].phones!.isNotEmpty) {
+          String phone = contacts[j].phones![0].value.toString();
+          if (phone.length > 10) {
+            if (phone.contains(" ")) {
+              phone = phone.replaceAll(" ", "");
+            }
+            if (phone.contains("-")) {
+              phone = phone.replaceAll("-", "");
+            }
+            if (phone.contains("+")) {
+              phone = phone.replaceAll("+91", "");
+            }
+          }
+          if (phone == statusesSnapshot.docs[i]["phone"]) {
+
+            var messageSnapshot =
+                await FirebaseFirestore.instance.collection('contacts').get();
+            for (int a = 0; a < messageSnapshot.docs.length; a++) {
+              if (messageSnapshot.docs[a].data()["isGroup"] == false) {
+
+                if (messageSnapshot.docs[a].data()["senderId"] ==
+                    currentUserId ||
+                    messageSnapshot.docs[a].data()["receiverId"] ==
+                        statusesSnapshot.docs[i]["id"]) {
+                  message.add(messageSnapshot.docs[a]);
+                }
+              }
+            }
+            return message;
+          }
+        }
+      }
+    }
+
+    return message;
   }
 
   // LOAD USERDATA LIST
@@ -180,7 +246,8 @@ class MessageController extends GetxController {
               await launchUrl(uri);
             }
           } else {
-            Get.toNamed(routeName.chat, arguments: m.docs.isEmpty  ? "No User" : m.docs[0].data());
+            Get.toNamed(routeName.chat,
+                arguments: m.docs.isEmpty ? "No User" : m.docs[0].data());
           }
         }
       });
