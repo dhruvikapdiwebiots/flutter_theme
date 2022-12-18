@@ -17,116 +17,19 @@ class MessageCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: Insets.i10),
       margin: const EdgeInsets.only(
           bottom: Insets.i10, left: Insets.i5, right: Insets.i5),
-      /*child: TextButton(
-        child: currentUserId != document!["senderId"] ? Row(
-          children: <Widget>[
-            Material(
-              borderRadius: const BorderRadius.all(Radius.circular(AppRadius.r25)),
-              clipBehavior: Clip.hardEdge,
-              child: document!["sender"]['image'] != null && document!["sender"]['image'] != ""
-                  ? CachedNetworkImage(
-                placeholder: (context, url) => Container(
-                  width: Sizes.s50,
-                  height: Sizes.s50,
-                  padding: const EdgeInsets.all(10.0),
-                  child: CircularProgressIndicator(
-                      strokeWidth: 1.0,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                          appCtrl.appTheme.primary)
-                  ),
-                ),
-                imageUrl: document!["sender"]['image'],
-                width: Sizes.s40,
-                height: Sizes.s40,
-                fit: BoxFit.cover,
-              )
-                  : Icon(Icons.account_circle,
-                  size: 50.0, color: appCtrl.appTheme.grey),
-            ),
-            Flexible(
-              child: Container(
-                  margin: const EdgeInsets.only(left: 10.0),
-                  child: Column(children: <Widget>[
-                    Container(
-                        alignment: Alignment.centerLeft,
-                        margin: const EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 5.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(document!["sender"]['name'],
-                                style: AppCss.poppinsblack16
-                                    .textColor(appCtrl.appTheme.primary)),
-                            const VSpace(Sizes.s6),
-                            Text(
-                              document!["lastMessage"].contains("http") ?"Media Share" :document!["lastMessage"],
-                              style: AppCss.poppinsMedium14
-                                  .textColor(appCtrl.appTheme.grey),
-                            )
-                          ],
-                        ))
-                  ])),
-            )
-          ],
-        ):  Row(
-          children: <Widget>[
-            Material(
-              borderRadius: const BorderRadius.all(Radius.circular(AppRadius.r25)),
-              clipBehavior: Clip.hardEdge,
-              child: document!["receiver"]['image'] != null && document!["receiver"]['image'] != ""
-                  ? CachedNetworkImage(
-                placeholder: (context, url) => Container(
-                  width: Sizes.s50,
-                  height: Sizes.s50,
-                  padding: const EdgeInsets.all(10.0),
-                  child: CircularProgressIndicator(
-                      strokeWidth: 1.0,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                          appCtrl.appTheme.primary)
-                  ),
-                ),
-                imageUrl: document!["receiver"]['image'],
-                width: Sizes.s40,
-                height: Sizes.s40,
-                fit: BoxFit.cover,
-              )
-                  : Icon(Icons.account_circle,
-                  size: 50.0, color: appCtrl.appTheme.grey),
-            ),
-            Flexible(
-              child: Container(
-                  margin: const EdgeInsets.only(left: 10.0),
-                  child: Column(children: <Widget>[
-                    Container(
-                        alignment: Alignment.centerLeft,
-                        margin: const EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 5.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(document!["receiver"]['name'],
-                                style: AppCss.poppinsblack16
-                                    .textColor(appCtrl.appTheme.primary)),
-                            const VSpace(Sizes.s6),
-                            Text(
-                              document!["lastMessage"].contains("http") ?"Media Share" :document!["lastMessage"],
-                              style: AppCss.poppinsMedium14
-                                  .textColor(appCtrl.appTheme.grey),
-                            )
-                          ],
-                        ))
-                  ])),
-            )
-          ],
-        ),
-        onPressed: () {
-
-
-        },
-      ),*/
       child: ListTile(
-          onTap: () => Get.toNamed(routeName.chat,
-              arguments: currentUserId != document!["senderId"]
+          onTap: () {
+            print("se ");
+            var data ={
+              "data":currentUserId != document!["senderId"]
                   ? document!["sender"]
-                  : document!["receiver"]),
+                  : document!["receiver"],
+              "chatId": document!["chatId"]
+            };
+            print("data : $data");
+            Get.toNamed(routeName.chat,
+                arguments:data);
+          },
           contentPadding: EdgeInsets.zero,
           title: Text(document!["sender"]['name'],
               style: AppCss.poppinsblack16.textColor(appCtrl.appTheme.primary)),

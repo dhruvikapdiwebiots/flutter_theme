@@ -87,8 +87,10 @@ class MessageController extends GetxController {
 
   // LOAD USERDATA LIST
   Widget loadUser(BuildContext context, DocumentSnapshot document) {
+    print("ssss");
     if (document["isGroup"] == false) {
       if (document["senderId"] == currentUserId) {
+
         return ReceiverMessageCard(
             document: document, currentUserId: currentUserId);
       } else {
@@ -128,16 +130,19 @@ class MessageController extends GetxController {
             }
           }
           if (phone == statusesSnapshot.docs[i]["phone"]) {
-
             var messageSnapshot =
                 await FirebaseFirestore.instance.collection('contacts').get();
+            print("messageSnapshot : $messageSnapshot");
             for (int a = 0; a < messageSnapshot.docs.length; a++) {
               if (messageSnapshot.docs[a].data()["isGroup"] == false) {
-
                 if (messageSnapshot.docs[a].data()["senderId"] ==
-                    currentUserId ||
+                        currentUserId ||
                     messageSnapshot.docs[a].data()["receiverId"] ==
-                        statusesSnapshot.docs[i]["id"]) {
+                            statusesSnapshot.docs[i]["id"] &&
+                        messageSnapshot.docs[a].data()["senderId"] ==
+                            statusesSnapshot.docs[i]["id"] ||
+                    messageSnapshot.docs[a].data()["receiverId"] ==
+                        currentUserId) {
                   message.add(messageSnapshot.docs[a]);
                 }
               }
@@ -246,8 +251,12 @@ class MessageController extends GetxController {
               await launchUrl(uri);
             }
           } else {
+            var data ={
+              "data":m.docs[0].data(),
+              "chatId": "0"
+            };
             Get.toNamed(routeName.chat,
-                arguments: m.docs.isEmpty ? "No User" : m.docs[0].data());
+                arguments: data);
           }
         }
       });

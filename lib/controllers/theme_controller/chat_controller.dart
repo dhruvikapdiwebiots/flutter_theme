@@ -4,11 +4,13 @@ import 'dart:io';
 
 import 'package:dartx/dartx_io.dart';
 import 'package:flutter_theme/config.dart';
+import 'package:flutter_theme/models/message_model.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ChatController extends GetxController {
   String? pId,
       id,
+      chatId,
       pName,
       groupId,
       imageUrl,
@@ -46,89 +48,51 @@ class ChatController extends GetxController {
     if (data == "No User") {
       isUserAvailable = false;
     } else {
-      pData = data;
-      pId = data["id"];
-      pName = data["name"];
+      print("arg : $data");
+      pData = data["data"];
+      pId = pData["id"];
+      pName = pData["name"];
+      chatId = data["chatId"];
       readLocal();
       getPeerStatus();
       isUserAvailable = true;
+      update();
     }
+    print("chatId : $chatId");
+    print(
+        "all : ${FirebaseFirestore.instance.collection('messages').doc(chatId).collection("chat").orderBy('timestamp', descending: true).get().then((value) => {
+              print("va : ${value.docs[0].data()}")
+            })}");
     update();
+    getMessage();
     super.onReady();
   }
 
-  Future getMessage() async {
-    List statusData = [];
-    try {
-      PermissionStatus permissionStatus =
-          await permissionHandelCtrl.getContactPermission();
-      if (permissionStatus == PermissionStatus.granted) {
-        var contacts = (await ContactsService.getContacts(
-            withThumbnails: false, iOSLocalizedLabels: false));
-        print(contacts.length);
-        statusData = await getMessageList(contacts);
-        print("ddd ${statusData.length}");
+  Stream<List<MessageModel>> getMessage()  {
+    print("object");
+    return FirebaseFirestore.instance .collection('messages')
+        .doc(chatId!)
+        .collection("chat")
+        .orderBy('timestamp', descending: true).limit(20)
+        .snapshots()
+        .map((event) {
+      List<MessageModel> messages = [];
+      for (var document in event.docs) {
+        print("document : $document");
+        messages.add(MessageModel.fromMap(document.data()));
       }
-    } catch (e) {
-      log("message : $e");
-    }
-    return statusData;
-  }
-
-  getMessageList(List<Contact> contacts) async {
-    List message = [];
-    var statusesSnapshot =
-        await FirebaseFirestore.instance.collection('users').get();
-    for (int i = 0; i < statusesSnapshot.docs.length; i++) {
-      for (int j = 0; j < contacts.length; j++) {
-        if (contacts[j].phones!.isNotEmpty) {
-          String phone = contacts[j].phones![0].value.toString();
-          if (phone.length > 10) {
-            if (phone.contains(" ")) {
-              phone = phone.replaceAll(" ", "");
-            }
-            if (phone.contains("-")) {
-              phone = phone.replaceAll("-", "");
-            }
-            if (phone.contains("+")) {
-              phone = phone.replaceAll("+91", "");
-            }
-          }
-          var storageUser = appCtrl.storage.read("user");
-
-          if (storageUser["phone"] != statusesSnapshot.docs[i].data()["phone"]) {
-            if (phone == statusesSnapshot.docs[i].data()["phone"]) {
-              print("user : ${statusesSnapshot.docs[i].data()}");
-              var messageSnapshot = await FirebaseFirestore.instance
-                  .collection('messages')
-                  .orderBy("timestamp", descending: true)
-                  .get();
-              for (int a = 0; a < messageSnapshot.docs.length; a++) {
-
-                if (messageSnapshot.docs[a].data()["sender"] == id) {
-                  print(messageSnapshot.docs[a].data()["receiver"] == statusesSnapshot.docs[i].data()["id"]);
-                 if(messageSnapshot.docs[a].data()["receiver"] == statusesSnapshot.docs[i].data()["id"]){
-                   print("ok success");
-                   message.add(messageSnapshot.docs[a].data());
-                  }
-                }
-              }
-              print(" : $message");
-            }
-          }
-        }
-      }
-    }
-
-    return message;
+      return messages;
+    });
   }
 
   //get user online, offline, typing status
   getPeerStatus() {
     FirebaseFirestore.instance.collection('users').doc(pId).get().then((value) {
-      if (value.data()!.isNotEmpty) {
-        status = value.data()!["status"].toString();
-        statusLastSeen = value.data()!["lastSeen"].toString();
+      if (value.exists) {
+        if (value.data()!.isNotEmpty) {
+          status = value.data()!["status"].toString();
+          statusLastSeen = value.data()!["lastSeen"].toString();
+        }
       }
     });
     update();
@@ -158,8 +122,6 @@ class ChatController extends GetxController {
 //read local data
   readLocal() async {
     id = appCtrl.storage.read('id') ?? '';
-    groupId = '$id-$pId';
-    log("groupId : $groupId");
     FirebaseFirestore.instance
         .collection(
             'users') // Your collection name will be whatever you have given in firestore database
@@ -333,8 +295,16 @@ class ChatController extends GetxController {
   void onSendMessage(String content, MessageType type) async {
     if (content.trim() != '') {
       textEditingController.clear();
-
-      FirebaseFirestore.instance.collection('messages').doc(pId).collection("chat").doc(id).collection("messages").add({
+      final now = DateTime.now();
+      String? newChatId =
+          chatId == "0" ? now.microsecondsSinceEpoch.toString() : chatId;
+      chatId = newChatId;
+      update();
+      FirebaseFirestore.instance
+          .collection('messages')
+          .doc(newChatId)
+          .collection("chat")
+          .add({
         'sender': id,
         'receiver': pId,
         // user ID you want to read message
@@ -381,6 +351,7 @@ class ChatController extends GetxController {
                 'receiver': {"id": pId, "name": pName, "image": pData["image"]},
                 'receiverId': pId,
                 'senderId': user["id"],
+                'chatId': newChatId,
                 'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
                 "lastMessage": content,
                 "isGroup": false,
@@ -405,6 +376,7 @@ class ChatController extends GetxController {
             'receiver': {"id": pId, "name": pName, "image": pData["image"]},
             'receiverId': pId,
             'senderId': user["id"],
+            'chatId': newChatId,
             'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
             "lastMessage": content,
             "isGroup": false,

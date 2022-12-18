@@ -12,35 +12,29 @@ class MessageBox extends StatelessWidget {
                 child: CircularProgressIndicator(
                     valueColor: AlwaysStoppedAnimation<Color>(
                         appCtrl.appTheme.primary)))
-            : StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection('messages').doc(chatCtrl.pId).collection("chat").doc(chatCtrl.id)
-                    .collection('messages')
-                    .orderBy('timestamp', descending: true)
-                    .limit(20)
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  print("sna : ${snapshot.hasData}");
-                  if (!snapshot.hasData) {
-                    return Center(
-                        child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                                appCtrl.appTheme.primary)));
-                  } else {
-                    chatCtrl.message = (snapshot.data!).docs;
-                    print("object : ${(snapshot.data!).docs.length}");
-                    return ListView.builder(
-                      padding: const EdgeInsets.all(10.0),
-
-                      itemBuilder: (context, index) => chatCtrl.buildItem(
-                          index, (snapshot.data!).docs[index]),
-                      itemCount: (snapshot.data!).docs.length,
-                      reverse: true,
-                      controller: chatCtrl.listScrollController,
-                    );
-                  }
-                },
-              ),
+            : chatCtrl.chatId != null? StreamBuilder(
+              stream: chatCtrl.getMessage(),
+              builder: (context, snapshot) {
+                print("sna : ${snapshot.data}");
+                if (!snapshot.hasData) {
+                  return Center(
+                      child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                              appCtrl.appTheme.primary)));
+                } else {
+                  chatCtrl.message = (snapshot.data!);
+                  print("object : ${(snapshot.data!).length}");
+                  return ListView.builder(
+                    padding: const EdgeInsets.all(10.0),
+                    itemBuilder: (context, index) => chatCtrl.buildItem(
+                        index, (snapshot.data!)[index]),
+                    itemCount: (snapshot.data!).length,
+                    reverse: true,
+                    controller: chatCtrl.listScrollController,
+                  );
+                }
+              },
+            ): Container(),
       );
     });
   }

@@ -19,10 +19,18 @@ class ReceiverMessageCard extends StatelessWidget {
           bottom: Insets.i10, left: Insets.i5, right: Insets.i5),
 
       child: ListTile(
-          onTap: () => Get.toNamed(routeName.chat,
-              arguments: currentUserId != document!["receiverId"]
+          onTap: () {
+            print("da");
+            var data ={
+              "data":currentUserId != document!["receiverId"]
                   ? document!["receiver"]
-                  : document!["receiver"]),
+                  : document!["receiver"],
+              "chatId": document!["chatId"]
+            };
+            print(data);
+           /* Get.toNamed(routeName.chat,
+                arguments: data);*/
+          },
           contentPadding: EdgeInsets.zero,
           title: Text( document!["receiver"]['name'],
               style: AppCss.poppinsblack16.textColor(appCtrl.appTheme.primary)),
