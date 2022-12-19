@@ -28,8 +28,8 @@ class ReceiverMessageCard extends StatelessWidget {
               "chatId": document!["chatId"]
             };
             print(data);
-           /* Get.toNamed(routeName.chat,
-                arguments: data);*/
+            Get.toNamed(routeName.chat,
+                arguments: data);
           },
           contentPadding: EdgeInsets.zero,
           title: Text( document!["receiver"]['name'],

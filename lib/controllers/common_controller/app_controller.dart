@@ -44,6 +44,7 @@ class AppController extends GetxController {
     initPlatformState();
     update();
     getAdminPermission();
+
     super.onReady();
   }
 

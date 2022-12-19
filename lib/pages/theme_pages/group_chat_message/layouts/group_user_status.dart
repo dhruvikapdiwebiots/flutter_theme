@@ -8,14 +8,15 @@ class GroupUserLastSeen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return GetBuilder<GroupChatMessageController>(
         builder: (chatCtrl) {
           return StreamBuilder(
               stream: FirebaseFirestore.instance
-                  .collection('groups')
-                  .where("id", isEqualTo: chatCtrl.pId)
+                  .collection('groupMessage').doc(chatCtrl.pId).collection("chat").doc(chatCtrl.documentId)
                   .snapshots(),
               builder: (context, snapshot) {
+                print("snapshot.data : ${snapshot.data!}" );
                 if (snapshot.data != null) {
                   if (!snapshot.hasData) {
                     return Center(
@@ -23,14 +24,10 @@ class GroupUserLastSeen extends StatelessWidget {
                             valueColor: AlwaysStoppedAnimation<Color>(
                                 appCtrl.appTheme.primary)));
                   } else {
-                    chatCtrl.message = (snapshot.data!).docs;
+
+                    chatCtrl.message = (snapshot.data!.data());
                     return Text(
-                      snapshot.data!.docs[0]["status"] == "Offline"
-                          ? DateFormat('HH:mm a').format(
-                          DateTime.fromMillisecondsSinceEpoch(
-                              int.parse(snapshot.data!.docs[0]
-                              ['lastSeen'])))
-                          : snapshot.data!.docs[0]["status"],
+                      snapshot.data!.data()!["status"].contains(chatCtrl.user["name"]) ? "" : snapshot.data!.data()!["status"],
                       textAlign: TextAlign.center,
                       style: AppCss.poppinsMedium14
                           .textColor(appCtrl.appTheme.whiteColor),

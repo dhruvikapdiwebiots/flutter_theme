@@ -77,7 +77,6 @@ class MessageController extends GetxController {
             withThumbnails: false, iOSLocalizedLabels: false));
         print(contacts.length);
         statusData = await getContactList(contacts);
-        print("statusData $statusData");
       }
     } catch (e) {
       log("message : $e");
@@ -87,10 +86,9 @@ class MessageController extends GetxController {
 
   // LOAD USERDATA LIST
   Widget loadUser(BuildContext context, DocumentSnapshot document) {
-    print("ssss");
+
     if (document["isGroup"] == false) {
       if (document["senderId"] == currentUserId) {
-
         return ReceiverMessageCard(
             document: document, currentUserId: currentUserId);
       } else {
@@ -112,6 +110,7 @@ class MessageController extends GetxController {
 
   getContactList(List<Contact> contacts) async {
     List message = [];
+
     var statusesSnapshot =
         await FirebaseFirestore.instance.collection('users').get();
     for (int i = 0; i < statusesSnapshot.docs.length; i++) {
@@ -132,7 +131,6 @@ class MessageController extends GetxController {
           if (phone == statusesSnapshot.docs[i]["phone"]) {
             var messageSnapshot =
                 await FirebaseFirestore.instance.collection('contacts').get();
-            print("messageSnapshot : $messageSnapshot");
             for (int a = 0; a < messageSnapshot.docs.length; a++) {
               if (messageSnapshot.docs[a].data()["isGroup"] == false) {
                 if (messageSnapshot.docs[a].data()["senderId"] ==
@@ -144,6 +142,17 @@ class MessageController extends GetxController {
                     messageSnapshot.docs[a].data()["receiverId"] ==
                         currentUserId) {
                   message.add(messageSnapshot.docs[a]);
+                }
+              } else {
+                if(messageSnapshot.docs[a].data()["senderId"] == currentUserId){
+                  message.add(messageSnapshot.docs[a]);
+                }else {
+                  List groupReceiver =
+                  messageSnapshot.docs[a].data()["receiverId"];
+                  print("isExis : ${groupReceiver.where((element) => element["id"] == currentUserId).isEmpty}");
+                  if(groupReceiver.where((element) => element["id"] == currentUserId).isNotEmpty){
+                    message.add(messageSnapshot.docs[a]);
+                  }
                 }
               }
             }
@@ -251,12 +260,8 @@ class MessageController extends GetxController {
               await launchUrl(uri);
             }
           } else {
-            var data ={
-              "data":m.docs[0].data(),
-              "chatId": "0"
-            };
-            Get.toNamed(routeName.chat,
-                arguments: data);
+            var data = {"data": m.docs[0].data(), "chatId": "0"};
+            Get.toNamed(routeName.chat, arguments: data);
           }
         }
       });

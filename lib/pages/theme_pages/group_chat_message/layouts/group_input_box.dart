@@ -15,7 +15,7 @@ class GroupInputBox extends StatelessWidget {
             color: Colors.white),
         child: Row(
           children: <Widget>[
-          const HSpace(Sizes.s15),
+            const HSpace(Sizes.s15),
             Flexible(
               child: TextField(
                 style:
@@ -26,15 +26,25 @@ class GroupInputBox extends StatelessWidget {
                   hintStyle: TextStyle(color: appCtrl.appTheme.gray),
                 ),
                 focusNode: chatCtrl.focusNode,
-                onChanged: (val){
+                onChanged: (val) {
+                  chatCtrl.textEditingController.addListener(() {
+                    if (chatCtrl.textEditingController.text.isNotEmpty) {
+
+                      chatCtrl.typing = true;
+                      appCtrl.firebaseCtrl.groupTypingStatus(chatCtrl.pId,chatCtrl.documentId,chatCtrl.typing);
+                    }
+                    if (chatCtrl.textEditingController.text.isEmpty && chatCtrl.typing == true) {
+                      chatCtrl.typing = false;
+                      appCtrl.firebaseCtrl.groupTypingStatus(chatCtrl.pId,chatCtrl.documentId,chatCtrl.typing);
+                    }
+
+                  });
 
                 },
               ),
             ),
             IconButton(
-              icon: const Icon(
-                Icons.attachment_outlined
-              ),
+              icon: const Icon(Icons.attachment_outlined),
               padding: const EdgeInsets.all(0.0),
               onPressed: () {
                 chatCtrl.shareMedia(context);

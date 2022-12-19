@@ -13,9 +13,9 @@ class AppArray{
 
   //bottom list
   var bottomList = [
-    {'icon': Icons.call, 'title': "calls"},
+    {'icon': Icons.image, 'title': "status"},
     {'icon': Icons.message, 'title': "chats"},
-    {'icon': Icons.settings, 'title': "status"},
+    {'icon': Icons.call, 'title': "calls"},
   ];
 
   //action list

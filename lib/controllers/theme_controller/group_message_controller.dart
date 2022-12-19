@@ -16,6 +16,7 @@ import 'package:permission_handler/permission_handler.dart';
 class GroupChatMessageController extends GetxController {
   String? pId,
       id,
+      documentId,
       pName,
       groupId,
       imageUrl,
@@ -29,6 +30,7 @@ class GroupChatMessageController extends GetxController {
   XFile? imageFile;
   File? image;
   bool isLoading = true;
+  dynamic user;
   bool typing = false;
   final permissionHandelCtrl = Get.isRegistered<PermissionHandlerController>()
       ? Get.find<PermissionHandlerController>()
@@ -43,7 +45,7 @@ class GroupChatMessageController extends GetxController {
   @override
   void onReady() {
     // TODO: implement onReady
-    var user = appCtrl.storage.read("user");
+    user = appCtrl.storage.read("user");
     id = user["id"];
     groupId = '';
     isLoading = false;
@@ -60,40 +62,24 @@ class GroupChatMessageController extends GetxController {
   }
 
   getPeerStatus() {
-    FirebaseFirestore.instance
-        .collection('groups')
-        .doc(pId)
-        .get()
-        .then((value) {
+    print("pId : $pId");
+    FirebaseFirestore.instance.collection('group').doc(pId).get().then((value) {
       if (value.exists) {
-        if (value.data()!.isNotEmpty) {
-          log("ddd : ${value.data()}");
-          pData = value.data();
-        }
+        print(" idd : ${value.id}");
+
+        pData = value.data();
       }
     });
+
+    FirebaseFirestore.instance.collection('groupMessage').doc(pId).collection("chat").get().then((value) {
+      if (value.docs.isNotEmpty) {
+        print(" idd : ${value.docs[0].id  }");
+        documentId = value.docs[0].id  ;
+      }
+    });
+
     update();
     return status;
-  }
-
-  setTyping() async {
-    final user = appCtrl.storage.read("user");
-    textEditingController.addListener(() {
-      if (textEditingController.text.isNotEmpty) {
-        FirebaseFirestore.instance.collection("users").doc(id).update({
-          "status": "${user["name"]} is typing...",
-          "lastSeen": DateTime.now().millisecondsSinceEpoch.toString()
-        });
-        typing = true;
-      }
-      if (textEditingController.text.isEmpty && typing == true) {
-        FirebaseFirestore.instance.collection("users").doc(id).update({
-          "status": "Online",
-          "lastSeen": DateTime.now().millisecondsSinceEpoch.toString()
-        });
-        typing = false;
-      }
-    });
   }
 
 //read local data
@@ -105,7 +91,7 @@ class GroupChatMessageController extends GetxController {
         .update({'chattingWith': pId});
     textEditingController.addListener(() {
       if (textEditingController.text.isNotEmpty) {
-        appCtrl.firebaseCtrl.setTyping();
+        appCtrl.firebaseCtrl.groupTypingStatus(pId,documentId,typing);
         typing = true;
       }
       if (textEditingController.text.isEmpty && typing == true) {
@@ -289,26 +275,38 @@ class GroupChatMessageController extends GetxController {
       textEditingController.clear();
       var user = appCtrl.storage.read("user");
       id = user["id"];
+      List receiverData = [];
+      print(pData["users"]);
+      List groupUser = pData["users"];
+      for (int i = 0; i < groupUser.length; i++) {
+        var data = {"id": groupUser[i]["id"], "name": groupUser[i]["name"]};
+        receiverData.add(data);
+      }
+      var senderDataAdd = {"id": id, "name": user["name"]};
+      receiverData.add(senderDataAdd);
+      update();
+      print("receiverData : $receiverData");
       FirebaseFirestore.instance
           .collection('groupMessage')
           .doc(pId)
-          .collection("chats")
+          .collection("chat")
           .add({
         'sender': id,
         'senderName': user["name"],
-        'receiver': pData["users"],
+        'receiver': receiverData,
         // user ID you want to read message
         'content': content,
         "groupId": pId,
         'type': type.name,
         'messageType': "sender",
+        "status": "",
         // i dont know why you need this ?
         'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
         // I dont know why you called it just timestamp i changed it on created and passed an function with serverTimestamp()
       });
 
       final msgList = await FirebaseFirestore.instance
-          .collection("contacts")
+          .collection("contacts").where("isGroup",isEqualTo: true)
           .get()
           .then((value) {
         log("exist : ${value}");
@@ -328,6 +326,7 @@ class GroupChatMessageController extends GetxController {
                       DateTime.now().millisecondsSinceEpoch.toString(),
                   "lastMessage": content,
                   "senderId": id,
+                  'sender': {"id" :user['id'],"name":user['name']},
                 });
               }
             }
@@ -336,24 +335,6 @@ class GroupChatMessageController extends GetxController {
           listScrollController.animateTo(0.0,
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeOut);
-        } else {
-          dynamic user = appCtrl.storage.read("user");
-
-          FirebaseFirestore.instance.collection('contacts').add({
-            'sender': {
-              "id": user["id"],
-              "name": user["name"],
-              "image": user["image"]
-            },
-            'receiver': {"id": pId, "name": pName, "image": pData["image"]},
-            'receiverId': pId,
-            'senderId': user["id"],
-            'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-            "lastMessage": content,
-            "isGroup": false,
-            "groupId": groupId ?? "",
-            "updateStamp": DateTime.now().millisecondsSinceEpoch.toString()
-          });
         }
       });
     }

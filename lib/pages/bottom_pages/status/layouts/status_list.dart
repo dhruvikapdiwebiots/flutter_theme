@@ -10,7 +10,6 @@ class StatusListLayout extends StatelessWidget {
         return Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height - 50,
-          decoration: BoxDecoration(color: appCtrl.appTheme.accent),
           child: FutureBuilder<List<Status>>(
               future: statusCtrl.getStatus(),
               builder: (context, snapshot) {
@@ -21,6 +20,7 @@ class StatusListLayout extends StatelessWidget {
                 return ListView.builder(
                   itemCount: (snapshot.data!).length,
                   itemBuilder: (context, index) {
+                    print((snapshot.data!)[index].profilePic!);
                     return Column(children: [
                       InkWell(
                           onTap: () {
@@ -33,11 +33,11 @@ class StatusListLayout extends StatelessWidget {
                                   bottom: 8.0, top: Insets.i10),
                               child: ListTile(
                                   title: Text(
-                                    (snapshot.data!)[index].username,
+                                    (snapshot.data!)[index].username!,
                                   ),
                                   leading: CircleAvatar(
                                       backgroundImage: NetworkImage(
-                                          (snapshot.data!)[index].profilePic),
+                                          (snapshot.data!)[index].profilePic!),
                                       radius: 30)))),
                       Divider(
                           color: appCtrl.appTheme.grey.withOpacity(.2), indent: 85),

@@ -69,14 +69,14 @@ class LoginController extends GetxController {
   }
 
   getData() async {
-    userId = storage.read('id') ?? '';
+    var users = storage.read('user') ?? '';
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
-    log("user : $user");
-    if (user == null) {
+    log("user : $users");
+    if (users == "") {
       log("null");
     } else {
-      dynamic resultData = await getUserData(user);
+      dynamic resultData = await getUserData(user!,isStorage: true,users:users);
       if (resultData["phone"] == "") {
         Get.toNamed(routeName.editProfile, arguments: resultData);
       } else {
@@ -152,7 +152,7 @@ class LoginController extends GetxController {
   userRegister(User user)async{
     final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
     firebaseMessaging.getToken().then((token) async{
-      await FirebaseFirestore.instance.collection('users').doc(user!.uid).set({
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
         'chattingWith': null,
         'id': user.uid,
         'image': user.photoURL ?? "",
@@ -177,8 +177,7 @@ class LoginController extends GetxController {
       FirebaseAuth.instance.authStateChanges().listen((firebaseUser) async {
         isLoading = false;
         User? user = firebaseUser;
-        getUserData(user!);
-        dynamic resultData = await getUserData(user);
+        dynamic resultData = await getUserData(user!);
         if (resultData["phone"] == "") {
           Get.toNamed(routeName.editProfile, arguments: resultData);
         } else {
@@ -253,12 +252,11 @@ class LoginController extends GetxController {
     return null;
   }
 
-  Future<Object?> getUserData(User user) async {
+  Future<Object?> getUserData(User user,{isStorage = false,users}) async {
     final result = await FirebaseFirestore.instance
         .collection('users')
-        .doc(user.uid)
+        .doc(isStorage ?users["id"] :user.uid)
         .get();
-    print("result : ${result.data()}");
     dynamic resultData;
     if (result.exists) {
       Map<String, dynamic>? data = result.data();

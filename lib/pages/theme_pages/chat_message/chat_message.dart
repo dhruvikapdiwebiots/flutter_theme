@@ -29,6 +29,7 @@ class _ChatState extends State<Chat>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       appCtrl.firebaseCtrl.setIsActive();
+      print("setTyping");
       chatCtrl.setTyping();
       chatCtrl.getPeerStatus();
     } else {

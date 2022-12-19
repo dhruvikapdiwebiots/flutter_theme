@@ -30,7 +30,7 @@ class GroupDeleteAlert extends StatelessWidget {
 
                 FirebaseFirestore.instance
                     .collection('groupMessage')
-                    .doc(chatCtrl.pId).collection("chats").doc(documentReference!.id)
+                    .doc(chatCtrl.pId).collection("chat").doc(documentReference!.id)
                     .delete();
                 await FirebaseFirestore.instance
                     .runTransaction((transaction) async {});

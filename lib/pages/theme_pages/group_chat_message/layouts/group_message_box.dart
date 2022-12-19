@@ -8,16 +8,15 @@ class GroupMessageBox extends StatelessWidget {
     return GetBuilder<GroupChatMessageController>(builder: (chatCtrl) {
       return Flexible(
         child:
-            StreamBuilder(
+            StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection('groupMessage')
                     .doc(chatCtrl.pId)
-                    .collection('chats')
+                    .collection('chat')
                     .orderBy('timestamp',descending: true)
                     .limit(20)
                     .snapshots(),
                 builder: (context, snapshot) {
-                  print("sna : ${snapshot.hasData}");
                   if (!snapshot.hasData) {
                     return Container();
                   } else {

@@ -59,31 +59,11 @@ class ChatController extends GetxController {
       update();
     }
     print("chatId : $chatId");
-    print(
-        "all : ${FirebaseFirestore.instance.collection('messages').doc(chatId).collection("chat").orderBy('timestamp', descending: true).get().then((value) => {
-              print("va : ${value.docs[0].data()}")
-            })}");
     update();
-    getMessage();
+
     super.onReady();
   }
 
-  Stream<List<MessageModel>> getMessage()  {
-    print("object");
-    return FirebaseFirestore.instance .collection('messages')
-        .doc(chatId!)
-        .collection("chat")
-        .orderBy('timestamp', descending: true).limit(20)
-        .snapshots()
-        .map((event) {
-      List<MessageModel> messages = [];
-      for (var document in event.docs) {
-        print("document : $document");
-        messages.add(MessageModel.fromMap(document.data()));
-      }
-      return messages;
-    });
-  }
 
   //get user online, offline, typing status
   getPeerStatus() {

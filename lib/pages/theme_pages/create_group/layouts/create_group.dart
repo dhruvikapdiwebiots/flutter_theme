@@ -133,19 +133,19 @@ class CreateGroup extends StatelessWidget {
                             await FirebaseFirestore.instance
                                 .collection('contacts')
                                 .add({
-                              'sender': user,
+                              'sender': {"id" :user['id'],"name":user['name']},
                               'receiver': null,
                               'group': {
                                 "id": value.id,
                                 "name": groupCtrl.txtGroupName.text,
-                                "image": image
+                                "image": groupCtrl.imageUrl
                               },
                               'receiverId': groupCtrl.selectedContact,
                               'senderId': user["id"],
                               'timestamp': DateTime.now()
                                   .millisecondsSinceEpoch
                                   .toString(),
-                              "lastMessage": "new_added",
+                              "lastMessage": "",
                               "isGroup": true,
                               "groupId": value.id,
                               "updateStamp": DateTime.now()

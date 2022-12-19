@@ -8,6 +8,8 @@ class PopUpAction extends StatelessWidget {
     return GetBuilder<DashboardController>(
       builder: (dashboardCtrl) {
         return PopupMenuButton(
+          color: appCtrl.appTheme.whiteColor,
+            icon: Icon(Icons.more_vert, color: appCtrl.appTheme.whiteColor),
             itemBuilder: (context) {
               return [
                 ...dashboardCtrl.actionList

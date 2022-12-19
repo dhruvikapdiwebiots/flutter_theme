@@ -10,6 +10,7 @@ class OtherSetting extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: appCtrl.appTheme.primary,
+          iconTheme: IconThemeData(color: appCtrl.appTheme.whiteColor),
           title: Text(fonts.chats.tr,
               style:
                   AppCss.poppinsblack18.textColor(appCtrl.appTheme.whiteColor)),

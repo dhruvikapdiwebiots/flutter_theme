@@ -26,6 +26,7 @@ class _DashboardState extends State<Dashboard>
     } else {
       appCtrl.firebaseCtrl.setLastSeen();
     }
+    appCtrl.firebaseCtrl.statusDeleteAfter24Hours();
   }
 
   @override
@@ -44,10 +45,10 @@ class _DashboardState extends State<Dashboard>
                   ],
                   automaticallyImplyLeading: false,
                   title: Text(dashboardCtrl.selectedIndex == 0
-                      ? fonts.calls.tr
+                      ? fonts.status.tr
                       : dashboardCtrl.selectedIndex == 1
                           ? fonts.chats.tr
-                          : fonts.status.tr,style: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.whiteColor),)),
+                          : fonts.calls.tr,style: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.whiteColor),)),
               body: dashboardCtrl.widgetOptions
                   .elementAt(dashboardCtrl.selectedIndex),
               bottomNavigationBar: dashboardCtrl.bottomList.isNotEmpty

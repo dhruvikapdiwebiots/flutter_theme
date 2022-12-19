@@ -29,12 +29,13 @@ class _StatusScreenViewState extends State<StatusScreenView> {
   }
 
   void initStoryPageItems() {
-    for (int i = 0; i < status!.photoUrl.length; i++) {
+    for (int i = 0; i < status!.photoUrl!.length; i++) {
       storyItems.add(StoryItem.pageImage(
-        url: status!.photoUrl[i],
+        url: status!.photoUrl![i].image!,
         controller: controller,
       ));
     }
+    print("storyItems : $storyItems");
   }
 
   @override

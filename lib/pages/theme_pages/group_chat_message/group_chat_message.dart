@@ -28,10 +28,9 @@ class _GroupChatMessageState extends State<GroupChatMessage>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       appCtrl.firebaseCtrl.setIsActive();
-      chatCtrl.setTyping();
       chatCtrl.getPeerStatus();
+      appCtrl.firebaseCtrl.groupTypingStatus(chatCtrl.pId,chatCtrl.documentId,chatCtrl.typing);
     } else {
-      appCtrl.firebaseCtrl.setLastSeen();
       chatCtrl.getPeerStatus();
     }
   }

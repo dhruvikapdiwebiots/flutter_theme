@@ -13,6 +13,7 @@ class SettingController extends GetxController {
     // TODO: implement onReady
     settingList = appArray.settingList;
     user = appCtrl.storage.read("user");
+    print(user);
     update();
     super.onReady();
   }

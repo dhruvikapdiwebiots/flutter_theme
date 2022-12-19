@@ -19,7 +19,7 @@ class CurrentUserStatus extends StatelessWidget {
           if (snapshot.data != null) {
             if (!snapshot.data!.docs.isNotEmpty) {
               return CurrentUserEmptyStatus(onTap: () {
-                Status status = Status.fromMap(
+                Status status = Status.fromJson(
                     snapshot.data!.docs[0].data());
 
                 Get.toNamed(routeName.statusView,

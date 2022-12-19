@@ -51,7 +51,7 @@ class StatusController extends GetxController {
     String downloadUrl = await snap.ref.getDownloadURL();
     imageUrl = downloadUrl;
 
-    List<String> statusImageUrls = [];
+    List<PhotoUrl> statusImageUrls = [];
     var statusesSnapshot = await FirebaseFirestore.instance
         .collection('status')
         .where(
@@ -61,18 +61,26 @@ class StatusController extends GetxController {
         .get();
 
     if (statusesSnapshot.docs.isNotEmpty) {
-      Status status = Status.fromMap(statusesSnapshot.docs[0].data());
-      statusImageUrls = status.photoUrl;
-      statusImageUrls.add(imageUrl!);
+      Status status = Status.fromJson(statusesSnapshot.docs[0].data());
+      statusImageUrls = status.photoUrl!;
+      var data = {
+        "image": imageUrl!,
+        "timestamp": DateTime.now().millisecondsSinceEpoch.toString(),
+        "isExpired": false
+      };
+      statusImageUrls.add(PhotoUrl.fromJson(data));
       await FirebaseFirestore.instance
           .collection('status')
           .doc(statusesSnapshot.docs[0].id)
-          .update({
-        'photoUrl': statusImageUrls,
-      });
+          .update({'photoUrl': statusImageUrls});
       return;
     } else {
-      statusImageUrls = [imageUrl!];
+      var data = {
+        "image": imageUrl!,
+        "timestamp": DateTime.now().millisecondsSinceEpoch.toString(),
+        "isExpired": false
+      };
+      statusImageUrls = [PhotoUrl.fromJson(data)];
     }
 
     Status status = Status(
@@ -81,9 +89,10 @@ class StatusController extends GetxController {
         photoUrl: statusImageUrls,
         createdAt: DateTime.now().millisecondsSinceEpoch.toString(),
         profilePic: user["image"],
-        uid: currentUserId!,isSeenByOwn:false);
+        uid: currentUserId!,
+        isSeenByOwn: false);
 
-    await FirebaseFirestore.instance.collection('status').add(status.toMap());
+    await FirebaseFirestore.instance.collection('status').add(status.toJson());
   }
 
 // UPLOAD SELECTED IMAGE TO FIREBASE
@@ -142,8 +151,10 @@ class StatusController extends GetxController {
           if (phone == statusesSnapshot.docs[i]["phoneNumber"]) {
             final storeUser = appCtrl.storage.read("user");
             if (statusesSnapshot.docs[i]["uid"] != storeUser["id"]) {
+              print(
+                  "object :${Status.fromJson(statusesSnapshot.docs[i].data())}");
               Status tempStatus =
-                  Status.fromMap(statusesSnapshot.docs[i].data());
+                  Status.fromJson(statusesSnapshot.docs[i].data());
               statusData.add(tempStatus);
             }
           }
@@ -156,45 +167,71 @@ class StatusController extends GetxController {
 }
 
 class Status {
-  final String uid;
-  final String username;
-  final String phoneNumber;
-  final List<String> photoUrl;
-  final String createdAt;
-  final String profilePic;
-  final bool isSeenByOwn;
+  String? uid;
+  String? username;
+  String? phoneNumber;
+  List<PhotoUrl>? photoUrl;
+  String? createdAt;
+  String? profilePic;
+  bool? isSeenByOwn;
 
-  Status({
-    required this.uid,
-    required this.username,
-    required this.phoneNumber,
-    required this.photoUrl,
-    required this.createdAt,
-    required this.profilePic,
-    required this.isSeenByOwn,
-  });
+  Status(
+      {this.uid,
+      this.username,
+      this.phoneNumber,
+      this.photoUrl,
+      this.createdAt,
+      this.profilePic,
+      this.isSeenByOwn});
 
-  Map<String, dynamic> toMap() {
-    return {
-      'uid': uid,
-      'username': username,
-      'phoneNumber': phoneNumber,
-      'photoUrl': photoUrl,
-      'createdAt': createdAt,
-      'profilePic': profilePic,
-      'isSeenByOwn': isSeenByOwn,
-    };
+  Status.fromJson(Map<String, dynamic> json) {
+    uid = json['uid'];
+    username = json['username'];
+    phoneNumber = json['phoneNumber'];
+    createdAt = json['createdAt'];
+    profilePic = json['profilePic'];
+    isSeenByOwn = json['isSeenByOwn'];
+    if (json['photoUrl'] != null) {
+      photoUrl = <PhotoUrl>[];
+      json['photoUrl'].forEach((v) {
+        photoUrl!.add(PhotoUrl.fromJson(v));
+      });
+    }
   }
 
-  factory Status.fromMap(Map<String, dynamic> map) {
-    return Status(
-      uid: map['uid'] ?? '',
-      username: map['username'] ?? '',
-      phoneNumber: map['phoneNumber'] ?? '',
-      photoUrl: List<String>.from(map['photoUrl']),
-      createdAt: map['createdAt'] ?? '',
-      profilePic: map['profilePic'] ?? '',
-      isSeenByOwn: map['isSeenByOwn'] ?? false,
-    );
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['uid'] = uid;
+    data['username'] = username;
+    data['phoneNumber'] = phoneNumber;
+    data['createdAt'] = createdAt;
+    data['profilePic'] = profilePic;
+    data['isSeenByOwn'] = isSeenByOwn;
+    if (photoUrl != null) {
+      data['photoUrl'] = photoUrl!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class PhotoUrl {
+  String? image;
+  String? timestamp;
+  bool? isExpired;
+
+  PhotoUrl({this.image, this.timestamp, this.isExpired});
+
+  PhotoUrl.fromJson(Map<String, dynamic> json) {
+    image = json['image'];
+    timestamp = json['timestamp'];
+    isExpired = json['isExpired'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['image'] = image;
+    data['timestamp'] = timestamp;
+    data['isExpired'] = isExpired;
+    return data;
   }
 }

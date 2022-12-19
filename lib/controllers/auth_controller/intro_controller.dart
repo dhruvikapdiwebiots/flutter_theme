@@ -59,7 +59,9 @@ class IntroController extends GetxController{
 
 //navigate to Login
   navigateToLogin() {
+    print(  appCtrl.storage.read("user"));
    Get.toNamed(routeName.login);
+   appCtrl.storage.write("isIntro", true);
   }
 
   @override

@@ -37,14 +37,14 @@ class _MessageState extends State<Message>
             floatingActionButton: FloatingActionButton(
               onPressed: () => messageCtrl.saveContactInChat(),
               backgroundColor: appCtrl.appTheme.primary,
-              child: const Icon(Icons.message),
+              child:  Icon(Icons.message,color: appCtrl.appTheme.whiteColor),
             ),
             body: SafeArea(
                 child: Stack(fit: StackFit.expand, children: <Widget>[
               Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height - 50,
-                  decoration: BoxDecoration(color: appCtrl.appTheme.accent),
+
                   child: const ChatCard()),
             ]))),
       );

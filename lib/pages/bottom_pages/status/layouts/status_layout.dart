@@ -11,7 +11,7 @@ class StatusLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
         onTap: () async {
-          Status status = Status.fromMap(snapshot!.data!.docs[0].data());
+          Status status = Status.fromJson(snapshot!.data!.docs[0].data());
 
           Get.toNamed(routeName.statusView, arguments: status);
           await FirebaseFirestore.instance
@@ -27,8 +27,7 @@ class StatusLayout extends StatelessWidget {
         leading: Stack(alignment: Alignment.bottomRight, children: [
           CircleAvatar(
                   backgroundImage: NetworkImage((snapshot!.data!)
-                      .docs[0]["photoUrl"]
-                          [(snapshot!.data!).docs[0]["photoUrl"].length - 1]
+                      .docs[0]["photoUrl"][0]["image"]
                       .toString()),
                   radius: 30)
               .paddingAll(Insets.i2)

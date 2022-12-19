@@ -35,7 +35,7 @@ class _IntroState extends State<Intro> {
                     child: Text(fonts.skip.tr,
                             style: AppCss.poppinsBold16
                                 .textColor(appCtrl.appTheme.primary))
-                        .inkWell(onTap: () {}))),
+                        .inkWell(onTap: () =>introCtrl.navigateToLogin()))),
             //intro page layout
             const IntroPageLayout(),
 

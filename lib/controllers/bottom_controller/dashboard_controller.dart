@@ -1,5 +1,6 @@
 
 import 'package:flutter_theme/config.dart';
+import 'package:flutter_theme/models/call_model.dart';
 import 'package:flutter_theme/pages/bottom_pages/status/status.dart';
 
 class DashboardController extends GetxController {
@@ -22,7 +23,7 @@ class DashboardController extends GetxController {
   List<Widget> widgetOptions = <Widget>[
     StatusList(),
     Message(),
-    Setting(),
+    Text("Calls"),
   ];
 
   //on tap select

@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_theme/config.dart';
 
 class SplashController extends GetxController{
+  final firebaseCtrl = Get.isRegistered<FirebaseCommonController>() ? Get.find<FirebaseCommonController>() : Get.put(FirebaseCommonController());
   @override
   void onReady() {
     // TODO: implement onReady
@@ -30,13 +31,19 @@ class SplashController extends GetxController{
 
   //check whether user login or not
   void navigationPage() async {
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final User? user = auth.currentUser;
+    var user = appCtrl.storage.read("user");
+
+    bool isIntro = appCtrl.storage.read("isIntro") ?? false;
     if (user == null) {
       // Checking if user is already login or not
      Get.toNamed(routeName.intro);
     } else {
-      loginNavigation(); // navigate to homepage if user id is not null
+      if(isIntro) {
+        loginNavigation(); // navigate to homepage if user id is not null
+      }else{
+        Get.toNamed(routeName.intro);
+      }
+      firebaseCtrl.statusDeleteAfter24Hours();
     }
   }
 

@@ -37,7 +37,7 @@ class _StatusListState extends State<StatusList>
   Widget build(BuildContext context) {
     return GetBuilder<StatusController>(builder: (_) {
       return Scaffold(
-          backgroundColor: appCtrl.appTheme.accent,
+
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
               File? pickedImage = await pickImageFromGallery(context);
@@ -46,16 +46,15 @@ class _StatusListState extends State<StatusList>
                     arguments: pickedImage);
               }
             },
-            backgroundColor: appCtrl.appTheme.primary,
-            child: const Icon(Icons.add),
+            child: Icon(Icons.add,color: appCtrl.appTheme.whiteColor,),
           ),
           body: SafeArea(
               child: SingleChildScrollView(
             child: Column(children: <Widget>[
              CurrentUserStatus(currentUserId: statusCtrl.currentUserId,)
-                  .decorated(color: appCtrl.appTheme.accent)
+
                   .marginSymmetric(vertical: Insets.i10),
-              const Divider().decorated(color: appCtrl.appTheme.accent),
+              const Divider(),
              const StatusListLayout(),
             ]),
           )));

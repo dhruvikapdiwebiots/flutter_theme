@@ -8,7 +8,7 @@ class OtpController extends GetxController {
   TextEditingController otp = TextEditingController();
 
   bool isCodeSent = false;
-  String? verificationId, mobileNumber;
+  String? verificationCode, mobileNumber;
 
   @override
   void onReady() {
@@ -25,8 +25,15 @@ class OtpController extends GetxController {
     FocusScope.of(Get.context!).requestFocus(FocusNode());
   }
 
-  homeNavigation(userid) async {
-    appCtrl.storage.write("id", userid);
+  homeNavigation(user) async {
+    print(user);
+    appCtrl.storage.write("id", user["id"]);
+    await appCtrl.storage.write("user", user);
+    await  FirebaseFirestore.instance
+        .collection('users')
+        .doc(user["id"])
+        .update({'status': "Online"});
+
     Get.toNamed(routeName.dashboard);
   }
 
@@ -50,9 +57,11 @@ class OtpController extends GetxController {
       firebaseAuth
           .signInWithCredential(phoneAuthCredential)
           .then((UserCredential value) {
+            print("user : ${value}");
+            print("user : ${value.user}");
         if (value.user != null) {
           // Handle loogged in state
-          homeNavigation(value.user!.uid);
+          homeNavigation(value.user);
         } else {
           showToast(fonts.otpError.tr, Colors.red);
         }
@@ -68,11 +77,13 @@ class OtpController extends GetxController {
     }
 
     codeSent(String verificationId, [int? forceResendingToken]) async {
+      print("code : $verificationId");
       verificationId = verificationId;
       update();
     }
 
     codeAutoRetrievalTimeout(String verificationId) {
+      print("verificationId :$verificationId");
       verificationId = verificationId;
       update();
     }
@@ -83,27 +94,46 @@ class OtpController extends GetxController {
         timeout: const Duration(seconds: 60),
         verificationCompleted: verificationCompleted,
         verificationFailed: verificationFailed,
-        codeSent: codeSent,
+        codeSent: (String verificationId, int? resendToken) async {
+          verificationCode = verificationId;
+          var phoneUser = FirebaseAuth.instance.currentUser;
+          update();
+          print("new : $verificationId");
+        },
         codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
   }
 
   //on form submit
   void onFormSubmitted() async {
+    print(otp.text);
+    print(verificationCode);
     AuthCredential authCredential = PhoneAuthProvider.credential(
-        verificationId: verificationId!, smsCode: otp.text);
-
+        verificationId: verificationCode!, smsCode: otp.text);
+    print("authCredential : $authCredential");
     firebaseAuth
         .signInWithCredential(authCredential)
         .then((UserCredential value) async{
       if (value.user != null) {
-        await userRegister(value.user!);
-        dynamic resultData = await getUserData(value.user!);
+        User user = value.user!;
+        FirebaseFirestore.instance.collection("users").where("phone",isEqualTo: mobileNumber).get().then((value) {
+          FirebaseFirestore.instance
+              .collection("users")
+              .where("phone", isEqualTo: mobileNumber)
+              .get()
+              .then((value) async{
+            if (value.docs[0].exists) {
 
-        if (resultData["name"] == "") {
-          Get.toNamed(routeName.editProfile, arguments: resultData);
-        } else {
-          homeNavigation(resultData);
-        }
+              if (value.docs[0].data()["name"] == "") {
+                Get.toNamed(routeName.editProfile, arguments: value.docs[0].data());
+              } else {
+                homeNavigation(value.docs[0].data());
+              }
+            }else{
+              await userRegister(user);
+            }
+            /* */
+          });
+        });
       } else {
         showToast(fonts.otpError.tr, Colors.red);
       }
