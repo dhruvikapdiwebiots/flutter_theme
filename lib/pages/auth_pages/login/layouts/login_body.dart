@@ -40,11 +40,14 @@ class LoginBody extends StatelessWidget {
               const VSpace(Sizes.s20),
 
               //sign in button
-              LoginWidget().signInButton(onTap: () {
+              LoginWidget().signInButton(onTap: ()async {
                 if (loginCtrl.formKey.currentState!.validate()) {
                   loginCtrl.dismissKeyBoard();
-                  loginCtrl.signIn(
+                await  loginCtrl.authController.signIn(
                       loginCtrl.emailText.text, loginCtrl.passwordText.text);
+                loginCtrl.emailText.text ="";
+                loginCtrl.passwordText.text ="";
+                loginCtrl.update();
                 }
               }),
               const VSpace(Sizes.s12),

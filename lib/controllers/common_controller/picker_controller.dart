@@ -7,6 +7,7 @@ class PickerController extends GetxController {
   XFile? videoFile;
   File? image;
   File? video;
+  String? imageUrl;
 
 // GET IMAGE FROM GALLERY
   Future getImage(source) async {
@@ -45,14 +46,13 @@ class PickerController extends GetxController {
         });
   }
 
-
   //video picker option
   videoPickerOption(BuildContext context) {
     showModalBottomSheet(
         context: context,
         shape: const RoundedRectangleBorder(
           borderRadius:
-          BorderRadius.vertical(top: Radius.circular(AppRadius.r25)),
+              BorderRadius.vertical(top: Radius.circular(AppRadius.r25)),
         ),
         builder: (BuildContext context) {
           // return your layout
@@ -77,5 +77,15 @@ class PickerController extends GetxController {
             Get.back();
           });
         });
+  }
+
+  Future<String> uploadImage(File file,{String? fileNameText}) async {
+    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    Reference reference = FirebaseStorage.instance.ref().child( fileNameText ?? fileName);
+    UploadTask uploadTask = reference.putFile(file);
+    TaskSnapshot snap = await uploadTask;
+    String downloadUrl = await snap.ref.getDownloadURL();
+    imageUrl = downloadUrl;
+    return imageUrl!;
   }
 }

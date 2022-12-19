@@ -48,65 +48,20 @@ class ChatController extends GetxController {
     if (data == "No User") {
       isUserAvailable = false;
     } else {
-      print("arg : $data");
       pData = data["data"];
       pId = pData["id"];
       pName = pData["name"];
       chatId = data["chatId"];
-      readLocal();
-      getPeerStatus();
       isUserAvailable = true;
       update();
     }
-    print("chatId : $chatId");
     update();
 
     super.onReady();
   }
 
-
-  //get user online, offline, typing status
-  getPeerStatus() {
-    FirebaseFirestore.instance.collection('users').doc(pId).get().then((value) {
-      if (value.exists) {
-        if (value.data()!.isNotEmpty) {
-          status = value.data()!["status"].toString();
-          statusLastSeen = value.data()!["lastSeen"].toString();
-        }
-      }
-    });
-    update();
-    return status;
-  }
-
   //update typing status
   setTyping() async {
-    textEditingController.addListener(() {
-      if (textEditingController.text.isNotEmpty) {
-        FirebaseFirestore.instance.collection("users").doc(id).update({
-          "status": "typing...",
-          "lastSeen": DateTime.now().millisecondsSinceEpoch.toString()
-        });
-        typing = true;
-      }
-      if (textEditingController.text.isEmpty && typing == true) {
-        FirebaseFirestore.instance.collection("users").doc(id).update({
-          "status": "Online",
-          "lastSeen": DateTime.now().millisecondsSinceEpoch.toString()
-        });
-        typing = false;
-      }
-    });
-  }
-
-//read local data
-  readLocal() async {
-    id = appCtrl.storage.read('id') ?? '';
-    FirebaseFirestore.instance
-        .collection(
-            'users') // Your collection name will be whatever you have given in firestore database
-        .doc(id)
-        .update({'chattingWith': pId});
     textEditingController.addListener(() {
       if (textEditingController.text.isNotEmpty) {
         appCtrl.firebaseCtrl.setTyping();
@@ -117,9 +72,9 @@ class ChatController extends GetxController {
         typing = false;
       }
     });
-    update();
   }
 
+  //share document
   documentShare() async {
     pickerCtrl.dismissKeyboard();
     Get.back();
@@ -129,26 +84,15 @@ class ChatController extends GetxController {
       File file = File(result.files.single.path.toString());
       String fileName =
           "${file.name}-${DateTime.now().millisecondsSinceEpoch.toString()}";
-      Reference reference = FirebaseStorage.instance.ref().child(fileName);
-      UploadTask uploadTask = reference.putFile(file);
-      uploadTask.then((res) {
-        res.ref.getDownloadURL().then((downloadUrl) {
-          imageUrl = downloadUrl;
-          isLoading = false;
-          onSendMessage(
-              "${result.files.single.name}-BREAK-$imageUrl",
-              result.files.single.path.toString().contains(".mp4")
-                  ? MessageType.video
-                  : result.files.single.path.toString().contains(".mp3")
-                      ? MessageType.audio
-                      : MessageType.doc);
-          update();
-        }, onError: (err) {
-          isLoading = false;
-          update();
-          Fluttertoast.showToast(msg: 'Not Upload');
-        });
-      });
+
+      imageUrl = await pickerCtrl.uploadImage(file, fileNameText: fileName);
+      onSendMessage(
+          "${result.files.single.name}-BREAK-$imageUrl",
+          result.files.single.path.toString().contains(".mp4")
+              ? MessageType.video
+              : result.files.single.path.toString().contains(".mp3")
+                  ? MessageType.audio
+                  : MessageType.doc);
     }
   }
 
@@ -156,8 +100,8 @@ class ChatController extends GetxController {
   locationShare() async {
     pickerCtrl.dismissKeyboard();
     Get.back();
-    Position? position =
-        await permissionHandelCtrl.getCurrentPosition().then((value) async {
+
+    await permissionHandelCtrl.getCurrentPosition().then((value) async {
       var locationString =
           'https://www.google.com/maps/search/?api=1&query=${value!.latitude},${value.longitude}';
       onSendMessage(locationString, MessageType.location);
@@ -394,13 +338,11 @@ class ChatController extends GetxController {
     List<Contact>? contactList;
     bool isExist = false;
     try {
-      PermissionStatus permissionStatus =
-          await permissionHandelCtrl.getContactPermission();
-      if (permissionStatus == PermissionStatus.granted) {
-        var contacts = (await ContactsService.getContacts(
-            withThumbnails: false, iOSLocalizedLabels: false));
-        contactList = contacts;
-        print(contactList.length);
+      bool permissionStatus =
+          await permissionHandelCtrl.permissionGranted();
+      if (permissionStatus) {
+        List<Contact> allContacts = await getAllContacts();
+        contactList = allContacts;
         isExist = await getContactList(contactList, document);
       }
     } catch (e) {
@@ -418,20 +360,8 @@ class ChatController extends GetxController {
       for (int j = 0; j < contacts.length; j++) {
         if (contacts[j].phones!.isNotEmpty) {
           print("phonephonephone : ${contacts[j].phones![0].value}");
-          String phone = contacts[j].phones![0].value.toString();
-          if (phone.length > 10) {
-            if (phone.contains(" ")) {
-              phone = phone.replaceAll(" ", "");
-            }
-            if (phone.contains("-")) {
-              phone = phone.replaceAll("-", "");
-            }
-            if (phone.contains("+")) {
-              phone = phone.replaceAll("+91", "");
-            }
-          }
-          print("phone : $phone");
-          print(phone == statusesSnapshot.docs[i]["phone"]);
+          String phone = await phoneNumberExtension(contacts[j].phones![0].value.toString());
+
           if (phone == statusesSnapshot.docs[i]["phone"]) {
             if (statusesSnapshot.docs[i]["id"] == document["receiver"]) {
               return true;

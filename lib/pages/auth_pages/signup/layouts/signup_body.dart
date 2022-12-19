@@ -1,4 +1,3 @@
-
 import '../../../../config.dart';
 
 class SignupBody extends StatelessWidget {
@@ -26,12 +25,14 @@ class SignupBody extends StatelessWidget {
                   const SignupTextBox(),
 
                   //signup button
-                  SignupWidget()
-                      .signupButton(onTap: () {
-                        if(signupCtrl.formKey.currentState!.validate()){
-                          signupCtrl.dismissKeyBoard();
-                          signupCtrl.signUp(signupCtrl.emailText.text, signupCtrl.passwordText.text );
-                        }
+                  SignupWidget().signupButton(onTap: () async {
+                    if (signupCtrl.formKey.currentState!.validate()) {
+                      signupCtrl.dismissKeyBoard();
+                      await signupCtrl.authController.signUp(
+                          signupCtrl.emailText.text,
+                          signupCtrl.passwordText.text);
+                      signupCtrl.cleartext();
+                    }
                   }),
                   const VSpace(Sizes.s20),
 

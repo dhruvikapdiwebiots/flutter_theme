@@ -33,6 +33,29 @@ extension StringCasingExtension on String {
   String toTitleCase() => replaceAll(RegExp(' +'), ' ').split(' ').map((str) => str.toCapitalized()).join(' ');
 }
 
+//phone number split
+String phoneNumberExtension(phoneNumber){
+  String phone = phoneNumber;
+  if (phone.length > 10) {
+    if (phone.contains(" ")) {
+      phone = phone.replaceAll(" ", "");
+    }
+    if (phone.contains("-")) {
+      phone = phone.replaceAll("-", "");
+    }
+    if (phone.contains("+")) {
+      phone = phone.replaceAll("+91", "");
+    }
+  }
+  return phone;
+}
+
+
+Future<List<Contact>> getAllContacts()async{
+  var contacts = (await ContactsService.getContacts(
+  withThumbnails: false, iOSLocalizedLabels: false));
+  return contacts;
+}
 
 
 const double degrees2Radians = math.pi / 180.0;

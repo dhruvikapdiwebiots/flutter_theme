@@ -1,3 +1,5 @@
+
+
 import '../../../config.dart';
 
 class Login extends StatelessWidget {
@@ -24,7 +26,7 @@ class Login extends StatelessWidget {
                       children: <Widget>[
                         loginCtrl.isLoading == false
                             ? const LoginBody()
-                            : loginCtrl.buildLoader()
+                            : LoginLoader(isLoading: loginCtrl.isLoading,)
                       ])),
             ),
           ),

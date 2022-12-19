@@ -3,13 +3,10 @@
 import 'dart:async';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:audioplayers/audioplayers.dart' as audioPlayers;
-import 'package:flutter_theme/models/call_model.dart';
-import 'package:provider/provider.dart';
-import 'package:wakelock/wakelock.dart';
+import 'package:audioplayers/audioplayers.dart' as audio_players;
+
+import '../../../../config.dart';
+
 
 class AudioCall extends StatefulWidget {
   final String? channelName;
@@ -70,7 +67,7 @@ class AudioCallState extends State<AudioCall> {
   }
 
   String? mp3Uri;
-  late audioPlayers.AudioPlayer player;
+  late audio_players.AudioPlayer player;
   AudioCache audioCache = AudioCache();
 
   /* Future<Null> _playCallingTone() async {

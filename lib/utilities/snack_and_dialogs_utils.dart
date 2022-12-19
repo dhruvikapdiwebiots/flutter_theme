@@ -1,4 +1,3 @@
-
 import '../config.dart';
 
 snackBar(message, {context, duration, textColor, backgroundColor, icon}) {
@@ -160,29 +159,29 @@ deleteConfirmation(
       return alert;
     },
   );
-
 }
 
 sendOtp() async {
   Get.generalDialog(
     pageBuilder: (context, anim1, anim2) {
       return Align(
-        alignment: Alignment.center,
-        child: Container(
-          height: 250,
-          margin: const EdgeInsets.symmetric(horizontal: Insets.i10),
-          child: Container(),
-        ),
-      );
+          alignment: Alignment.center,
+          child: Container(
+              height: 250,
+              margin: const EdgeInsets.symmetric(horizontal: Insets.i10),
+              child: Container()));
     },
     transitionBuilder: (context, anim1, anim2, child) {
       return SlideTransition(
-        position: Tween(begin: const Offset(0, -1), end: const Offset(0, 0))
-            .animate(anim1),
-        child: child,
-      );
+          position: Tween(begin: const Offset(0, -1), end: const Offset(0, 0))
+              .animate(anim1),
+          child: child);
     },
     transitionDuration: const Duration(milliseconds: 300),
   );
 }
 
+
+showToast(error) {
+  Fluttertoast.showToast(msg: error);
+}

@@ -41,7 +41,7 @@ class _MessageState extends State<Message>
             ),
             body: SafeArea(
                 child: Stack(fit: StackFit.expand, children: <Widget>[
-              Container(
+              SizedBox(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height - 50,
 

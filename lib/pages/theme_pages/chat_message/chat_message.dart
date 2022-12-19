@@ -29,12 +29,9 @@ class _ChatState extends State<Chat>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       appCtrl.firebaseCtrl.setIsActive();
-      print("setTyping");
       chatCtrl.setTyping();
-      chatCtrl.getPeerStatus();
     } else {
       appCtrl.firebaseCtrl.setLastSeen();
-      chatCtrl.getPeerStatus();
     }
   }
 
@@ -65,7 +62,7 @@ class _ChatState extends State<Chat>
 
   @override
   Widget build(BuildContext context) {
-    log("use : ${chatCtrl.getPeerStatus()}");
+
     return GetBuilder<ChatController>(builder: (_) {
       return WillPopScope(
           onWillPop: chatCtrl.onBackPress,

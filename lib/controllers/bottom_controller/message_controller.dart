@@ -1,10 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
-import 'package:flutter_theme/pages/bottom_pages/message/layout/group_message_card.dart';
-import 'package:flutter_theme/pages/bottom_pages/message/layout/receiver_message_card.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_theme/config.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class MessageController extends GetxController {
   String? currentUserId;
@@ -30,7 +27,7 @@ class MessageController extends GetxController {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
-  void onReady() {
+  void onReady() async {
     // TODO: implement onReady
     final data = appCtrl.storage.read("user");
     currentUserId = data["id"];
@@ -39,15 +36,14 @@ class MessageController extends GetxController {
     final User user = auth.currentUser!;
     currentUser = user;
     update();
-    fetch();
     notificationCtrl.configLocalNotification();
     notificationCtrl.registerNotification();
-    getUser();
+    contactList = await MessageFirebaseApi().getUser();
     update();
     super.onReady();
   }
 
-  // BOTTOM TABLAYOUT ICON CLICKED
+  // BOTTOM TAB LAYOUT ICON CLICKED
   void onBottomIconPressed(int index) {
     if (index == 0 || index == 1) {
       isHomePageSelected = true;
@@ -70,156 +66,16 @@ class MessageController extends GetxController {
   Future getMessage() async {
     List statusData = [];
     try {
-      PermissionStatus permissionStatus =
-          await permissionHandelCtrl.getContactPermission();
-      if (permissionStatus == PermissionStatus.granted) {
+      bool permissionStatus = await permissionHandelCtrl.permissionGranted();
+      if (permissionStatus) {
         var contacts = (await ContactsService.getContacts(
             withThumbnails: false, iOSLocalizedLabels: false));
-        print(contacts.length);
-        statusData = await getContactList(contacts);
+        statusData = await MessageFirebaseApi().getContactList(contacts);
       }
     } catch (e) {
       log("message : $e");
     }
     return statusData;
-  }
-
-  // LOAD USERDATA LIST
-  Widget loadUser(BuildContext context, DocumentSnapshot document) {
-
-    if (document["isGroup"] == false) {
-      if (document["senderId"] == currentUserId) {
-        return ReceiverMessageCard(
-            document: document, currentUserId: currentUserId);
-      } else {
-        return MessageCard(
-          document: document,
-          currentUserId: currentUserId,
-        );
-      }
-    } else {
-      List user = document["receiverId"];
-      return user.where((element) => element["id"] == currentUserId).isNotEmpty
-          ? GroupMessageCard(
-              document: document,
-              currentUserId: currentUserId,
-            )
-          : Container();
-    }
-  }
-
-  getContactList(List<Contact> contacts) async {
-    List message = [];
-
-    var statusesSnapshot =
-        await FirebaseFirestore.instance.collection('users').get();
-    for (int i = 0; i < statusesSnapshot.docs.length; i++) {
-      for (int j = 0; j < contacts.length; j++) {
-        if (contacts[j].phones!.isNotEmpty) {
-          String phone = contacts[j].phones![0].value.toString();
-          if (phone.length > 10) {
-            if (phone.contains(" ")) {
-              phone = phone.replaceAll(" ", "");
-            }
-            if (phone.contains("-")) {
-              phone = phone.replaceAll("-", "");
-            }
-            if (phone.contains("+")) {
-              phone = phone.replaceAll("+91", "");
-            }
-          }
-          if (phone == statusesSnapshot.docs[i]["phone"]) {
-            var messageSnapshot =
-                await FirebaseFirestore.instance.collection('contacts').get();
-            for (int a = 0; a < messageSnapshot.docs.length; a++) {
-              if (messageSnapshot.docs[a].data()["isGroup"] == false) {
-                if (messageSnapshot.docs[a].data()["senderId"] ==
-                        currentUserId ||
-                    messageSnapshot.docs[a].data()["receiverId"] ==
-                            statusesSnapshot.docs[i]["id"] &&
-                        messageSnapshot.docs[a].data()["senderId"] ==
-                            statusesSnapshot.docs[i]["id"] ||
-                    messageSnapshot.docs[a].data()["receiverId"] ==
-                        currentUserId) {
-                  message.add(messageSnapshot.docs[a]);
-                }
-              } else {
-                if(messageSnapshot.docs[a].data()["senderId"] == currentUserId){
-                  message.add(messageSnapshot.docs[a]);
-                }else {
-                  List groupReceiver =
-                  messageSnapshot.docs[a].data()["receiverId"];
-                  print("isExis : ${groupReceiver.where((element) => element["id"] == currentUserId).isEmpty}");
-                  if(groupReceiver.where((element) => element["id"] == currentUserId).isNotEmpty){
-                    message.add(messageSnapshot.docs[a]);
-                  }
-                }
-              }
-            }
-            return message;
-          }
-        }
-      }
-    }
-
-    return message;
-  }
-
-  // LOAD USERDATA LIST
-  Widget groupUser(BuildContext context, DocumentSnapshot document) {
-    bool isEmpty = true;
-    List user = document["users"];
-    isEmpty = user.where((element) {
-      return element["id"] == currentUserId;
-    }).isNotEmpty;
-    return isEmpty
-        ? Container()
-        : GroupMessageCard(
-            document: document,
-            currentUserId: currentUserId,
-          );
-  }
-
-  //fetch data
-  Future<User?> fetch() async {
-    String groupChatId = "";
-    String lastSeen = "";
-    // Wait for all documents to arrive, first.
-    final result =
-        await FirebaseFirestore.instance.collection('messages').get();
-    result.docs.map((doc) async {
-      String id = doc.data()['id'];
-      groupChatId = '$currentUserId-$id';
-      final m = await FirebaseFirestore.instance
-          .collection('messages')
-          .doc(groupChatId)
-          .collection(groupChatId)
-          .get();
-      if (m.docs.isNotEmpty) {
-        lastSeen = m.docs.first.data()['content'];
-        // lastSeen = m.docs.first.data['content'];
-      }
-    });
-
-    return null;
-  }
-
-  //get all users
-  getUser() async {
-    final contactLists =
-        await FirebaseFirestore.instance.collection("users").get();
-    for (int i = 0; i < contactLists.docs.length; i++) {
-      if (contactLists.docs[i].id != currentUserId) {
-        final msgList = await FirebaseFirestore.instance
-            .collection("messages")
-            .doc("$currentUserId-${contactLists.docs[i]["id"]}")
-            .get();
-        if (msgList.exists) {
-          contactList.add(contactLists.docs[i]);
-        }
-      }
-    }
-    update();
   }
 
   //pick up contact and check if mobile exist
@@ -229,41 +85,7 @@ class MessageController extends GetxController {
         await permissionHandelCtrl.getContactPermission();
     if (permissionStatus == PermissionStatus.granted) {
       Get.toNamed(routeName.contactList)!.then((value) async {
-        if (value != null) {
-          Contact contact = value;
-          log("contact : ${contact.phones![0].value}");
-          String phone = contact.phones![0].value!;
-          if (phone.length > 10) {
-            if (phone.contains(" ")) {
-              phone = phone.replaceAll(" ", "");
-            }
-            if (phone.contains("-")) {
-              phone = phone.replaceAll("-", "");
-            }
-            if (phone.contains("+")) {
-              phone = phone.replaceAll("+91", "");
-            }
-            if (phone.length > 10) {
-              phone = phone.substring(3);
-            }
-          }
-          update();
-
-          final m = await FirebaseFirestore.instance
-              .collection('users')
-              .where('phone', isEqualTo: phone)
-              .limit(1)
-              .get();
-          if (m.docs.isEmpty) {
-            if (Platform.isAndroid) {
-              final uri = Uri(scheme: 'Download the Chatter', path: phone);
-              await launchUrl(uri);
-            }
-          } else {
-            var data = {"data": m.docs[0].data(), "chatId": "0"};
-            Get.toNamed(routeName.chat, arguments: data);
-          }
-        }
+        MessageFirebaseApi().saveContact(value);
       });
     } else {
       permissionHandelCtrl.handleInvalidPermissions(permissionStatus);

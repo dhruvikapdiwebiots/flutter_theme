@@ -57,8 +57,7 @@ class OtpController extends GetxController {
       firebaseAuth
           .signInWithCredential(phoneAuthCredential)
           .then((UserCredential value) {
-            print("user : ${value}");
-            print("user : ${value.user}");
+
         if (value.user != null) {
           // Handle loogged in state
           homeNavigation(value.user);
@@ -115,29 +114,29 @@ class OtpController extends GetxController {
         .then((UserCredential value) async{
       if (value.user != null) {
         User user = value.user!;
-        FirebaseFirestore.instance.collection("users").where("phone",isEqualTo: mobileNumber).get().then((value) {
-          FirebaseFirestore.instance
-              .collection("users")
-              .where("phone", isEqualTo: mobileNumber)
-              .get()
-              .then((value) async{
-            if (value.docs[0].exists) {
+        FirebaseFirestore.instance.collection("users").where("phone",isEqualTo: mobileNumber).get().then((value) async{
+          if (value.docs.isNotEmpty) {
 
-              if (value.docs[0].data()["name"] == "") {
-                Get.toNamed(routeName.editProfile, arguments: value.docs[0].data());
-              } else {
-                homeNavigation(value.docs[0].data());
-              }
-            }else{
-              await userRegister(user);
+            if (value.docs[0].data()["name"] == "") {
+              Get.toNamed(routeName.editProfile, arguments: value.docs[0].data());
+            } else {
+              homeNavigation(value.docs[0].data());
             }
-            /* */
-          });
+          }else{
+            await userRegister(user);
+            dynamic resultData = await getUserData(user);
+            if (resultData["name"] == "") {
+              Get.toNamed(routeName.editProfile, arguments: resultData);
+            } else {
+              homeNavigation(resultData);
+            }
+          }
         });
       } else {
         showToast(fonts.otpError.tr, Colors.red);
       }
     }).catchError((error) {
+      print("error : $error");
       showToast(fonts.somethingWrong.tr, Colors.red);
     });
   }

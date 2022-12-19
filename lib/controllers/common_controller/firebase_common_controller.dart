@@ -1,10 +1,12 @@
 import 'package:flutter_theme/config.dart';
 
 class FirebaseCommonController extends GetxController {
+  var user = appCtrl.storage.read("user");
+
   //online status update
   void setIsActive() async {
-    String userId = appCtrl.storage.read("id");
-    await FirebaseFirestore.instance.collection("users").doc(userId).update(
+
+    await FirebaseFirestore.instance.collection("users").doc(user["id"]).update(
       {
         "status": "Online",
         "lastSeen": DateTime.now().millisecondsSinceEpoch.toString()
@@ -14,7 +16,7 @@ class FirebaseCommonController extends GetxController {
 
   //last seen update
   void setLastSeen() async {
-    var user = appCtrl.storage.read("user");
+
     await FirebaseFirestore.instance.collection("users").doc(user["id"]).update(
       {
         "status": "Offline",
@@ -25,7 +27,6 @@ class FirebaseCommonController extends GetxController {
 
   //last seen update
   void groupTypingStatus(pId, documentId, isTyping) async {
-    var user = appCtrl.storage.read("user");
     await FirebaseFirestore.instance
         .collection("groupMessage")
         .doc(pId)
@@ -41,7 +42,6 @@ class FirebaseCommonController extends GetxController {
 
   //typing update
   void setTyping() async {
-    var user = appCtrl.storage.read("user");
     await FirebaseFirestore.instance.collection("users").doc(user["id"]).update(
       {
         "status": "typing...",
@@ -51,14 +51,14 @@ class FirebaseCommonController extends GetxController {
   }
 
   statusDeleteAfter24Hours() async {
-    var user = appCtrl.storage.read("user");
+
     FirebaseFirestore.instance
         .collection('status')
         .where("uid", isEqualTo: user["id"])
         .get()
         .then((value) {
       if (value.docs.isNotEmpty) {
-        print(value.docs[0].data());
+
         for (int i = 0; i < value.docs[0].data()["photoUrl"].length; i++) {
           var millis =
               int.parse(value.docs[0].data()["photoUrl"][i]["timestamp"]);

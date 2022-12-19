@@ -1,3 +1,5 @@
+
+
 import '../../../../config.dart';
 
 class ChatCard extends StatelessWidget {
@@ -19,17 +21,17 @@ class ChatCard extends StatelessWidget {
                   ));
                 } else {
                   return ListView.builder(
-                          shrinkWrap: true,
-                          padding: const EdgeInsets.all(10.0),
-                          itemBuilder: (context, index) {
-                            return messageCtrl.loadUser(
-                                context, snapshot.data![index]);
-                          },
-                          itemCount: snapshot.data!.length,
-                        );
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.all(10.0),
+                    itemBuilder: (context, index) {
+                      return LoadUser(
+                          document: snapshot.data![index],
+                          currentUserId: messageCtrl.currentUserId);
+                    },
+                    itemCount: snapshot.data!.length,
+                  );
                 }
               }),
-
         ],
       );
     });

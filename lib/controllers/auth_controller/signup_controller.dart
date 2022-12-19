@@ -1,6 +1,3 @@
-import 'dart:async';
-import 'dart:developer';
-
 
 import 'package:flutter_theme/config.dart';
 
@@ -12,6 +9,10 @@ class SignupController extends GetxController {
   bool nameValidation = false;
   bool confirmPasswordValidation = false;
   bool passEye = true, confirmPassEye = true;
+
+  final authController = Get.isRegistered<FirebaseAuthController>()
+      ? Get.find<FirebaseAuthController>()
+      : Get.put(FirebaseAuthController());
 
   TextEditingController nameText = TextEditingController();
   TextEditingController emailText = TextEditingController();
@@ -27,29 +28,21 @@ class SignupController extends GetxController {
   final storage = GetStorage();
   var loggedIn = false;
 
-  var auth = FirebaseAuth.instance;
+
   bool isLoading = false;
   bool isLoggedIn = false;
   User? currentUser;
   var userId = '';
 
-  homeNavigation(userid) async {
-    await storage.write("id", userid);
-    Get.offAllNamed(routeName.dashboard);
-  }
-
-  showToast(error) {
-    Fluttertoast.showToast(msg: error);
-  }
 
 // CLEAR TEXT
   cleartext() {
     emailText.text = "";
     passwordText.text = "";
+    update();
   }
 
 // EYE TOGGLE
-
   void toggle() {
     passEye = !passEye;
     update();
@@ -73,70 +66,10 @@ class SignupController extends GetxController {
     FocusScope.of(context).requestFocus(nextFocus);
   }
 
-  getData() async {
-    userId = storage.read('id') ?? '';
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final User? user = auth.currentUser;
-    if (user == null) {
-    } else {
-      homeNavigation(userId);
-    }
-  }
-
-  Widget buildLoader() {
-    return Positioned(
-      child: isLoading
-          ? Container(
-              color: appCtrl.appTheme.accent.withOpacity(0.8),
-              child: Center(
-                child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                        appCtrl.appTheme.primary)),
-              ),
-            )
-          : Container(),
-    );
-  }
-
-// SIGN UP IN FIREBASE
-  Future<User?> signUp(email, password) async {
-    try {
-      var user = await auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      assert(await user.user?.getIdToken() != null);
-      userRegister(user.user);
-      cleartext();
-      Get.back();
-      return user.user;
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        log('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        final snackBar = SnackBar(
-          content: const Text('The account already exists for that email.'),
-          action: SnackBarAction(
-            label: 'Undo',
-            onPressed: () {
-              // Some code to undo the change.
-            },
-          ),
-        );
-
-        // Find the ScaffoldMessenger in the widget tree
-        // and use it to show a SnackBar.
-        ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);
-        log('The account already exists for that email.');
-      }
-    } catch (e) {
-      log("catch : $e");
-    } finally {}
-    return null;
-  }
 
   //REGISTER USER DATA
   void userRegister(User? user) async {
-
-    firebaseMessaging.getToken().then((token) async{
+    firebaseMessaging.getToken().then((token) async {
       await FirebaseFirestore.instance.collection('users').doc(user!.uid).set({
         'chattingWith': null,
         'id': user.uid,
@@ -147,11 +80,10 @@ class SignupController extends GetxController {
         "typeStatus": "Offline",
         "phone": user.phoneNumber ?? "",
         "email": user.email,
-        "deviceName":appCtrl.deviceName,
-        "device":appCtrl.device,
-        "statusDesc":"Hello, I am using Chatter"
+        "deviceName": appCtrl.deviceName,
+        "device": appCtrl.device,
+        "statusDesc": "Hello, I am using Chatter"
       });
     });
-
   }
 }

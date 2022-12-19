@@ -1,10 +1,6 @@
 import 'dart:io';
 
-
 import 'package:flutter_theme/config.dart';
-import 'package:flutter_theme/pages/bottom_pages/status/layouts/current_user_status.dart';
-import 'package:flutter_theme/pages/bottom_pages/status/layouts/status_list.dart';
-
 
 class StatusList extends StatefulWidget {
   const StatusList({Key? key}) : super(key: key);
@@ -37,7 +33,6 @@ class _StatusListState extends State<StatusList>
   Widget build(BuildContext context) {
     return GetBuilder<StatusController>(builder: (_) {
       return Scaffold(
-
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
               File? pickedImage = await pickImageFromGallery(context);
@@ -46,20 +41,21 @@ class _StatusListState extends State<StatusList>
                     arguments: pickedImage);
               }
             },
-            child: Icon(Icons.add,color: appCtrl.appTheme.whiteColor,),
+            child: Icon(
+              Icons.add,
+              color: appCtrl.appTheme.whiteColor,
+            ),
           ),
           body: SafeArea(
               child: SingleChildScrollView(
             child: Column(children: <Widget>[
-             CurrentUserStatus(currentUserId: statusCtrl.currentUserId,)
-
-                  .marginSymmetric(vertical: Insets.i10),
+              CurrentUserStatus(
+                currentUserId: statusCtrl.currentUserId,
+              ).marginSymmetric(vertical: Insets.i10),
               const Divider(),
-             const StatusListLayout(),
+              const StatusListLayout(),
             ]),
           )));
     });
   }
 }
-
-

@@ -7,24 +7,22 @@ class StatusListLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<StatusController>(
       builder: (statusCtrl) {
-        return Container(
+        return SizedBox(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height - 50,
           child: FutureBuilder<List<Status>>(
               future: statusCtrl.getStatus(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: const CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
 
                 return ListView.builder(
                   itemCount: (snapshot.data!).length,
                   itemBuilder: (context, index) {
-                    print((snapshot.data!)[index].profilePic!);
                     return Column(children: [
                       InkWell(
                           onTap: () {
-                            print((snapshot.data!)[index]);
                             Get.toNamed(routeName.statusView,
                                 arguments: (snapshot.data!)[index]);
                           },

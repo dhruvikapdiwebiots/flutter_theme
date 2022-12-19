@@ -50,7 +50,14 @@ export 'theme_pages/create_group/layouts/all_registered_contact.dart';
 export 'theme_pages/create_group/layouts/selected_contact_list.dart';
 export 'theme_pages/create_group/layouts/selected_users.dart';
 export 'theme_pages/create_group/layouts/create_group.dart';
-
+export 'auth_pages/login/layouts/login_loader.dart';
+export 'bottom_pages/message/layout/group_message_card.dart';
+export 'bottom_pages/message/layout/receiver_message_card.dart';
+export 'bottom_pages/message/message_firebase_api.dart';
+export 'bottom_pages/message/layout/load_user.dart';
+export 'bottom_pages/status/layouts/current_user_status.dart';
+export 'bottom_pages/status/layouts/status_list.dart';
+export 'bottom_pages/status/layouts/status_firebase_api.dart';
 
 export '/utilities/type_list.dart';
 export '/models/bottom_nav_bar_model.dart';

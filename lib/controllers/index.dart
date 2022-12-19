@@ -21,3 +21,4 @@ export 'theme_controller/create_group_controller.dart';
 export 'common_controller/all_permission_handler.dart';
 export 'common_controller/notification_controller.dart';
 export 'common_controller/picker_controller.dart';
+export 'auth_controller/firebase_auth_controller.dart';

@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:flutter_theme/models/position_item.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../config.dart';
@@ -122,5 +120,15 @@ class PermissionHandlerController extends GetxController{
     }
     return null;
 
+  }
+
+  Future<bool> permissionGranted()async{
+    PermissionStatus permissionStatus =
+    await permissionHandelCtrl.getContactPermission();
+    if (permissionStatus == PermissionStatus.granted) {
+      return true;
+    }else{
+      return false;
+    }
   }
 }
