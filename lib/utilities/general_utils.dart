@@ -51,7 +51,7 @@ String phoneNumberExtension(phoneNumber){
 }
 
 
-Future<List<Contact>> getAllContacts()async{
+Future<List<Contact>>   getAllContacts()async{
   var contacts = (await ContactsService.getContacts(
   withThumbnails: false, iOSLocalizedLabels: false));
   return contacts;

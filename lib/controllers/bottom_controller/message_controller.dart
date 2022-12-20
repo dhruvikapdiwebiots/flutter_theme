@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:flutter_theme/models/message_model.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_theme/config.dart';
 
@@ -66,12 +67,10 @@ class MessageController extends GetxController {
   Future getMessage() async {
     List statusData = [];
     try {
-      bool permissionStatus = await permissionHandelCtrl.permissionGranted();
-      if (permissionStatus) {
-        var contacts = (await ContactsService.getContacts(
-            withThumbnails: false, iOSLocalizedLabels: false));
-        statusData = await MessageFirebaseApi().getContactList(contacts);
-      }
+      var contacts = appCtrl.storage.read(session.contactList);
+      List<Contact> contactList = contacts.map((e) => Contact.fromMap(e)).toList();
+      print(contactList);
+      statusData = await MessageFirebaseApi().getContactList(contacts);
     } catch (e) {
       log("message : $e");
     }

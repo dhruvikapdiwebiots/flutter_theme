@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import '../../../config.dart';
@@ -8,6 +9,7 @@ class MessageFirebaseApi {
   //get contact list
   getContactList(List<Contact> contacts) async {
     List message = [];
+
     final data = appCtrl.storage.read("user");
     currentUserId = data["id"];
     var statusesSnapshot =
@@ -15,11 +17,14 @@ class MessageFirebaseApi {
     for (int i = 0; i < statusesSnapshot.docs.length; i++) {
       for (int j = 0; j < contacts.length; j++) {
         if (contacts[j].phones!.isNotEmpty) {
-          String phone =  phoneNumberExtension(contacts[j].phones![0].value.toString());
+          String phone =
+              phoneNumberExtension(contacts[j].phones![0].value.toString());
 
           if (phone == statusesSnapshot.docs[i]["phone"]) {
-            var messageSnapshot =
-                await FirebaseFirestore.instance.collection('contacts').orderBy("updateStamp",descending: true).get();
+            var messageSnapshot = await FirebaseFirestore.instance
+                .collection('contacts')
+                .orderBy("updateStamp", descending: true)
+                .get();
             for (int a = 0; a < messageSnapshot.docs.length; a++) {
               if (messageSnapshot.docs[a].data()["isGroup"] == false) {
                 if (messageSnapshot.docs[a].data()["senderId"] ==
@@ -58,7 +63,7 @@ class MessageFirebaseApi {
   }
 
   //check contact in firebase and if not exists
-  saveContact(value)async{
+  saveContact(value) async {
     if (value != null) {
       Contact contact = value;
 
@@ -77,7 +82,6 @@ class MessageFirebaseApi {
           phone = phone.substring(3);
         }
       }
-
 
       final m = await FirebaseFirestore.instance
           .collection('users')
@@ -100,7 +104,7 @@ class MessageFirebaseApi {
   Future<List> getUser() async {
     List contactList = [];
     final contactLists =
-    await FirebaseFirestore.instance.collection("users").get();
+        await FirebaseFirestore.instance.collection("users").get();
     for (int i = 0; i < contactLists.docs.length; i++) {
       if (contactLists.docs[i].id != currentUserId) {
         final msgList = await FirebaseFirestore.instance

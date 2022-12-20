@@ -9,6 +9,7 @@ class DashboardController extends GetxController {
 
   late int iconCount = 0;
   List bottomList = [];
+  final statusCtrl = Get.isRegistered<StatusController>() ? Get.find<StatusController>() :Get.put(StatusController());
   List actionList = [];
 /*
 //list of bottommost page
@@ -29,7 +30,11 @@ class DashboardController extends GetxController {
   //on tap select
   onTapSelect(val) async {
     selectedIndex = val;
+
     update();
+    if(selectedIndex ==0){
+      statusCtrl.getStatus();
+    }
   }
 
 

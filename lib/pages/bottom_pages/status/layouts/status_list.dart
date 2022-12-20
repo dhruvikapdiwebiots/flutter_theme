@@ -9,13 +9,15 @@ class StatusListLayout extends StatelessWidget {
       return SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height - 50,
-         child: StreamBuilder(
-              stream: statusCtrl.getStatus(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
+        child: FutureBuilder(
+            future: statusCtrl.getStatus(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if ((snapshot.data == null)) {
+                return  Container();
+              }else{
                 return ListView.builder(
                   itemCount: (snapshot.data!).length,
                   itemBuilder: (context, index) {
@@ -37,13 +39,14 @@ class StatusListLayout extends StatelessWidget {
                                           (snapshot.data!)[index].profilePic!),
                                       radius: 30)))),
                       Divider(
-                          color: appCtrl.appTheme.grey.withOpacity(.2), indent: 85),
+                          color: appCtrl.appTheme.grey.withOpacity(.2),
+                          indent: 85),
                     ]);
                   },
                 );
-                return Container();
-              }),
+              }
 
+            }),
       );
     });
   }

@@ -12,8 +12,9 @@ class Setting extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: appCtrl.appTheme.primary,
           iconTheme: IconThemeData(color: appCtrl.appTheme.whiteColor),
-          title: Text(fonts.setting.tr, style:
-          AppCss.poppinsblack18.textColor(appCtrl.appTheme.whiteColor)),
+          title: Text(fonts.setting.tr,
+              style:
+                  AppCss.poppinsblack18.textColor(appCtrl.appTheme.whiteColor)),
         ),
         body: settingCtrl.user != null && settingCtrl.user != ""
             ? Column(children: [
@@ -43,9 +44,8 @@ class Setting extends StatelessWidget {
                           if (e.key == 0) {
                             Get.toNamed(routeName.otherSetting);
                           } else if (e.key == 2) {
-                            FirebaseAuth.instance.signOut();
-
                             var user = appCtrl.storage.read("user");
+
                             await FirebaseFirestore.instance
                                 .collection("users")
                                 .doc(user["id"])
@@ -55,7 +55,8 @@ class Setting extends StatelessWidget {
                                   .millisecondsSinceEpoch
                                   .toString()
                             });
-                            appCtrl.storage.erase();
+                            FirebaseAuth.instance.signOut();
+                            await appCtrl.storage.erase();
                             Get.offAllNamed(routeName.login);
                           }
                         },
