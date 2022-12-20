@@ -17,6 +17,7 @@ class CommonTextBox extends StatelessWidget {
   final ValueChanged<String>? onFieldSubmitted;
   final String? errorText;
   final int? maxLength;
+  final ValueChanged<String>? onChanged;
 
   const CommonTextBox(
       {Key? key,
@@ -35,6 +36,7 @@ class CommonTextBox extends StatelessWidget {
       this.textInputAction,
       this.maxLength,
       this.onFieldSubmitted,
+      this.onChanged,
       this.filled = false})
       : super(key: key);
 
@@ -45,6 +47,7 @@ class CommonTextBox extends StatelessWidget {
     return GetBuilder<AppController>(builder: (appCtrl) {
       return TextFormField(
           controller: controller,
+          onChanged: onChanged,
           validator: validator,
           focusNode: focusNode,
           keyboardType: keyboardType,

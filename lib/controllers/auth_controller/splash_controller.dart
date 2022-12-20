@@ -25,16 +25,21 @@ class SplashController extends GetxController{
 
   //navigate to login page
   loginNavigation() async {
-    Get.offAllNamed(routeName.login);
+    var user = appCtrl.storage.read("user") ?? "";
+    if(user == "") {
+      Get.offAllNamed(routeName.login);
+    }else{
+      Get.offAllNamed(routeName.dashboard);
+    }
 
   }
 
   //check whether user login or not
   void navigationPage() async {
-    var user = appCtrl.storage.read("user");
+    var user = appCtrl.storage.read("user")??"";
 
     bool isIntro = appCtrl.storage.read("isIntro") ?? false;
-    if (user == null) {
+    if (user == "") {
       // Checking if user is already login or not
      Get.toNamed(routeName.intro);
     } else {
@@ -43,7 +48,7 @@ class SplashController extends GetxController{
       }else{
         Get.toNamed(routeName.intro);
       }
-      firebaseCtrl.statusDeleteAfter24Hours();
+
     }
   }
 

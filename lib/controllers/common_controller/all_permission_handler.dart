@@ -84,6 +84,8 @@ class PermissionHandlerController extends GetxController{
     if (permission != PermissionStatus.granted &&
         permission != PermissionStatus.permanentlyDenied) {
       PermissionStatus permissionStatus = await Permission.contacts.request();
+      print("permission : $permission");
+      print("permission : $permissionStatus");
       return permissionStatus;
     } else {
       return permission;
@@ -125,6 +127,7 @@ class PermissionHandlerController extends GetxController{
   Future<bool> permissionGranted()async{
     PermissionStatus permissionStatus =
     await permissionHandelCtrl.getContactPermission();
+    print("permissionStatus : $permissionStatus");
     if (permissionStatus == PermissionStatus.granted) {
       return true;
     }else{

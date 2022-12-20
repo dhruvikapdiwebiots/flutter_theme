@@ -22,11 +22,11 @@ class _DashboardState extends State<Dashboard>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      appCtrl.firebaseCtrl.setIsActive();
+      firebaseCtrl.setIsActive();
     } else {
-      appCtrl.firebaseCtrl.setLastSeen();
+      firebaseCtrl.setLastSeen();
     }
-    appCtrl.firebaseCtrl.statusDeleteAfter24Hours();
+    firebaseCtrl.statusDeleteAfter24Hours();
   }
 
   @override

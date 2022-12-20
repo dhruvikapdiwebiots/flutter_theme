@@ -23,7 +23,7 @@ class AppController extends GetxController {
   String device= "";
   dynamic userAppSettingsVal;
   dynamic usageControlsVal;
-  final firebaseCtrl = Get.isRegistered<FirebaseCommonController>() ? Get.find<FirebaseCommonController>() : Get.put(FirebaseCommonController());
+
 
 
 //list of bottommost page

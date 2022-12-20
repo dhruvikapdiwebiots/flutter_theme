@@ -21,18 +21,30 @@ class ReceiverMessage extends StatelessWidget {
                 children: <Widget>[
                   // MESSAGE BOX FOR TEXT
                   if (document!["type"] == MessageType.text.name)
-                    ReceiverContent( onLongPress: () {
-                      showDialog(
-                        context: Get.context!,
-                        builder: (BuildContext context) =>
-                            chatCtrl.buildPopupDialog(context, document!),
-                      );
-                    },
-                      document: document,),
+                    ReceiverContent(
+                      onLongPress: () {
+                        print("object");
+                        showDialog(
+                          context: Get.context!,
+                          builder: (BuildContext context) =>
+                              chatCtrl.buildPopupDialog(context, document!),
+                        );
+                      },
+                      document: document,
+                    ),
 
                   // MESSAGE BOX FOR IMAGE
                   if (document!["type"] == MessageType.image.name)
-                    ReceiverImage(document: document,),
+                    ReceiverImage(
+                      document: document,
+                      onLongPress: () {
+                        showDialog(
+                          context: Get.context!,
+                          builder: (BuildContext context) =>
+                              chatCtrl.buildPopupDialog(context, document!),
+                        );
+                      },
+                    ),
 
                   if (document!["type"] == MessageType.contact.name)
                     ContactLayout(
@@ -65,8 +77,8 @@ class ReceiverMessage extends StatelessWidget {
                         onLongPress: () {
                           showDialog(
                               context: Get.context!,
-                              builder: (BuildContext context) =>
-                                  chatCtrl.buildPopupDialog(context, document!));
+                              builder: (BuildContext context) => chatCtrl
+                                  .buildPopupDialog(context, document!));
                         })
                 ],
               ),

@@ -25,7 +25,7 @@ class StatusFirebaseApi {
       await FirebaseFirestore.instance
           .collection('status')
           .doc(statusesSnapshot.docs[0].id)
-          .update({'photoUrl': statusImageUrls});
+          .update({'photoUrl': statusImageUrls.map((e) => e.toJson()).toList()});
       return;
     } else {
       var data = {

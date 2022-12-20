@@ -38,6 +38,7 @@ class DashboardController extends GetxController {
     // TODO: implement onReady
     bottomList = appArray.bottomList;
     actionList = appArray.actionList;
+   // firebaseCtrl.statusDeleteAfter24Hours();
     update();
     super.onReady();
   }

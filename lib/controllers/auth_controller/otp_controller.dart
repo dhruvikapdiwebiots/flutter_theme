@@ -97,7 +97,7 @@ class OtpController extends GetxController {
           verificationCode = verificationId;
           var phoneUser = FirebaseAuth.instance.currentUser;
           update();
-          print("new : $verificationId");
+
         },
         codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
   }

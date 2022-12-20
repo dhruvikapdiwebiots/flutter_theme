@@ -30,7 +30,6 @@ print("objectId : ${chatCtrl.chatId}");
                           appCtrl.appTheme.primary)));
             } else {
               chatCtrl.message = (snapshot.data!);
-              print("object : ${(snapshot.data!).docs.length}");
               return ListView.builder(
                 padding: const EdgeInsets.all(10.0),
                 itemBuilder: (context, index) => chatCtrl.buildItem(

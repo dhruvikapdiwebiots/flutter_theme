@@ -15,21 +15,11 @@ class MessageFirebaseApi {
     for (int i = 0; i < statusesSnapshot.docs.length; i++) {
       for (int j = 0; j < contacts.length; j++) {
         if (contacts[j].phones!.isNotEmpty) {
-          String phone = contacts[j].phones![0].value.toString();
-          if (phone.length > 10) {
-            if (phone.contains(" ")) {
-              phone = phone.replaceAll(" ", "");
-            }
-            if (phone.contains("-")) {
-              phone = phone.replaceAll("-", "");
-            }
-            if (phone.contains("+")) {
-              phone = phone.replaceAll("+91", "");
-            }
-          }
+          String phone =  phoneNumberExtension(contacts[j].phones![0].value.toString());
+
           if (phone == statusesSnapshot.docs[i]["phone"]) {
             var messageSnapshot =
-                await FirebaseFirestore.instance.collection('contacts').get();
+                await FirebaseFirestore.instance.collection('contacts').orderBy("updateStamp",descending: true).get();
             for (int a = 0; a < messageSnapshot.docs.length; a++) {
               if (messageSnapshot.docs[a].data()["isGroup"] == false) {
                 if (messageSnapshot.docs[a].data()["senderId"] ==

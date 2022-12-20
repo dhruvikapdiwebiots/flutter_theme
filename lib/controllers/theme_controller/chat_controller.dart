@@ -64,11 +64,11 @@ class ChatController extends GetxController {
   setTyping() async {
     textEditingController.addListener(() {
       if (textEditingController.text.isNotEmpty) {
-        appCtrl.firebaseCtrl.setTyping();
+        firebaseCtrl.setTyping();
         typing = true;
       }
       if (textEditingController.text.isEmpty && typing == true) {
-        appCtrl.firebaseCtrl.setIsActive();
+        firebaseCtrl.setIsActive();
         typing = false;
       }
     });
@@ -219,6 +219,7 @@ class ChatController extends GetxController {
   void onSendMessage(String content, MessageType type) async {
     if (content.trim() != '') {
       textEditingController.clear();
+      var user = appCtrl.storage.read("user");
       final now = DateTime.now();
       String? newChatId =
           chatId == "0" ? now.microsecondsSinceEpoch.toString() : chatId;
@@ -229,10 +230,11 @@ class ChatController extends GetxController {
           .doc(newChatId)
           .collection("chat")
           .add({
-        'sender': id,
+        'sender': user["id"],
         'receiver': pId,
         // user ID you want to read message
         'content': content,
+        "chatId": newChatId,
         'type': type.name,
         'messageType': "sender",
         // i dont know why you need this ?
@@ -242,48 +244,27 @@ class ChatController extends GetxController {
 
       final msgList = await FirebaseFirestore.instance
           .collection("contacts")
+          .where("chatId", isEqualTo: newChatId)
           .get()
           .then((value) {
+        print("id : ${user['id']}");
+        print("pData : $pData");
         if (value.docs.isNotEmpty) {
-          for (var i = 0; i < value.docs.length; i++) {
-            dynamic user = appCtrl.storage.read("user");
-            final snapshot = value.docs[i].data();
-            if (snapshot["senderId"] == id && snapshot["receiverId"] == pId ||
-                snapshot["senderId"] == pId && snapshot["receiverId"] == id) {
-              FirebaseFirestore.instance
-                  .collection('contacts')
-                  .doc(value.docs[i].id)
-                  .update({
-                "updateStamp": DateTime.now().millisecondsSinceEpoch.toString(),
-                "lastMessage": content,
-                "senderId": id,
-                'sender': {
-                  "id": user["id"],
-                  "name": user["name"],
-                  "image": user["image"]
-                },
-                'receiver': {"id": pId, "name": pName, "image": pData["image"]},
-                'receiverId': pId,
-              });
-            } else {
-              FirebaseFirestore.instance.collection('contacts').add({
-                'sender': {
-                  "id": user["id"],
-                  "name": user["name"],
-                  "image": user["image"]
-                },
-                'receiver': {"id": pId, "name": pName, "image": pData["image"]},
-                'receiverId': pId,
-                'senderId': user["id"],
-                'chatId': newChatId,
-                'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-                "lastMessage": content,
-                "isGroup": false,
-                "groupId": "",
-                "updateStamp": DateTime.now().millisecondsSinceEpoch.toString()
-              });
-            }
-          }
+          FirebaseFirestore.instance
+              .collection('contacts')
+              .doc(value.docs[0].id)
+              .update({
+            "updateStamp": DateTime.now().millisecondsSinceEpoch.toString(),
+            "lastMessage": content,
+            "senderId": user['id'],
+            'sender': {
+              "id": user['id'],
+              "name": user['name'],
+              "image": user["image"]
+            },
+            "receiverId": pId,
+            "receiver": {"id": pId, "name": pName, "image": pData["image"]}
+          });
 
           listScrollController.animateTo(0.0,
               duration: const Duration(milliseconds: 300),
@@ -322,7 +303,8 @@ class ChatController extends GetxController {
 
 // BUILD ITEM MESSAGE BOX FOR RECEIVER AND SENDER BOX DESIGN
   Widget buildItem(int index, document) {
-    if (document['sender'] == id) {
+    var user = appCtrl.storage.read("user");
+    if (document['sender'] == user["id"]) {
       return SenderMessage(
         document: document,
         index: index,
@@ -338,8 +320,7 @@ class ChatController extends GetxController {
     List<Contact>? contactList;
     bool isExist = false;
     try {
-      bool permissionStatus =
-          await permissionHandelCtrl.permissionGranted();
+      bool permissionStatus = await permissionHandelCtrl.permissionGranted();
       if (permissionStatus) {
         List<Contact> allContacts = await getAllContacts();
         contactList = allContacts;
@@ -359,8 +340,8 @@ class ChatController extends GetxController {
     for (int i = 0; i < statusesSnapshot.docs.length; i++) {
       for (int j = 0; j < contacts.length; j++) {
         if (contacts[j].phones!.isNotEmpty) {
-          print("phonephonephone : ${contacts[j].phones![0].value}");
-          String phone = await phoneNumberExtension(contacts[j].phones![0].value.toString());
+          String phone =
+              phoneNumberExtension(contacts[j].phones![0].value.toString());
 
           if (phone == statusesSnapshot.docs[i]["phone"]) {
             if (statusesSnapshot.docs[i]["id"] == document["receiver"]) {
@@ -378,7 +359,7 @@ class ChatController extends GetxController {
     return statusData;
   }
 
-  // ON BACKPRESS
+  // ON BACK PRESS
   Future<bool> onBackPress() {
     FirebaseFirestore.instance
         .collection(

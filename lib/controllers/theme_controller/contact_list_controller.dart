@@ -1,10 +1,12 @@
-import 'package:contacts_service/contacts_service.dart';
+
 import 'package:flutter_theme/config.dart';
 
 class ContactListController extends GetxController {
   List<Contact>? contacts;
   List<Contact>? contactList = [];
+  List<Contact>? searchContactList = [];
   List selectedContact = [];
+  TextEditingController searchText = TextEditingController();
 
   @override
   void onReady() {
@@ -58,11 +60,27 @@ class ContactListController extends GetxController {
         if (phone == user.data()["phone"]) {
           final storeUser = appCtrl.storage.read("user");
           if (user.data()["id"] != storeUser["id"]) {
-            contacts.add(user.data());
+            contactList!.add(Contact.fromMap(contact));
           }
         }
       }
     }
+    update();
+  }
+
+  searchContact(val){
+    searchContactList = [];
+    for(int i =0;i<contactList!.length;i++){
+      print("contac : ${contactList![i].displayName}");
+      if( contactList![i].phones!.isNotEmpty) {
+        print(contactList![i].displayName);
+        print(contactList![i].displayName!.contains(val));
+        if (contactList![i].displayName!.toLowerCase().contains(val)) {
+          searchContactList!.add(contactList![i]);
+        }
+      }
+    }
+    print(searchContactList);
     update();
   }
 }

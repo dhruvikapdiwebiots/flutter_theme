@@ -21,17 +21,31 @@ class _GroupChatMessageState extends State<GroupChatMessage>
   void initState() {
     // TODO: implement initState
     WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      chatCtrl.textEditingController.addListener(() async {
+        if (chatCtrl.textEditingController.text.isNotEmpty) {
+          chatCtrl.typing = true;
+          firebaseCtrl.groupTypingStatus(
+              chatCtrl.pId, chatCtrl.documentId, true);
+        }
+        if (chatCtrl.textEditingController.text.isEmpty &&
+            chatCtrl.typing == true) {
+          chatCtrl.typing = false;
+          firebaseCtrl.groupTypingStatus(
+              chatCtrl.pId, chatCtrl.documentId, false);
+        }
+        chatCtrl.update();
+      });
+    });
     super.initState();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      appCtrl.firebaseCtrl.setIsActive();
-      chatCtrl.getPeerStatus();
-      appCtrl.firebaseCtrl.groupTypingStatus(chatCtrl.pId,chatCtrl.documentId,chatCtrl.typing);
+      firebaseCtrl.setIsActive();
     } else {
-      chatCtrl.getPeerStatus();
+      firebaseCtrl.setLastSeen();
     }
   }
 
@@ -52,39 +66,6 @@ class _GroupChatMessageState extends State<GroupChatMessage>
                             fit: BoxFit.cover))),
                 Stack(children: <Widget>[
                   Column(children: <Widget>[
-                 /*   const VSpace(Sizes.s10),
-                    SizedBox(
-                      height: Sizes.s20,
-                      child: StreamBuilder(
-                          stream: FirebaseFirestore.instance
-                              .collection('groups')
-                              .where("groupId", isEqualTo: chatCtrl.pId)
-                              .snapshots(),
-                          builder: (context, snapshot) {
-                            if (snapshot.data != null) {
-                              if (!snapshot.hasData) {
-                                return Center(
-                                    child: CircularProgressIndicator(
-                                        valueColor: AlwaysStoppedAnimation<Color>(
-                                            appCtrl.appTheme.primary)));
-                              } else {
-                                return Text(
-                                  snapshot.data!.docs[0]["createdBy"]["id"] == chatCtrl.id
-                                      ? "You created this group"
-                                      : "${snapshot.data!.docs[0]["createdBy"]["name"]} created this group",
-                                  textAlign: TextAlign.center,
-                                  style: AppCss.poppinsMedium14
-                                      .textColor(appCtrl.appTheme.whiteColor),
-                                );
-                              }
-                            } else {
-                              return Center(
-                                  child: CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                          appCtrl.appTheme.primary)));
-                            }
-                          }),
-                    ),*/
                     // List of messages
                     const GroupMessageBox(),
                     // Sticker

@@ -31,11 +31,11 @@ class GroupInputBox extends StatelessWidget {
                     if (chatCtrl.textEditingController.text.isNotEmpty) {
 
                       chatCtrl.typing = true;
-                      appCtrl.firebaseCtrl.groupTypingStatus(chatCtrl.pId,chatCtrl.documentId,chatCtrl.typing);
+                      firebaseCtrl.groupTypingStatus(chatCtrl.pId,chatCtrl.documentId,true);
                     }
                     if (chatCtrl.textEditingController.text.isEmpty && chatCtrl.typing == true) {
                       chatCtrl.typing = false;
-                      appCtrl.firebaseCtrl.groupTypingStatus(chatCtrl.pId,chatCtrl.documentId,chatCtrl.typing);
+                      firebaseCtrl.groupTypingStatus(chatCtrl.pId,chatCtrl.documentId,false);
                     }
 
                   });

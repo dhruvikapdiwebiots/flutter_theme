@@ -21,10 +21,11 @@ class _MessageState extends State<Message>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      appCtrl.firebaseCtrl.setIsActive();
+      firebaseCtrl.setIsActive();
     } else {
-      appCtrl.firebaseCtrl.setLastSeen();
+      firebaseCtrl.setLastSeen();
     }
+    firebaseCtrl.statusDeleteAfter24Hours();
   }
 
   @override

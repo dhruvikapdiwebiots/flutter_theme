@@ -34,14 +34,14 @@ class ReceiverMessageCard extends StatelessWidget {
           contentPadding: EdgeInsets.zero,
           title: Text( document!["receiver"]['name'],
               style: AppCss.poppinsblack16.textColor(appCtrl.appTheme.primary)),
-          subtitle: Padding(
+          subtitle:document!["lastMessage"] != null ? Padding(
             padding: const EdgeInsets.only(top: 6.0),
-            child: Text(
+            child:  Text(
                 document!["lastMessage"].contains("http")
                     ? "Media Share"
                     : document!["lastMessage"],
                 style: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.grey)),
-          ),
+          ):Container(),
           leading: document!["receiver"]['image'] != null &&
               document!["receiver"]['image'] != ""
               ? CircleAvatar(
@@ -54,7 +54,7 @@ class ReceiverMessageCard extends StatelessWidget {
           ),
           trailing: Text(
               DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(
-                  int.parse(document!['timestamp']))),
+                  int.parse(document!['updateStamp']))),
               style:
               AppCss.poppinsMedium12.textColor(appCtrl.appTheme.primary))),
     );

@@ -27,7 +27,7 @@ class InputBox extends StatelessWidget {
                 ),
                 focusNode: chatCtrl.focusNode,
                 onChanged: (val){
-
+                  chatCtrl.setTyping();
                 },
               ),
             ),

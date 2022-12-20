@@ -45,7 +45,7 @@ class GroupMessageCard extends StatelessWidget {
         trailing: Text(
             DateFormat('HH:mm a').format(
                 DateTime.fromMillisecondsSinceEpoch(
-                    int.parse(document!['timestamp']))),
+                    int.parse(document!['updateStamp']))),
             style:  AppCss.poppinsMedium12
                 .textColor(appCtrl.appTheme.primary)
         ),

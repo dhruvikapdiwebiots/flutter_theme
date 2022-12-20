@@ -54,7 +54,6 @@ class GroupChatMessageController extends GetxController {
     pData = data;
     pId = data["id"];
     pName = data["name"];
-    readLocal();
     getPeerStatus();
     log("groupData : $pData");
     update();
@@ -82,26 +81,7 @@ class GroupChatMessageController extends GetxController {
     return status;
   }
 
-//read local data
-  readLocal() async {
-    FirebaseFirestore.instance
-        .collection(
-            'users') // Your collection name will be whatever you have given in firestore database
-        .doc(pId)
-        .update({'chattingWith': pId});
-    textEditingController.addListener(() {
-      if (textEditingController.text.isNotEmpty) {
-        appCtrl.firebaseCtrl.groupTypingStatus(pId,documentId,typing);
-        typing = true;
-      }
-      if (textEditingController.text.isEmpty && typing == true) {
-        appCtrl.firebaseCtrl.setIsActive();
-        typing = false;
-      }
-    });
-    update();
-  }
-
+  //document share
   documentShare() async {
     pickerCtrl.dismissKeyboard();
     Get.back();
@@ -113,8 +93,6 @@ class GroupChatMessageController extends GetxController {
           "${file.name}-${DateTime.now().millisecondsSinceEpoch.toString()}";
       Reference reference = FirebaseStorage.instance.ref().child(fileName);
       UploadTask uploadTask = reference.putFile(file);
-      print("fileName : $fileName");
-      print("file : $file");
       uploadTask.then((res) {
         res.ref.getDownloadURL().then((downloadUrl) {
           imageUrl = downloadUrl;
@@ -309,7 +287,7 @@ class GroupChatMessageController extends GetxController {
           .collection("contacts").where("isGroup",isEqualTo: true)
           .get()
           .then((value) {
-        log("exist : ${value}");
+
         if (value.docs.isNotEmpty) {
           for (var i = 0; i < value.docs.length; i++) {
             final snapshot = value.docs[i].data();
@@ -368,11 +346,7 @@ class GroupChatMessageController extends GetxController {
 
   // ON BACKPRESS
   Future<bool> onBackPress() {
-    FirebaseFirestore.instance
-        .collection(
-            'users') // Your collection name will be whatever you have given in firestore database
-        .doc(id)
-        .update({'chattingWith': null});
+    firebaseCtrl.groupTypingStatus(pId,documentId,false);
     Get.back();
     return Future.value(false);
   }
