@@ -134,4 +134,13 @@ class PermissionHandlerController extends GetxController{
       return false;
     }
   }
+
+  getContact() async{
+    bool permissionStatus = await permissionHandelCtrl.permissionGranted();
+    if (permissionStatus) {
+      List<Contact> contacts = await getAllContacts();
+      appCtrl.storage.write(session.contactList, contacts);
+
+    }
+  }
 }

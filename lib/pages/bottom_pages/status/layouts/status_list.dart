@@ -5,13 +5,12 @@ class StatusListLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<StatusController>(
-      builder: (statusCtrl) {
-        return SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height - 50,
-          child: FutureBuilder<List<Status>>(
-              future: statusCtrl.getStatus(),
+    return GetBuilder<StatusController>(builder: (statusCtrl) {
+      return SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height - 50,
+         child: StreamBuilder(
+              stream: statusCtrl.getStatus(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -44,8 +43,8 @@ class StatusListLayout extends StatelessWidget {
                 );
                 return Container();
               }),
-        );
-      }
-    );
+
+      );
+    });
   }
 }

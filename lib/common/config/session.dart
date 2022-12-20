@@ -16,4 +16,5 @@ class Session {
   String selectedIndex = 'selectedIndex';
   String usageControls = 'usageControls';
   String userAppSettings = 'userAppSettings';
+  String contactList = 'contactList';
 }

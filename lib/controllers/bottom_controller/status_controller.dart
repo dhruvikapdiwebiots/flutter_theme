@@ -45,19 +45,16 @@ class StatusController extends GetxController {
   }
 
 //get status of user according to contact in firebase
-  Future<List<Status>> getStatus() async {
-    List<Status> statusData = [];
+  Stream<List<Status>> getStatus()  {
+    Stream<List<Status>>? statusData ;
     try {
-      bool permissionStatus = await permissionHandelCtrl.permissionGranted();
-      if (permissionStatus) {
-        List<Contact> contacts = await getAllContacts();
-        contactList = contacts;
-        statusData = await getStatusList(contactList!);
-      }
+      permissionHandelCtrl.getContact();
+       contactList = appCtrl.storage.read(session.contactList);
+      statusData = getStatusList(contactList!);
     } catch (e) {
       log("message : $e");
     }
-    return statusData;
+    return statusData!;
   }
 
   //get status list
