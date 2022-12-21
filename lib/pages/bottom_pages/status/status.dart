@@ -28,7 +28,6 @@ class _StatusListState extends State<StatusList>
       firebaseCtrl.setLastSeen();
     }
     firebaseCtrl.statusDeleteAfter24Hours();
-    statusCtrl.getStatus();
   }
 
   @override
@@ -51,9 +50,9 @@ class _StatusListState extends State<StatusList>
           body: SafeArea(
               child: SingleChildScrollView(
             child: Column(children: <Widget>[
-              CurrentUserStatus(
-                currentUserId: statusCtrl.currentUserId,
-              ).marginSymmetric(vertical: Insets.i10),
+              statusCtrl.user != null?   CurrentUserStatus(
+                currentUserId: statusCtrl.user["phone"],
+              ).marginSymmetric(vertical: Insets.i10): Container(),
               const Divider(),
               const StatusListLayout(),
             ]),

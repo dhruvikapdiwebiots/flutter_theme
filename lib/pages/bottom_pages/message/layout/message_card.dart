@@ -21,7 +21,7 @@ class MessageCard extends StatelessWidget {
           onTap: () {
             print("se ");
             var data ={
-              "data":currentUserId != document!["senderId"]
+              "data":currentUserId != document!["senderPhone"]
                   ? document!["sender"]
                   : document!["receiver"],
               "chatId": document!["chatId"]

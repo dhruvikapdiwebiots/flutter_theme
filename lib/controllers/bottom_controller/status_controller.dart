@@ -9,7 +9,7 @@ final permissionHandelCtrl = Get.isRegistered<PermissionHandlerController>()
 
 class StatusController extends GetxController {
   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-  List<Contact>? contactList;
+  List<Contact> contactList = [];
   String? groupId, currentUserId, imageUrl;
   Image? contactPhoto;
   dynamic user;
@@ -25,13 +25,13 @@ class StatusController extends GetxController {
       : Get.put(PickerController());
 
   @override
-  void onReady() {
+  void onReady() async{
     // TODO: implement onReady
     final data = appCtrl.storage.read("user");
     currentUserId = data["id"];
     user = data;
     update();
-
+    contactList =   await permissionHandelCtrl.getContact();
     notificationCtrl.configLocalNotification();
     notificationCtrl.registerNotification();
     update();
@@ -48,9 +48,7 @@ class StatusController extends GetxController {
   Future getStatus() async {
     List<Status> statusData = [];
     try {
-      await permissionHandelCtrl.getContact();
-      contactList = appCtrl.storage.read(session.contactList);
-      statusData = await getStatusList(contactList!);
+      statusData = await getStatusList(contactList);
       log("new : $statusData");
     } catch (e) {
       log("message : $e");
@@ -59,10 +57,10 @@ class StatusController extends GetxController {
   }
 
   //get status list
-  getStatusList(List<Contact> contacts) async {
+  Future<List<Status>>  getStatusList(List<Contact> contacts) async {
     List<Status> statusData = [];
     statusData = await StatusFirebaseApi().getStatusUserList(contacts);
-    log("statusData : $statusData");
+    log("statusData s: $statusData");
     return statusData;
   }
 }

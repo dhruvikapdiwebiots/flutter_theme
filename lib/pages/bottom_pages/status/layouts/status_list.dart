@@ -36,7 +36,7 @@ class StatusListLayout extends StatelessWidget {
                                   ),
                                   leading: CircleAvatar(
                                       backgroundImage: NetworkImage(
-                                          (snapshot.data!)[index].profilePic!),
+                                          (snapshot.data!)[index].photoUrl[0].image.toString()),
                                       radius: 30)))),
                       Divider(
                           color: appCtrl.appTheme.grey.withOpacity(.2),

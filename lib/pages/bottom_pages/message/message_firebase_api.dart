@@ -18,7 +18,7 @@ class MessageFirebaseApi {
       for (int j = 0; j < contacts.length; j++) {
         if (contacts[j].phones!.isNotEmpty) {
           String phone =
-              phoneNumberExtension(contacts[j].phones![0].value.toString());
+          phoneNumberExtension(contacts[j].phones![0].value.toString());
 
           if (phone == statusesSnapshot.docs[i]["phone"]) {
             var messageSnapshot = await FirebaseFirestore.instance
@@ -90,7 +90,10 @@ class MessageFirebaseApi {
           .get();
       if (m.docs.isEmpty) {
         if (Platform.isAndroid) {
-          final uri = Uri(scheme: 'Download the Chatter', path: phone);
+
+          final uri = Uri(scheme: "sms", path: phone,queryParameters: <String, String>{
+            'body': Uri.encodeComponent('Download the ChatBox App'),
+          },);
           await launchUrl(uri);
         }
       } else {

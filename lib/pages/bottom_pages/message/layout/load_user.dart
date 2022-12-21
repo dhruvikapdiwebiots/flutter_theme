@@ -8,7 +8,7 @@ class LoadUser extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (document!["isGroup"] == false) {
-      if (document!["senderId"] == currentUserId) {
+      if (document!["senderPhone"] == currentUserId) {
         return ReceiverMessageCard(
             document: document, currentUserId: currentUserId);
       } else {
@@ -18,8 +18,8 @@ class LoadUser extends StatelessWidget {
         );
       }
     } else {
-      List user = document!["receiverId"];
-      return user.where((element) => element["id"] == currentUserId).isNotEmpty
+      List user = document!["receiverPhone"];
+      return user.where((element) => element["phone"] == currentUserId).isNotEmpty
           ? GroupMessageCard(
         document: document,
         currentUserId: currentUserId,

@@ -1,4 +1,3 @@
-
 import 'dart:math' as math;
 
 import '../config.dart';
@@ -29,12 +28,17 @@ List arrayFilter(List val) {
 }
 
 extension StringCasingExtension on String {
-  String toCapitalized() => length > 0 ?'${this[0].toUpperCase()}${substring(1).toLowerCase()}':'';
-  String toTitleCase() => replaceAll(RegExp(' +'), ' ').split(' ').map((str) => str.toCapitalized()).join(' ');
+  String toCapitalized() =>
+      length > 0 ? '${this[0].toUpperCase()}${substring(1).toLowerCase()}' : '';
+
+  String toTitleCase() => replaceAll(RegExp(' +'), ' ')
+      .split(' ')
+      .map((str) => str.toCapitalized())
+      .join(' ');
 }
 
 //phone number split
-String phoneNumberExtension(phoneNumber){
+String phoneNumberExtension(phoneNumber) {
   String phone = phoneNumber;
   if (phone.length > 10) {
     if (phone.contains(" ")) {
@@ -46,17 +50,20 @@ String phoneNumberExtension(phoneNumber){
     if (phone.contains("+")) {
       phone = phone.replaceAll("+91", "");
     }
+    if (phone.contains(" ")) {
+      phone = phone.replaceAll("  ", "");
+    }
   }
   return phone;
 }
 
-
-Future<List<Contact>>   getAllContacts()async{
+Future<List<Contact>>  getAllContacts() async {
   var contacts = (await ContactsService.getContacts(
-  withThumbnails: false, iOSLocalizedLabels: false));
+      withThumbnails: false, iOSLocalizedLabels: false));
+  print("see");
   return contacts;
+  print("write");
 }
-
 
 const double degrees2Radians = math.pi / 180.0;
 

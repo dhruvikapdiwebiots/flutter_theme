@@ -12,8 +12,8 @@ class CurrentUserStatus extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder(
         stream: FirebaseFirestore.instance
-            .collection('status')
-            .where("uid", isEqualTo: currentUserId)
+            .collection('status').where("phoneNumber",isEqualTo: currentUserId)
+        
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.data != null) {

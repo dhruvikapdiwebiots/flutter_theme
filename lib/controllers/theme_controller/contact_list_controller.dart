@@ -1,43 +1,40 @@
-
 import 'package:flutter_theme/config.dart';
 
 class ContactListController extends GetxController {
   List<Contact>? contacts;
-  List<Contact>? contactList = [];
+  List<Contact> contactList = [];
   List<Contact>? searchContactList = [];
   List selectedContact = [];
+  bool isLoading = true;
   TextEditingController searchText = TextEditingController();
+  final messageCtrl = Get.isRegistered<MessageController>()
+      ? Get.find<MessageController>()
+      : Get.put(MessageController());
 
   @override
-  void onReady() {
+  void onReady() async {
     // TODO: implement onReady
-    refreshContacts();
-    super.onReady();
-  }
-
-  Future<void> refreshContacts() async {
-    // Load without thumbnails initially.
-    var contacts = (await ContactsService.getContacts(
-        withThumbnails: false, iOSLocalizedLabels: false));
-    contactList = contacts;
-    update();
-
-    // Lazy load thumbnails after rendering initial contacts.
-    for (final contact in contactList!) {
+    contactList = await permissionHandelCtrl.getContact();
+    for (final contact in contactList) {
       ContactsService.getAvatar(contact).then((avatar) {
         if (avatar == null) return; // Don't redraw if no change.
         contact.avatar = avatar;
         update();
       });
     }
-  //  getFirebaseContact(contacts);
+    refreshContacts();
+    super.onReady();
   }
 
-  void updateContact() async {
-    Contact ninja = contacts!
-        .firstWhere((contact) => contact.familyName!.startsWith("Ninja"));
-    ninja.avatar = null;
-    await ContactsService.updateContact(ninja);
+  Future<void> refreshContacts() async {
+    // Load without thumbnails initially.
+
+    contactList = Get.arguments;
+    update();
+    await Future.delayed(Durations.s2);
+    isLoading = false;
+    update();
+    //  getFirebaseContact(contacts);
   }
 
   getFirebaseContact(contacts) async {
@@ -60,7 +57,7 @@ class ContactListController extends GetxController {
         if (phone == user.data()["phone"]) {
           final storeUser = appCtrl.storage.read("user");
           if (user.data()["id"] != storeUser["id"]) {
-            contactList!.add(Contact.fromMap(contact));
+            contactList.add(Contact.fromMap(contact));
           }
         }
       }
@@ -68,19 +65,27 @@ class ContactListController extends GetxController {
     update();
   }
 
-  searchContact(val){
+  searchContact(val, isTapSearch) {
     searchContactList = [];
-    for(int i =0;i<contactList!.length;i++){
-      print("contac : ${contactList![i].displayName}");
-      if( contactList![i].phones!.isNotEmpty) {
-        print(contactList![i].displayName);
-        print(contactList![i].displayName!.contains(val));
-        if (contactList![i].displayName!.toLowerCase().contains(val)) {
-          searchContactList!.add(contactList![i]);
+    if(isTapSearch){
+      for (int i = 0; i < contactList.length; i++) {
+        if (contactList[i].phones!.isNotEmpty) {
+          if (contactList[i].displayName!.toLowerCase().contains(val)) {
+            searchContactList!.add(contactList[i]);
+          }
+        }
+      }
+    }else {
+      if (val.length > 5) {
+        for (int i = 0; i < contactList.length; i++) {
+          if (contactList[i].phones!.isNotEmpty) {
+            if (contactList[i].displayName!.toLowerCase().contains(val)) {
+              searchContactList!.add(contactList[i]);
+            }
+          }
         }
       }
     }
-    print(searchContactList);
     update();
   }
 }

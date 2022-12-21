@@ -1,9 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../config.dart';
 
-class PermissionHandlerController extends GetxController{
+class PermissionHandlerController extends GetxController {
   static const String _kLocationServicesDisabledMessage =
       'Location services are disabled.';
   static const String _kPermissionDeniedMessage = 'Permission denied.';
@@ -41,7 +42,6 @@ class PermissionHandlerController extends GetxController{
     }
 
     if (permission == LocationPermission.deniedForever) {
-
       updatePositionList(
         PositionItemType.log,
         _kPermissionDeniedForeverMessage,
@@ -77,7 +77,6 @@ class PermissionHandlerController extends GetxController{
     return completer.future;
   }
 
-
 //get contact permission
   Future<PermissionStatus> getContactPermission() async {
     PermissionStatus permission = await Permission.contacts.status;
@@ -99,7 +98,7 @@ class PermissionHandlerController extends GetxController{
       ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);
     } else if (permissionStatus == PermissionStatus.permanentlyDenied) {
       final snackBar =
-      SnackBar(content: Text(fonts.contactDataNotAvailable.tr));
+          SnackBar(content: Text(fonts.contactDataNotAvailable.tr));
       ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);
     }
   }
@@ -111,9 +110,8 @@ class PermissionHandlerController extends GetxController{
     if (!hasPermission) {
       LocationPermission permission = await Geolocator.requestPermission();
       getCurrentPosition();
-    }else {
-      final position =
-      await geoLocatorPlatform.getCurrentPosition();
+    } else {
+      final position = await geoLocatorPlatform.getCurrentPosition();
       updatePositionList(
         PositionItemType.position,
         position.toString(),
@@ -121,26 +119,26 @@ class PermissionHandlerController extends GetxController{
       return position;
     }
     return null;
-
   }
 
-  Future<bool> permissionGranted()async{
+  Future<bool> permissionGranted() async {
     PermissionStatus permissionStatus =
-    await permissionHandelCtrl.getContactPermission();
+        await permissionHandelCtrl.getContactPermission();
     print("permissionStatus : $permissionStatus");
     if (permissionStatus == PermissionStatus.granted) {
       return true;
-    }else{
+    } else {
       return false;
     }
   }
 
-  getContact() async{
+ Future<List<Contact>> getContact() async {
+   List<Contact> contacts = [];
     bool permissionStatus = await permissionHandelCtrl.permissionGranted();
     if (permissionStatus) {
-      List<Contact> contacts = await getAllContacts();
-      appCtrl.storage.write(session.contactList, contacts);
-
+      contacts = await getAllContacts();
+      print("object");
     }
+    return contacts;
   }
 }

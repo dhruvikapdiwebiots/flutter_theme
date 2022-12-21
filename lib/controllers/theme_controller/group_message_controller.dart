@@ -303,8 +303,8 @@ class GroupChatMessageController extends GetxController {
                   "updateStamp":
                       DateTime.now().millisecondsSinceEpoch.toString(),
                   "lastMessage": content,
-                  "senderId": id,
-                  'sender': {"id" :user['id'],"name":user['name']},
+                  "senderPhone": user["phone"],
+                  'sender': {"id" :user['id'],"name":user['name'],"phone":user["phone"]},
                 });
               }
             }

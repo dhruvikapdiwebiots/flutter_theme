@@ -256,14 +256,15 @@ class ChatController extends GetxController {
               .update({
             "updateStamp": DateTime.now().millisecondsSinceEpoch.toString(),
             "lastMessage": content,
-            "senderId": user['id'],
+            "senderPhone": user['phone'],
             'sender': {
               "id": user['id'],
               "name": user['name'],
-              "image": user["image"]
+              "image": user["image"],
+              "phone": user["phone"]
             },
-            "receiverId": pId,
-            "receiver": {"id": pId, "name": pName, "image": pData["image"]}
+            "receiverPhone": pData["phone"],
+            "receiver": {"id": pId, "name": pName, "image": pData["image"],"phone":pData["phone"]}
           });
 
           listScrollController.animateTo(0.0,
@@ -276,11 +277,12 @@ class ChatController extends GetxController {
             'sender': {
               "id": user["id"],
               "name": user["name"],
-              "image": user["image"]
+              "image": user["image"],
+              "phone": user["phone"]
             },
-            'receiver': {"id": pId, "name": pName, "image": pData["image"]},
-            'receiverId': pId,
-            'senderId': user["id"],
+            'receiver': {"id": pId, "name": pName, "image": pData["image"],"phone":pData["phone"]},
+            'receiverPhone': pData["phone"],
+            "senderPhone": user['phone'],
             'chatId': newChatId,
             'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
             "lastMessage": content,
@@ -335,7 +337,6 @@ class ChatController extends GetxController {
   getContactList(List<Contact> contacts, DocumentSnapshot document) async {
     var statusesSnapshot =
         await FirebaseFirestore.instance.collection('users').get();
-    log("statusesSnapshot : ${statusesSnapshot.docs.length}");
     List<Status> statusData = [];
     for (int i = 0; i < statusesSnapshot.docs.length; i++) {
       for (int j = 0; j < contacts.length; j++) {

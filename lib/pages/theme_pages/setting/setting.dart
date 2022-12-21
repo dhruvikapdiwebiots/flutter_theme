@@ -56,7 +56,8 @@ class Setting extends StatelessWidget {
                                   .toString()
                             });
                             FirebaseAuth.instance.signOut();
-                            await appCtrl.storage.erase();
+                            await appCtrl.storage.remove("users");
+                            await appCtrl.storage.remove("id");
                             Get.offAllNamed(routeName.login);
                           }
                         },
