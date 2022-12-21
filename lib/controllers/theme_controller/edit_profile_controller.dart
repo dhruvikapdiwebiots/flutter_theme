@@ -16,14 +16,30 @@ class EditProfileController extends GetxController {
   TextEditingController emailText = TextEditingController();
   TextEditingController phoneText = TextEditingController();
   TextEditingController statusText = TextEditingController();
+  TextEditingController passwordText = TextEditingController();
 
   final FocusNode nameFocus = FocusNode();
   final FocusNode emailFocus = FocusNode();
   final FocusNode phoneFocus = FocusNode();
   final FocusNode statusFocus = FocusNode();
+  final FocusNode passwordFocus = FocusNode();
+
+  final authController = Get.isRegistered<FirebaseAuthController>()
+      ? Get.find<FirebaseAuthController>()
+      : Get.put(FirebaseAuthController());
 
   final storage = GetStorage();
   var loggedIn = false;
+
+  bool passwordValidation = false;
+  bool passEye = true;
+
+// EYE TOGGLE
+  void toggle() {
+    passEye = !passEye;
+    update();
+  }
+
 
   var auth = FirebaseAuth.instance;
   bool isLoading = false;
@@ -84,20 +100,33 @@ class EditProfileController extends GetxController {
   }
 
   updateUserData() async {
-    FirebaseFirestore.instance.collection('users').doc(user["id"]).update({
-      'image': "",
-      'name': nameText.text,
-      'status': "Online",
-      "typeStatus": "",
-      "phone": phoneText.text,
-      "email": emailText.text,
-      "statusDesc": statusText.text
-    }).then((result) {
-      log("new USer true");
-      Get.offAllNamed(routeName.dashboard);
-    }).catchError((onError) {
-      log("onError");
+    FirebaseFirestore.instance
+        .collection("users")
+        .where("email", isEqualTo: emailText.text)
+        .limit(1)
+        .get()
+        .then((value) {
+      if (value.docs.isNotEmpty) {
+        ScaffoldMessenger.of(Get.context!)
+            .showSnackBar(const SnackBar(content: Text("Email Already Exist")));
+      } else {
+        FirebaseFirestore.instance.collection('users').doc(user["id"]).update({
+          'image': "",
+          'name': nameText.text,
+          'status': "Online",
+          "typeStatus": "",
+          "phone": phoneText.text,
+          "email": emailText.text,
+          "statusDesc": statusText.text
+        }).then((result) {
+          log("new USer true");
+          Get.offAllNamed(routeName.dashboard);
+        }).catchError((onError) {
+          log("onError");
+        });
+      }
     });
+
     await storage.write("id", user["id"]);
     await storage.write("user", user);
   }
@@ -136,12 +165,12 @@ class EditProfileController extends GetxController {
     log("uploadTask : ${uploadTask}");
     uploadTask.then((res) {
       log("res : $res");
-      res.ref.getDownloadURL().then((downloadUrl) async{
+      res.ref.getDownloadURL().then((downloadUrl) async {
         user["image"] = imageUrl;
         await storage.write("user", user);
         imageUrl = downloadUrl;
         log(user["id"]);
-       await  FirebaseFirestore.instance
+        await FirebaseFirestore.instance
             .collection('users')
             .doc(user["id"])
             .update({'image': imageUrl});

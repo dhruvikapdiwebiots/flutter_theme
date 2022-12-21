@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter_theme/config.dart';
 
-class FirebaseAuthController extends GetxController{
+class FirebaseAuthController extends GetxController {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   var firebaseAuth = FirebaseAuth.instance;
   bool isLoading = false;
@@ -15,9 +15,9 @@ class FirebaseAuthController extends GetxController{
       case "G":
         try {
           GoogleSignInAccount? googleSignInAccount =
-          await _googleSignIn.signIn();
+              await _googleSignIn.signIn();
           GoogleSignInAuthentication googleAuth =
-          await googleSignInAccount!.authentication;
+              await googleSignInAccount!.authentication;
           final googleAuthCred = GoogleAuthProvider.credential(
               idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
           User? user =
@@ -33,14 +33,12 @@ class FirebaseAuthController extends GetxController{
 
           return 1;
         } catch (error) {
-
           isLoading = false;
           return 0;
         }
     }
     return 0;
   }
-
 
   // SIGN IN WITH ANONYMOUS
   Future<void> signInAnonymously() async {
@@ -61,7 +59,6 @@ class FirebaseAuthController extends GetxController{
       log("catch : $e");
     }
   }
-
 
   loginWithFB() async {
     log('login');
@@ -89,10 +86,10 @@ class FirebaseAuthController extends GetxController{
 
         break;
       case FacebookLoginStatus.cancel:
-      // User cancel log in
+        // User cancel log in
         break;
       case FacebookLoginStatus.error:
-      // Log in failed
+        // Log in failed
         log('Error while log in: ${result.error}');
         break;
     }
@@ -111,7 +108,6 @@ class FirebaseAuthController extends GetxController{
     }
     return resultData;
   }
-
 
   // SIGN IN WITH EMAIL
   Future<User?> signIn(String email, String password) async {
@@ -139,7 +135,6 @@ class FirebaseAuthController extends GetxController{
     return null;
   }
 
-
 // SIGN UP IN FIREBASE
   Future<User?> signUp(email, password) async {
     try {
@@ -154,9 +149,9 @@ class FirebaseAuthController extends GetxController{
         log('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
         final snackBar = SnackBar(
-            content: const Text('The account already exists for that email.'),
+            content:  Text(fonts.accountAlreadyExists.tr),
             action: SnackBarAction(
-                label: 'Undo',
+                label: fonts.undo.tr,
                 onPressed: () {
                   // Some code to undo the change.
                 }));
@@ -182,25 +177,38 @@ class FirebaseAuthController extends GetxController{
     Get.toNamed(routeName.dashboard);
   }
 
-
-
   //register user
   userRegister(User user) async {
     final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
     firebaseMessaging.getToken().then((token) async {
-      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-        'chattingWith': null,
-        'id': user.uid,
-        'image': user.photoURL ?? "",
-        'name': user.displayName,
-        'pushToken': token,
-        'status': "Offline",
-        "typeStatus": "Offline",
-        "phone": user.phoneNumber ?? "",
-        "email": user.email,
-        "deviceName": appCtrl.deviceName,
-        "device": appCtrl.device,
-        "statusDesc": "Hello, I am using Chatter"
+      FirebaseFirestore.instance
+          .collection("users")
+          .where("email", isEqualTo: user.email)
+          .limit(1)
+          .get()
+          .then((value) async {
+        if (value.docs.isNotEmpty) {
+          ScaffoldMessenger.of(Get.context!).showSnackBar(
+               SnackBar(content: Text(fonts.emailAlreadyExist.tr)));
+        } else {
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .set({
+            'chattingWith': null,
+            'id': user.uid,
+            'image': user.photoURL ?? "",
+            'name': user.displayName,
+            'pushToken': token,
+            'status': "Offline",
+            "typeStatus": "Offline",
+            "phone": user.phoneNumber ?? "",
+            "email": user.email,
+            "deviceName": appCtrl.deviceName,
+            "device": appCtrl.device,
+            "statusDesc": "Hello, I am using Chatter"
+          });
+        }
       });
     });
   }

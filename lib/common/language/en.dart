@@ -66,4 +66,7 @@ final dynamic en = {
   "hindi": "Hindi",
   "korean": "Korean",
   "yourStatus": "Your status",
+  "emailAlreadyExist": "Email Already Exist",
+  "accountAlreadyExists": "The account already exists for that email.",
+  "undo": "Undo",
 };

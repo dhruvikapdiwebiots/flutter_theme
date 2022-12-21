@@ -11,6 +11,7 @@ class CommonTextBox extends StatelessWidget {
   final FormFieldValidator<String>? validator;
   final bool filled;
   final bool obscureText;
+  final bool readOnly;
   final FocusNode? focusNode;
   final TextInputAction? textInputAction;
   final TextInputType? keyboardType;
@@ -32,6 +33,7 @@ class CommonTextBox extends StatelessWidget {
       this.focusNode,
       this.errorText,
       this.obscureText = false,
+      this.readOnly = false,
       this.keyboardType,
       this.textInputAction,
       this.maxLength,
@@ -54,6 +56,7 @@ class CommonTextBox extends StatelessWidget {
           textInputAction: textInputAction,
           obscureText: obscureText,
           onFieldSubmitted: onFieldSubmitted,
+          readOnly: readOnly,
           maxLength: maxLength,
           decoration: InputDecoration(
               filled: filled,

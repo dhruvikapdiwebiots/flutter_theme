@@ -75,14 +75,8 @@ class OtpController extends GetxController {
       update();
     }
 
-    codeSent(String verificationId, [int? forceResendingToken]) async {
-      print("code : $verificationId");
-      verificationId = verificationId;
-      update();
-    }
 
     codeAutoRetrievalTimeout(String verificationId) {
-      print("verificationId :$verificationId");
       verificationId = verificationId;
       update();
     }
@@ -134,6 +128,7 @@ class OtpController extends GetxController {
         });
       } else {
         showToast(fonts.otpError.tr, Colors.red);
+
       }
     }).catchError((error) {
       print("error : $error");
@@ -169,7 +164,7 @@ class OtpController extends GetxController {
         'pushToken': token,
         'status': "Offline",
         "typeStatus": "Offline",
-        "phone": user.phoneNumber ?? "",
+        "phone": mobileNumber,
         "email": user.email,
         "deviceName":appCtrl.deviceName,
         "device":appCtrl.device,

@@ -55,4 +55,7 @@ class Fonts{
   final theme = "theme";
   final language = "language";
   final yourStatus = "yourStatus";
+  final emailAlreadyExist = "emailAlreadyExist";
+  final accountAlreadyExists = "accountAlreadyExists";
+  final undo = "undo";
 }
