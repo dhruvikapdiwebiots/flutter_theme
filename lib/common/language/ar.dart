@@ -18,7 +18,8 @@ final dynamic ar = {
   "doNotHaveAccount": "ليس لديك حساب",
   "signUp": "اشتراك",
   "resetPassword": "إعادة تعيين كلمة المرور",
-  "resetPasswordDesc": "يمكنك إعادة تعيين كلمة المرور الخاصة بك باستخدام معرف البريد الإلكتروني الخاص بك.",
+  "resetPasswordDesc":
+      "يمكنك إعادة تعيين كلمة المرور الخاصة بك باستخدام معرف البريد الإلكتروني الخاص بك.",
   "done": "فعله",
   "confirmPasswordError": "الرجاء إدخال تأكيد كلمة المرور",
   "confirmPasswordErrorDes": "تأكيد كلمة المرور لا يتطابق مع كلمة المرور",
@@ -67,4 +68,10 @@ final dynamic ar = {
   "arabic": "عربي",
   "hindi": "هندي",
   "korean": "الكورية",
+  "yourStatus": "حالتك",
+  "emailAlreadyExist": "البريد الالكتروني موجود مسبقا",
+  "accountAlreadyExists": "الحساب موجود بالفعل لهذا البريد الإلكتروني.",
+  "undo": "الغاء التحميل",
+  "create": "خلق",
+  "groupName": "أسم المجموعة",
 };

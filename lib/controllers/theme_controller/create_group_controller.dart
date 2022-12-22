@@ -11,6 +11,7 @@ class CreateGroupController extends GetxController {
   final formKey = GlobalKey<FormState>();
   File? image;
   XFile? imageFile;
+  bool isLoading = false;
 
   String imageUrl = "";
   TextEditingController txtGroupName = TextEditingController();
@@ -22,47 +23,16 @@ class CreateGroupController extends GetxController {
       : Get.put(PermissionHandlerController());
 
   Future<void> refreshContacts() async {
-    PermissionStatus permissionStatus =
-        await permissionHandelCtrl.getContactPermission();
-    print(permissionStatus);
-    if (permissionStatus == PermissionStatus.granted) {
-// Load without thumbnails initially.
-      var contacts = (await ContactsService.getContacts(
-          withThumbnails: false, iOSLocalizedLabels: false));
-
-      contacts = contacts;
-      update();
-
-// Lazy load thumbnails after rendering initial contacts.
-      for (final contact in contacts) {
-        ContactsService.getAvatar(contact).then((avatar) {
-          if (avatar == null) return; // Don't redraw if no change.
-          contact.avatar = avatar;
-          update();
-        });
-      }
-      getFirebaseContact(contacts);
-    } else {
-      await permissionHandelCtrl.handleInvalidPermissions(permissionStatus);
-      if (permissionStatus == PermissionStatus.granted) {
-// Load without thumbnails initially.
-        var contacts = (await ContactsService.getContacts(
-            withThumbnails: false, iOSLocalizedLabels: false));
-
-        contacts = contacts;
+    contacts = await permissionHandelCtrl.getContact();
+    for (final contact in contacts!) {
+      ContactsService.getAvatar(contact).then((avatar) {
+        if (avatar == null) return; // Don't redraw if no change.
+        contact.avatar = avatar;
         update();
-
-// Lazy load thumbnails after rendering initial contacts.
-        for (final contact in contacts) {
-          ContactsService.getAvatar(contact).then((avatar) {
-            if (avatar == null) return; // Don't redraw if no change.
-            contact.avatar = avatar;
-            update();
-          });
-        }
-        getFirebaseContact(contacts);
-      }
+      });
     }
+    update();
+    getFirebaseContact(contacts);
   }
 
   getFirebaseContact(contacts) async {
@@ -70,24 +40,27 @@ class CreateGroupController extends GetxController {
 
     for (final user in msgList.docs) {
       for (final contact in contacts!) {
-        String phone = contact.phones![0].value.toString();
-        if (phone.length > 10) {
-          if (phone.contains(" ")) {
-            phone = phone.replaceAll(" ", "");
+        if (contact.phones!.isNotEmpty) {
+          String phone = contact.phones![0].value.toString();
+          if (phone.length > 10) {
+            if (phone.contains(" ")) {
+              phone = phone.replaceAll(" ", "");
+            }
+            if (phone.contains("-")) {
+              phone = phone.replaceAll("-", "");
+            }
+            if (phone.contains("+")) {
+              phone = phone.replaceAll("+91", "");
+            }
           }
-          if (phone.contains("-")) {
-            phone = phone.replaceAll("-", "");
-          }
-          if (phone.contains("+")) {
-            phone = phone.replaceAll("+91", "");
+          if (phone == user.data()["phone"]) {
+            final storeUser = appCtrl.storage.read("user");
+            if (user.data()["id"] != storeUser["id"]) {
+              contactList.add(user.data());
+            }
           }
         }
-        if (phone == user.data()["phone"]) {
-          final storeUser = appCtrl.storage.read("user");
-          if (user.data()["id"] != storeUser["id"]) {
-            contactList.add(user.data());
-          }
-        }
+
       }
     }
     update();
@@ -140,7 +113,7 @@ class CreateGroupController extends GetxController {
         ),
         builder: (BuildContext context) {
 // return your layout
-          return const CreateGroup();
+          return isLoading ? LoginLoader(isLoading: isLoading) : CreateGroup();
         });
   }
 

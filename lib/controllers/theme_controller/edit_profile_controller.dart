@@ -44,6 +44,7 @@ class EditProfileController extends GetxController {
   var auth = FirebaseAuth.instance;
   bool isLoading = false;
   bool isLoggedIn = false;
+  bool isPhoneLogin = false;
   User? currentUser;
   XFile? imageFile;
   String imageUrl = "";
@@ -84,58 +85,86 @@ class EditProfileController extends GetxController {
     }
   }
 
-  Widget buildLoader() {
-    return Positioned(
-      child: isLoading
-          ? Container(
-              color: appCtrl.appTheme.accent.withOpacity(0.8),
-              child: Center(
-                child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                        appCtrl.appTheme.primary)),
-              ),
-            )
-          : Container(),
-    );
-  }
 
+  //update user
   updateUserData() async {
-    FirebaseFirestore.instance
-        .collection("users")
-        .where("email", isEqualTo: emailText.text)
-        .limit(1)
-        .get()
-        .then((value) {
-      if (value.docs.isNotEmpty) {
-        ScaffoldMessenger.of(Get.context!)
-            .showSnackBar(const SnackBar(content: Text("Email Already Exist")));
-      } else {
+    isLoading = true;
+    update();
+    if(isPhoneLogin) {
+      FirebaseFirestore.instance
+          .collection("users")
+          .where("email", isEqualTo: emailText.text)
+          .limit(1)
+          .get()
+          .then((value) {
+        if (value.docs.isNotEmpty) {
+          ScaffoldMessenger.of(Get.context!)
+              .showSnackBar(
+              const SnackBar(content: Text("Email Already Exist")));
+        } else {
+          FirebaseFirestore.instance.collection('users').doc(user["id"]).update(
+              {
+                'image': "",
+                'name': nameText.text,
+                'status': "Online",
+                "typeStatus": "",
+                "phone": phoneText.text,
+                "email": emailText.text,
+                "statusDesc": statusText.text
+              }).then((result)async {
+            log("new USer true");
+            FirebaseFirestore.instance.collection('users').doc(user["id"]).get().then((value) async{
+              await storage.write("id", user["id"]);
+              await storage.write("user", value.data());
+            });
+
+            Get.offAllNamed(routeName.dashboard);
+          }).catchError((onError) {
+            log("onError");
+          });
+        }
+      });
+    }else{
+      FirebaseFirestore.instance
+          .collection("users")
+          .where("email", isEqualTo: emailText.text)
+          .limit(1)
+          .get()
+          .then((value) {
         FirebaseFirestore.instance.collection('users').doc(user["id"]).update({
           'image': "",
           'name': nameText.text,
           'status': "Online",
           "typeStatus": "",
           "phone": phoneText.text,
-          "email": emailText.text,
+          "email": emailText.text ,
           "statusDesc": statusText.text
-        }).then((result) {
+        }).then((result)async {
           log("new USer true");
+          FirebaseFirestore.instance.collection('users').doc(user["id"]).get().then((value) async{
+            await storage.write("id", user["id"]);
+            await storage.write("user", value.data());
+          });
           Get.offAllNamed(routeName.dashboard);
         }).catchError((onError) {
           log("onError");
         });
-      }
-    });
+      });
+    }
 
     await storage.write("id", user["id"]);
     await storage.write("user", user);
+    isLoading = false;
+    update();
   }
 
   @override
   void onReady() {
     // TODO: implement onReady
     statusText.text = "Hello, I am using Chatter";
-    user = Get.arguments;
+    var data = Get.arguments;
+    user = data["resultData"];
+    isPhoneLogin = data["isPhoneLogin"];
     nameText.text = user["name"] ?? "";
     emailText.text = user["email"] ?? "";
     phoneText.text = user["phone"] ?? "";

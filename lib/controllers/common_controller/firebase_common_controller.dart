@@ -19,6 +19,7 @@ class FirebaseCommonController extends GetxController {
   //last seen update
   void setLastSeen() async {
     var user = appCtrl.storage.read("user");
+
     await FirebaseFirestore.instance.collection("users").doc(user["id"]).update(
       {
         "status": "Offline",

@@ -28,10 +28,14 @@ class SignupBody extends StatelessWidget {
                   SignupWidget().signupButton(onTap: () async {
                     if (signupCtrl.formKey.currentState!.validate()) {
                       signupCtrl.dismissKeyBoard();
+                      signupCtrl.isLoading = true;
+                      signupCtrl.update();
                       await signupCtrl.authController.signUp(
                           signupCtrl.emailText.text,
-                          signupCtrl.passwordText.text);
+                          signupCtrl.passwordText.text,signupCtrl.nameText.text);
                       signupCtrl.cleartext();
+                      signupCtrl.isLoading = false;
+                      signupCtrl.update();
                     }
                   }),
                   const VSpace(Sizes.s20),

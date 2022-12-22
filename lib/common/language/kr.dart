@@ -67,4 +67,10 @@ final dynamic kr = {
   "arabic": "아라비아 말",
   "hindi": "힌디 어",
   "korean": "한국인",
+  "yourStatus": "귀하의 상태",
+  "emailAlreadyExist": "이메일이 이미 있음",
+  "accountAlreadyExists": "해당 이메일에 대한 계정이 이미 존재합니다.",
+  "undo": "실행 취소",
+  "create": "창조하다",
+  "groupName": "그룹 이름",
 };

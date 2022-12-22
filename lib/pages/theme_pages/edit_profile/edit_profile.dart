@@ -14,7 +14,7 @@ class EditProfile extends StatelessWidget {
         appBar: AppBar(
             backgroundColor: appCtrl.appTheme.primary,
             title: Text(fonts.saveProfile.tr)),
-        body: SingleChildScrollView(
+        body: editCtrl.isLoading ?LoginLoader(isLoading: editCtrl.isLoading).height(MediaQuery.of(context).size.height) : SingleChildScrollView(
             child: Form(
           key: editCtrl.formKey,
           child:editCtrl.user != null && editCtrl.user != ""? Column(

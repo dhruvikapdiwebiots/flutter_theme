@@ -67,4 +67,10 @@ final dynamic hi = {
   "arabic": "अरबी",
   "hindi": "हिन्दी",
   "korean": "कोरियाई",
+  "yourStatus": "तुम्हारी स्थिति",
+  "emailAlreadyExist": "ईमेल पहले से मौजूद है",
+  "accountAlreadyExists": "उस ईमेल के लिए खाता पहले से मौजूद है।",
+  "undo": "पूर्ववत",
+  "create": "सृजन करना",
+  "groupName": "समूह नाम",
 };

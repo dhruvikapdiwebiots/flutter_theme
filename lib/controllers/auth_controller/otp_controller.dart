@@ -7,7 +7,7 @@ class OtpController extends GetxController {
 
   TextEditingController otp = TextEditingController();
 
-  bool isCodeSent = false;
+  bool isCodeSent = false,isLoading = false;
   String? verificationCode, mobileNumber;
 
   @override
@@ -38,7 +38,6 @@ class OtpController extends GetxController {
   }
 
   void showToast(message, Color color) {
-    print(message);
     Fluttertoast.showToast(
         msg: message,
         toastLength: Toast.LENGTH_LONG,
@@ -89,7 +88,6 @@ class OtpController extends GetxController {
         verificationFailed: verificationFailed,
         codeSent: (String verificationId, int? resendToken) async {
           verificationCode = verificationId;
-          var phoneUser = FirebaseAuth.instance.currentUser;
           update();
 
         },
@@ -98,11 +96,12 @@ class OtpController extends GetxController {
 
   //on form submit
   void onFormSubmitted() async {
-    print(otp.text);
-    print(verificationCode);
+    dismissKeyboard();
+isLoading =true;
+update();
     AuthCredential authCredential = PhoneAuthProvider.credential(
         verificationId: verificationCode!, smsCode: otp.text);
-    print("authCredential : $authCredential");
+
     firebaseAuth
         .signInWithCredential(authCredential)
         .then((UserCredential value) async{
@@ -112,7 +111,7 @@ class OtpController extends GetxController {
           if (value.docs.isNotEmpty) {
 
             if (value.docs[0].data()["name"] == "") {
-              Get.toNamed(routeName.editProfile, arguments: value.docs[0].data());
+              Get.toNamed(routeName.editProfile, arguments:  {"resultData" : value.docs[0].data(),"isPhoneLogin":true});
             } else {
               homeNavigation(value.docs[0].data());
             }
@@ -120,18 +119,23 @@ class OtpController extends GetxController {
             await userRegister(user);
             dynamic resultData = await getUserData(user);
             if (resultData["name"] == "") {
-              Get.toNamed(routeName.editProfile, arguments: resultData);
+              Get.toNamed(routeName.editProfile, arguments: {"resultData" : resultData,"isPhoneLogin":true});
             } else {
               homeNavigation(resultData);
             }
           }
+          isLoading = false;
+          update();
         });
       } else {
+        isLoading =true;
+        update();
         showToast(fonts.otpError.tr, Colors.red);
 
       }
     }).catchError((error) {
-      print("error : $error");
+      isLoading =true;
+      update();
       showToast(fonts.somethingWrong.tr, Colors.red);
     });
   }

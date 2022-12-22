@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_theme/pages/bottom_pages/status/layouts/current_user_empty_status.dart';
 import 'package:flutter_theme/pages/bottom_pages/status/layouts/status_layout.dart';
 
@@ -18,19 +20,24 @@ class CurrentUserStatus extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.data != null) {
             if (!snapshot.data!.docs.isNotEmpty) {
-              return CurrentUserEmptyStatus(onTap: () {
-                Status status = Status.fromJson(snapshot.data!.docs[0].data());
-
-                Get.toNamed(routeName.statusView, arguments: status);
+              return CurrentUserEmptyStatus(onTap: ()async {
+                File? pickedImage = await pickImageFromGallery(context);
+                if (pickedImage != null) {
+                  Get.toNamed(routeName.confirmationScreen,
+                      arguments: pickedImage);
+                }
               });
             } else {
               return StatusLayout(snapshot: snapshot) ;
             }
           } else {
-            return Center(
-                child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                        appCtrl.appTheme.primary)));
+            return CurrentUserEmptyStatus(onTap: () async {
+              File? pickedImage = await pickImageFromGallery(context);
+              if (pickedImage != null) {
+                Get.toNamed(routeName.confirmationScreen,
+                    arguments: pickedImage);
+              }
+            });
           }
         });
   }

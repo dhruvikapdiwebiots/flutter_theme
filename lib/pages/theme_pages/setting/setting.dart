@@ -1,4 +1,5 @@
 import 'package:flutter_theme/config.dart';
+import 'package:intl/intl.dart';
 
 class Setting extends StatelessWidget {
   final settingCtrl = Get.put(SettingController());
@@ -9,13 +10,13 @@ class Setting extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<SettingController>(builder: (_) {
       return Scaffold(
-        appBar: AppBar(
+        /*appBar: AppBar(
           backgroundColor: appCtrl.appTheme.primary,
           iconTheme: IconThemeData(color: appCtrl.appTheme.whiteColor),
           title: Text(fonts.setting.tr,
               style:
                   AppCss.poppinsblack18.textColor(appCtrl.appTheme.whiteColor)),
-        ),
+        ),*/
         body: settingCtrl.user != null && settingCtrl.user != ""
             ? Column(children: [
                 Row(
@@ -29,9 +30,41 @@ class Setting extends StatelessWidget {
                               style: AppCss.poppinsblack16
                                   .textColor(appCtrl.appTheme.blackColor)),
                           const VSpace(Sizes.s10),
-                          Text(settingCtrl.user["status"],
+                          /*Text(settingCtrl.user["status"],
                               style: AppCss.poppinsMedium14
-                                  .textColor(appCtrl.appTheme.grey))
+                                  .textColor(appCtrl.appTheme.grey))*/
+                          StreamBuilder(
+                              stream: FirebaseFirestore.instance
+                                  .collection('users')
+                                  .where("id", isEqualTo: settingCtrl.user["id"])
+                                  .snapshots(),
+                              builder: (context, snapshot) {
+                                if (snapshot.data != null) {
+                                  if (!snapshot.hasData) {
+                                    return Center(
+                                        child: CircularProgressIndicator(
+                                            valueColor: AlwaysStoppedAnimation<Color>(
+                                                appCtrl.appTheme.primary)));
+                                  } else {
+                                    return Text(
+                                      snapshot.data!.docs[0]["status"] == "Offline"
+                                          ? DateFormat('HH:mm a').format(
+                                          DateTime.fromMillisecondsSinceEpoch(
+                                              int.parse(snapshot.data!.docs[0]
+                                              ['lastSeen'])))
+                                          : snapshot.data!.docs[0]["status"],
+                                      textAlign: TextAlign.center,
+                                        style: AppCss.poppinsMedium14
+                                            .textColor(appCtrl.appTheme.grey)
+                                    );
+                                  }
+                                } else {
+                                  return Center(
+                                      child: CircularProgressIndicator(
+                                          valueColor: AlwaysStoppedAnimation<Color>(
+                                              appCtrl.appTheme.primary)));
+                                }
+                              })
                         ])
                   ],
                 ).inkWell(onTap: () => settingCtrl.editProfile()),
@@ -43,7 +76,17 @@ class Setting extends StatelessWidget {
                         onTap: () async {
                           if (e.key == 0) {
                             Get.toNamed(routeName.otherSetting);
-                          } else if (e.key == 2) {
+                          } else if(e.key ==1){
+                            var user = appCtrl.storage.read("user");
+
+                            await FirebaseFirestore.instance
+                                .collection("users")
+                                .doc(user["id"]).delete();
+                            FirebaseAuth.instance.signOut();
+                            await appCtrl.storage.remove("user");
+                            await appCtrl.storage.remove("id");
+                            Get.offAllNamed(routeName.phone);
+                          }else if (e.key == 2) {
                             var user = appCtrl.storage.read("user");
 
                             await FirebaseFirestore.instance
@@ -56,9 +99,9 @@ class Setting extends StatelessWidget {
                                   .toString()
                             });
                             FirebaseAuth.instance.signOut();
-                            await appCtrl.storage.remove("users");
+                            await appCtrl.storage.remove("user");
                             await appCtrl.storage.remove("id");
-                            Get.offAllNamed(routeName.login);
+                            Get.offAllNamed(routeName.phone);
                           }
                         },
                         minLeadingWidth: 0,

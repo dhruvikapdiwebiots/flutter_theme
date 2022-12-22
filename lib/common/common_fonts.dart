@@ -58,4 +58,6 @@ class Fonts{
   final emailAlreadyExist = "emailAlreadyExist";
   final accountAlreadyExists = "accountAlreadyExists";
   final undo = "undo";
+  final create = "create";
+  final groupName = "groupName";
 }

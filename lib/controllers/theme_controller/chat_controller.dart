@@ -220,6 +220,7 @@ class ChatController extends GetxController {
     if (content.trim() != '') {
       textEditingController.clear();
       var user = appCtrl.storage.read("user");
+      print("user = : $user");
       final now = DateTime.now();
       String? newChatId =
           chatId == "0" ? now.microsecondsSinceEpoch.toString() : chatId;

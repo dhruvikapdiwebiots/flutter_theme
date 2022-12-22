@@ -17,7 +17,13 @@ class Signup extends StatelessWidget {
           CommonWidget().backIcon(),
           Expanded(
               child: SingleChildScrollView(
-                  child: Column(children: const <Widget>[SignupBody()])))
+                  child: Stack(
+                    alignment: Alignment.center,
+                      children: <Widget>[
+            const SignupBody(),
+            if (signupCtrl.isLoading)
+              LoginLoader(isLoading: signupCtrl.isLoading).height(MediaQuery.of(context).size.height)
+          ])))
         ]),
       );
     });

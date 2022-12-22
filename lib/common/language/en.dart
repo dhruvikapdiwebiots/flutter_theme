@@ -69,4 +69,6 @@ final dynamic en = {
   "emailAlreadyExist": "Email Already Exist",
   "accountAlreadyExists": "The account already exists for that email.",
   "undo": "Undo",
+  "create": "Create",
+  "groupName": "Group Name",
 };

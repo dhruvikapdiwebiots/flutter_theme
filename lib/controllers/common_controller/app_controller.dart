@@ -1,5 +1,3 @@
-
-
 import 'dart:developer';
 import 'dart:io';
 
@@ -12,6 +10,7 @@ import '../../config.dart';
 class AppController extends GetxController {
   AppTheme _appTheme = AppTheme.fromType(ThemeType.light);
   final storage = GetStorage();
+
   AppTheme get appTheme => _appTheme;
   int selectedIndex = 0;
   bool isTheme = false;
@@ -19,17 +18,13 @@ class AppController extends GetxController {
   String languageVal = "in";
   List drawerList = [];
   int currVal = 1;
-  String deviceName= "";
-  String device= "";
+  String deviceName = "";
+  String device = "";
   dynamic userAppSettingsVal;
   dynamic usageControlsVal;
 
-
-
 //list of bottommost page
-  List<Widget> widgetOptions = <Widget>[
-
-  ];
+  List<Widget> widgetOptions = <Widget>[];
 
   //update theme
   updateTheme(theme) {
@@ -49,7 +44,7 @@ class AppController extends GetxController {
   }
 
   //get data from storage
-  getData()async{
+  getData() async {
     //theme check
     bool loadThemeFromStorage = storage.read('isDarkMode') ?? false;
     if (loadThemeFromStorage) {
@@ -65,13 +60,19 @@ class AppController extends GetxController {
     Get.forceAppUpdate();
   }
 
-  getAdminPermission()async{
-    final usageControls =await FirebaseFirestore.instance.collection(collectionName.admin).doc(collectionName.usageControls).get();
+  getAdminPermission() async {
+    final usageControls = await FirebaseFirestore.instance
+        .collection(collectionName.admin)
+        .doc(collectionName.usageControls)
+        .get();
     log("admin : ${usageControls.data()}");
     usageControlsVal = usageControls.data();
     appCtrl.storage.write(session.usageControls, usageControls.data());
     update();
-    final userAppSettings =await FirebaseFirestore.instance.collection(collectionName.admin).doc(collectionName.userAppSettings).get();
+    final userAppSettings = await FirebaseFirestore.instance
+        .collection(collectionName.admin)
+        .doc(collectionName.userAppSettings)
+        .get();
     log("admin : ${userAppSettings.data()}");
     userAppSettingsVal = userAppSettings.data();
     appCtrl.storage.write(session.userAppSettings, userAppSettings.data());
@@ -83,15 +84,13 @@ class AppController extends GetxController {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     try {
       if (Platform.isAndroid) {
-
         AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-        deviceName =androidInfo.model;
-        device ="android";
+        deviceName = androidInfo.model;
+        device = "android";
       } else if (Platform.isIOS) {
         IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-        deviceName =iosInfo.utsname.machine.toString();
-        device ="ios";
-
+        deviceName = iosInfo.utsname.machine.toString();
+        device = "ios";
       }
     } on PlatformException {
       deviceData = <String, dynamic>{
@@ -100,7 +99,6 @@ class AppController extends GetxController {
     }
     update();
   }
-
 }
 
 language() async {
@@ -111,7 +109,7 @@ language() async {
         child: Container(
           height: Sizes.s280,
           decoration:
-          BoxDecoration(borderRadius: BorderRadius.circular(AppRadius.r8)),
+              BoxDecoration(borderRadius: BorderRadius.circular(AppRadius.r8)),
           margin: const EdgeInsets.symmetric(horizontal: Insets.i50),
           child: LanguageScreen(),
         ),

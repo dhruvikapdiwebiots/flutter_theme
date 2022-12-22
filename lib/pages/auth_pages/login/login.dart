@@ -1,5 +1,3 @@
-
-
 import '../../../config.dart';
 
 class Login extends StatelessWidget {
@@ -20,14 +18,13 @@ class Login extends StatelessWidget {
               padding: const EdgeInsets.all(36.0),
               child: Container(
                   decoration: BoxDecoration(color: appCtrl.appTheme.accent),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        loginCtrl.isLoading == false
-                            ? const LoginBody()
-                            : LoginLoader(isLoading: loginCtrl.isLoading,)
-                      ])),
+                  child: Stack(children: <Widget>[
+                    const LoginBody(),
+                    if (loginCtrl.isLoading == true)
+                      LoginLoader(
+                        isLoading: loginCtrl.isLoading,
+                      )
+                  ])),
             ),
           ),
         ),

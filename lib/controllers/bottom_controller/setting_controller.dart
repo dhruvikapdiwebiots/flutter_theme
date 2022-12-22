@@ -13,7 +13,6 @@ class SettingController extends GetxController {
     // TODO: implement onReady
     settingList = appArray.settingList;
     user = appCtrl.storage.read("user");
-    print(user);
     update();
     super.onReady();
   }
@@ -21,7 +20,7 @@ class SettingController extends GetxController {
   editProfile() {
     user = appCtrl.storage.read("user");
     
-    Get.toNamed(routeName.editProfile, arguments: user);
+    Get.toNamed(routeName.editProfile, arguments: {"resultData" : user,"isPhoneLogin":false});
   }
 
 }

@@ -34,7 +34,7 @@ class EditProfileTextBox extends StatelessWidget {
               controller: editCtrl.phoneText,
               textInputAction: TextInputAction.done,
               keyboardType: TextInputType.phone,
-              readOnly: true,
+              readOnly:editCtrl.phoneText.text.isNotEmpty ? true :false,
               validator: (val) {
                 if (val!.isEmpty) {
                   return fonts.phoneError.tr;
@@ -61,14 +61,7 @@ class EditProfileTextBox extends StatelessWidget {
               errorText:
                   editCtrl.statusValidation ? fonts.phoneError.tr : null),
           const VSpace(Sizes.s25),
-          //password text box
-          PasswordTextBox(
-            focusNode: editCtrl.passwordFocus,
-            onPressed: () => editCtrl.toggle(),
-            passEye: editCtrl.passEye,
-            passwordText: editCtrl.passwordText,
-            passwordValidation: editCtrl.passwordValidation,
-          ),
+
         ],
       );
     });

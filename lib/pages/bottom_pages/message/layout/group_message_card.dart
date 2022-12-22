@@ -29,7 +29,7 @@ class GroupMessageCard extends StatelessWidget {
         subtitle: Padding(
           padding: const EdgeInsets.only(top: 6.0),
           child: Text(
-              document!["lastMessage"] == ""?   currentUserId == document!["senderId"]
+              document!["lastMessage"] == ""?   currentUserId == document!["senderPhone"]
                 ? "You Create this group ${document!["group"]['name']}"
                 : "${document!["sender"]['name']} added you":document!["lastMessage"],
             style: AppCss.poppinsMedium14

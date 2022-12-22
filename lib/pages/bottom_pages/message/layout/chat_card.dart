@@ -24,6 +24,7 @@ class _ChatCardState extends State<ChatCard> {
         for (int a = 0; a < snapshot.data!.docs.length; a++) {
 
           if (snapshot.data!.docs[a].data()["isGroup"] == false) {
+            print(snapshot.data!.docs[a].data()["senderPhone"]);
             if (snapshot.data!.docs[a].data()["senderPhone"] ==
                 messageCtrl.storageUser["phone"] ||
                 snapshot.data!.docs[a].data()["receiverPhone"] ==
@@ -40,7 +41,7 @@ class _ChatCardState extends State<ChatCard> {
               message.add(snapshot.data!.docs[a]);
             } else {
               List groupReceiver =
-              snapshot.data!.docs[a].data()["receiver"];
+              snapshot.data!.docs[a].data()["receiverId"];
               if (groupReceiver
                   .where((element) => element["phone"] == phone)
                   .isNotEmpty) {
@@ -67,9 +68,9 @@ class _ChatCardState extends State<ChatCard> {
                 if (!snapshot.hasData) {
                   return Center(
                       child: CircularProgressIndicator(
-                    valueColor:
+                        valueColor:
                         AlwaysStoppedAnimation<Color>(appCtrl.appTheme.primary),
-                  ));
+                      )).height(MediaQuery.of(context).size.height).expanded();
                 } else {
                   List message = chatListWidget(snapshot);
                   return message.isNotEmpty ? ListView.builder(
@@ -84,6 +85,7 @@ class _ChatCardState extends State<ChatCard> {
                   ): Container();
 
                 }
+
               }),
         ],
       );

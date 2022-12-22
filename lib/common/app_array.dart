@@ -15,14 +15,14 @@ class AppArray{
   var bottomList = [
     {'icon': Icons.image, 'title': "status"},
     {'icon': Icons.message, 'title': "chats"},
-    {'icon': Icons.call, 'title': "calls"},
+    {'icon': Icons.settings, 'title': "setting"},
   ];
 
   //action list
   var actionList = [
-    {'title': "broadCast"},
+    /*{'title': "broadCast"},*/
     {'title': "newGroup"},
-    {'title': "setting"},
+    /*{'title': "setting"},*/
   ];
 
   //setting list
@@ -30,6 +30,6 @@ class AppArray{
     {'icon': Icons.message, 'title': "chats"},
     {'icon': Icons.delete_forever, 'title': "deleteAccount"},
     {'icon': Icons.logout, 'title': "logout"},
-    {'icon': Icons.supervised_user_circle_sharp, 'title': "inviteFriend"},
+    //{'icon': Icons.supervised_user_circle_sharp, 'title': "inviteFriend"},
   ];
 }

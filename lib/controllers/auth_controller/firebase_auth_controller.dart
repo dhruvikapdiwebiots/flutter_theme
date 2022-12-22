@@ -26,7 +26,8 @@ class FirebaseAuthController extends GetxController {
           isLoading = false;
           dynamic resultData = await getUserData(user);
           if (resultData["phone"] == "") {
-            Get.toNamed(routeName.editProfile, arguments: resultData);
+            Get.toNamed(routeName.editProfile,
+                arguments: {"resultData": resultData, "isPhoneLogin": false});
           } else {
             homeNavigation(resultData);
           }
@@ -50,7 +51,8 @@ class FirebaseAuthController extends GetxController {
         User? user = firebaseUser;
         dynamic resultData = await getUserData(user!);
         if (resultData["phone"] == "") {
-          Get.toNamed(routeName.editProfile, arguments: resultData);
+          Get.toNamed(routeName.editProfile,
+              arguments: {"resultData": resultData, "isPhoneLogin": false});
         } else {
           homeNavigation(resultData);
         }
@@ -78,7 +80,8 @@ class FirebaseAuthController extends GetxController {
             (await firebaseAuth.signInWithCredential(facebookAuthCred)).user;
         dynamic resultData = await getUserData(user!);
         if (resultData["phone"] == "") {
-          Get.toNamed(routeName.editProfile, arguments: resultData);
+          Get.toNamed(routeName.editProfile,
+              arguments: {"resultData": resultData, "isPhoneLogin": false});
         } else {
           homeNavigation(resultData);
         }
@@ -119,9 +122,10 @@ class FirebaseAuthController extends GetxController {
       isLoading = false;
       log('login : ${user.user}');
       dynamic resultData = await getUserData(user.user!);
-
+      print("resultData : $resultData");
       if (resultData["phone"] == "") {
-        Get.toNamed(routeName.editProfile, arguments: resultData);
+        Get.toNamed(routeName.editProfile,
+            arguments: {"resultData": resultData, "isPhoneLogin": false});
       } else {
         homeNavigation(resultData);
       }
@@ -136,12 +140,12 @@ class FirebaseAuthController extends GetxController {
   }
 
 // SIGN UP IN FIREBASE
-  Future<User?> signUp(email, password) async {
+  Future<User?> signUp(email, password, name) async {
     try {
       var user = await auth.createUserWithEmailAndPassword(
           email: email, password: password);
       assert(await user.user?.getIdToken() != null);
-      userRegister(user.user!);
+      userRegister(user.user!, name: name);
       Get.back();
       return user.user;
     } on FirebaseAuthException catch (e) {
@@ -149,7 +153,7 @@ class FirebaseAuthController extends GetxController {
         log('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
         final snackBar = SnackBar(
-            content:  Text(fonts.accountAlreadyExists.tr),
+            content: Text(fonts.accountAlreadyExists.tr),
             action: SnackBarAction(
                 label: fonts.undo.tr,
                 onPressed: () {
@@ -178,7 +182,7 @@ class FirebaseAuthController extends GetxController {
   }
 
   //register user
-  userRegister(User user) async {
+  userRegister(User user, {String? name}) async {
     final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
     firebaseMessaging.getToken().then((token) async {
       FirebaseFirestore.instance
@@ -189,7 +193,7 @@ class FirebaseAuthController extends GetxController {
           .then((value) async {
         if (value.docs.isNotEmpty) {
           ScaffoldMessenger.of(Get.context!).showSnackBar(
-               SnackBar(content: Text(fonts.emailAlreadyExist.tr)));
+              SnackBar(content: Text(fonts.emailAlreadyExist.tr)));
         } else {
           await FirebaseFirestore.instance
               .collection('users')
@@ -198,7 +202,7 @@ class FirebaseAuthController extends GetxController {
             'chattingWith': null,
             'id': user.uid,
             'image': user.photoURL ?? "",
-            'name': user.displayName,
+            'name': user.displayName ?? name,
             'pushToken': token,
             'status': "Offline",
             "typeStatus": "Offline",

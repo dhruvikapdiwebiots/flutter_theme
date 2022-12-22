@@ -27,7 +27,7 @@ class SplashController extends GetxController{
   loginNavigation() async {
     var user = appCtrl.storage.read("user") ?? "";
     if(user == "") {
-      Get.offAllNamed(routeName.login);
+      Get.offAllNamed(routeName.phone);
     }else{
       Get.offAllNamed(routeName.dashboard);
     }

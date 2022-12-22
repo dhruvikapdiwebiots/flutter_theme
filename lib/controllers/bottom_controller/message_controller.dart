@@ -33,8 +33,10 @@ class MessageController extends GetxController {
   void onReady() async {
     // TODO: implement onReady
     final data = appCtrl.storage.read("user");
-    currentUserId = data["id"];
-    storageUser = data;
+    if(data != null) {
+      currentUserId = data["id"];
+      storageUser = data;
+    }
     update();
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User user = auth.currentUser!;
@@ -88,8 +90,7 @@ class MessageController extends GetxController {
   //pick up contact and check if mobile exist
   saveContactInChat() async {
     // Add your onPressed code here!
-    isLoading = true;
-    Get.toNamed(routeName.contactList,arguments: contactUserList)!.then((value) async {
+    Get.toNamed(routeName.contactList)!.then((value) async {
       MessageFirebaseApi().saveContact(value);
     });
   }

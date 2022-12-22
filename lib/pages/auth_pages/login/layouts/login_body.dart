@@ -43,10 +43,13 @@ class LoginBody extends StatelessWidget {
               LoginWidget().signInButton(onTap: ()async {
                 if (loginCtrl.formKey.currentState!.validate()) {
                   loginCtrl.dismissKeyBoard();
+                  loginCtrl.isLoading = true;
+                  loginCtrl.update();
                 await  loginCtrl.authController.signIn(
                       loginCtrl.emailText.text, loginCtrl.passwordText.text);
                 loginCtrl.emailText.text ="";
                 loginCtrl.passwordText.text ="";
+                  loginCtrl.isLoading = false ;
                 loginCtrl.update();
                 }
               }),

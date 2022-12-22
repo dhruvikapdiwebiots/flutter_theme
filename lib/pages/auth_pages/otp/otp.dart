@@ -12,14 +12,20 @@ class Otp extends StatelessWidget {
       return Scaffold(
           backgroundColor: appCtrl.appTheme.accent,
           resizeToAvoidBottomInset: false,
-          body: Column(children: <Widget>[
-            VSpace(MediaQuery.of(context).padding.top),
-            //back button
-            CommonWidget().backIcon(),
-            const Padding(
-                padding:  EdgeInsets.all(Insets.i40),
-                child: OtpBody())
-          ]));
+          body: Stack(
+            children: [
+              Column(children: <Widget>[
+                VSpace(MediaQuery.of(context).padding.top),
+                //back button
+                CommonWidget().backIcon(),
+                const Padding(
+                    padding:  EdgeInsets.all(Insets.i40),
+                    child:  OtpBody())
+              ]),
+              if(otpCtrl.isLoading)
+                LoginLoader(isLoading: otpCtrl.isLoading,)
+            ],
+          ));
     });
   }
 }

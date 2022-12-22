@@ -47,7 +47,6 @@ class LoginController extends GetxController {
 
   //get storage data
   getData() async {
-    print("check");
     var users = storage.read('user') ?? '';
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
@@ -58,7 +57,7 @@ class LoginController extends GetxController {
       dynamic resultData = await authController.getUserData(user!,
           isStorage: true, users: users);
       if (resultData["phone"] == "") {
-        Get.toNamed(routeName.editProfile, arguments: resultData);
+        Get.toNamed(routeName.editProfile, arguments:  {"resultData" : resultData,"isPhoneLogin":false});
       } else {
         authController.homeNavigation(resultData);
       }

@@ -31,31 +31,37 @@ class GroupChat extends StatelessWidget {
             )
                 : Container(),
             body: SafeArea(
-                child: SingleChildScrollView(
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (groupChatCtrl.selectedContact.isNotEmpty)
-                            const SelectedContactList(),
-                          if (groupChatCtrl.contactList.isNotEmpty)
-                            Column(children: [
-                              ...groupChatCtrl.contactList.asMap().entries.map((e) {
-                                return AllRegisteredContact(
-                                    onTap: () {
-                                      if (groupChatCtrl.selectedContact
-                                          .contains(e.value)) {
-                                        groupChatCtrl.selectedContact.remove(e.value);
-                                      } else {
-                                        groupChatCtrl.selectedContact.add(e.value);
-                                      }
-                                      groupChatCtrl.update();
-                                    },
-                                    isExist: groupChatCtrl.selectedContact
-                                        .contains(e.value),
-                                    data: e.value);
-                              }).toList()
-                            ])
-                        ])))),
+                child: Stack(
+                  children: [
+                    SingleChildScrollView(
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (groupChatCtrl.selectedContact.isNotEmpty)
+                                const SelectedContactList(),
+                              if (groupChatCtrl.contactList.isNotEmpty)
+                                Column(children: [
+                                  ...groupChatCtrl.contactList.asMap().entries.map((e) {
+                                    return AllRegisteredContact(
+                                        onTap: () {
+                                          if (groupChatCtrl.selectedContact
+                                              .contains(e.value)) {
+                                            groupChatCtrl.selectedContact.remove(e.value);
+                                          } else {
+                                            groupChatCtrl.selectedContact.add(e.value);
+                                          }
+                                          groupChatCtrl.update();
+                                        },
+                                        isExist: groupChatCtrl.selectedContact
+                                            .contains(e.value),
+                                        data: e.value);
+                                  }).toList()
+                                ])
+                            ])),
+                    if(groupChatCtrl.isLoading)
+                      LoginLoader(isLoading: groupChatCtrl.isLoading,)
+                  ],
+                ))),
       );
     });
   }

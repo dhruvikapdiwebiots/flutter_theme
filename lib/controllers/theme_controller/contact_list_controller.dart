@@ -1,4 +1,5 @@
 import 'package:flutter_theme/config.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class ContactListController extends GetxController {
   List<Contact>? contacts;
@@ -6,6 +7,7 @@ class ContactListController extends GetxController {
   List<Contact>? searchContactList = [];
   List selectedContact = [];
   bool isLoading = true;
+  static const pageSize = 20;
   TextEditingController searchText = TextEditingController();
   final messageCtrl = Get.isRegistered<MessageController>()
       ? Get.find<MessageController>()
@@ -14,7 +16,9 @@ class ContactListController extends GetxController {
   @override
   void onReady() async {
     // TODO: implement onReady
-    contactList = await permissionHandelCtrl.getContact();
+    isLoading = true;
+    update();
+      contactList = await permissionHandelCtrl.getContact();
     for (final contact in contactList) {
       ContactsService.getAvatar(contact).then((avatar) {
         if (avatar == null) return; // Don't redraw if no change.
@@ -22,19 +26,9 @@ class ContactListController extends GetxController {
         update();
       });
     }
-    refreshContacts();
-    super.onReady();
-  }
-
-  Future<void> refreshContacts() async {
-    // Load without thumbnails initially.
-
-    contactList = Get.arguments;
     update();
-    await Future.delayed(Durations.s2);
     isLoading = false;
-    update();
-    //  getFirebaseContact(contacts);
+    super.onReady();
   }
 
   getFirebaseContact(contacts) async {
@@ -65,9 +59,11 @@ class ContactListController extends GetxController {
     update();
   }
 
-  searchContact(val, isTapSearch) {
+  searchContact(val, isTapSearch) async {
     searchContactList = [];
-    if(isTapSearch){
+    isLoading = true;
+    update();
+    if (isTapSearch) {
       for (int i = 0; i < contactList.length; i++) {
         if (contactList[i].phones!.isNotEmpty) {
           if (contactList[i].displayName!.toLowerCase().contains(val)) {
@@ -75,7 +71,7 @@ class ContactListController extends GetxController {
           }
         }
       }
-    }else {
+    } else {
       if (val.length > 5) {
         for (int i = 0; i < contactList.length; i++) {
           if (contactList[i].phones!.isNotEmpty) {
@@ -86,6 +82,8 @@ class ContactListController extends GetxController {
         }
       }
     }
+    await Future.delayed(Durations.s2);
+    isLoading = false;
     update();
   }
 }

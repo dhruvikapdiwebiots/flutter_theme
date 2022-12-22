@@ -48,7 +48,7 @@ class _DashboardState extends State<Dashboard>
                       ? fonts.status.tr
                       : dashboardCtrl.selectedIndex == 1
                           ? fonts.chats.tr
-                          : fonts.calls.tr,style: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.whiteColor),)),
+                          : fonts.setting.tr,style: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.whiteColor),)),
               body: dashboardCtrl.widgetOptions
                   .elementAt(dashboardCtrl.selectedIndex),
               bottomNavigationBar: dashboardCtrl.bottomList.isNotEmpty

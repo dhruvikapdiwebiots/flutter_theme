@@ -11,158 +11,170 @@ class CreateGroup extends StatelessWidget {
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
       return GetBuilder<CreateGroupController>(builder: (groupCtrl) {
-        return Padding(
-          padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: Container(
-              padding: const EdgeInsets.all(16),
-              height: MediaQuery.of(context).size.height / 2.2,
-              child: Form(
-                key: groupCtrl.formKey,
-                child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(left: 8),
-                        child: Text(
-                          'setgroup',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16.5),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Row(
+        return Stack(
+          children: [
+            Padding(
+              padding:
+                  EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: Container(
+                  padding: const EdgeInsets.all(16),
+                  height: MediaQuery.of(context).size.height / 2.2,
+                  child: Form(
+                    key: groupCtrl.formKey,
+                    child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          groupCtrl.pickerCtrl.image != null
-                              ? Container(
-                                  height: Sizes.s60,
-                                  width: Sizes.s60,
-                                  child: Image.file(groupCtrl.pickerCtrl.image!,
-                                          fit: BoxFit.fill)
-                                      .clipRRect(all: AppRadius.r50),
-                                  decoration: BoxDecoration(
-                                      color:
-                                          appCtrl.appTheme.gray.withOpacity(.2),
-                                      shape: BoxShape.circle),
-                                ).inkWell(onTap: () {
-                                  groupCtrl.pickerCtrl
-                                      .imagePickerOption(context);
-                                })
-                              : Container(
-                                  height: Sizes.s60,
-                                  width: Sizes.s60,
-                                  alignment: Alignment.center,
-                                  padding: const EdgeInsets.all(Insets.i15),
-                                  decoration: BoxDecoration(
-                                      color:
-                                          appCtrl.appTheme.gray.withOpacity(.2),
-                                      image: DecorationImage(
-                                          image: AssetImage(imageAssets.user),
-                                          fit: BoxFit.fill),
-                                      shape: BoxShape.circle),
-                                ).inkWell(
-                                  onTap: () => groupCtrl.pickerCtrl
-                                      .imagePickerOption(context)),
-                          const HSpace(Sizes.s15),
-                          Expanded(
-                            child: CommonTextBox(
-                              controller: groupCtrl.txtGroupName,
-                              labelText: "Group Name",
-                              validator: (val) {
-                                if (val!.isEmpty) {
-                                  return "Group Name Required";
-                                } else {
-                                  return null;
-                                }
-                              },
-                              maxLength: 25,
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: appCtrl.appTheme.primary)),
-                              textInputAction: TextInputAction.next,
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(left: 8),
+                            child: Text(
+                              'setgroup',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16.5),
                             ),
                           ),
-                        ],
-                      ),
-                      const VSpace(Sizes.s20),
-                      CommonButton(
-                        title: "Create",
-                        style: AppCss.poppinsMedium14
-                            .textColor(appCtrl.appTheme.whiteColor),
-                        margin: 0,
-                        onTap: () async {
-                          groupCtrl.imageFile = groupCtrl.pickerCtrl.imageFile;
-                          await groupCtrl.uploadFile();
-                          String? image = groupCtrl.imageUrl;
-                          groupCtrl.update();
-                          final now = DateTime.now();
-                          String id = now.microsecondsSinceEpoch.toString();
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Row(
+                            children: [
+                              groupCtrl.pickerCtrl.image != null
+                                  ? Container(
+                                      height: Sizes.s60,
+                                      width: Sizes.s60,
+                                      decoration: BoxDecoration(
+                                          color:
+                                              appCtrl.appTheme.gray.withOpacity(.2),
+                                          shape: BoxShape.circle),
+                                      child: Image.file(groupCtrl.pickerCtrl.image!,
+                                              fit: BoxFit.fill)
+                                          .clipRRect(all: AppRadius.r50),
+                                    ).inkWell(onTap: () {
+                                      groupCtrl.pickerCtrl
+                                          .imagePickerOption(context);
+                                    })
+                                  : Container(
+                                      height: Sizes.s60,
+                                      width: Sizes.s60,
+                                      alignment: Alignment.center,
+                                      padding: const EdgeInsets.all(Insets.i15),
+                                      decoration: BoxDecoration(
+                                          color:
+                                              appCtrl.appTheme.gray.withOpacity(.2),
+                                          image: DecorationImage(
+                                              image: AssetImage(imageAssets.user),
+                                              fit: BoxFit.fill),
+                                          shape: BoxShape.circle),
+                                    ).inkWell(
+                                      onTap: () => groupCtrl.pickerCtrl
+                                          .imagePickerOption(context)),
+                              const HSpace(Sizes.s15),
+                              Expanded(
+                                child: CommonTextBox(
+                                  controller: groupCtrl.txtGroupName,
+                                  labelText: fonts.groupName.tr,
+                                  validator: (val) {
+                                    if (val!.isEmpty) {
+                                      return "Group Name Required";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                  maxLength: 25,
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: appCtrl.appTheme.primary)),
+                                  textInputAction: TextInputAction.next,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const VSpace(Sizes.s20),
+                          CommonButton(
+                            title: fonts.create.tr,
+                            style: AppCss.poppinsMedium14
+                                .textColor(appCtrl.appTheme.whiteColor),
+                            margin: 0,
+                            onTap: () async {
+                              groupCtrl.isLoading = true;
+                              groupCtrl.imageFile = groupCtrl.pickerCtrl.imageFile;
+                              if(groupCtrl.imageFile != null) {
+                                await groupCtrl.uploadFile();
+                              }
+                              groupCtrl.update();
+                              final now = DateTime.now();
+                              String id = now.microsecondsSinceEpoch.toString();
 
-                          final user = appCtrl.storage.read("user");
-                          await Future.delayed(Durations.s3);
-                          print("image : ${groupCtrl.imageUrl}");
-                          await FirebaseFirestore.instance
-                              .collection('groups')
-                              .doc(id)
-                              .set({
-                            "name": groupCtrl.txtGroupName.text,
-                            "image": groupCtrl.imageUrl,
-                            "groupTypeNotification": "new_added",
-                            "users": groupCtrl.selectedContact,
-                            "groupId": id,
-                            "createdBy": user,
-                            'timestamp': DateTime.now()
-                                .millisecondsSinceEpoch
-                                .toString(),
-                            // I dont know why you called it just timestamp i changed it on created and passed an function with serverTimestamp()
-                          });
-
-                          groupCtrl.selectedContact.add(user);
-                          await FirebaseFirestore.instance
-                              .collection("groups")
-                              .doc(id)
-                              .get()
-                              .then((value) async {
-                            await FirebaseFirestore.instance
-                                .collection('contacts')
-                                .add({
-                              'sender': {"id" :user['id'],"name":user['name']},
-                              'receiver': null,
-                              'group': {
-                                "id": value.id,
+                              final user = appCtrl.storage.read("user");
+                              await Future.delayed(Durations.s3);
+                              print("image : ${groupCtrl.imageUrl}");
+                              await FirebaseFirestore.instance
+                                  .collection('groups')
+                                  .doc(id)
+                                  .set({
                                 "name": groupCtrl.txtGroupName.text,
-                                "image": groupCtrl.imageUrl
-                              },
-                              'receiverId': groupCtrl.selectedContact,
-                              'senderId': user["id"],
-                              'timestamp': DateTime.now()
-                                  .millisecondsSinceEpoch
-                                  .toString(),
-                              "lastMessage": "",
-                              "isGroup": true,
-                              "groupId": value.id,
-                              "updateStamp": DateTime.now()
-                                  .millisecondsSinceEpoch
-                                  .toString()
-                            });
+                                "image": groupCtrl.imageUrl,
+                                "groupTypeNotification": "new_added",
+                                "users": groupCtrl.selectedContact,
+                                "groupId": id,
+                                "createdBy": user,
+                                'timestamp': DateTime.now()
+                                    .millisecondsSinceEpoch
+                                    .toString(),
+                                // I dont know why you called it just timestamp i changed it on created and passed an function with serverTimestamp()
+                              });
 
-                            groupCtrl.selectedContact = [];
-                            groupCtrl.txtGroupName.text = "";
-                            groupCtrl.update();
-                            Get.back();
-                            Get.back();
-                          });
-                        },
-                      )
-                    ]),
-              )),
+                              groupCtrl.selectedContact.add(user);
+                              await FirebaseFirestore.instance
+                                  .collection("groups")
+                                  .doc(id)
+                                  .get()
+                                  .then((value) async {
+                                await FirebaseFirestore.instance
+                                    .collection('contacts')
+                                    .add({
+                                  'sender': {
+                                    "id": user['id'],
+                                    "name": user['name'],
+                                    "phone":user["phone"]
+                                  },
+                                  'receiver': null,
+                                  'group': {
+                                    "id": value.id,
+                                    "name": groupCtrl.txtGroupName.text,
+                                    "image": groupCtrl.imageUrl,
+                                  },
+                                  'receiverId': groupCtrl.selectedContact,
+                                  'senderPhone': user["phone"],
+                                  'timestamp': DateTime.now()
+                                      .millisecondsSinceEpoch
+                                      .toString(),
+                                  "lastMessage": "",
+                                  "isGroup": true,
+                                  "groupId": value.id,
+                                  "updateStamp": DateTime.now()
+                                      .millisecondsSinceEpoch
+                                      .toString()
+                                }).then((value) {
+                                  groupCtrl.selectedContact = [];
+                                  groupCtrl.txtGroupName.text = "";
+                                  groupCtrl.update();
+                                  Get.back();
+                                  Get.back();
+                                });
+                              });
+                            },
+                          )
+                        ]),
+                  )),
+            ),
+            if(groupCtrl.isLoading)
+              LoginLoader(isLoading: groupCtrl.isLoading,)
+          ],
         );
       });
     });

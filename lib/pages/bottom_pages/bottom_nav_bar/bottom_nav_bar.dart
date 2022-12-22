@@ -24,7 +24,7 @@ class BottomNavBar extends StatelessWidget {
                 .map((e) => BottomNavigationBarItem(
                 icon: Icon(e.value["icon"])
                     .paddingOnly(bottom: Insets.i5),
-                label: e.value["title"]))
+                label: trans(e.value["title"])))
                 .toList()
           ],
           currentIndex: dashboardCtrl.selectedIndex,

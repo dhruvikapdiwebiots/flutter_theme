@@ -24,7 +24,7 @@ class DashboardController extends GetxController {
   List<Widget> widgetOptions = <Widget>[
     StatusList(),
     Message(),
-    Text("Calls"),
+    Setting(),
   ];
 
   //on tap select
@@ -43,6 +43,7 @@ class DashboardController extends GetxController {
     // TODO: implement onReady
     bottomList = appArray.bottomList;
     actionList = appArray.actionList;
+    firebaseCtrl.setIsActive();
    // firebaseCtrl.statusDeleteAfter24Hours();
     update();
     super.onReady();
@@ -51,12 +52,13 @@ class DashboardController extends GetxController {
 
   popupMenuTap(value){
     print(value);
-    if (selectedPopTap == 0) {
+    /*if (selectedPopTap == 0) {
       print("My account menu is selected.");
     } else if (selectedPopTap == 1) {
       Get.toNamed(routeName.groupChat);
     } else if (selectedPopTap == 2) {
       Get.toNamed(routeName.setting);
-    }
+    }*/
+    Get.toNamed(routeName.groupChat);
   }
 }
