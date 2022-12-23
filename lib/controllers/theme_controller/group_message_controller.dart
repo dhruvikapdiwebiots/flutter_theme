@@ -250,20 +250,8 @@ class GroupChatMessageController extends GetxController {
   // SEND MESSAGE CLICK
   void onSendMessage(String content, MessageType type, {groupId}) async {
     if (content.trim() != '') {
-      textEditingController.clear();
       var user = appCtrl.storage.read("user");
       id = user["id"];
-      List receiverData = [];
-      print(pData["users"]);
-      List groupUser = pData["users"];
-      for (int i = 0; i < groupUser.length; i++) {
-        var data = {"id": groupUser[i]["id"], "name": groupUser[i]["name"]};
-        receiverData.add(data);
-      }
-      var senderDataAdd = {"id": id, "name": user["name"]};
-      receiverData.add(senderDataAdd);
-      update();
-      print("receiverData : $receiverData");
       FirebaseFirestore.instance
           .collection('groupMessage')
           .doc(pId)
@@ -271,7 +259,7 @@ class GroupChatMessageController extends GetxController {
           .add({
         'sender': id,
         'senderName': user["name"],
-        'receiver': receiverData,
+        'receiver': pData["users"],
         // user ID you want to read message
         'content': content,
         "groupId": pId,
