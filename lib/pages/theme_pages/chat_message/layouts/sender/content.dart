@@ -24,16 +24,20 @@ class Content extends StatelessWidget {
                   topRight: Radius.circular(Insets.i20),
                   topLeft: Radius.circular(Insets.i20),
                   bottomLeft: Radius.circular(Insets.i20))),
-          margin: EdgeInsets.only(
+          margin: const EdgeInsets.only(
               bottom:  Insets.i10,
               right: Insets.i10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(document!['content'],
-                  style: AppCss.poppinsMedium14
-                      .textColor(appCtrl.appTheme.accent)),
+              Expanded(
+                child: Text(document!['content'],
+                    style: AppCss.poppinsMedium14
+                        .textColor(appCtrl.appTheme.accent).letterSpace(.2).textHeight(1.2)),
+              ),
+              const HSpace(Sizes.s8),
               Text(
                 DateFormat('HH:mm a').format(
                     DateTime.fromMillisecondsSinceEpoch(

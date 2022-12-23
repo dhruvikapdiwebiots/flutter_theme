@@ -19,16 +19,15 @@ class SenderMessage extends StatelessWidget {
                 if (document!["type"] == MessageType.text.name)
                   // Text
                   Content(
-                    onLongPress: () {
-                      print("object");
-                      showDialog(
-                        context: Get.context!,
-                        builder: (BuildContext context) =>
-                            chatCtrl.buildPopupDialog(context, document!),
-                      );
-                    },
-                    document: document
-                  ),
+                      onLongPress: () {
+                        print("object");
+                        showDialog(
+                          context: Get.context!,
+                          builder: (BuildContext context) =>
+                              chatCtrl.buildPopupDialog(context, document!),
+                        );
+                      },
+                      document: document),
                 if (document!["type"] == MessageType.image.name)
                   SenderImage(
                       document: document,
@@ -72,8 +71,19 @@ class SenderMessage extends StatelessWidget {
                             context: Get.context!,
                             builder: (BuildContext context) =>
                                 chatCtrl.buildPopupDialog(context, document!));
-                      })
+                      }),
+
               ]),
+              if (document!["type"] == MessageType.messageType.name)
+                Align(
+                  alignment: Alignment.center,
+                  child: Text(document!["content"])
+                      .paddingSymmetric(
+                      horizontal: Insets.i8, vertical: Insets.i10)
+                      .decorated(
+                      color: appCtrl.appTheme.primary.withOpacity(.2),
+                      borderRadius: BorderRadius.circular(AppRadius.r8)).alignment(Alignment.center),
+                ).paddingOnly(bottom: Insets.i8)
             ],
           ));
     });

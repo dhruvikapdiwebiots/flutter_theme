@@ -15,6 +15,7 @@ class StatusController extends GetxController {
   dynamic user;
   XFile? imageFile;
   File? image;
+  bool isLoading = false;
   List selectedContact = [];
   Stream<QuerySnapshot>? stream;
   final notificationCtrl = Get.isRegistered<NotificationController>()
@@ -40,8 +41,13 @@ class StatusController extends GetxController {
 
   //add status
   addStatus(File file) async {
+    isLoading = true;
+    update();
     imageUrl = await pickerCtrl.uploadImage(file);
+    update();
     await StatusFirebaseApi().addStatus(imageUrl);
+    isLoading = false;
+    update();
   }
 
 //get status of user according to contact in firebase

@@ -26,7 +26,7 @@ class OtpController extends GetxController {
   }
 
   homeNavigation(user) async {
-    print(user);
+ print("user : $user");
     appCtrl.storage.write("id", user["id"]);
     await appCtrl.storage.write("user", user);
     await  FirebaseFirestore.instance

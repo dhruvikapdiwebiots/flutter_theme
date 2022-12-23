@@ -6,9 +6,9 @@ class StatusFirebaseApi {
     var user = appCtrl.storage.read("user");
     List<PhotoUrl> statusImageUrls = [];
     var statusesSnapshot = await FirebaseFirestore.instance
-        .collection('status')
+        .collection('status').where("uid", isEqualTo: user["id"])
         .get();
-
+print("statusesSnapshot : ${statusesSnapshot.docs.isNotEmpty}");
     if (statusesSnapshot.docs.isNotEmpty) {
       Status status = Status.fromJson(statusesSnapshot.docs[0].data());
       statusImageUrls = status.photoUrl!;
@@ -20,7 +20,7 @@ class StatusFirebaseApi {
       statusImageUrls.add(PhotoUrl.fromJson(data));
       await FirebaseFirestore.instance
           .collection('status')
-          .doc(user["phone"])
+          .doc(statusesSnapshot.docs[0].id)
           .update(
               {'photoUrl': statusImageUrls.map((e) => e.toJson()).toList()});
       return;

@@ -29,15 +29,22 @@ class _ConfirmStatusScreenState extends State<ConfirmStatusScreen> {
     return GetBuilder<StatusController>(
       builder: (statusCtrl) {
         return Scaffold(
-          body: Center(
-            child: AspectRatio(
-              aspectRatio: 9 / 16,
-              child: Image.file(file!),
-            ),
+          body: Stack(
+            children: [
+              Center(
+                child: AspectRatio(
+                  aspectRatio: 9 / 16,
+                  child: Image.file(file!),
+                ),
+              ),
+              if(statusCtrl.isLoading)
+                LoginLoader(isLoading: statusCtrl.isLoading,)
+            ],
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              statusCtrl.addStatus(file!);
+            onPressed: ()async {
+             await statusCtrl.addStatus(file!);
+
               Get.back();
             },
             child: const Icon(

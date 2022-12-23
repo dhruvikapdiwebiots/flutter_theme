@@ -1,4 +1,4 @@
-enum MessageType { text, image, video, doc, location, contact, audio }
+enum MessageType { text, image, video, doc, location, contact, audio, messageType }
 
 enum PositionItemType {
   log,

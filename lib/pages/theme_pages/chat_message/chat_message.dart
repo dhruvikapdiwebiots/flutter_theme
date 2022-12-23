@@ -14,6 +14,7 @@ class _ChatState extends State<Chat>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   final chatCtrl = Get.put(ChatController());
   dynamic receiverData;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -22,9 +23,7 @@ class _ChatState extends State<Chat>
       chatCtrl.setTyping();
     });
     receiverData = Get.arguments;
-    setState(() {
-
-    });
+    setState(() {});
     super.initState();
   }
 
@@ -38,7 +37,7 @@ class _ChatState extends State<Chat>
     }
   }
 
-  makeCall()async{
+  makeCall() async {
     /*var user = appCtrl.storage.read("user");
     await FirebaseFirestore.instance
         .collection('call')
@@ -52,7 +51,7 @@ class _ChatState extends State<Chat>
     Get.toNamed(routeName.callScreen,arguments:user );*/
   }
 
-  call( bool isVideoCall) async {
+  call(bool isVideoCall) async {
     var data = appCtrl.storage.read("user");
 
     CallUtils.dial(
@@ -65,35 +64,41 @@ class _ChatState extends State<Chat>
 
   @override
   Widget build(BuildContext context) {
-
     return GetBuilder<ChatController>(builder: (_) {
       return WillPopScope(
           onWillPop: chatCtrl.onBackPress,
           child: Scaffold(
-              appBar: ChatMessageAppBar(name: chatCtrl.pName,callTap:()=> call(false)),
+              appBar: ChatMessageAppBar(
+                  name: chatCtrl.pName,
+                  callTap: () => call(false),
+                  moreTap: () => chatCtrl.blockUser()),
               backgroundColor: Colors.white,
-
-              body: chatCtrl.isUserAvailable ?  Stack(children: [
-                Container(
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage(imageAssets.chatBg),
-                            fit: BoxFit.cover))),
-                Stack(children: <Widget>[
-                  Column(children: <Widget>[
-                    // List of messages
-                    const MessageBox(),
-                    // Sticker
-                    Container(),
-                    // Input content
-                    const InputBox()
-                  ]),
-                  // Loading
-                  const BuildLoader()
-                ])
-              ]): Center(
-                child: CommonButton(title: "Invite",onTap: (){},),
-              )));
+              body: chatCtrl.isUserAvailable
+                  ? Stack(children: [
+                      Container(
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: AssetImage(imageAssets.chatBg),
+                                  fit: BoxFit.cover))),
+                      Stack(children: <Widget>[
+                        Column(children: <Widget>[
+                          // List of messages
+                          const MessageBox(),
+                          // Sticker
+                          Container(),
+                          // Input content
+                          const InputBox()
+                        ]),
+                        // Loading
+                        const BuildLoader()
+                      ])
+                    ])
+                  : Center(
+                      child: CommonButton(
+                        title: "Invite",
+                        onTap: () {},
+                      ),
+                    )));
     });
   }
 }

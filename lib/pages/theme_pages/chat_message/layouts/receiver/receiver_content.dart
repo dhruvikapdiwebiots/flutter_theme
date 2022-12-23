@@ -25,11 +25,14 @@ class ReceiverContent extends StatelessWidget {
         margin: const EdgeInsets.only(left: 2.0),
         child:  Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(document!['content'],
-                style: AppCss.poppinsMedium14
-                    .textColor(appCtrl.appTheme.primary)),
+            Expanded(
+              child: Text(document!['content'],
+                  style: AppCss.poppinsMedium14
+                      .textColor(appCtrl.appTheme.primary).letterSpace(.2).textHeight(1.2)),
+            ),
             Text(
               DateFormat('HH:mm a').format(
                   DateTime.fromMillisecondsSinceEpoch(
