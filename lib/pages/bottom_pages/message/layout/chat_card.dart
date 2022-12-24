@@ -36,6 +36,7 @@ class _ChatCardState extends State<ChatCard> {
                           itemBuilder: (context, index) {
                             return LoadUser(
                                 document: message[index],
+                                blockBy:messageCtrl.storageUser["id"],
                                 currentUserId:
                                     messageCtrl.storageUser["phone"]);
                           },

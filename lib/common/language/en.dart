@@ -78,5 +78,6 @@ final dynamic en = {
   "invite": "Invite",
   "cancel": "Cancel",
   "unblock": "UnBlock",
+  "block": "Block",
   "unblockUser": "Unblock @pName to send message?",
 };

@@ -189,39 +189,35 @@ showToast(error) {
 }
 
 //unblock confirmation
-unblockConfirmation(pName,value,chatId,pId)async{
+unblockConfirmation(pName, value, chatId, pId) async {
   Get.generalDialog(
     pageBuilder: (context, anim1, anim2) {
       return Align(
-        alignment: Alignment.center,
-        child: AlertDialog(
-          content: Text(fonts.unblockUser(pName)),
-          actions: <Widget>[
-            TextButton(
-                onPressed: () {
-                  Get.back();
-                },
-                child: Text(
-                  fonts.alert.tr,
-                  style: AppCss.poppinsMedium16.textColor(appCtrl.appTheme.grey)
-                )),
-            TextButton(
-                onPressed: () async{
-                  await ChatFirebaseApi().unblockFunction( value, chatId, pId);
-                  Get.back();
-                },
-                child: Text(
-                  fonts.unblock.tr,
-                    style: AppCss.poppinsMedium16.textColor(appCtrl.appTheme.primary)
-                ))
-          ],
-        ),
-      );
+          alignment: Alignment.center,
+          child: AlertDialog(
+              content: Text(fonts.unblockUser(pName)),
+              actions: <Widget>[
+                TextButton(
+                    onPressed: () {
+                      Get.back();
+                    },
+                    child: Text(fonts.cancel.tr,
+                        style: AppCss.poppinsMedium16
+                            .textColor(appCtrl.appTheme.grey))),
+                TextButton(
+                    onPressed: () async {
+                      await ChatFirebaseApi()
+                          .unblockFunction(value, chatId, pId);
+                      Get.back();
+                    },
+                    child: Text(fonts.unblock.tr,
+                        style: AppCss.poppinsMedium16
+                            .textColor(appCtrl.appTheme.primary)))
+              ]));
     },
     transitionBuilder: (context, anim1, anim2, child) {
       return SlideTransition(
-        position:
-        Tween(begin: const Offset(0, -1), end: const Offset(0, 0))
+        position: Tween(begin: const Offset(0, -1), end: const Offset(0, 0))
             .animate(anim1),
         child: child,
       );
@@ -230,14 +226,14 @@ unblockConfirmation(pName,value,chatId,pId)async{
   );
 
   //block check
-  blockCheck()async{
+  blockCheck() async {
     var user = appCtrl.storage.read("user");
     FirebaseFirestore.instance
         .collection("blocks")
         .doc(user["id"])
-        .get().then((value) {
-          return value;
+        .get()
+        .then((value) {
+      return value;
     });
   }
 }
-

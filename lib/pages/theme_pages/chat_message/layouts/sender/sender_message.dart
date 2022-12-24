@@ -20,7 +20,6 @@ class SenderMessage extends StatelessWidget {
                   // Text
                   Content(
                       onLongPress: () {
-                        print("object");
                         showDialog(
                           context: Get.context!,
                           builder: (BuildContext context) =>

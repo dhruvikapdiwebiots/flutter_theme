@@ -51,7 +51,7 @@ class DashboardController extends GetxController {
 
 
   popupMenuTap(value){
-    print(value);
+
     /*if (selectedPopTap == 0) {
       print("My account menu is selected.");
     } else if (selectedPopTap == 1) {

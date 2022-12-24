@@ -145,7 +145,6 @@ update();
         .collection('users')
         .doc(user.uid)
         .get();
-    print("result : ${result.data()}");
     dynamic resultData;
     if (result.exists) {
       Map<String, dynamic>? data = result.data();

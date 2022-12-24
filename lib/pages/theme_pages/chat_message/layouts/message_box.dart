@@ -8,7 +8,6 @@ class MessageBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ChatController>(builder: (chatCtrl) {
-print("objectId : ${chatCtrl.chatId}");
       return Flexible(
         child: chatCtrl.chatId == null
             ? Center(

@@ -83,8 +83,7 @@ class PermissionHandlerController extends GetxController {
     if (permission != PermissionStatus.granted &&
         permission != PermissionStatus.permanentlyDenied) {
       PermissionStatus permissionStatus = await Permission.contacts.request();
-      print("permission : $permission");
-      print("permission : $permissionStatus");
+
       return permissionStatus;
     } else {
       return permission;
@@ -106,7 +105,6 @@ class PermissionHandlerController extends GetxController {
   // get location
   Future<Position?> getCurrentPosition() async {
     final hasPermission = await handlePermission();
-    print(hasPermission);
     if (!hasPermission) {
       LocationPermission permission = await Geolocator.requestPermission();
       getCurrentPosition();
@@ -124,7 +122,6 @@ class PermissionHandlerController extends GetxController {
   Future<bool> permissionGranted() async {
     PermissionStatus permissionStatus =
         await permissionHandelCtrl.getContactPermission();
-    print("permissionStatus : $permissionStatus");
     if (permissionStatus == PermissionStatus.granted) {
       return true;
     } else {
@@ -137,7 +134,6 @@ class PermissionHandlerController extends GetxController {
     bool permissionStatus = await permissionHandelCtrl.permissionGranted();
     if (permissionStatus) {
       contacts = await getAllContacts();
-      print("object");
     }
     return contacts;
   }

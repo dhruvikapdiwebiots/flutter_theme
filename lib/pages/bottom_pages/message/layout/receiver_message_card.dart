@@ -4,9 +4,9 @@ import '../../../../config.dart';
 
 class ReceiverMessageCard extends StatelessWidget {
   final DocumentSnapshot? document;
-  final String? currentUserId;
+  final String? currentUserId,blockBy;
 
-  const ReceiverMessageCard({Key? key, this.document, this.currentUserId})
+  const ReceiverMessageCard({Key? key, this.document, this.currentUserId,this.blockBy})
       : super(key: key);
 
   @override
@@ -23,7 +23,8 @@ class ReceiverMessageCard extends StatelessWidget {
               "data": currentUserId != document!["receiverPhone"]
                   ? document!["receiver"]
                   : document!["receiver"],
-              "chatId": document!["chatId"]
+              "chatId": document!["chatId"],
+              "allData":document!
             };
 
             Get.toNamed(routeName.chat, arguments: data);
@@ -35,7 +36,11 @@ class ReceiverMessageCard extends StatelessWidget {
               ? Padding(
                   padding: const EdgeInsets.only(top: 6.0),
                   child: Text(
-                      document!["lastMessage"].contains("http")
+                      document!["isBlock"] == true
+                          ? document!["blockBy"] != blockBy
+                          ? ""
+                          : document!["lastMessage"].contains("http")
+                          : document!["lastMessage"].contains("http")
                           ? "Media Share"
                           : document!["lastMessage"],
                       style: AppCss.poppinsMedium14

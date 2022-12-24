@@ -21,7 +21,6 @@ class CommonFileRowList extends StatelessWidget {
               color: Colors.pink,
               text: fonts.video.tr,
               onTap: ()async {
-                print("object");
                 chatCtrl.pickerCtrl.dismissKeyboard();
                 Get.back();
                 chatCtrl.videoSend();

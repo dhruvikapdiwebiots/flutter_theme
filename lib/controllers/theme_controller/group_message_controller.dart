@@ -61,18 +61,14 @@ class GroupChatMessageController extends GetxController {
   }
 
   getPeerStatus() {
-    print("pId : $pId");
     FirebaseFirestore.instance.collection('group').doc(pId).get().then((value) {
       if (value.exists) {
-        print(" idd : ${value.id}");
-
         pData = value.data();
       }
     });
 
     FirebaseFirestore.instance.collection('groupMessage').doc(pId).collection("chat").get().then((value) {
       if (value.docs.isNotEmpty) {
-        print(" idd : ${value.docs[0].id  }");
         documentId = value.docs[0].id  ;
       }
     });
@@ -120,10 +116,9 @@ class GroupChatMessageController extends GetxController {
     Get.back();
     Position? position =
         await permissionHandelCtrl.getCurrentPosition().then((value) async {
-      print(value);
+
       var locationString =
           'https://www.google.com/maps/search/?api=1&query=${value!.latitude},${value.longitude}';
-      print(locationString);
       onSendMessage(locationString, MessageType.location);
       return null;
     });

@@ -1,16 +1,20 @@
+import 'dart:developer';
+
 import 'package:intl/intl.dart';
 
 import '../../../../config.dart';
 
 class MessageCard extends StatelessWidget {
   final DocumentSnapshot? document;
-  final String? currentUserId;
+  final String? currentUserId, blockBy;
 
-  const MessageCard({Key? key, this.document, this.currentUserId})
+  const MessageCard({Key? key, this.document, this.currentUserId, this.blockBy})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+log("is : ${document!["blockBy"] != blockBy}");
+log("is : ${document!["isBlock"] == true}");
     return Container(
       decoration:
           const BoxDecoration(border: Border(bottom: BorderSide(width: 0.2))),
@@ -19,28 +23,34 @@ class MessageCard extends StatelessWidget {
           bottom: Insets.i10, left: Insets.i5, right: Insets.i5),
       child: ListTile(
           onTap: () {
-            print("se ");
-            var data ={
-              "data":currentUserId != document!["senderPhone"]
+            var data = {
+              "data": currentUserId != document!["senderPhone"]
                   ? document!["sender"]
                   : document!["receiver"],
-              "chatId": document!["chatId"]
+              "chatId": document!["chatId"],
+              "allData": document!
             };
-            print("data : $data");
-            Get.toNamed(routeName.chat,
-                arguments:data);
+
+            Get.toNamed(routeName.chat, arguments: data);
           },
           contentPadding: EdgeInsets.zero,
           title: Text(document!["sender"]['name'],
               style: AppCss.poppinsblack16.textColor(appCtrl.appTheme.primary)),
-          subtitle: document!["lastMessage"] != null ? Padding(
-            padding: const EdgeInsets.only(top: 6.0),
-            child: Text(
-                document!["lastMessage"].contains("http")
-                    ? "Media Share"
-                    : document!["lastMessage"],
-                style: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.grey)),
-          ):Container(),
+          subtitle: document!["lastMessage"] != null
+              ? Padding(
+                  padding: const EdgeInsets.only(top: 6.0),
+                  child: Text(
+                      document!["isBlock"] == true
+                          ? document!["blockBy"] != blockBy
+                              ? ""
+                              : document!["lastMessage"].contains("http")
+                          : document!["lastMessage"].contains("http")
+                              ? "Media Share"
+                              : document!["lastMessage"],
+                      style: AppCss.poppinsMedium14
+                          .textColor(appCtrl.appTheme.grey)),
+                )
+              : Container(),
           leading: document!["sender"]['image'] != null &&
                   document!["sender"]['image'] != ""
               ? CircleAvatar(

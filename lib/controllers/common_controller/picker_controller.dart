@@ -64,7 +64,7 @@ class PickerController extends GetxController {
               video = File(videoFile!.path);
 
               update();
-              print("vvv : $video");
+
             }
             Get.back(result: video);
           }, galleryTap: () async {

@@ -44,8 +44,6 @@ class MessageFirebaseApi {
                 } else {
                   List groupReceiver =
                       messageSnapshot.docs[a].data()["receiverId"];
-                  print(
-                      "isExis : ${groupReceiver.where((element) => element["id"] == currentUserId).isEmpty}");
                   if (groupReceiver
                       .where((element) => element["id"] == currentUserId)
                       .isNotEmpty) {
@@ -97,7 +95,7 @@ class MessageFirebaseApi {
           await launchUrl(uri);
         }
       } else {
-        var data = {"data": m.docs[0].data(), "chatId": "0"};
+        var data = {"data": m.docs[0].data(), "chatId": "0","allData":m.docs[0].data()};
         Get.toNamed(routeName.chat, arguments: data);
       }
     }
@@ -134,7 +132,6 @@ class MessageFirebaseApi {
             messageCtrl.contactUserList[j].phones![0].value.toString());
         for (int a = 0; a < snapshot.data!.docs.length; a++) {
           if (snapshot.data!.docs[a].data()["isGroup"] == false) {
-            print(snapshot.data!.docs[a].data()["senderPhone"]);
             if (snapshot.data!.docs[a].data()["senderPhone"] ==
                 messageCtrl.storageUser["phone"] ||
                 snapshot.data!.docs[a].data()["receiverPhone"] == phone &&

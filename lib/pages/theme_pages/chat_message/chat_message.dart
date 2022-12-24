@@ -70,6 +70,12 @@ class _ChatState extends State<Chat>
           child: Scaffold(
               appBar: ChatMessageAppBar(
                   name: chatCtrl.pName,
+                  isBlock: chatCtrl.isBlock
+                      ? chatCtrl.blockBy ==
+                              chatCtrl.userData["id"]
+                          ? true
+                          : false
+                      : false,
                   callTap: () => call(false),
                   moreTap: () => chatCtrl.blockUser()),
               backgroundColor: Colors.white,

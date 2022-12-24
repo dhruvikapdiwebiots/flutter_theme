@@ -111,7 +111,6 @@ class CreateGroup extends StatelessWidget {
 
                               final user = appCtrl.storage.read("user");
                               await Future.delayed(Durations.s3);
-                              print("image : ${groupCtrl.imageUrl}");
                               await FirebaseFirestore.instance
                                   .collection('groups')
                                   .doc(id)

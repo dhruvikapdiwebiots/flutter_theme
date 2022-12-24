@@ -66,7 +66,6 @@ class StatusController extends GetxController {
   Future<List<Status>>  getStatusList(List<Contact> contacts) async {
     List<Status> statusData = [];
     statusData = await StatusFirebaseApi().getStatusUserList(contacts);
-    log("statusData s: $statusData");
     return statusData;
   }
 }

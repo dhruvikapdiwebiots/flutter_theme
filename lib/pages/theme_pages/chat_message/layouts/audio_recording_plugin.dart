@@ -138,7 +138,6 @@ class AudioRecordingPluginState extends State<AudioRecordingPlugin> {
 
   // play recorded audio
   getPlaybackFn() {
-    print("tap");
     if (!mPlayerIsInit || !mPlaybackReady || !mRecorder!.isStopped) {
       return null;
     }

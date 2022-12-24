@@ -23,7 +23,7 @@ class ReceiverMessage extends StatelessWidget {
                   if (document!["type"] == MessageType.text.name)
                     ReceiverContent(
                       onLongPress: () {
-                        print("object");
+
                         showDialog(
                           context: Get.context!,
                           builder: (BuildContext context) =>

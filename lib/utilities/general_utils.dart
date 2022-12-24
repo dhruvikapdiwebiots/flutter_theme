@@ -60,9 +60,7 @@ String phoneNumberExtension(phoneNumber) {
 Future<List<Contact>>  getAllContacts() async {
   var contacts = (await ContactsService.getContacts(
       withThumbnails: false, iOSLocalizedLabels: false));
-  print("see");
   return contacts;
-  print("write");
 }
 
 const double degrees2Radians = math.pi / 180.0;

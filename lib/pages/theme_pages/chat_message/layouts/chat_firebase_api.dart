@@ -5,9 +5,9 @@ class ChatFirebaseApi{
 
   //unblock
   unblockFunction(value,chatId,pId)async{
-    var user = appCtrl.storage.read("user");
+   /* var user = appCtrl.storage.read("user");
     for (int i = 0; i < value.docs.length; i++) {
-      if (value.docs[i].data()["userId"] == pId) {
+      if (value.docs[i].data()["blockUserId"] == pId) {
         FirebaseFirestore.instance
             .collection("blocks")
             .doc(user["id"])
@@ -35,6 +35,6 @@ class ChatFirebaseApi{
               .toString(),
         });
       }
-    }
+    }*/
   }
 }

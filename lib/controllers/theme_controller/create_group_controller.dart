@@ -86,7 +86,7 @@ class CreateGroupController extends GetxController {
     await uploadTask.then((res) {
       res.ref.getDownloadURL().then((downloadUrl) {
         imageUrl = downloadUrl;
-        print("imageUrl : $imageUrl");
+
         update();
       }, onError: (err) {
         update();

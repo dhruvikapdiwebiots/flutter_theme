@@ -1,6 +1,8 @@
 
 //*************   © Copyrighted by Thinkcreative_Technologies. An Exclusive item of Envato market. Make sure you have purchased a Regular License OR Extended license for the Source Code from Envato to use this product. See the License Defination attached with source code. *********************
 
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_theme/models/call_model.dart';
 
@@ -33,7 +35,7 @@ class CallMethods {
           .set(hasNotDialledMap, SetOptions(merge: true));
       return true;
     } catch (e) {
-      print(e);
+      log("error : $e");
       return false;
     }
   }
@@ -50,7 +52,7 @@ class CallMethods {
           .delete();
       return true;
     } catch (e) {
-      print(e);
+      log("e :$e");
       return false;
     }
   }

@@ -3,7 +3,8 @@ import '../../../../config.dart';
 class ChatMessageAppBar extends StatelessWidget with PreferredSizeWidget{
   final String? name;
   final GestureTapCallback? callTap,moreTap;
-  const ChatMessageAppBar({Key? key,this.name,this.callTap,this.moreTap}) : super(key: key);
+  final bool isBlock;
+  const ChatMessageAppBar({Key? key,this.name,this.callTap,this.moreTap,this.isBlock = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ class ChatMessageAppBar extends StatelessWidget with PreferredSizeWidget{
           PopupMenuButton<int>(
             itemBuilder: (context) {
               return <PopupMenuEntry<int>>[
-                PopupMenuItem(child: Text('Block'), value: 0,onTap: moreTap,),
+                PopupMenuItem(value: 0,onTap: moreTap,child: Text(isBlock ? fonts.unblock.tr : fonts.block.tr),),
               ];
             },
           ),

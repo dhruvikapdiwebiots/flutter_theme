@@ -69,5 +69,6 @@ class Fonts{
   final invite = "invite";
   final cancel = "cancel";
   final unblock = "unblock";
+  final block = "block";
   String unblockUser(val) => "unblockUser".trParams({'pName':val});
 }
