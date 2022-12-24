@@ -8,26 +8,26 @@ class AlertBack extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Alert!'),
+      title:  Text(fonts.alert.tr),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const <Widget>[
-          Text("Are you sure you want to exit from the app"),
+        children:  <Widget>[
+          Text(fonts.areYouSure.tr),
         ],
       ),
       actions: <Widget>[
         TextButton(
           onPressed: () {
-            Navigator.of(context).pop();
+            Get.back();
           },
-          child: const Text('Close'),
+          child: Text(fonts.close.tr),
         ),
         TextButton(
           onPressed: () async {
             SystemNavigator.pop();
           },
-          child: const Text('Yes'),
+          child:  Text(fonts.yes.tr),
         ),
       ],
     );

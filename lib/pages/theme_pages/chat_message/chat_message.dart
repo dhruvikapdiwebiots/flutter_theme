@@ -95,7 +95,7 @@ class _ChatState extends State<Chat>
                     ])
                   : Center(
                       child: CommonButton(
-                        title: "Invite",
+                        title: fonts.invite.tr,
                         onTap: () {},
                       ),
                     )));

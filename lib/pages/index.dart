@@ -58,6 +58,8 @@ export 'bottom_pages/message/layout/load_user.dart';
 export 'bottom_pages/status/layouts/current_user_status.dart';
 export 'bottom_pages/status/layouts/status_list.dart';
 export 'bottom_pages/status/layouts/status_firebase_api.dart';
+export 'bottom_pages/status/layouts/current_user_empty_status.dart';
+export 'bottom_pages/status/layouts/status_layout.dart';
 
 export '/utilities/type_list.dart';
 export '/models/bottom_nav_bar_model.dart';

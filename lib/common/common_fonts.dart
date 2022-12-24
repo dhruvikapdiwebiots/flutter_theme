@@ -1,3 +1,5 @@
+import 'package:flutter_theme/config.dart';
+
 class Fonts{
   final title = "title";
   final subtitle = "subtitle";
@@ -60,4 +62,12 @@ class Fonts{
   final undo = "undo";
   final create = "create";
   final groupName = "groupName";
+  final areYouSure = "areYouSure";
+  final alert = "alert";
+  final close = "close";
+  final yes = "yes";
+  final invite = "invite";
+  final cancel = "cancel";
+  final unblock = "unblock";
+  String unblockUser(val) => "unblockUser".trParams({'pName':val});
 }

@@ -19,7 +19,7 @@ class CurrentUserEmptyStatus extends StatelessWidget {
               CircleAvatar(
                   backgroundImage:
                   AssetImage(imageAssets.user),
-                  radius: 30),
+                  radius: Sizes.s30),
               Icon(CupertinoIcons.add_circled_solid,
                   color: appCtrl.appTheme.whiteColor)
             ]));

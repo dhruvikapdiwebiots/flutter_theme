@@ -22,7 +22,7 @@ class StatusLayout extends StatelessWidget {
           });
         },
         title: Text(
-          (snapshot!.data!).docs[0]["username"],
+          (snapshot!.data!).docs[0]["username"]
         ),
         trailing: Icon(Icons.more_horiz,color: appCtrl.appTheme.primary,),
         leading: Stack(alignment: Alignment.bottomRight, children: [

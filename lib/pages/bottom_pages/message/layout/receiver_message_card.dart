@@ -13,50 +13,48 @@ class ReceiverMessageCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration:
-      const BoxDecoration(border: Border(bottom: BorderSide(width: 0.2))),
+          const BoxDecoration(border: Border(bottom: BorderSide(width: 0.2))),
       padding: const EdgeInsets.symmetric(vertical: Insets.i10),
       margin: const EdgeInsets.only(
           bottom: Insets.i10, left: Insets.i5, right: Insets.i5),
-
       child: ListTile(
           onTap: () {
-            print("da");
-            var data ={
-              "data":currentUserId != document!["receiverPhone"]
+            var data = {
+              "data": currentUserId != document!["receiverPhone"]
                   ? document!["receiver"]
                   : document!["receiver"],
               "chatId": document!["chatId"]
             };
-            print(data);
-            Get.toNamed(routeName.chat,
-                arguments: data);
+
+            Get.toNamed(routeName.chat, arguments: data);
           },
           contentPadding: EdgeInsets.zero,
-          title: Text( document!["receiver"]['name'],
+          title: Text(document!["receiver"]['name'],
               style: AppCss.poppinsblack16.textColor(appCtrl.appTheme.primary)),
-          subtitle:document!["lastMessage"] != null ? Padding(
-            padding: const EdgeInsets.only(top: 6.0),
-            child:  Text(
-                document!["lastMessage"].contains("http")
-                    ? "Media Share"
-                    : document!["lastMessage"],
-                style: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.grey)),
-          ):Container(),
+          subtitle: document!["lastMessage"] != null
+              ? Padding(
+                  padding: const EdgeInsets.only(top: 6.0),
+                  child: Text(
+                      document!["lastMessage"].contains("http")
+                          ? "Media Share"
+                          : document!["lastMessage"],
+                      style: AppCss.poppinsMedium14
+                          .textColor(appCtrl.appTheme.grey)),
+                )
+              : Container(),
           leading: document!["receiver"]['image'] != null &&
-              document!["receiver"]['image'] != ""
+                  document!["receiver"]['image'] != ""
               ? CircleAvatar(
-            backgroundImage: NetworkImage(document!["receiver"]['image']),
-            radius: 25,
-          )
+                  backgroundImage: NetworkImage(document!["receiver"]['image']),
+                  radius: Sizes.s25)
               : CircleAvatar(
-            backgroundImage: AssetImage(imageAssets.user),
-            radius: 25,
-          ),
+                  backgroundImage: AssetImage(imageAssets.user),
+                  radius: Sizes.s25),
           trailing: Text(
               DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(
                   int.parse(document!['updateStamp']))),
               style:
-              AppCss.poppinsMedium12.textColor(appCtrl.appTheme.primary))),
+                  AppCss.poppinsMedium12.textColor(appCtrl.appTheme.primary))),
     );
   }
 }

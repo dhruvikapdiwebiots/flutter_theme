@@ -121,4 +121,45 @@ class MessageFirebaseApi {
     }
     return contactList;
   }
+
+  //chat list
+
+  List chatListWidget(
+      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,MessageController messageCtrl) {
+    List message = [];
+
+    for (int j = 0; j < messageCtrl.contactUserList.length; j++) {
+      if (messageCtrl.contactUserList[j].phones!.isNotEmpty) {
+        String phone = phoneNumberExtension(
+            messageCtrl.contactUserList[j].phones![0].value.toString());
+        for (int a = 0; a < snapshot.data!.docs.length; a++) {
+          if (snapshot.data!.docs[a].data()["isGroup"] == false) {
+            print(snapshot.data!.docs[a].data()["senderPhone"]);
+            if (snapshot.data!.docs[a].data()["senderPhone"] ==
+                messageCtrl.storageUser["phone"] ||
+                snapshot.data!.docs[a].data()["receiverPhone"] == phone &&
+                    snapshot.data!.docs[a].data()["senderPhone"] == phone ||
+                snapshot.data!.docs[a].data()["receiverPhone"] ==
+                    messageCtrl.storageUser["phone"]) {
+              message.add(snapshot.data!.docs[a]);
+            }
+          } else {
+            if (snapshot.data!.docs[a].data()["senderPhone"] ==
+                messageCtrl.storageUser["phone"]) {
+              message.add(snapshot.data!.docs[a]);
+            } else {
+              List groupReceiver = snapshot.data!.docs[a].data()["receiverId"];
+              if (groupReceiver
+                  .where((element) => element["phone"] == phone)
+                  .isNotEmpty) {
+                message.add(snapshot.data!.docs[a]);
+              }
+            }
+          }
+        }
+        return message;
+      }
+    }
+    return message;
+  }
 }

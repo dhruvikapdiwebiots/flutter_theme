@@ -71,4 +71,12 @@ final dynamic en = {
   "undo": "Undo",
   "create": "Create",
   "groupName": "Group Name",
+  "areYouSure": "Are you sure you want to exit from the app",
+  "alert": "Alert!",
+  "close": "Close",
+  "yes": "Yes",
+  "invite": "Invite",
+  "cancel": "Cancel",
+  "unblock": "UnBlock",
+  "unblockUser": "Unblock @pName to send message?",
 };

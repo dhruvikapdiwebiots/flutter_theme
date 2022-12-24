@@ -47,10 +47,10 @@ class _ConfirmStatusScreenState extends State<ConfirmStatusScreen> {
 
               Get.back();
             },
-            child: const Icon(
+            child:  Icon(
               Icons.done,
-              color: Colors.white,
-            ),
+              color: appCtrl.appTheme.whiteColor
+            )
           ),
         );
       }

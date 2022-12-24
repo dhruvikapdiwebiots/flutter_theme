@@ -1,10 +1,8 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:dartx/dartx_io.dart';
 import 'package:flutter_theme/config.dart';
-import 'package:flutter_theme/models/message_model.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ChatController extends GetxController {
@@ -125,21 +123,14 @@ class ChatController extends GetxController {
         });
   }
 
-// GET IMAGE FROM GALLERY
-  Future getImage(source) async {
-    final ImagePicker picker = ImagePicker();
-    imageFile = (await picker.pickImage(source: source))!;
-    if (imageFile != null) {
-      isLoading = true;
-      update();
-      uploadFile();
-    }
-  }
-
   //block user
   blockUser() async {
     var user = appCtrl.storage.read("user");
-    await FirebaseFirestore.instance.collection("blocks").doc(user["id"]).collection("users").add({
+    await FirebaseFirestore.instance
+        .collection("blocks")
+        .doc(user["id"])
+        .collection("users")
+        .add({
       "userId": pId,
     });
     DateTime now = DateTime.now();
@@ -248,203 +239,96 @@ class ChatController extends GetxController {
     var user = appCtrl.storage.read("user");
     FirebaseFirestore.instance
         .collection("blocks")
-        .doc(user["id"]).collection("users")
+        .doc(user["id"])
+        .collection("users")
         .get()
         .then((value) {
       bool isContains = value.docs[0].data().containsValue(pId);
-      print(" d: $isContains");
       if (isContains) {
-        print(value.docs[0].data());
-        Get.generalDialog(
-          pageBuilder: (context, anim1, anim2) {
-            return Align(
-              alignment: Alignment.center,
-              child: AlertDialog(
-
-                content:  Text("Unblock $pName to send message?"),
-                actions: <Widget>[
-                  TextButton(
-                      onPressed: () {
-                        Get.back();
-                      },
-                      child:  Text(
-                        "Cancel",
-                        style: TextStyle(color: appCtrl.appTheme.gray, fontSize: 17),
-                      )),
-                  TextButton(
-                      onPressed: () {
-                       print("d : ${value.docs}");
-                       for(int i = 0;i< value.docs.length;i++){
-                         if(value.docs[i].data()["userId"] == pId){
-                           FirebaseFirestore.instance
-                               .collection("blocks")
-                               .doc(user["id"]).collection("users").doc(value.docs[i].id).delete();
-                           DateTime now = DateTime.now();
-                           String? newChatId =
-                           chatId == "0" ? now.microsecondsSinceEpoch.toString() : chatId;
-                           chatId = newChatId;
-                           FirebaseFirestore.instance
-                               .collection('messages')
-                               .doc(newChatId)
-                               .collection("chat")
-                               .add({
-                             'sender': user["id"],
-                             'receiver': pId,
-                             // user ID you want to read message
-                             'content': "You Unblock this contact",
-                             "chatId": newChatId,
-                             'type': MessageType.messageType.name,
-                             'messageType': "sender",
-                             // i dont know why you need this ?
-                             'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-                             // I dont know why you called it just timestamp i changed it on created and passed an function with serverTimestamp()
-                           });
-                         }
-                       }
-                        Get.back();
-                      },
-                      child: Text(
-                        "UnBlock",
-                        style: TextStyle(color: appCtrl.appTheme.primary, fontSize: 17),
-                      ))
-                ],
-              ),
-            );
-          },
-          transitionBuilder: (context, anim1, anim2, child) {
-            return SlideTransition(
-              position: Tween(
-                  begin: const Offset(0, -1), end: const Offset(0, 0))
-                  .animate(anim1),
-              child: child,
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 300),
-        );
+       unblockConfirmation(pName, value, chatId, pId);
       } else {
-        if (content.trim() != '') {
-          FirebaseFirestore.instance
-              .collection("blocks")
-              .doc(user["id"])
+        final now = DateTime.now();
+        String? newChatId = chatId == "0"
+            ? now.microsecondsSinceEpoch.toString()
+            : chatId;
+        chatId = newChatId;
+        update();
+        FirebaseFirestore.instance
+            .collection('messages')
+            .doc(newChatId)
+            .collection("chat")
+            .add({
+          'sender': user["id"],
+          'receiver': pId,
+          'content': content,
+          "chatId": newChatId,
+          'type': type.name,
+          'messageType': "sender",
+          'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+        }).then((value) async {
+          final msgList = await FirebaseFirestore.instance
+              .collection("contacts")
+              .where("chatId", isEqualTo: newChatId)
               .get()
               .then((value) {
-            if (value.exists) {
-              Get.generalDialog(
-                pageBuilder: (context, anim1, anim2) {
-                  return Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                      height: Sizes.s280,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(AppRadius.r8)),
-                      margin:
-                          const EdgeInsets.symmetric(horizontal: Insets.i50),
-                      child: Column(
-                        children: [Text("Unblock $pName to send message")],
-                      ),
-                    ),
-                  );
-                },
-                transitionBuilder: (context, anim1, anim2, child) {
-                  return SlideTransition(
-                    position: Tween(
-                            begin: const Offset(0, -1), end: const Offset(0, 0))
-                        .animate(anim1),
-                    child: child,
-                  );
-                },
-                transitionDuration: const Duration(milliseconds: 300),
-              );
-            } else {
-              final now = DateTime.now();
-              String? newChatId = chatId == "0"
-                  ? now.microsecondsSinceEpoch.toString()
-                  : chatId;
-              chatId = newChatId;
-              update();
+
+            if (value.docs.isNotEmpty) {
               FirebaseFirestore.instance
-                  .collection('messages')
-                  .doc(newChatId)
-                  .collection("chat")
-                  .add({
-                'sender': user["id"],
-                'receiver': pId,
-                // user ID you want to read message
-                'content': content,
-                "chatId": newChatId,
-                'type': type.name,
-                'messageType': "sender",
-                // i dont know why you need this ?
-                'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-                // I dont know why you called it just timestamp i changed it on created and passed an function with serverTimestamp()
-              }).then((value) async {
-                final msgList = await FirebaseFirestore.instance
-                    .collection("contacts")
-                    .where("chatId", isEqualTo: newChatId)
-                    .get()
-                    .then((value) {
-                  print("id : ${user['id']}");
-                  print("pData : $pData");
-                  if (value.docs.isNotEmpty) {
-                    FirebaseFirestore.instance
-                        .collection('contacts')
-                        .doc(value.docs[0].id)
-                        .update({
-                      "updateStamp":
-                          DateTime.now().millisecondsSinceEpoch.toString(),
-                      "lastMessage": content,
-                      "senderPhone": user['phone'],
-                      'sender': {
-                        "id": user['id'],
-                        "name": user['name'],
-                        "image": user["image"],
-                        "phone": user["phone"]
-                      },
-                      "receiverPhone": pData["phone"],
-                      "receiver": {
-                        "id": pId,
-                        "name": pName,
-                        "image": pData["image"],
-                        "phone": pData["phone"]
-                      }
-                    });
+                  .collection('contacts')
+                  .doc(value.docs[0].id)
+                  .update({
+                "updateStamp":
+                DateTime.now().millisecondsSinceEpoch.toString(),
+                "lastMessage": content,
+                "senderPhone": user['phone'],
+                'sender': {
+                  "id": user['id'],
+                  "name": user['name'],
+                  "image": user["image"],
+                  "phone": user["phone"]
+                },
+                "receiverPhone": pData["phone"],
+                "receiver": {
+                  "id": pId,
+                  "name": pName,
+                  "image": pData["image"],
+                  "phone": pData["phone"]
+                }
+              });
 
-                    listScrollController.animateTo(0.0,
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeOut);
-                  } else {
-                    dynamic user = appCtrl.storage.read("user");
+              listScrollController.animateTo(0.0,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeOut);
+            } else {
+              dynamic user = appCtrl.storage.read("user");
 
-                    FirebaseFirestore.instance.collection('contacts').add({
-                      'sender': {
-                        "id": user["id"],
-                        "name": user["name"],
-                        "image": user["image"],
-                        "phone": user["phone"]
-                      },
-                      'receiver': {
-                        "id": pId,
-                        "name": pName,
-                        "image": pData["image"],
-                        "phone": pData["phone"]
-                      },
-                      'receiverPhone': pData["phone"],
-                      "senderPhone": user['phone'],
-                      'chatId': newChatId,
-                      'timestamp':
-                          DateTime.now().millisecondsSinceEpoch.toString(),
-                      "lastMessage": content,
-                      "isGroup": false,
-                      "groupId": "",
-                      "updateStamp":
-                          DateTime.now().millisecondsSinceEpoch.toString()
-                    });
-                  }
-                });
+              FirebaseFirestore.instance.collection('contacts').add({
+                'sender': {
+                  "id": user["id"],
+                  "name": user["name"],
+                  "image": user["image"],
+                  "phone": user["phone"]
+                },
+                'receiver': {
+                  "id": pId,
+                  "name": pName,
+                  "image": pData["image"],
+                  "phone": pData["phone"]
+                },
+                'receiverPhone': pData["phone"],
+                "senderPhone": user['phone'],
+                'chatId': newChatId,
+                'timestamp':
+                DateTime.now().millisecondsSinceEpoch.toString(),
+                "lastMessage": content,
+                "isGroup": false,
+                "groupId": "",
+                "updateStamp":
+                DateTime.now().millisecondsSinceEpoch.toString()
               });
             }
-          });
-        }
+          }).then((value) => textEditingController.clear());
+        });
       }
     });
   }
@@ -467,51 +351,10 @@ class ChatController extends GetxController {
       );
     } else {
       // RECEIVER MESSAGE
-
-      return ReceiverMessage(document: document, index: index);
+      return document["type"] == MessageType.messageType.name
+          ? Container()
+          : ReceiverMessage(document: document, index: index);
     }
-  }
-
-  Future<bool> getContact(document) async {
-    List<Contact>? contactList;
-    bool isExist = false;
-    try {
-      bool permissionStatus = await permissionHandelCtrl.permissionGranted();
-      if (permissionStatus) {
-        List<Contact> allContacts = await getAllContacts();
-        contactList = allContacts;
-        isExist = await getContactList(contactList, document);
-      }
-    } catch (e) {
-      log("message : $e");
-    }
-    return isExist;
-  }
-
-  getContactList(List<Contact> contacts, DocumentSnapshot document) async {
-    var statusesSnapshot =
-        await FirebaseFirestore.instance.collection('users').get();
-    List<Status> statusData = [];
-    for (int i = 0; i < statusesSnapshot.docs.length; i++) {
-      for (int j = 0; j < contacts.length; j++) {
-        if (contacts[j].phones!.isNotEmpty) {
-          String phone =
-              phoneNumberExtension(contacts[j].phones![0].value.toString());
-
-          if (phone == statusesSnapshot.docs[i]["phone"]) {
-            if (statusesSnapshot.docs[i]["id"] == document["receiver"]) {
-              return true;
-            } else {
-              return false;
-            }
-          } else {
-            return false;
-          }
-        }
-      }
-    }
-
-    return statusData;
   }
 
   // ON BACK PRESS
@@ -525,24 +368,4 @@ class ChatController extends GetxController {
     return Future.value(false);
   }
 
-  //image picker option
-  imagePickerOption(BuildContext context) {
-    showModalBottomSheet(
-        context: context,
-        shape: const RoundedRectangleBorder(
-          borderRadius:
-              BorderRadius.vertical(top: Radius.circular(AppRadius.r25)),
-        ),
-        builder: (BuildContext context) {
-          // return your layout
-          return ImagePickerLayout(cameraTap: () {
-            pickerCtrl.dismissKeyboard();
-            getImage(ImageSource.camera);
-            Get.back();
-          }, galleryTap: () {
-            getImage(ImageSource.gallery);
-            Get.back();
-          });
-        });
-  }
 }

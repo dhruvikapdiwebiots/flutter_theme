@@ -35,7 +35,7 @@ class _StatusScreenViewState extends State<StatusScreenView> {
         controller: controller,
       ));
     }
-    print("storyItems : $storyItems");
+
   }
 
   @override

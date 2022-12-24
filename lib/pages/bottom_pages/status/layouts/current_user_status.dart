@@ -1,8 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter_theme/pages/bottom_pages/status/layouts/current_user_empty_status.dart';
-import 'package:flutter_theme/pages/bottom_pages/status/layouts/status_layout.dart';
-
 import '../../../../config.dart';
 
 class CurrentUserStatus extends StatelessWidget {
@@ -14,13 +11,13 @@ class CurrentUserStatus extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder(
         stream: FirebaseFirestore.instance
-            .collection('status').where("phoneNumber",isEqualTo: currentUserId)
-        
+            .collection('status')
+            .where("phoneNumber", isEqualTo: currentUserId)
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.data != null) {
             if (!snapshot.data!.docs.isNotEmpty) {
-              return CurrentUserEmptyStatus(onTap: ()async {
+              return CurrentUserEmptyStatus(onTap: () async {
                 File? pickedImage = await pickImageFromGallery(context);
                 if (pickedImage != null) {
                   Get.toNamed(routeName.confirmationScreen,
@@ -28,7 +25,7 @@ class CurrentUserStatus extends StatelessWidget {
                 }
               });
             } else {
-              return StatusLayout(snapshot: snapshot) ;
+              return StatusLayout(snapshot: snapshot);
             }
           } else {
             return CurrentUserEmptyStatus(onTap: () async {

@@ -1,3 +1,5 @@
+import 'package:flutter_theme/pages/theme_pages/chat_message/layouts/chat_firebase_api.dart';
+
 import '../config.dart';
 
 snackBar(message, {context, duration, textColor, backgroundColor, icon}) {
@@ -181,7 +183,61 @@ sendOtp() async {
   );
 }
 
-
+//show error message
 showToast(error) {
   Fluttertoast.showToast(msg: error);
 }
+
+//unblock confirmation
+unblockConfirmation(pName,value,chatId,pId)async{
+  Get.generalDialog(
+    pageBuilder: (context, anim1, anim2) {
+      return Align(
+        alignment: Alignment.center,
+        child: AlertDialog(
+          content: Text(fonts.unblockUser(pName)),
+          actions: <Widget>[
+            TextButton(
+                onPressed: () {
+                  Get.back();
+                },
+                child: Text(
+                  fonts.alert.tr,
+                  style: AppCss.poppinsMedium16.textColor(appCtrl.appTheme.grey)
+                )),
+            TextButton(
+                onPressed: () async{
+                  await ChatFirebaseApi().unblockFunction( value, chatId, pId);
+                  Get.back();
+                },
+                child: Text(
+                  fonts.unblock.tr,
+                    style: AppCss.poppinsMedium16.textColor(appCtrl.appTheme.primary)
+                ))
+          ],
+        ),
+      );
+    },
+    transitionBuilder: (context, anim1, anim2, child) {
+      return SlideTransition(
+        position:
+        Tween(begin: const Offset(0, -1), end: const Offset(0, 0))
+            .animate(anim1),
+        child: child,
+      );
+    },
+    transitionDuration: const Duration(milliseconds: 300),
+  );
+
+  //block check
+  blockCheck()async{
+    var user = appCtrl.storage.read("user");
+    FirebaseFirestore.instance
+        .collection("blocks")
+        .doc(user["id"])
+        .get().then((value) {
+          return value;
+    });
+  }
+}
+
