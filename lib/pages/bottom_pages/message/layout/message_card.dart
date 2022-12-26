@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../config.dart';
@@ -21,14 +22,17 @@ class MessageCard extends StatelessWidget {
           bottom: Insets.i10, left: Insets.i5, right: Insets.i5),
       child: ListTile(
           onTap: () {
+            FirebaseFirestore.instance
+                .collection("contacts")
+                .doc(document!.id)
+                .update({"isSeen": true});
             var data = {
               "data": currentUserId != document!["senderPhone"]
                   ? document!["sender"]
                   : document!["receiver"],
               "chatId": document!["chatId"],
-              "allData":document!
+              "allData": document!
             };
-
             Get.toNamed(routeName.chat, arguments: data);
           },
           contentPadding: EdgeInsets.zero,
@@ -36,13 +40,19 @@ class MessageCard extends StatelessWidget {
               style: AppCss.poppinsblack16.textColor(appCtrl.appTheme.primary)),
           subtitle: document!["lastMessage"] != null
               ? Padding(
-                  padding: const EdgeInsets.only(top: 6.0),
-                  child: Text(
-                      document!["lastMessage"].contains("http")
-                          ? "Media Share"
-                          : document!["lastMessage"],
-                      style: AppCss.poppinsMedium14
-                          .textColor(appCtrl.appTheme.grey)),
+                  padding: const EdgeInsets.only(top: Insets.i6),
+                  child: Row(
+                    children: [
+                      Icon(Icons.done_all,color: document!["isSeen"] ? appCtrl.appTheme.primary: appCtrl.appTheme.grey,size: Sizes.s16),
+                      const HSpace(Sizes.s10),
+                      Text(
+                          document!["lastMessage"].contains("http")
+                              ? "Media Share"
+                              : document!["lastMessage"],
+                          style: AppCss.poppinsMedium14
+                              .textColor(appCtrl.appTheme.grey)),
+                    ],
+                  ),
                 )
               : Container(),
           leading: document!["sender"]['image'] != null &&

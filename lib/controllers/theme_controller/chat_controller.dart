@@ -57,10 +57,11 @@ class ChatController extends GetxController {
       pName = pData["name"];
       chatId = data["chatId"];
       isUserAvailable = true;
+      print("pData : $pData");
       update();
     }
     update();
-
+    seenMessage();
     super.onReady();
   }
 
@@ -76,6 +77,27 @@ class ChatController extends GetxController {
         typing = false;
       }
     });
+  }
+
+  seenMessage() async {
+
+    if(userData["phone"] != pData["senderPhone"]) {
+      FirebaseFirestore.instance
+          .collection("messages")
+          .doc(pId)
+          .collection("chat")
+          .where("isSeen", isEqualTo: false)
+          .get()
+          .then((value) {
+        for (var i = 0; i < value.docs.length; i++) {
+          FirebaseFirestore.instance
+              .collection("messages")
+              .doc(pId)
+              .collection("chat").doc(value.docs[i].id).update(
+              {"isSeen": true});
+        }
+      });
+    }
   }
 
   //share document
@@ -132,10 +154,10 @@ class ChatController extends GetxController {
   blockUser() async {
     DateTime now = DateTime.now();
     String? newChatId =
-    chatId == "0" ? now.microsecondsSinceEpoch.toString() : chatId;
+        chatId == "0" ? now.microsecondsSinceEpoch.toString() : chatId;
     chatId = newChatId;
     update();
-    if(isBlock){
+    if (isBlock) {
       FirebaseFirestore.instance
           .collection('messages')
           .doc(newChatId)
@@ -150,10 +172,7 @@ class ChatController extends GetxController {
         "blockBy": userData["id"],
         "blockUserId": pId,
         'messageType': "sender",
-        'timestamp': DateTime
-            .now()
-            .millisecondsSinceEpoch
-            .toString(),
+        'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
       });
       final msgList = await FirebaseFirestore.instance
           .collection("contacts")
@@ -200,9 +219,7 @@ class ChatController extends GetxController {
               curve: Curves.easeOut);
         }
       });
-    }else {
-
-
+    } else {
       FirebaseFirestore.instance
           .collection('messages')
           .doc(newChatId)
@@ -217,12 +234,8 @@ class ChatController extends GetxController {
         "blockBy": userData["id"],
         "blockUserId": pId,
         'messageType': "sender",
-        'timestamp': DateTime
-            .now()
-            .millisecondsSinceEpoch
-            .toString(),
+        'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
       });
-
 
       final msgList = await FirebaseFirestore.instance
           .collection("contacts")
@@ -270,7 +283,6 @@ class ChatController extends GetxController {
         }
       });
     }
-
   }
 
 // UPLOAD SELECTED IMAGE TO FIREBASE
@@ -406,7 +418,7 @@ class ChatController extends GetxController {
                       "image": userData["image"],
                       "phone": userData["phone"]
                     },
-                    "blockUserMessage":content,
+                    "blockUserMessage": content,
                     "receiverPhone": pData["phone"],
                     "receiver": {
                       "id": pId,
@@ -432,7 +444,7 @@ class ChatController extends GetxController {
                       "image": pData["image"],
                       "phone": pData["phone"]
                     },
-                    "blockUserMessage":content,
+                    "blockUserMessage": content,
                     'receiverPhone': pData["phone"],
                     "senderPhone": userData['phone'],
                     'chatId': newChatId,
@@ -441,6 +453,7 @@ class ChatController extends GetxController {
                     "lastMessage": content,
                     "isGroup": false,
                     "isBlock": true,
+                    "isBroadcast": false,
                     "blockBy": allData.data()["blockBy"],
                     "blockUserId": allData.data()["blockUserId"],
                     "groupId": "",
@@ -466,6 +479,7 @@ class ChatController extends GetxController {
             "isBlock": false,
             "blockBy": "",
             "blockUserId": "",
+            "isSeen": false,
             'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
           }).then((snap) async {
             await FirebaseFirestore.instance
@@ -490,7 +504,9 @@ class ChatController extends GetxController {
                   },
                   "isGroup": false,
                   "isBlock": false,
+                  "isBroadcast": false,
                   "blockBy": "",
+                  "isSeen": false,
                   "blockUserId": "",
                   "receiverPhone": pData["phone"],
                   "receiver": {
@@ -523,7 +539,9 @@ class ChatController extends GetxController {
                   'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
                   "lastMessage": content,
                   "isGroup": false,
+                  "isSeen": false,
                   "isBlock": false,
+                  "isBroadcast": false,
                   "blockBy": "",
                   "blockUserId": "",
                   "groupId": "",
@@ -547,6 +565,7 @@ class ChatController extends GetxController {
           'type': type.name,
           'messageType': "sender",
           "isBlock": false,
+          "isSeen": false,
           "blockBy": "",
           "blockUserId": "",
           'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
@@ -564,6 +583,7 @@ class ChatController extends GetxController {
                 "updateStamp": DateTime.now().millisecondsSinceEpoch.toString(),
                 "lastMessage": content,
                 "senderPhone": userData['phone'],
+                "isSeen": false,
                 'sender': {
                   "id": userData['id'],
                   "name": userData['name'],
@@ -572,6 +592,7 @@ class ChatController extends GetxController {
                 },
                 "isGroup": false,
                 "isBlock": false,
+                "isBroadcast": false,
                 "blockBy": "",
                 "blockUserId": "",
                 "receiverPhone": pData["phone"],
@@ -595,6 +616,7 @@ class ChatController extends GetxController {
                   "image": user["image"],
                   "phone": user["phone"]
                 },
+                "isSeen": false,
                 'receiver': {
                   "id": pId,
                   "name": pName,
@@ -608,6 +630,7 @@ class ChatController extends GetxController {
                 "lastMessage": content,
                 "isGroup": false,
                 "isBlock": false,
+                "isBroadcast": false,
                 "blockBy": "",
                 "blockUserId": "",
                 "groupId": "",

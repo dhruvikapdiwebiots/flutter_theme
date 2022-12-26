@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dartx/dartx_io.dart';
 import 'package:flutter_theme/config.dart';
+import 'package:flutter_theme/pages/theme_pages/broadcast_chat/layouts/braodcast_sender.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class BroadcastChatController extends GetxController {
@@ -17,7 +18,7 @@ class BroadcastChatController extends GetxController {
       statusLastSeen,
       videoUrl,
       blockBy;
-  dynamic message, userData;
+  dynamic message, userData, broadData;
   List pData = [];
   bool positionStreamStarted = false;
   bool isUserAvailable = true;
@@ -25,6 +26,7 @@ class BroadcastChatController extends GetxController {
   XFile? videoFile;
   File? image;
   int totalUser = 0;
+  String nameList = "";
   File? video;
   bool? isLoading = true;
   bool typing = false, isBlock = false;
@@ -47,9 +49,19 @@ class BroadcastChatController extends GetxController {
     userData = appCtrl.storage.read("user");
     var data = Get.arguments;
 
-    pData = data["selectedContact"];
-    pId = data["id"];
+    broadData = data["data"];
+    pId = data["broadcastId"];
+    pData = broadData["receiverId"];
     totalUser = pData.length;
+
+    for (var i = 0; i < pData.length; i++) {
+      if (nameList != "") {
+        nameList = "$nameList, ${pData[i]["name"]}";
+      } else {
+        nameList = pData[i]["name"];
+      }
+    }
+    print("pId : $pId");
     update();
 
     super.onReady();
@@ -198,7 +210,25 @@ class BroadcastChatController extends GetxController {
           chatId == "0" ? now.microsecondsSinceEpoch.toString() : chatId;
       chatId = newChatId;
       update();
+      for (var i = 0; i < pData.length; i++) {
+        FirebaseFirestore.instance
+            .collection("contacts")
+            .orderBy("updateStamp", descending: true)
+            .get()
+            .then((value) {
 
+          for (var j = 0; j < value.docs.length; j++) {
+            if (value.docs[j].data()["senderPhone"] == userData["phone"] &&
+                value.docs[j].data()["receiverPhone"] == pData[i]["phone"] ||
+                    value.docs[j].data()["senderPhone"] == pData[i]["phone"] &&
+                value.docs[j].data()["receiverPhone"] == userData["phone"]) {
+              print("done : ${value.docs[j].id  }");
+            }else{
+              print("new");
+            }
+          }
+        });
+      }
       Get.forceAppUpdate();
     }
   }
@@ -214,7 +244,7 @@ class BroadcastChatController extends GetxController {
 // BUILD ITEM MESSAGE BOX FOR RECEIVER AND SENDER BOX DESIGN
   Widget buildItem(int index, document) {
     if (document['sender'] == userData["id"]) {
-      return SenderMessage(
+      return BroadcastSender(
         document: document,
         index: index,
       );

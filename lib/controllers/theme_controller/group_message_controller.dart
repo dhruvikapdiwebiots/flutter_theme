@@ -280,6 +280,7 @@ class GroupChatMessageController extends GetxController {
                     .collection('contacts')
                     .doc(value.docs[i].id)
                     .update({
+
                   "updateStamp":
                       DateTime.now().millisecondsSinceEpoch.toString(),
                   "lastMessage": content,

@@ -9,15 +9,10 @@ class BroadcastMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<BroadcastChatController>(builder: (chatCtrl) {
       return Flexible(
-        child: chatCtrl.chatId == null
-            ? Center(
-                child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                        appCtrl.appTheme.primary)))
-            : StreamBuilder<QuerySnapshot>(
+        child:  StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
-              .collection('broadcastMessages')
-              .doc(chatCtrl.chatId)
+              .collection('broadcastMessage')
+              .doc(chatCtrl.pId)
               .collection("chat")
               .orderBy('timestamp', descending: true)
               .limit(20).snapshots(),

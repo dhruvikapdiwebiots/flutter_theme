@@ -11,7 +11,7 @@ class LoadUser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (document!["isGroup"] == false) {
+    if (document!["isGroup"] == false && document!["isBroadcast"] == false) {
       if (document!["senderPhone"] == currentUserId) {
         return ReceiverMessageCard(
             document: document, currentUserId: currentUserId, blockBy: blockBy);

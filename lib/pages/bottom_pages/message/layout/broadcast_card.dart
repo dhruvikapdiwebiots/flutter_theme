@@ -11,7 +11,7 @@ class BroadCastMessageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List selectedContact =document!["selectedContact"];
+    List selectedContact = document!["receiverId"];
     return Container(
       decoration:
       const BoxDecoration(border: Border(bottom: BorderSide(width: 0.2))),
@@ -20,7 +20,14 @@ class BroadCastMessageCard extends StatelessWidget {
           bottom: Insets.i10, left: Insets.i5, right: Insets.i5),
 
       child: ListTile(
-        onTap: ()=> Get.toNamed(routeName.groupChatMessage,arguments: document!["group"]),
+        onTap: (){
+          var data={
+            "broadcastId":document!["broadcastId"],
+            "data":document,
+
+          };
+          Get.toNamed(routeName.broadcastChat,arguments: data);
+        },
         contentPadding: EdgeInsets.zero,
         title: Text(
             "${selectedContact.length} recipient",

@@ -161,6 +161,7 @@ class CreateGroup extends StatelessWidget {
                                     "phone": user["phone"]
                                   },
                                   'receiver': null,
+                                  "isBroadcast": false,
                                   'group': {
                                     "id": value.id,
                                     "name": groupCtrl.txtGroupName.text,
