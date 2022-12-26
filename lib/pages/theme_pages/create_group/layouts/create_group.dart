@@ -14,8 +14,8 @@ class CreateGroup extends StatelessWidget {
         return Stack(
           children: [
             Padding(
-              padding:
-                  EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
               child: Container(
                   padding: const EdgeInsets.all(16),
                   height: MediaQuery.of(context).size.height / 2.2,
@@ -47,10 +47,11 @@ class CreateGroup extends StatelessWidget {
                                       height: Sizes.s60,
                                       width: Sizes.s60,
                                       decoration: BoxDecoration(
-                                          color:
-                                              appCtrl.appTheme.gray.withOpacity(.2),
+                                          color: appCtrl.appTheme.gray
+                                              .withOpacity(.2),
                                           shape: BoxShape.circle),
-                                      child: Image.file(groupCtrl.pickerCtrl.image!,
+                                      child: Image.file(
+                                              groupCtrl.pickerCtrl.image!,
                                               fit: BoxFit.fill)
                                           .clipRRect(all: AppRadius.r50),
                                     ).inkWell(onTap: () {
@@ -63,10 +64,11 @@ class CreateGroup extends StatelessWidget {
                                       alignment: Alignment.center,
                                       padding: const EdgeInsets.all(Insets.i15),
                                       decoration: BoxDecoration(
-                                          color:
-                                              appCtrl.appTheme.gray.withOpacity(.2),
+                                          color: appCtrl.appTheme.gray
+                                              .withOpacity(.2),
                                           image: DecorationImage(
-                                              image: AssetImage(imageAssets.user),
+                                              image:
+                                                  AssetImage(imageAssets.user),
                                               fit: BoxFit.fill),
                                           shape: BoxShape.circle),
                                     ).inkWell(
@@ -101,8 +103,9 @@ class CreateGroup extends StatelessWidget {
                             margin: 0,
                             onTap: () async {
                               groupCtrl.isLoading = true;
-                              groupCtrl.imageFile = groupCtrl.pickerCtrl.imageFile;
-                              if(groupCtrl.imageFile != null) {
+                              groupCtrl.imageFile =
+                                  groupCtrl.pickerCtrl.imageFile;
+                              if (groupCtrl.imageFile != null) {
                                 await groupCtrl.uploadFile();
                               }
                               groupCtrl.update();
@@ -124,9 +127,25 @@ class CreateGroup extends StatelessWidget {
                                 'timestamp': DateTime.now()
                                     .millisecondsSinceEpoch
                                     .toString(),
-                                // I dont know why you called it just timestamp i changed it on created and passed an function with serverTimestamp()
                               });
 
+                              FirebaseFirestore.instance
+                                  .collection('groupMessage')
+                                  .doc(id)
+                                  .collection("chat")
+                                  .add({
+                                'sender': user["id"],
+                                'senderName': user["name"],
+                                'receiver': groupCtrl.selectedContact,
+                                'content': "${user["name"]} created this group",
+                                "groupId": id,
+                                'type': MessageType.messageType.name,
+                                'messageType': "sender",
+                                "status": "",
+                                'timestamp': DateTime.now()
+                                    .millisecondsSinceEpoch
+                                    .toString(),
+                              });
                               groupCtrl.selectedContact.add(user);
                               await FirebaseFirestore.instance
                                   .collection("groups")
@@ -139,7 +158,7 @@ class CreateGroup extends StatelessWidget {
                                   'sender': {
                                     "id": user['id'],
                                     "name": user['name'],
-                                    "phone":user["phone"]
+                                    "phone": user["phone"]
                                   },
                                   'receiver': null,
                                   'group': {
@@ -171,8 +190,10 @@ class CreateGroup extends StatelessWidget {
                         ]),
                   )),
             ),
-            if(groupCtrl.isLoading)
-              LoginLoader(isLoading: groupCtrl.isLoading,)
+            if (groupCtrl.isLoading)
+              LoginLoader(
+                isLoading: groupCtrl.isLoading,
+              )
           ],
         );
       });

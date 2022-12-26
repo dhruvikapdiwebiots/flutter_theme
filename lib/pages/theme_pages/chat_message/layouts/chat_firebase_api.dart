@@ -5,36 +5,43 @@ class ChatFirebaseApi{
 
   //unblock
   unblockFunction(value,chatId,pId)async{
-   /* var user = appCtrl.storage.read("user");
-    for (int i = 0; i < value.docs.length; i++) {
-      if (value.docs[i].data()["blockUserId"] == pId) {
+    var user = appCtrl.storage.read("user");
+    DateTime now = DateTime.now();
+    String? newChatId = chatId == "0"
+        ? now.microsecondsSinceEpoch.toString()
+        : chatId;
+    chatId = newChatId;
+  await  FirebaseFirestore.instance
+        .collection('messages')
+        .doc(newChatId)
+        .collection("chat")
+        .add({
+      'sender': user["id"],
+      'receiver': pId,
+      'content': "You Unblock this contact",
+      "chatId": newChatId,
+      'type': MessageType.messageType.name,
+      'messageType': "sender",
+      'timestamp': DateTime.now()
+          .millisecondsSinceEpoch
+          .toString(),
+    });
+
+    await FirebaseFirestore.instance
+        .collection("contacts")
+        .where("chatId", isEqualTo: newChatId)
+        .get()
+        .then((value) {
+      if (value.docs.isNotEmpty) {
         FirebaseFirestore.instance
-            .collection("blocks")
-            .doc(user["id"])
-            .collection("users")
-            .doc(value.docs[i].id)
-            .delete();
-        DateTime now = DateTime.now();
-        String? newChatId = chatId == "0"
-            ? now.microsecondsSinceEpoch.toString()
-            : chatId;
-        chatId = newChatId;
-        FirebaseFirestore.instance
-            .collection('messages')
-            .doc(newChatId)
-            .collection("chat")
-            .add({
-          'sender': user["id"],
-          'receiver': pId,
-          'content': "You Unblock this contact",
-          "chatId": newChatId,
-          'type': MessageType.messageType.name,
-          'messageType': "sender",
-          'timestamp': DateTime.now()
-              .millisecondsSinceEpoch
-              .toString(),
+            .collection('contacts')
+            .doc(value.docs[0].id)
+            .update({
+          "isBlock": false,
+          "blockBy": "",
+          "blockUserId": ""
         });
       }
-    }*/
+    });
   }
 }

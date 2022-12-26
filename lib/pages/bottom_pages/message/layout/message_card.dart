@@ -13,8 +13,6 @@ class MessageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-log("is : ${document!["blockBy"] != blockBy}");
-log("is : ${document!["isBlock"] == true}");
     return Container(
       decoration:
           const BoxDecoration(border: Border(bottom: BorderSide(width: 0.2))),
@@ -28,7 +26,7 @@ log("is : ${document!["isBlock"] == true}");
                   ? document!["sender"]
                   : document!["receiver"],
               "chatId": document!["chatId"],
-              "allData": document!
+              "allData":document!
             };
 
             Get.toNamed(routeName.chat, arguments: data);
@@ -40,13 +38,9 @@ log("is : ${document!["isBlock"] == true}");
               ? Padding(
                   padding: const EdgeInsets.only(top: 6.0),
                   child: Text(
-                      document!["isBlock"] == true
-                          ? document!["blockBy"] != blockBy
-                              ? ""
-                              : document!["lastMessage"].contains("http")
-                          : document!["lastMessage"].contains("http")
-                              ? "Media Share"
-                              : document!["lastMessage"],
+                      document!["lastMessage"].contains("http")
+                          ? "Media Share"
+                          : document!["lastMessage"],
                       style: AppCss.poppinsMedium14
                           .textColor(appCtrl.appTheme.grey)),
                 )

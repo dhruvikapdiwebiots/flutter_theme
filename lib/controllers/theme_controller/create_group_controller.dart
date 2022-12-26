@@ -11,7 +11,7 @@ class CreateGroupController extends GetxController {
   final formKey = GlobalKey<FormState>();
   File? image;
   XFile? imageFile;
-  bool isLoading = false;
+  bool isLoading = false, isGroup = true;
 
   String imageUrl = "";
   TextEditingController txtGroupName = TextEditingController();
@@ -60,7 +60,6 @@ class CreateGroupController extends GetxController {
             }
           }
         }
-
       }
     }
     update();
@@ -104,22 +103,96 @@ class CreateGroupController extends GetxController {
     refreshContacts();
   }
 
-  addGroupBottomSheet() {
-    showModalBottomSheet(
-        isScrollControlled: true,
-        context: Get.context!,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
-        ),
-        builder: (BuildContext context) {
+  addGroupBottomSheet() async {
+    if (isGroup) {
+      showModalBottomSheet(
+          isScrollControlled: true,
+          context: Get.context!,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+          ),
+          builder: (BuildContext context) {
 // return your layout
-          return isLoading ? LoginLoader(isLoading: isLoading) : CreateGroup();
+            return isLoading
+                ? LoginLoader(isLoading: isLoading)
+                : const CreateGroup();
+          });
+    } else {
+      final now = DateTime.now();
+      String id = now.microsecondsSinceEpoch.toString();
+
+      final user = appCtrl.storage.read("user");
+      await Future.delayed(Durations.s3);
+      await FirebaseFirestore.instance
+          .collection('broadcast')
+          .doc(id)
+          .set({
+        "users": selectedContact,
+        "broadcastId": id,
+        "createdBy": user,
+        'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+      });
+
+      FirebaseFirestore.instance
+          .collection('broadcastMessage')
+          .doc(id)
+          .collection("chat")
+          .add({
+        'sender': user["id"],
+        'senderName': user["name"],
+        'receiver': selectedContact,
+        'content': "You created this broadcast",
+        "broadcastId": id,
+        'type': MessageType.messageType.name,
+        'messageType': "sender",
+        "status": "",
+        'timestamp': DateTime.now()
+            .millisecondsSinceEpoch
+            .toString(),
+      });
+
+      await FirebaseFirestore.instance
+          .collection("broadcast")
+          .doc(id)
+          .get()
+          .then((value) async {
+        await FirebaseFirestore.instance
+            .collection('contacts')
+            .add({
+          'sender': {
+            "id": user['id'],
+            "name": user['name'],
+            "phone": user["phone"]
+          },
+          'receiver': null,
+          'broadcastId': id,
+          'receiverId': selectedContact,
+          'senderPhone': user["phone"],
+          'timestamp': DateTime
+              .now()
+              .millisecondsSinceEpoch
+              .toString(),
+          "lastMessage": "",
+          "isBroadcast": true,
+          "updateStamp": DateTime
+              .now()
+              .millisecondsSinceEpoch
+              .toString()
         });
+      });
+      var data ={
+        "id": id,
+        "selectedContact":selectedContact
+      };
+      Get.toNamed(routeName.broadcastChat, arguments: data);
+    }
   }
 
   @override
   void onReady() {
 // TODO: implement onReady
+    isGroup = Get.arguments;
+    update();
     super.onReady();
     refreshContacts();
   }

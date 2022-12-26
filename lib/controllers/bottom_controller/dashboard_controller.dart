@@ -52,13 +52,12 @@ class DashboardController extends GetxController {
 
   popupMenuTap(value){
 
-    /*if (selectedPopTap == 0) {
-      print("My account menu is selected.");
+    if (selectedPopTap == 0) {
+      Get.toNamed(routeName.groupChat,arguments: false);
     } else if (selectedPopTap == 1) {
-      Get.toNamed(routeName.groupChat);
+      Get.toNamed(routeName.groupChat,arguments: true);
     } else if (selectedPopTap == 2) {
       Get.toNamed(routeName.setting);
-    }*/
-    Get.toNamed(routeName.groupChat);
+    }
   }
 }

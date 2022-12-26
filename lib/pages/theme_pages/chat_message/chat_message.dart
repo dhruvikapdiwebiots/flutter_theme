@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/pages/theme_pages/call_screen/layouts/call_utility.dart';
@@ -76,7 +75,7 @@ class _ChatState extends State<Chat>
                           ? true
                           : false
                       : false,
-                  callTap: () => call(false),
+                  callTap: () {},
                   moreTap: () => chatCtrl.blockUser()),
               backgroundColor: Colors.white,
               body: chatCtrl.isUserAvailable

@@ -255,15 +255,12 @@ class GroupChatMessageController extends GetxController {
         'sender': id,
         'senderName': user["name"],
         'receiver': pData["users"],
-        // user ID you want to read message
         'content': content,
         "groupId": pId,
         'type': type.name,
         'messageType': "sender",
         "status": "",
-        // i dont know why you need this ?
         'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-        // I dont know why you called it just timestamp i changed it on created and passed an function with serverTimestamp()
       });
 
       final msgList = await FirebaseFirestore.instance

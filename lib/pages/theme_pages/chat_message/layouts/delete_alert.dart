@@ -67,11 +67,11 @@ class DeleteAlert extends StatelessWidget {
                       .collection("contacts")
                       .where("chatId", isEqualTo: chatCtrl.chatId)
                       .get()
-                      .then((value) {
-                    if (value.docs.isNotEmpty) {
+                      .then((snapShot) {
+                    if (snapShot.docs.isNotEmpty) {
                       FirebaseFirestore.instance
                           .collection('contacts')
-                          .doc(value.docs[0].id)
+                          .doc(snapShot.docs[0].id)
                           .update({
                         "updateStamp":
                         DateTime

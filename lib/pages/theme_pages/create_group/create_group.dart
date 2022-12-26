@@ -19,7 +19,7 @@ class GroupChat extends StatelessWidget {
             appBar: AppBar(
               centerTitle: false,
               // leadingWidth: 40,
-              title: Text(fonts.selectContacts.tr,
+              title: Text( groupChatCtrl.isGroup ? fonts.selectContacts.tr: "Broadcast",
                   style: AppCss.poppinsMedium18
                       .textColor(appCtrl.appTheme.whiteColor)),
             ),

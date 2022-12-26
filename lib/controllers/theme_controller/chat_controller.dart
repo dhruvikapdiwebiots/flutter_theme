@@ -16,9 +16,10 @@ class ChatController extends GetxController {
       peerNo,
       status,
       statusLastSeen,
-      videoUrl,blockBy;
+      videoUrl,
+      blockBy;
   dynamic message;
-  dynamic pData, allData,userData;
+  dynamic pData, allData, userData;
   bool positionStreamStarted = false;
   bool isUserAvailable = true;
   XFile? imageFile;
@@ -26,7 +27,7 @@ class ChatController extends GetxController {
   File? image;
   File? video;
   bool? isLoading = true;
-  bool typing = false,isBlock = false;
+  bool typing = false, isBlock = false;
   final pickerCtrl = Get.isRegistered<PickerController>()
       ? Get.find<PickerController>()
       : Get.put(PickerController());
@@ -50,8 +51,8 @@ class ChatController extends GetxController {
     } else {
       pData = data["data"];
       allData = data["allData"];
-      isBlock = allData.data()["isBlock"];
-      blockBy = allData.data()["blockBy"];
+      isBlock = allData.data()["isBlock"] ?? false;
+      blockBy = allData.data()["blockBy"] ?? "";
       pId = pData["id"];
       pName = pData["name"];
       chatId = data["chatId"];
@@ -129,68 +130,146 @@ class ChatController extends GetxController {
 
   //block user
   blockUser() async {
-    var user = appCtrl.storage.read("user");
     DateTime now = DateTime.now();
     String? newChatId =
-        chatId == "0" ? now.microsecondsSinceEpoch.toString() : chatId;
+    chatId == "0" ? now.microsecondsSinceEpoch.toString() : chatId;
     chatId = newChatId;
-    allData.data()["isBlock"] = true;
-    allData.data()["blockBy"] = user["id"];
-    allData.data()["blockUserId"] = pId;
     update();
-    FirebaseFirestore.instance
-        .collection('messages')
-        .doc(newChatId)
-        .collection("chat")
-        .add({
-      'sender': user["id"],
-      'receiver': pId,
-      'content': "You block this contact",
-      "chatId": newChatId,
-      'type': MessageType.messageType.name,
-      "isBlock": true,
-      "blockBy": user["id"],
-      "blockUserId": pId,
-      'messageType': "sender",
-      'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-    });
+    if(isBlock){
+      FirebaseFirestore.instance
+          .collection('messages')
+          .doc(newChatId)
+          .collection("chat")
+          .add({
+        'sender': userData["id"],
+        'receiver': pId,
+        'content': "You unblock this contact",
+        "chatId": newChatId,
+        'type': MessageType.messageType.name,
+        "isBlock": true,
+        "blockBy": userData["id"],
+        "blockUserId": pId,
+        'messageType': "sender",
+        'timestamp': DateTime
+            .now()
+            .millisecondsSinceEpoch
+            .toString(),
+      });
+      final msgList = await FirebaseFirestore.instance
+          .collection("contacts")
+          .where("chatId", isEqualTo: newChatId)
+          .get()
+          .then((value) {
+        if (value.docs.isNotEmpty) {
+          FirebaseFirestore.instance
+              .collection('contacts')
+              .doc(value.docs[0].id)
+              .update({
+            "senderPhone": userData['phone'],
+            'sender': {
+              "id": userData['id'],
+              "name": userData['name'],
+              "image": userData["image"],
+              "phone": userData["phone"]
+            },
+            "receiverPhone": pData["phone"],
+            "receiver": {
+              "id": pId,
+              "name": pName,
+              "image": pData["image"],
+              "phone": pData["phone"]
+            },
+            "isBlock": false,
+            "blockBy": "",
+            "blockUserId": ""
+          }).then((value) {
+            FirebaseFirestore.instance
+                .collection("contacts")
+                .where("chatId", isEqualTo: newChatId)
+                .get()
+                .then((value) {
+              allData = value.docs[0];
+              update();
+              Get.forceAppUpdate();
+              log("alll : ${value.docs[0].data()}");
+            });
+          });
 
-    final msgList = await FirebaseFirestore.instance
-        .collection("contacts")
-        .where("chatId", isEqualTo: newChatId)
-        .get()
-        .then((value) {
-      if (value.docs.isNotEmpty) {
-        FirebaseFirestore.instance
-            .collection('contacts')
-            .doc(value.docs[0].id)
-            .update({
-          "updateStamp": DateTime.now().millisecondsSinceEpoch.toString(),
-          "lastMessage": "You block this user",
-          "senderPhone": user['phone'],
-          'sender': {
-            "id": user['id'],
-            "name": user['name'],
-            "image": user["image"],
-            "phone": user["phone"]
-          },
-          "receiverPhone": pData["phone"],
-          "receiver": {
-            "id": pId,
-            "name": pName,
-            "image": pData["image"],
-            "phone": pData["phone"]
-          },
-          "isBlock": true,
-          "blockBy": user["id"],
-          "blockUserId": pId
-        });
+          listScrollController.animateTo(0.0,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOut);
+        }
+      });
+    }else {
 
-        listScrollController.animateTo(0.0,
-            duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
-      }
-    });
 
+      FirebaseFirestore.instance
+          .collection('messages')
+          .doc(newChatId)
+          .collection("chat")
+          .add({
+        'sender': userData["id"],
+        'receiver': pId,
+        'content': "You block this contact",
+        "chatId": newChatId,
+        'type': MessageType.messageType.name,
+        "isBlock": true,
+        "blockBy": userData["id"],
+        "blockUserId": pId,
+        'messageType': "sender",
+        'timestamp': DateTime
+            .now()
+            .millisecondsSinceEpoch
+            .toString(),
+      });
+
+
+      final msgList = await FirebaseFirestore.instance
+          .collection("contacts")
+          .where("chatId", isEqualTo: newChatId)
+          .get()
+          .then((value) {
+        if (value.docs.isNotEmpty) {
+          FirebaseFirestore.instance
+              .collection('contacts')
+              .doc(value.docs[0].id)
+              .update({
+            "senderPhone": userData['phone'],
+            'sender': {
+              "id": userData['id'],
+              "name": userData['name'],
+              "image": userData["image"],
+              "phone": userData["phone"]
+            },
+            "receiverPhone": pData["phone"],
+            "receiver": {
+              "id": pId,
+              "name": pName,
+              "image": pData["image"],
+              "phone": pData["phone"]
+            },
+            "isBlock": true,
+            "blockBy": userData["id"],
+            "blockUserId": pId
+          }).then((value) {
+            FirebaseFirestore.instance
+                .collection("contacts")
+                .where("chatId", isEqualTo: newChatId)
+                .get()
+                .then((value) {
+              allData = value.docs[0];
+              update();
+              Get.forceAppUpdate();
+              log("alll : ${value.docs[0].data()}");
+            });
+          });
+
+          listScrollController.animateTo(0.0,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOut);
+        }
+      });
+    }
 
   }
 
@@ -276,34 +355,36 @@ class ChatController extends GetxController {
   // SEND MESSAGE CLICK
   void onSendMessage(String content, MessageType type) async {
     if (content.trim() != '') {
-      print(allData["isBlock"]);
       textEditingController.clear();
-      var user = appCtrl.storage.read("user");
       final now = DateTime.now();
       String? newChatId =
           chatId == "0" ? now.microsecondsSinceEpoch.toString() : chatId;
       chatId = newChatId;
       update();
-
       if (allData.data()["isBlock"] != null) {
         if (allData.data()["isBlock"] == true) {
-          if (allData.data()["blockBy"] == user["id"]) {
-            unblockConfirmation(pName, allData.data()["isBlock"], chatId, pId);
+          if (allData.data()["blockBy"] == userData["id"]) {
+            await unblockConfirmation(
+                pName, allData.data()["isBlock"], chatId, pId);
+            allData.data()["isBlock"] = false;
+            allData.data()["blockBy"] = "";
+            allData.data()["blockUserId"] = "";
+            update();
           } else {
             await FirebaseFirestore.instance
                 .collection('messages')
                 .doc(newChatId)
                 .collection("chat")
                 .add({
-              'sender': user["id"],
+              'sender': userData["id"],
               'receiver': pId,
               'content': content,
               "chatId": newChatId,
               'type': type.name,
               'messageType': "sender",
               "isBlock": true,
-              "blockBy":allData.data()["blockBy"],
-              "blockUserId":allData.data()["blockUserId"],
+              "blockBy": allData.data()["blockBy"],
+              "blockUserId": allData.data()["blockUserId"],
               'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
             }).then((snap) async {
               await FirebaseFirestore.instance
@@ -318,17 +399,14 @@ class ChatController extends GetxController {
                       .update({
                     "updateStamp":
                         DateTime.now().millisecondsSinceEpoch.toString(),
-                    "lastMessage": content,
-                    "senderPhone": user['phone'],
+                    "senderPhone": userData['phone'],
                     'sender': {
-                      "id": user['id'],
-                      "name": user['name'],
-                      "image": user["image"],
-                      "phone": user["phone"]
+                      "id": userData['id'],
+                      "name": userData['name'],
+                      "image": userData["image"],
+                      "phone": userData["phone"]
                     },
-                    "isBlock": true,
-                    "blockBy":allData.data()["blockBy"],
-                    "blockUserId":allData.data()["blockUserId"],
+                    "blockUserMessage":content,
                     "receiverPhone": pData["phone"],
                     "receiver": {
                       "id": pId,
@@ -343,10 +421,10 @@ class ChatController extends GetxController {
                 } else {
                   FirebaseFirestore.instance.collection('contacts').add({
                     'sender': {
-                      "id": user["id"],
-                      "name": user["name"],
-                      "image": user["image"],
-                      "phone": user["phone"]
+                      "id": userData["id"],
+                      "name": userData["name"],
+                      "image": userData["image"],
+                      "phone": userData["phone"]
                     },
                     'receiver': {
                       "id": pId,
@@ -354,16 +432,17 @@ class ChatController extends GetxController {
                       "image": pData["image"],
                       "phone": pData["phone"]
                     },
+                    "blockUserMessage":content,
                     'receiverPhone': pData["phone"],
-                    "senderPhone": user['phone'],
+                    "senderPhone": userData['phone'],
                     'chatId': newChatId,
                     'timestamp':
                         DateTime.now().millisecondsSinceEpoch.toString(),
                     "lastMessage": content,
                     "isGroup": false,
                     "isBlock": true,
-                    "blockBy":allData.data()["blockBy"],
-                    "blockUserId":allData.data()["blockUserId"],
+                    "blockBy": allData.data()["blockBy"],
+                    "blockUserId": allData.data()["blockUserId"],
                     "groupId": "",
                     "updateStamp":
                         DateTime.now().millisecondsSinceEpoch.toString()
@@ -378,15 +457,15 @@ class ChatController extends GetxController {
               .doc(newChatId)
               .collection("chat")
               .add({
-            'sender': user["id"],
+            'sender': userData["id"],
             'receiver': pId,
             'content': content,
             "chatId": newChatId,
             'type': type.name,
             'messageType': "sender",
-            "isBlock": true,
-            "blockBy":allData.data()["blockBy"],
-            "blockUserId":allData.data()["blockUserId"],
+            "isBlock": false,
+            "blockBy": "",
+            "blockUserId": "",
             'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
           }).then((snap) async {
             await FirebaseFirestore.instance
@@ -402,17 +481,17 @@ class ChatController extends GetxController {
                   "updateStamp":
                       DateTime.now().millisecondsSinceEpoch.toString(),
                   "lastMessage": content,
-                  "senderPhone": user['phone'],
+                  "senderPhone": userData['phone'],
                   'sender': {
-                    "id": user['id'],
-                    "name": user['name'],
-                    "image": user["image"],
-                    "phone": user["phone"]
+                    "id": userData['id'],
+                    "name": userData['name'],
+                    "image": userData["image"],
+                    "phone": userData["phone"]
                   },
                   "isGroup": false,
-                  "isBlock": true,
-                  "blockBy":allData.data()["blockBy"],
-                  "blockUserId":allData.data()["blockUserId"],
+                  "isBlock": false,
+                  "blockBy": "",
+                  "blockUserId": "",
                   "receiverPhone": pData["phone"],
                   "receiver": {
                     "id": pId,
@@ -427,10 +506,10 @@ class ChatController extends GetxController {
               } else {
                 FirebaseFirestore.instance.collection('contacts').add({
                   'sender': {
-                    "id": user["id"],
-                    "name": user["name"],
-                    "image": user["image"],
-                    "phone": user["phone"]
+                    "id": userData["id"],
+                    "name": userData["name"],
+                    "image": userData["image"],
+                    "phone": userData["phone"]
                   },
                   'receiver': {
                     "id": pId,
@@ -439,14 +518,14 @@ class ChatController extends GetxController {
                     "phone": pData["phone"]
                   },
                   'receiverPhone': pData["phone"],
-                  "senderPhone": user['phone'],
+                  "senderPhone": userData['phone'],
                   'chatId': newChatId,
                   'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
                   "lastMessage": content,
                   "isGroup": false,
-                  "isBlock": true,
-                  "blockBy":allData.data()["blockBy"],
-                  "blockUserId":allData.data()["blockUserId"],
+                  "isBlock": false,
+                  "blockBy": "",
+                  "blockUserId": "",
                   "groupId": "",
                   "updateStamp":
                       DateTime.now().millisecondsSinceEpoch.toString()
@@ -461,15 +540,15 @@ class ChatController extends GetxController {
             .doc(newChatId)
             .collection("chat")
             .add({
-          'sender': user["id"],
+          'sender': userData["id"],
           'receiver': pId,
           'content': content,
           "chatId": newChatId,
           'type': type.name,
           'messageType': "sender",
           "isBlock": false,
-          "blockBy":"",
-          "blockUserId":"",
+          "blockBy": "",
+          "blockUserId": "",
           'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
         }).then((snap) async {
           await FirebaseFirestore.instance
@@ -484,17 +563,17 @@ class ChatController extends GetxController {
                   .update({
                 "updateStamp": DateTime.now().millisecondsSinceEpoch.toString(),
                 "lastMessage": content,
-                "senderPhone": user['phone'],
+                "senderPhone": userData['phone'],
                 'sender': {
-                  "id": user['id'],
-                  "name": user['name'],
-                  "image": user["image"],
-                  "phone": user["phone"]
+                  "id": userData['id'],
+                  "name": userData['name'],
+                  "image": userData["image"],
+                  "phone": userData["phone"]
                 },
                 "isGroup": false,
                 "isBlock": false,
-                "blockBy":"",
-                "blockUserId":"",
+                "blockBy": "",
+                "blockUserId": "",
                 "receiverPhone": pData["phone"],
                 "receiver": {
                   "id": pId,
@@ -529,8 +608,8 @@ class ChatController extends GetxController {
                 "lastMessage": content,
                 "isGroup": false,
                 "isBlock": false,
-                "blockBy":"",
-                "blockUserId":"",
+                "blockBy": "",
+                "blockUserId": "",
                 "groupId": "",
                 "updateStamp": DateTime.now().millisecondsSinceEpoch.toString()
               });
@@ -552,8 +631,7 @@ class ChatController extends GetxController {
 
 // BUILD ITEM MESSAGE BOX FOR RECEIVER AND SENDER BOX DESIGN
   Widget buildItem(int index, document) {
-    var user = appCtrl.storage.read("user");
-    if (document['sender'] == user["id"]) {
+    if (document['sender'] == userData["id"]) {
       return SenderMessage(
         document: document,
         index: index,
@@ -562,7 +640,9 @@ class ChatController extends GetxController {
       // RECEIVER MESSAGE
       return document["type"] == MessageType.messageType.name
           ? Container()
-          : document["isBlock"] ?Container() : ReceiverMessage(document: document, index: index);
+          : document["isBlock"]
+              ? Container()
+              : ReceiverMessage(document: document, index: index);
     }
   }
 
@@ -571,8 +651,8 @@ class ChatController extends GetxController {
     FirebaseFirestore.instance
         .collection(
             'users') // Your collection name will be whatever you have given in firestore database
-        .doc(id)
-        .update({'chattingWith': null});
+        .doc(userData["id"])
+        .update({'status': "Online"});
     Get.back();
     return Future.value(false);
   }

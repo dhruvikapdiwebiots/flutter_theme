@@ -79,7 +79,17 @@ class GroupSenderMessage extends StatelessWidget {
                             context: Get.context!,
                             builder: (BuildContext context) =>
                                 chatCtrl.buildPopupDialog(context, document!));
-                      })
+                      }),
+                if (document!["type"] == MessageType.messageType.name)
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(document!["content"])
+                        .paddingSymmetric(
+                        horizontal: Insets.i8, vertical: Insets.i10)
+                        .decorated(
+                        color: appCtrl.appTheme.primary.withOpacity(.2),
+                        borderRadius: BorderRadius.circular(AppRadius.r8)).alignment(Alignment.center),
+                  ).paddingOnly(bottom: Insets.i8)
               ]),
             ],
           ));

@@ -54,7 +54,7 @@ final dynamic en = {
   "camera": "Camera",
   "selectContacts": "Select Contacts",
   "contacts": "Contacts",
-  "broadCast": "BroadCast",
+  "broadCast": "Broadcast",
   "newGroup": "New Group",
   "accessDenied": "Access to contact data denied",
   "contactDataNotAvailable": "Contact data not available on device",
@@ -77,7 +77,7 @@ final dynamic en = {
   "yes": "Yes",
   "invite": "Invite",
   "cancel": "Cancel",
-  "unblock": "UnBlock",
+  "unblock": "Unblock",
   "block": "Block",
   "unblockUser": "Unblock @pName to send message?",
 };

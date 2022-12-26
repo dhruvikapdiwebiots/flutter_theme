@@ -20,7 +20,7 @@ class AppArray{
 
   //action list
   var actionList = [
-    /*{'title': "broadCast"},*/
+    {'title': "broadCast"},
     {'title': "newGroup"},
     /*{'title': "setting"},*/
   ];

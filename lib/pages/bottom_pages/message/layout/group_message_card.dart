@@ -31,7 +31,7 @@ class GroupMessageCard extends StatelessWidget {
           child: Text(
               document!["lastMessage"] == ""?   currentUserId == document!["senderPhone"]
                 ? "You Create this group ${document!["group"]['name']}"
-                : "${document!["sender"]['name']} added you":document!["lastMessage"],
+                : "${document!["sender"]['name']} added you": document!["lastMessage"],
             style: AppCss.poppinsMedium14
                 .textColor(appCtrl.appTheme.grey)
           ),

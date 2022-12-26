@@ -95,7 +95,7 @@ class MessageFirebaseApi {
           await launchUrl(uri);
         }
       } else {
-        var data = {"data": m.docs[0].data(), "chatId": "0","allData":m.docs[0].data()};
+        var data = {"data": m.docs[0].data(), "chatId": "0","allData":m.docs[0]};
         Get.toNamed(routeName.chat, arguments: data);
       }
     }

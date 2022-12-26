@@ -3,10 +3,6 @@
 
 
 
-import 'package:flutter_theme/pages/bottom_pages/status/layouts/confirmation_screen.dart';
-import 'package:flutter_theme/pages/bottom_pages/status/layouts/status_view.dart';
-
-import 'package:flutter_theme/pages/theme_pages/other_setting/other_setting.dart';
 
 import '../config.dart';
 import 'route_name.dart';
@@ -31,5 +27,6 @@ class AppRoute {
     GetPage(name: _routeName.confirmationScreen, page: () =>const ConfirmStatusScreen()),
     GetPage(name: _routeName.statusView, page: () =>const StatusScreenView()),
     GetPage(name: _routeName.otherSetting, page: () =>const OtherSetting()),
+    GetPage(name: _routeName.broadcastChat, page: () =>const BroadcastChat()),
   ];
 }
