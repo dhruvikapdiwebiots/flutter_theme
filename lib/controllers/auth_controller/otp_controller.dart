@@ -6,7 +6,7 @@ class OtpController extends GetxController {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   TextEditingController otp = TextEditingController();
-
+double val= 0;
   bool isCodeSent = false,isLoading = false;
   String? verificationCode, mobileNumber;
 

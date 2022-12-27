@@ -9,23 +9,38 @@ class Otp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<OtpController>(builder: (_) {
-      return Scaffold(
-          backgroundColor: appCtrl.appTheme.accent,
-          resizeToAvoidBottomInset: false,
-          body: Stack(
-            children: [
-              Column(children: <Widget>[
-                VSpace(MediaQuery.of(context).padding.top),
-                //back button
-                CommonWidget().backIcon(),
-                const Padding(
-                    padding:  EdgeInsets.all(Insets.i40),
-                    child:  OtpBody())
-              ]),
-              if(otpCtrl.isLoading)
-                LoginLoader(isLoading: otpCtrl.isLoading,)
-            ],
-          ));
+      return Container(
+        width: MediaQuery.of(context).size.height * 0.5,
+        margin: EdgeInsets.all(Insets.i10),
+        padding: const EdgeInsets.symmetric(
+            horizontal: Insets.i20, vertical: Insets.i20),
+        decoration: BoxDecoration(
+          color: appCtrl.appTheme.whiteColor,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Stack(
+          children: [
+            TweenAnimationBuilder<double>(
+                duration: const Duration(seconds: 1),
+                tween: Tween(begin: 0,end: otpCtrl.val),
+
+                builder: (context,value,child) {
+                  return Transform(
+                    transform: Matrix4.identity()..setEntry(3, 2, 0.001)..rotateY(value),alignment: Alignment.bottomCenter,
+                    child: Column(children: <Widget>[
+
+                      const Padding(
+                          padding:  EdgeInsets.all(Insets.i40),
+                          child:  OtpBody())
+                    ]),
+                  );
+                }
+            ),
+            if(otpCtrl.isLoading)
+              LoginLoader(isLoading: otpCtrl.isLoading,)
+          ],
+        ),
+      );
     });
   }
 }

@@ -36,16 +36,22 @@ class ReceiverMessageCard extends StatelessWidget {
           subtitle: document!["lastMessage"] != null
               ? Padding(
                   padding: const EdgeInsets.only(top: 6.0),
-                  child: Text(
-                      document!["isBlock"] == true && document!["isBlock"] == "true"
-                          ? document!["blockBy"] != blockBy
+                  child: Row(
+                    children: [
+                      Icon(Icons.done_all,color: document!["isSeen"] ? appCtrl.appTheme.primary: appCtrl.appTheme.grey,size: Sizes.s16),
+                      const HSpace(Sizes.s10),
+                      Text(
+                          document!["isBlock"] == true && document!["isBlock"] == "true"
+                              ? document!["blockBy"] != blockBy
                               ? document!["blockUserMessage"]
                               : document!["lastMessage"].contains("http")
-                          : document!["lastMessage"].contains("http")
+                              : document!["lastMessage"].contains("http")
                               ? "Media Share"
                               : document!["lastMessage"],
-                      style: AppCss.poppinsMedium14
-                          .textColor(appCtrl.appTheme.grey)),
+                          style: AppCss.poppinsMedium14
+                              .textColor(appCtrl.appTheme.grey)),
+                    ],
+                  ),
                 )
               : Container(),
           leading: document!["receiver"]['image'] != null &&

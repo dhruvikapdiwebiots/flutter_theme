@@ -15,6 +15,7 @@ class AppCss {
   //Text Style poppins extra bold
   static TextStyle get poppinsExtraBold65 => poppins.extraThickBold.size(FontSizes.f65);
   static TextStyle get poppinsExtraBold60 => poppins.extraThickBold.size(FontSizes.f60);
+  static TextStyle get poppinsExtraBold30 => poppins.extraThickBold.size(FontSizes.f30);
 
   //Text Style poppins bold
   static TextStyle get poppinsblack28 => poppins.black.size(FontSizes.f28);

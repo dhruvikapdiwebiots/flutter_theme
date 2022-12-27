@@ -11,9 +11,10 @@ class LoadUser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (document!["isGroup"] == false && document!["isBroadcast"] == false) {
-      if (document!["senderPhone"] == currentUserId) {
-        return ReceiverMessageCard(
+
+    if (document!["isGroup"] == false && document!["isBroadcast"] == false ) {
+      if (document!["senderPhone"] == currentUserId ) {
+        return   ReceiverMessageCard(
             document: document, currentUserId: currentUserId, blockBy: blockBy);
       } else {
         return MessageCard(
@@ -32,15 +33,15 @@ class LoadUser extends StatelessWidget {
               currentUserId: currentUserId,
             )
           : Container();
-    } else if (document!["isBroadcast"] == true) {
-      List user = document!["receiverId"];
+    } else if (document!["isBroadcast"] == true && document!["isBroadcastSender"] == false) {
+
       return document!["senderPhone"] == currentUserId
           ? BroadCastMessageCard(
               document: document,
               currentUserId: currentUserId,
             )
           : Container();
-    } else {
+    } else{
       return Container();
     }
   }

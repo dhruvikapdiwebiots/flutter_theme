@@ -56,7 +56,7 @@ class AppTheme {
         return AppTheme(
           isDark: false,
           txt: const Color(0xFF001928),
-          primary: const Color(0xFF3e474d),
+          primary: const Color(0xFF273B52),
           secondary: const Color(0xFF6EBAE7),
           accent: const Color(0xFFefefef),
           grey: Colors.grey,
@@ -66,7 +66,7 @@ class AppTheme {
           whiteColor: Colors.white,
           textColor: Colors.white,
           transparentColor: Colors.transparent,
-          bg1: Colors.white,
+          bg1: const Color(0xFFD4DEE5),
           error: Colors.red,
           borderGray: const Color(0xFFE6E8EA),
           blackColor: Colors.black,
@@ -86,7 +86,7 @@ class AppTheme {
             whiteColor: Colors.black,
             blackColor: Colors.white,
             textColor: const Color(0xFF636363),
-            bg1: const Color(0xFF151A1E),
+            bg1: const Color(0xFFD4DEE5),
             error: Colors.red,
             borderGray: const Color(0xFF353C41),
             transparentColor: Colors.transparent);

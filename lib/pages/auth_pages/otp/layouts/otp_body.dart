@@ -13,8 +13,6 @@ class OtpBody extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             //logo
-            LoginWidget().logoImage(),
-            const VSpace(Sizes.s10),
 
             //verify number
             Text(fonts.verifyMobileNumber.tr,

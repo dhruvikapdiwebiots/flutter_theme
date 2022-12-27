@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:dartx/dartx_io.dart';
 import 'package:flutter_theme/config.dart';
-import 'package:flutter_theme/pages/theme_pages/broadcast_chat/layouts/braodcast_sender.dart';
+import 'package:flutter_theme/pages/theme_pages/broadcast_chat/layouts/broadcast_sender.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class BroadcastChatController extends GetxController {
@@ -205,30 +205,161 @@ class BroadcastChatController extends GetxController {
   void onSendMessage(String content, MessageType type) async {
     if (content.trim() != '') {
       textEditingController.clear();
-      final now = DateTime.now();
-      String? newChatId =
-          chatId == "0" ? now.microsecondsSinceEpoch.toString() : chatId;
-      chatId = newChatId;
-      update();
-      for (var i = 0; i < pData.length; i++) {
-        FirebaseFirestore.instance
-            .collection("contacts")
-            .orderBy("updateStamp", descending: true)
-            .get()
-            .then((value) {
+      for(var i=0;i<pData.length;i++) {
+        if(pData[i]["chatId"] != null){
 
-          for (var j = 0; j < value.docs.length; j++) {
-            if (value.docs[j].data()["senderPhone"] == userData["phone"] &&
-                value.docs[j].data()["receiverPhone"] == pData[i]["phone"] ||
-                    value.docs[j].data()["senderPhone"] == pData[i]["phone"] &&
-                value.docs[j].data()["receiverPhone"] == userData["phone"]) {
-              print("done : ${value.docs[j].id  }");
-            }else{
-              print("new");
-            }
-          }
-        });
+          await FirebaseFirestore.instance
+              .collection('messages')
+              .doc(pData[i]["chatId"])
+              .collection("chat")
+              .add({
+            'sender': userData["id"],
+            'receiver': pId,
+            'content': content,
+            "chatId": pData[i]["chatId"],
+            'type': type.name,
+            'messageType': "sender",
+            "isBlock": false,
+            "isSeen": false,
+            "blockBy": "",
+            "blockUserId": "",
+            'timestamp': DateTime
+                .now()
+                .millisecondsSinceEpoch
+                .toString(),
+          }).then((snap) async {
+            FirebaseFirestore.instance.collection("contacts").where("chatId",isEqualTo: pData[i]["chatId"]).get().then((value)async{
+              await FirebaseFirestore.instance
+                  .collection('contacts').doc(value.docs[0].id)
+                  .update({
+                'sender': {
+                  "id": userData['id'],
+                  "name": userData['name'],
+                  "phone": userData["phone"]
+                },
+                "receiver": {
+                  "id": pData[i]["id"],
+                  "name": pData[i]["name"],
+                  "image": pData[i]["image"],
+                  "phone": pData[i]["phone"]
+                },
+                'receiverPhone': pData[i]["phone"],
+                "isBroadcastSender": true,
+                "isSeen": false,
+                'senderPhone': userData["phone"],
+                "lastMessage": content,
+                "updateStamp": DateTime
+                    .now()
+                    .millisecondsSinceEpoch
+                    .toString()
+              });
+            });
+
+          });
+        }else{
+
+          final now = DateTime.now();
+          String? newChatId = now.microsecondsSinceEpoch.toString();
+          update();
+          pData[i]["chatId"] = newChatId;
+          await FirebaseFirestore.instance
+              .collection('messages')
+              .doc(newChatId)
+              .collection("chat")
+              .add({
+            'sender': userData["id"],
+            'receiver': pId,
+            'content': content,
+            "chatId": newChatId,
+            'type': type.name,
+            'messageType': "sender",
+            "isBlock": false,
+            "isSeen": false,
+            "isBroadcast": false,
+            "isBroadcastSender": true,
+            "blockBy": "",
+            "blockUserId": "",
+            'timestamp': DateTime
+                .now()
+                .millisecondsSinceEpoch
+                .toString(),
+          }).then((snap) async {
+            await FirebaseFirestore.instance
+                .collection('contacts')
+                .add({
+              'sender': {
+                "id": userData['id'],
+                "name": userData['name'],
+                "phone": userData["phone"]
+              },
+              'receiver': {
+                "id": pData[i]['id'],
+                "name": pData[i]['name'],
+                "phone": pData[i]["phone"]
+              },
+              'chatId': newChatId,
+              'receiverPhone': pData[i]["phone"],
+              'senderPhone': userData["phone"],
+              'timestamp': DateTime
+                  .now()
+                  .millisecondsSinceEpoch
+                  .toString(),
+              "lastMessage": content,
+              "isBroadcast": false,
+              "isBroadcastSender": true,
+              "isGroup": false,
+              "isBlock": false,
+              "isSeen": false,
+              "updateStamp": DateTime
+                  .now()
+                  .millisecondsSinceEpoch
+                  .toString()
+            });
+          });
+
+        }
       }
+
+      FirebaseFirestore.instance.collection("broadcast").doc(pId).update(
+          {"users" :pData});
+
+      FirebaseFirestore.instance.collection("contacts").where("broadcastId",isEqualTo: pId).get().then((snap) {
+        FirebaseFirestore.instance.collection("contacts").doc(snap.docs[0].id).update({"receiverId":pData});
+      });
+
+      FirebaseFirestore.instance
+          .collection('broadcastMessage')
+          .doc(pId)
+          .collection("chat")
+          .add({
+        'sender': userData["id"],
+        'senderName': userData["name"],
+        'receiver': pData,
+        'content': content,
+        "broadcastId": pId,
+        'type': type.name,
+        'messageType': "sender",
+        "status": "",
+        'timestamp': DateTime.now()
+            .millisecondsSinceEpoch
+            .toString(),
+      }).then((value)async {
+        await FirebaseFirestore.instance
+            .collection("contacts")
+            .where("broadcastId", isEqualTo: pId)
+            .get()
+            .then((value) async {
+          await FirebaseFirestore.instance
+              .collection('contacts')
+              .doc(value.docs[0].id)
+              .update({
+            "updateStamp": DateTime.now().millisecondsSinceEpoch.toString(),
+            "lastMessage": content,
+            "isBroadcastSender": true,
+          });
+        });
+      });
+
       Get.forceAppUpdate();
     }
   }

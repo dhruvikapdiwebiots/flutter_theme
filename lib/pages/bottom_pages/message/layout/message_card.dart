@@ -1,6 +1,4 @@
-import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../config.dart';
@@ -43,8 +41,8 @@ class MessageCard extends StatelessWidget {
                   padding: const EdgeInsets.only(top: Insets.i6),
                   child: Row(
                     children: [
-                      Icon(Icons.done_all,color: document!["isSeen"] ? appCtrl.appTheme.primary: appCtrl.appTheme.grey,size: Sizes.s16),
-                      const HSpace(Sizes.s10),
+                      currentUserId != document!["senderPhone"] ? Container():  Icon(Icons.done_all,color: document!["isSeen"] ? appCtrl.appTheme.primary: appCtrl.appTheme.grey,size: Sizes.s16),
+                      currentUserId != document!["senderPhone"] ? Container():  const HSpace(Sizes.s10),
                       Text(
                           document!["lastMessage"].contains("http")
                               ? "Media Share"

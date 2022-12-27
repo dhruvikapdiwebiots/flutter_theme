@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:flutter_theme/config.dart';
 
-
 class CreateGroupController extends GetxController {
   List<Contact>? contacts;
   List selectedContact = [];
+  List newContact = [];
   List contactList = [];
   final formKey = GlobalKey<FormState>();
   File? image;
@@ -103,6 +103,7 @@ class CreateGroupController extends GetxController {
   }
 
   addGroupBottomSheet() async {
+    final user = appCtrl.storage.read("user");
     if (isGroup) {
       showModalBottomSheet(
           isScrollControlled: true,
@@ -117,18 +118,20 @@ class CreateGroupController extends GetxController {
                 : const CreateGroup();
           });
     } else {
-      isLoading =true;
+      isLoading = true;
       update();
       final now = DateTime.now();
       String broadcastId = now.microsecondsSinceEpoch.toString();
-
-      final user = appCtrl.storage.read("user");
+int counter =0;
+       await checkChatAvailable();
+      await Future.delayed(Durations.s3);
+       print("object : $newContact");
       await Future.delayed(Durations.s3);
       await FirebaseFirestore.instance
           .collection('broadcast')
           .doc(broadcastId)
           .set({
-        "users": selectedContact,
+        "users": newContact,
         "broadcastId": broadcastId,
         "createdBy": user,
         'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
@@ -141,15 +144,13 @@ class CreateGroupController extends GetxController {
           .add({
         'sender': user["id"],
         'senderName': user["name"],
-        'receiver': selectedContact,
+        'receiver': newContact,
         'content': "You created this broadcast",
         "broadcastId": broadcastId,
         'type': MessageType.messageType.name,
         'messageType': "sender",
         "status": "",
-        'timestamp': DateTime.now()
-            .millisecondsSinceEpoch
-            .toString(),
+        'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
       });
 
       await FirebaseFirestore.instance
@@ -157,9 +158,7 @@ class CreateGroupController extends GetxController {
           .doc(broadcastId)
           .get()
           .then((value) async {
-        await FirebaseFirestore.instance
-            .collection('contacts')
-            .add({
+        await FirebaseFirestore.instance.collection('contacts').add({
           'sender': {
             "id": user['id'],
             "name": user['name'],
@@ -167,39 +166,69 @@ class CreateGroupController extends GetxController {
           },
           'receiver': null,
           'broadcastId': broadcastId,
-          'receiverId': selectedContact,
+          'receiverId': newContact,
           'senderPhone': user["phone"],
-          'timestamp': DateTime
-              .now()
-              .millisecondsSinceEpoch
-              .toString(),
+          'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
           "lastMessage": "",
           "isBroadcast": true,
           "isGroup": false,
           "isBlock": false,
-          "updateStamp": DateTime
-              .now()
-              .millisecondsSinceEpoch
-              .toString()
+          "updateStamp": DateTime.now().millisecondsSinceEpoch.toString()
         });
       }).then((value) {
         selectedContact = [];
+        newContact = [];
         update();
       });
-      isLoading =false;
+      isLoading = false;
       update();
       Get.back();
       FirebaseFirestore.instance
-          .collection('contacts').where("broadcastId",isEqualTo: broadcastId).get().then((value) {
-            print("value.docs[0].data() : ${value.docs[0].data()}");
-        var data ={
-          "broadcastId": broadcastId,
-          "data":value.docs[0].data()
-        };
+          .collection('contacts')
+          .where("broadcastId", isEqualTo: broadcastId)
+          .get()
+          .then((value) {
+        print("value.docs[0].data() : ${value.docs[0].data()}");
+        var data = {"broadcastId": broadcastId, "data": value.docs[0].data()};
         Get.toNamed(routeName.broadcastChat, arguments: data);
       });
 
     }
+  }
+
+Future<List>  checkChatAvailable()async{
+    final user = appCtrl.storage.read("user");
+    for (var i = 0; i < selectedContact.length; i++) {
+      FirebaseFirestore.instance
+          .collection("contacts")
+          .orderBy("updateStamp", descending: true)
+          .get()
+          .then((value) async {
+        for (var j = 0; j < value.docs.length; j++) {
+          if (value.docs[j].data()["senderPhone"] == user["phone"] &&
+              value.docs[j].data()["receiverPhone"] ==
+                  selectedContact[i]["phone"] ||
+              value.docs[j].data()["senderPhone"] ==
+                  selectedContact[i]["phone"] &&
+                  value.docs[j].data()["receiverPhone"] == user["phone"]) {
+            print("old");
+            selectedContact[i]["chatId"] = value.docs[j].data()["chatId"];
+            update();
+            print("old : ${selectedContact[i]}");
+            newContact.add(selectedContact[i]);
+          }else{
+            print("new");
+            selectedContact[i]["chatId"] =null;
+            print("old : ${selectedContact[i]}");
+            newContact.add(selectedContact[i]);
+          }
+        }
+        update();
+      });
+    }
+
+    return newContact;
+
   }
 
   @override
