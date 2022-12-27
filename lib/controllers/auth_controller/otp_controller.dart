@@ -13,9 +13,10 @@ double val= 0;
   @override
   void onReady() {
     // TODO: implement onReady
-    mobileNumber = Get.arguments;
+    /*mobileNumber = Get.arguments ;*/
+    print("mob : $mobileNumber");
     update();
-    onVerifyCode();
+
     super.onReady();
   }
 
@@ -47,7 +48,8 @@ double val= 0;
   }
 
   //on verify code
-  void onVerifyCode() {
+  void onVerifyCode(phone) {
+    mobileNumber = phone;
     isCodeSent = true;
     update();
 

@@ -1,6 +1,7 @@
 
 import 'dart:async';
 
+import 'package:flip_card/flip_card.dart';
 import 'package:flutter_theme/config.dart';
 
 class PhoneController extends GetxController {
@@ -11,16 +12,23 @@ class PhoneController extends GetxController {
   bool visible = false,switchScreen = true;
   Timer timer= Timer(Duration(seconds: 1),(){});
   double val =0;
+  bool displayFront = true;
+  bool flipXAxis =true;
+  final formKey = GlobalKey<FormState>();
+  GlobalKey<FlipCardState> cardKey = GlobalKey<FlipCardState>();
+  bool showFrontSide =true;
+  final otpCtrl = Get.isRegistered<OtpController>() ? Get.find<OtpController>(): Get.put(OtpController());
 
   // CHECK VALIDATION
 
   void checkValidation() async {
-    if (phone.text.isEmpty) {
-      mobileNumber = true;
-    } else {
+
+    if (formKey.currentState!.validate()) {
       dismissKeyboard();
       mobileNumber = false;
-      Get.toNamed(routeName.otp, arguments: phone.text);
+      otpCtrl.onVerifyCode(phone.text);
+      cardKey.currentState!.toggleCard();
+
     }
   }
 
