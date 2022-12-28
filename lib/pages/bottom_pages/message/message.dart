@@ -33,24 +33,22 @@ class _MessageState extends State<Message>
   @override
   Widget build(BuildContext context) {
     return GetBuilder<MessageController>(builder: (_) {
-      return WillPopScope(
-        onWillPop: messageCtrl.onWillPop,
-        child: Scaffold(
-            key: messageCtrl.scaffoldKey,
-            floatingActionButton: FloatingActionButton(
-              onPressed: () => messageCtrl.saveContactInChat(),
-              backgroundColor: appCtrl.appTheme.primary,
-              child:  Icon(Icons.message,color: appCtrl.appTheme.whiteColor),
-            ),
-            body: SafeArea(
-                child: Stack(fit: StackFit.expand, children: <Widget>[
-              SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height - 50,
+      return Scaffold(
+          key: messageCtrl.scaffoldKey,
+          backgroundColor: appCtrl.appTheme.whiteColor,
+          floatingActionButton: FloatingActionButton(
+            onPressed: () => messageCtrl.saveContactInChat(),
+            backgroundColor: appCtrl.appTheme.primary,
+            child:  Icon(Icons.message,color: appCtrl.appTheme.whiteColor),
+          ),
+          body: SafeArea(
+              child: Stack(fit: StackFit.expand, children: <Widget>[
+            SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height - 50,
 
-                  child: const ChatCard()),
-            ]))),
-      );
+                child: const ChatCard()),
+          ])));
     });
   }
 }

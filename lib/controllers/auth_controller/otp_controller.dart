@@ -1,20 +1,17 @@
-
 import 'package:flutter_theme/config.dart';
-
 
 class OtpController extends GetxController {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   TextEditingController otp = TextEditingController();
-double val= 0;
-  bool isCodeSent = false,isLoading = false;
+  double val = 0;
+  bool isCodeSent = false, isLoading = false;
   String? verificationCode, mobileNumber;
 
   @override
   void onReady() {
     // TODO: implement onReady
     /*mobileNumber = Get.arguments ;*/
-    print("mob : $mobileNumber");
     update();
 
     super.onReady();
@@ -29,7 +26,7 @@ double val= 0;
   homeNavigation(user) async {
     appCtrl.storage.write("id", user["id"]);
     await appCtrl.storage.write("user", user);
-    await  FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection('users')
         .doc(user["id"])
         .update({'status': "Online"});
@@ -57,7 +54,6 @@ double val= 0;
       firebaseAuth
           .signInWithCredential(phoneAuthCredential)
           .then((UserCredential value) {
-
         if (value.user != null) {
           // Handle loogged in state
           homeNavigation(value.user);
@@ -75,7 +71,6 @@ double val= 0;
       update();
     }
 
-
     codeAutoRetrievalTimeout(String verificationId) {
       verificationId = verificationId;
       update();
@@ -90,7 +85,6 @@ double val= 0;
         codeSent: (String verificationId, int? resendToken) async {
           verificationCode = verificationId;
           update();
-
         },
         codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
   }
@@ -98,29 +92,37 @@ double val= 0;
   //on form submit
   void onFormSubmitted() async {
     dismissKeyboard();
-isLoading =true;
-update();
+    isLoading = true;
+    update();
     AuthCredential authCredential = PhoneAuthProvider.credential(
         verificationId: verificationCode!, smsCode: otp.text);
 
     firebaseAuth
         .signInWithCredential(authCredential)
-        .then((UserCredential value) async{
+        .then((UserCredential value) async {
       if (value.user != null) {
         User user = value.user!;
-        FirebaseFirestore.instance.collection("users").where("phone",isEqualTo: mobileNumber).get().then((value) async{
+        FirebaseFirestore.instance
+            .collection("users")
+            .where("phone", isEqualTo: mobileNumber)
+            .get()
+            .then((value) async {
           if (value.docs.isNotEmpty) {
-
             if (value.docs[0].data()["name"] == "") {
-              Get.toNamed(routeName.editProfile, arguments:  {"resultData" : value.docs[0].data(),"isPhoneLogin":true});
+              Get.toNamed(routeName.editProfile, arguments: {
+                "resultData": value.docs[0].data(),
+                "isPhoneLogin": true
+              });
             } else {
+              await appCtrl.storage.write("user", value.docs[0].data());
               homeNavigation(value.docs[0].data());
             }
-          }else{
+          } else {
             await userRegister(user);
             dynamic resultData = await getUserData(user);
             if (resultData["name"] == "") {
-              Get.toNamed(routeName.editProfile, arguments: {"resultData" : resultData,"isPhoneLogin":true});
+              Get.toNamed(routeName.editProfile,
+                  arguments: {"resultData": resultData, "isPhoneLogin": true});
             } else {
               homeNavigation(resultData);
             }
@@ -129,13 +131,12 @@ update();
           update();
         });
       } else {
-        isLoading =true;
+        isLoading = true;
         update();
         showToast(fonts.otpError.tr, Colors.red);
-
       }
     }).catchError((error) {
-      isLoading =true;
+      isLoading = true;
       update();
       showToast(fonts.somethingWrong.tr, Colors.red);
     });
@@ -157,9 +158,9 @@ update();
   }
 
   //user register
-  userRegister(User user)async{
+  userRegister(User user) async {
     final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-    firebaseMessaging.getToken().then((token) async{
+    firebaseMessaging.getToken().then((token) async {
       await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
         'chattingWith': null,
         'id': user.uid,
@@ -170,11 +171,10 @@ update();
         "typeStatus": "Offline",
         "phone": mobileNumber,
         "email": user.email,
-        "deviceName":appCtrl.deviceName,
-        "device":appCtrl.device,
-        "statusDesc":"Hello, I am using Chatter"
+        "deviceName": appCtrl.deviceName,
+        "device": appCtrl.device,
+        "statusDesc": "Hello, I am using Chatter"
       });
     });
   }
-
 }

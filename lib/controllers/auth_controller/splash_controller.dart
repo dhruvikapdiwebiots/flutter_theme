@@ -26,6 +26,7 @@ class SplashController extends GetxController{
   //navigate to login page
   loginNavigation() async {
     var user = appCtrl.storage.read("user") ?? "";
+    print("user : $user");
     if(user == "") {
       Get.offAllNamed(routeName.phone);
     }else{
@@ -39,11 +40,13 @@ class SplashController extends GetxController{
     var user = appCtrl.storage.read("user")??"";
 
     bool isIntro = appCtrl.storage.read("isIntro") ?? false;
+    print("user : $user");
+    print("isIntro : $isIntro");
     if (user == "") {
       // Checking if user is already login or not
-     Get.toNamed(routeName.intro);
+     Get.toNamed(routeName.phone);
     } else {
-      if(isIntro) {
+      if(isIntro ==true) {
         loginNavigation(); // navigate to homepage if user id is not null
       }else{
         Get.toNamed(routeName.intro);

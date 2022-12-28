@@ -77,7 +77,7 @@ class _ChatState extends State<Chat>
                       : false,
                   callTap: () {},
                   moreTap: () => chatCtrl.blockUser()),
-              backgroundColor: Colors.white,
+              backgroundColor: appCtrl.appTheme.whiteColor,
               body: chatCtrl.isUserAvailable
                   ? Stack(children: [
                       Container(

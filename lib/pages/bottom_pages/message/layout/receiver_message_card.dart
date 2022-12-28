@@ -12,10 +12,8 @@ class ReceiverMessageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(document!["receiverPhone"]);
     return Container(
-      decoration:
-          const BoxDecoration(border: Border(bottom: BorderSide(width: 0.2))),
-      padding: const EdgeInsets.symmetric(vertical: Insets.i10),
       margin: const EdgeInsets.only(
           bottom: Insets.i10, left: Insets.i5, right: Insets.i5),
       child: ListTile(
@@ -38,30 +36,74 @@ class ReceiverMessageCard extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 6.0),
                   child: Row(
                     children: [
-                      Icon(Icons.done_all,color: document!["isSeen"] ? appCtrl.appTheme.primary: appCtrl.appTheme.grey,size: Sizes.s16),
+                      Icon(Icons.done_all,
+                          color: document!["isSeen"]
+                              ? appCtrl.appTheme.primary
+                              : appCtrl.appTheme.grey,
+                          size: Sizes.s16),
                       const HSpace(Sizes.s10),
                       Text(
-                          document!["isBlock"] == true && document!["isBlock"] == "true"
+                          document!["isBlock"] == true &&
+                                  document!["isBlock"] == "true"
                               ? document!["blockBy"] != blockBy
-                              ? document!["blockUserMessage"]
+                                  ? document!["blockUserMessage"]
+                                  : document!["lastMessage"].contains("http")
                               : document!["lastMessage"].contains("http")
-                              : document!["lastMessage"].contains("http")
-                              ? "Media Share"
-                              : document!["lastMessage"],
+                                  ? "Media Share"
+                                  : document!["lastMessage"],
                           style: AppCss.poppinsMedium14
                               .textColor(appCtrl.appTheme.grey)),
                     ],
                   ),
                 )
               : Container(),
-          leading: document!["receiver"]['image'] != null &&
-                  document!["receiver"]['image'] != ""
-              ? CircleAvatar(
-                  backgroundImage: NetworkImage(document!["receiver"]['image']),
-                  radius: Sizes.s25)
-              : CircleAvatar(
-                  backgroundImage: AssetImage(imageAssets.user),
-                  radius: Sizes.s25),
+          leading: StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection('users')
+                  .where("phone", isEqualTo: document!["receiverPhone"])
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.data != null) {
+                  if (!snapshot.data!.docs.isNotEmpty) {
+                    return Image.asset(
+                      imageAssets.user,
+                      color: appCtrl.appTheme.whiteColor,
+                    ).paddingAll(Insets.i15).decorated(
+                        color: appCtrl.appTheme.grey.withOpacity(.4),
+                        shape: BoxShape.circle);
+                  } else {
+                    return CachedNetworkImage(
+
+
+                        imageUrl: (snapshot.data!).docs[0]["image"],
+                        imageBuilder: (context, imageProvider) => CircleAvatar(
+                              backgroundColor: const Color(0xffE6E6E6),
+                              radius: 28,
+                              backgroundImage: NetworkImage(
+                                  '${document!["receiver"]['image']}'),
+                            ),
+                        placeholder: (context, url) => Image.asset(
+                              imageAssets.user,
+                              color: appCtrl.appTheme.whiteColor,
+                            ).paddingAll(Insets.i15).decorated(
+                                color: appCtrl.appTheme.grey.withOpacity(.4),
+                                shape: BoxShape.circle),
+                        errorWidget: (context, url, error) => Image.asset(
+                              imageAssets.user,
+                              color: appCtrl.appTheme.whiteColor,
+                            ).paddingAll(Insets.i15).decorated(
+                                color: appCtrl.appTheme.grey.withOpacity(.4),
+                                shape: BoxShape.circle));
+                  }
+                } else {
+                  return Image.asset(
+                    imageAssets.user,
+                    color: appCtrl.appTheme.whiteColor,
+                  ).paddingAll(Insets.i15).decorated(
+                      color: appCtrl.appTheme.grey.withOpacity(.4),
+                      shape: BoxShape.circle);
+                }
+              }),
           trailing: Text(
               DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(
                   int.parse(document!['updateStamp']))),

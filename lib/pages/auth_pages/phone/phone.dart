@@ -94,15 +94,16 @@ class Phone extends StatelessWidget {
                         const VSpace(Sizes.s45),
                         CommonTextBox(
                             labelText: fonts.mobileNumber.tr,
-                            focusNode: phoneCtrl.phoneFocus,
                             controller: phoneCtrl.phone,
                             textInputAction: TextInputAction.done,
                             keyboardType: TextInputType.phone,
                             maxLength: 10,
+                            onTap: (){
+                            },
                             onChanged: (val) {
                               if (val.length == 10) {
                                 phoneCtrl.isCorrect = true;
-                              } else {
+                              }else {
                                 phoneCtrl.isCorrect = false;
                               }
                               phoneCtrl.update();
@@ -110,6 +111,10 @@ class Phone extends StatelessWidget {
                             validator: (val){
                               if(val!.isEmpty){
                                 return fonts.phoneError.tr;
+                              } else  if (val.length < 10) {
+                                return fonts.phoneError.tr;
+                              }else  if (val.length == 10) {
+                                return null;
                               }else{
                                 return null;
                               }
@@ -133,14 +138,7 @@ class Phone extends StatelessWidget {
                               .decorated(
                               color: appCtrl.appTheme.primary,
                               borderRadius: BorderRadius.circular(AppRadius.r50))
-                              .inkWell(onTap: () {
-                            print("object");
-
-
-                            phoneCtrl.checkValidation();
-                            // phoneCtrl.checkValidation();
-                            // phoneCtrl.checkValidation();
-                          }),
+                              .inkWell(onTap: () =>phoneCtrl.checkValidation()),
                         )
                       ]),
                     )),

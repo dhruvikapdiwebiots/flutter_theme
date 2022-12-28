@@ -12,7 +12,8 @@ class SenderImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(0),
+      decoration: BoxDecoration( borderRadius: BorderRadius.circular(AppRadius.r10), color: appCtrl.appTheme.primary,),
+      margin: const EdgeInsets.symmetric(horizontal: Insets.i10,vertical: Insets.i5),
       child: TextButton(
         onLongPress: onLongPress,
         onPressed: onPressed,
@@ -20,22 +21,16 @@ class SenderImage extends StatelessWidget {
           alignment: Alignment.bottomRight,
           children: [
             Material(
-              borderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(Insets.i20),
-                  topLeft: Radius.circular(Insets.i20),
-                  bottomLeft: Radius.circular(Insets.i20)),
+              borderRadius:  BorderRadius.circular(AppRadius.r8),
               clipBehavior: Clip.hardEdge,
               child: CachedNetworkImage(
                 placeholder: (context, url) => Container(
                     width: Sizes.s220,
                     height: Sizes.s200,
-                    padding: const EdgeInsets.all(70.0),
+
                     decoration: BoxDecoration(
                       color: appCtrl.appTheme.accent,
-                      borderRadius: const BorderRadius.only(
-                          topRight: Radius.circular(Insets.i20),
-                          topLeft: Radius.circular(Insets.i20),
-                          bottomLeft: Radius.circular(Insets.i20)),
+                      borderRadius:  BorderRadius.circular(AppRadius.r8),
                     ),
                     child: CircularProgressIndicator(
                       valueColor:

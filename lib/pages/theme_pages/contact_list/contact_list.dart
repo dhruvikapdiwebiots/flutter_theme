@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+
 import '../../../config.dart';
 
 class ContactList extends StatelessWidget {
@@ -12,7 +14,6 @@ class ContactList extends StatelessWidget {
     return GetBuilder<ContactListController>(builder: (_) {
       return WillPopScope(
         onWillPop: () async {
-
           return false;
         },
         child: Scaffold(
@@ -229,6 +230,7 @@ class ContactList extends StatelessWidget {
                                     },
                                   ),
                           ),
+
                         ],
                       ),
                     )

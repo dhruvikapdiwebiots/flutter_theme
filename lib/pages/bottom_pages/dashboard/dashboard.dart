@@ -33,27 +33,61 @@ class _DashboardState extends State<Dashboard>
   Widget build(BuildContext context) {
     return GetBuilder<DashboardController>(builder: (_) {
       return WillPopScope(
-          onWillPop: () async {
-            SystemNavigator.pop();
-            return false;
-          },
-          child: Scaffold(
-              appBar: AppBar(
-                backgroundColor: appCtrl.appTheme.primary,
+        onWillPop: () async {
+          SystemNavigator.pop();
+          return false;
+        },
+        child: dashboardCtrl.bottomList.isNotEmpty ? DefaultTabController(
+            length: 3,
+            child: Scaffold(
+                backgroundColor: appCtrl.appTheme.whiteColor,
+                appBar: AppBar(
+                  backgroundColor: appCtrl.appTheme.primary,
+                  automaticallyImplyLeading: false,
+                  elevation: 0,
                   actions: [
                     if (dashboardCtrl.selectedIndex == 1) const PopUpAction(),
                   ],
-                  automaticallyImplyLeading: false,
-                  title: Text(dashboardCtrl.selectedIndex == 0
-                      ? fonts.status.tr
-                      : dashboardCtrl.selectedIndex == 1
-                          ? fonts.chats.tr
-                          : fonts.setting.tr,style: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.whiteColor),)),
-              body: dashboardCtrl.widgetOptions
-                  .elementAt(dashboardCtrl.selectedIndex),
-              bottomNavigationBar: dashboardCtrl.bottomList.isNotEmpty
-                  ? const BottomNavBar()
-                  : Container()));
+                  title: Text("Chatter"),
+
+                  bottom: TabBar(
+                    controller: dashboardCtrl.controller,
+                      labelColor: appCtrl.appTheme.primary,
+                      unselectedLabelColor: appCtrl.appTheme.whiteColor,
+                      indicatorSize: TabBarIndicatorSize.label,
+                      padding: EdgeInsets.zero,
+                      labelStyle: AppCss.poppinsMedium14,
+                      indicatorPadding: EdgeInsets.zero,
+                      labelPadding: EdgeInsets.zero,
+                      indicatorWeight: 0,
+                      onTap: (val) {
+                        dashboardCtrl.onTapSelect(val);
+                      },
+                      indicator: BoxDecoration(
+                          borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10)),
+                          color: appCtrl.appTheme.whiteColor),
+                      tabs: [
+                        ...dashboardCtrl.bottomList
+                            .asMap()
+                            .entries
+                            .map((e) => Tab(
+                          iconMargin: EdgeInsets.zero,
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                        trans(e.value["title"]).toUpperCase()),
+                                  ),
+                                ))
+                            .toList()
+                      ]),
+                ),
+                body: TabBarView(
+                  controller: dashboardCtrl.controller,
+                  children: dashboardCtrl.widgetOptions,
+                ))):Container(),
+      );
     });
   }
 }

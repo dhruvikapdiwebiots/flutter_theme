@@ -1,4 +1,5 @@
 import 'package:flutter_theme/config.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class ContactListController extends GetxController {
   List<Contact>? contacts;
@@ -17,7 +18,7 @@ class ContactListController extends GetxController {
     // TODO: implement onReady
     isLoading = true;
     update();
-      contactList = await permissionHandelCtrl.getContact();
+    contactList = await permissionHandelCtrl.getContact();
     for (final contact in contactList) {
       ContactsService.getAvatar(contact).then((avatar) {
         if (avatar == null) return; // Don't redraw if no change.

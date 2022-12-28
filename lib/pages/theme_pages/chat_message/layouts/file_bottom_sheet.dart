@@ -13,10 +13,11 @@ class FileBottomSheet extends StatelessWidget {
       height: 278,
       width: MediaQuery.of(Get.context!).size.width,
       child: Card(
-        margin: const EdgeInsets.all(18.0),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        color: appCtrl.appTheme.whiteColor,
+        margin: const EdgeInsets.all(Insets.i18),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.r15)),
         child:const Padding(
-          padding:  EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+          padding:  EdgeInsets.symmetric(horizontal: Insets.i10, vertical: Insets.i20),
           child: CommonFileRowList (),
         ),
       ),

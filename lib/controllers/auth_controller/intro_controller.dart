@@ -1,23 +1,20 @@
-
 import 'dart:async';
 
 import 'package:flutter_theme/config.dart';
 
-
-
-
-class IntroController extends GetxController{
+class IntroController extends GetxController {
   var pageController = PageController(initialPage: 0);
-  List pageViewModelData =[];
+  List pageViewModelData = [];
 
   var title = fonts.title;
   var subtitle = fonts.subtitle;
   var subtitle2 = fonts.subtitle2;
   var subtitle3 = fonts.subtitle3;
-
+  bool isAnimate1 = false;
+  bool isAnimate2 = false;
+  bool isAnimate3 = false;
   late Timer sliderTimer;
   var currentShowIndex = 0;
-
 
   @override
   void onReady() {
@@ -25,7 +22,7 @@ class IntroController extends GetxController{
     pageViewModelData.add(PageViewData(
       titleText: title,
       subtitleText: subtitle,
-      assetsImage: imageAssets.logo,
+      assetsImage: imageAssets.intro,
     ));
 
     pageViewModelData.add(PageViewData(
@@ -58,9 +55,9 @@ class IntroController extends GetxController{
   }
 
 //navigate to Login
-  navigateToLogin() {
-   Get.toNamed(routeName.phone);
-   appCtrl.storage.write("isIntro", true);
+  navigateToLogin() async{
+    await appCtrl.storage.write("isIntro", true);
+    Get.toNamed(routeName.phone);
   }
 
   @override
@@ -72,5 +69,4 @@ class IntroController extends GetxController{
     update();
     super.dispose();
   }
-
 }

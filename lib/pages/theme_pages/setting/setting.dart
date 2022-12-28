@@ -9,7 +9,8 @@ class Setting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SettingController>(builder: (_) {
-      return Scaffold(
+      return Scaffold(backgroundColor: appCtrl.appTheme.whiteColor,
+
         /*appBar: AppBar(
           backgroundColor: appCtrl.appTheme.primary,
           iconTheme: IconThemeData(color: appCtrl.appTheme.whiteColor),

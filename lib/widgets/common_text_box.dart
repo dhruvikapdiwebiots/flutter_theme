@@ -18,6 +18,7 @@ class CommonTextBox extends StatelessWidget {
   final ValueChanged<String>? onFieldSubmitted;
   final String? errorText;
   final int? maxLength;
+  final GestureTapCallback? onTap;
   final ValueChanged<String>? onChanged;
 
   const CommonTextBox(
@@ -37,6 +38,7 @@ class CommonTextBox extends StatelessWidget {
       this.keyboardType,
       this.textInputAction,
       this.maxLength,
+      this.onTap,
       this.onFieldSubmitted,
       this.onChanged,
       this.filled = false})
@@ -56,6 +58,7 @@ class CommonTextBox extends StatelessWidget {
           textInputAction: textInputAction,
           obscureText: obscureText,
           onFieldSubmitted: onFieldSubmitted,
+          onTap: onTap,
           readOnly: readOnly,
           maxLength: maxLength,
           decoration: InputDecoration(

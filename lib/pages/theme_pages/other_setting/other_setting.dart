@@ -8,13 +8,13 @@ class OtherSetting extends StatelessWidget {
   Widget build(BuildContext context) {
     return DirectionalityRtl(
       child: Scaffold(
+        backgroundColor: appCtrl.appTheme.whiteColor,
         appBar: AppBar(
-          backgroundColor: appCtrl.appTheme.primary,
-          iconTheme: IconThemeData(color: appCtrl.appTheme.whiteColor),
-          title: Text(fonts.chats.tr,
-              style:
-                  AppCss.poppinsblack18.textColor(appCtrl.appTheme.whiteColor)),
-        ),
+            backgroundColor: appCtrl.appTheme.primary,
+            iconTheme: IconThemeData(color: appCtrl.appTheme.whiteColor),
+            title: Text(fonts.chats.tr,
+                style: AppCss.poppinsblack18
+                    .textColor(appCtrl.appTheme.whiteColor))),
         body: Column(
           children: [
             ListTile(
@@ -35,9 +35,10 @@ class OtherSetting extends StatelessWidget {
                 title: Text(fonts.language.tr,
                     style: AppCss.poppinsMedium14
                         .textColor(appCtrl.appTheme.blackColor)),
-                leading: const Icon(CupertinoIcons.globe)),  ListTile(
+                leading: const Icon(CupertinoIcons.globe)),
+            ListTile(
                 minLeadingWidth: 0,
-                onTap: ()async {
+                onTap: () async {
                   appCtrl.isRTL = !appCtrl.isRTL;
                   appCtrl.update();
                   await appCtrl.storage.write("isRTL", appCtrl.isRTL);
@@ -46,8 +47,9 @@ class OtherSetting extends StatelessWidget {
                 title: Text("RTL",
                     style: AppCss.poppinsMedium14
                         .textColor(appCtrl.appTheme.blackColor)),
-                leading:  Icon(appCtrl.isRTL || appCtrl.languageVal == "ar" ? Icons.arrow_back: Icons.arrow_forward)),
-
+                leading: Icon(appCtrl.isRTL || appCtrl.languageVal == "ar"
+                    ? Icons.arrow_back
+                    : Icons.arrow_forward)),
           ],
         ).paddingSymmetric(horizontal: Insets.i15, vertical: Insets.i20),
       ),

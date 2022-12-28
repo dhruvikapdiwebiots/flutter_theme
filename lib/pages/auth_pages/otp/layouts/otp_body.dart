@@ -41,15 +41,11 @@ class OtpBody extends StatelessWidget {
                 onSubmit: (pin) {
                   if (pin.length == 6) {
                     otpCtrl.onFormSubmitted();
-                  } else {
-                    otpCtrl.showToast("Invalid OTP", Colors.red);
                   }
                 },
                 onChanged: (String value) {
                   if (value.length == 6) {
                     otpCtrl.onFormSubmitted();
-                  } else {
-                    otpCtrl.showToast("Invalid OTP", Colors.red);
                   }
                 },
                 focusNode: FocusNode(),

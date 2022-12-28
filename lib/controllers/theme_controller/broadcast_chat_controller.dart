@@ -368,6 +368,7 @@ class BroadcastChatController extends GetxController {
   Widget buildPopupDialog(
       BuildContext context, DocumentSnapshot documentReference) {
     return DeleteAlert(
+
       documentReference: documentReference,
     );
   }

@@ -151,9 +151,6 @@ class EditProfileController extends GetxController {
         });
       });
     }
-
-    await storage.write("id", user["id"]);
-    await storage.write("user", user);
     isLoading = false;
     update();
   }
@@ -202,7 +199,16 @@ class EditProfileController extends GetxController {
         await FirebaseFirestore.instance
             .collection('users')
             .doc(user["id"])
-            .update({'image': imageUrl});
+            .update({'image': imageUrl}).then((value) {
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(user["id"]).get().then((snap) async{
+
+                await appCtrl.storage.write("user",snap.data());
+                user = snap.data();
+                update();
+          });
+        });
         update();
         log(user["image"]);
 

@@ -24,9 +24,9 @@ class Content extends StatelessWidget {
                   topRight: Radius.circular(Insets.i20),
                   topLeft: Radius.circular(Insets.i20),
                   bottomLeft: Radius.circular(Insets.i20))),
-          margin: const EdgeInsets.only(
-              bottom:  Insets.i10,
-              right: Insets.i10),
+          margin: const EdgeInsets.symmetric(
+              vertical:  Insets.i5,
+              horizontal: Insets.i10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.end,

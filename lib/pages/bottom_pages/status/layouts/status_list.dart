@@ -34,13 +34,24 @@ class StatusListLayout extends StatelessWidget {
                                   title: Text(
                                     (snapshot.data!)[index].username!,
                                   ),
-                                  leading: CircleAvatar(
-                                      backgroundImage: NetworkImage(
-                                          (snapshot.data!)[index].photoUrl[0].image.toString()),
-                                      radius: 30)))),
-                      Divider(
-                          color: appCtrl.appTheme.grey.withOpacity(.2),
-                          indent: 85),
+                                 leading: CachedNetworkImage(
+                                     imageUrl:   (snapshot.data!)[index].photoUrl[0].image.toString(),
+                                     imageBuilder: (context, imageProvider) => CircleAvatar(
+                                       backgroundColor: const Color(0xffE6E6E6),
+                                       radius: 32,
+                                       backgroundImage:
+                                       NetworkImage((snapshot.data!)[index].photoUrl[0].image.toString()),
+                                     ),
+                                     placeholder: (context, url) => const CircularProgressIndicator(strokeWidth: 2,).width(Sizes.s20).height(Sizes.s20).paddingAll(Insets.i15).decorated(
+                                         color: appCtrl.appTheme.grey.withOpacity(.4),
+                                         shape: BoxShape.circle),
+                                     errorWidget: (context, url, error) => Image.asset(
+                                       imageAssets.user,
+                                       color: appCtrl.appTheme.whiteColor,
+                                     ).paddingAll(Insets.i15).decorated(
+                                         color: appCtrl.appTheme.grey.withOpacity(.4),
+                                         shape: BoxShape.circle)),))),
+                   
                     ]);
                   },
                 );

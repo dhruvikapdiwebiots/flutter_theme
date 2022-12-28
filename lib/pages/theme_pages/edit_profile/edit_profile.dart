@@ -11,6 +11,7 @@ class EditProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<EditProfileController>(builder: (_) {
       return Scaffold(
+        backgroundColor: appCtrl.appTheme.whiteColor,
         appBar: AppBar(
             backgroundColor: appCtrl.appTheme.primary,
             title: Text(fonts.saveProfile.tr)),
@@ -22,17 +23,38 @@ class EditProfile extends StatelessWidget {
             children: [
               Hero(
                 tag: "user",
-                child: editCtrl.user["image"] != "" && editCtrl.user["image"] != null? Container(
-                  height: Sizes.s120,
-                  width: Sizes.s120,
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.all(Insets.i15),
-                  decoration: BoxDecoration(
-                      color: appCtrl.appTheme.gray.withOpacity(.3),
-                      image:
-                          DecorationImage(image: NetworkImage(editCtrl.user["image"]),fit: BoxFit.fill),
-                      shape: BoxShape.circle),
-                ):  Container(
+                child: editCtrl.user["image"] != "" && editCtrl.user["image"] != null?  CachedNetworkImage(
+                    imageUrl: editCtrl.user["image"],
+                    imageBuilder: (context, imageProvider) =>
+                        CircleAvatar(
+                          backgroundColor: const Color(0xffE6E6E6),
+                          radius: 60,
+                          backgroundImage: NetworkImage(
+                              '${editCtrl.user["image"]}'),
+                        ),
+                    placeholder: (context, url) =>  Container(
+                      height: Sizes.s120,
+                      width: Sizes.s120,
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.all(Insets.i15),
+                      decoration: BoxDecoration(
+                          color: appCtrl.appTheme.gray.withOpacity(.3),
+                          image:
+                          DecorationImage(image: AssetImage(imageAssets.user)),
+                          shape: BoxShape.circle),
+                    ),
+                    errorWidget: (context, url, error) =>
+                     Container(
+                      height: Sizes.s120,
+                      width: Sizes.s120,
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.all(Insets.i15),
+                      decoration: BoxDecoration(
+                          color: appCtrl.appTheme.gray.withOpacity(.3),
+                          image:
+                          DecorationImage(image: AssetImage(imageAssets.user)),
+                          shape: BoxShape.circle),
+                    )):  Container(
                   height: Sizes.s120,
                   width: Sizes.s120,
                   alignment: Alignment.center,

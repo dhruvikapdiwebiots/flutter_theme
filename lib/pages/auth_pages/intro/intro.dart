@@ -1,7 +1,6 @@
 import '../../../config.dart';
 
 class Intro extends StatefulWidget {
-
   const Intro({Key? key}) : super(key: key);
 
   @override
@@ -24,23 +23,12 @@ class _IntroState extends State<Intro> {
     return GetBuilder<IntroController>(builder: (_) {
       return Scaffold(
           resizeToAvoidBottomInset: false,
-          backgroundColor: appCtrl.appTheme.accent,
+          backgroundColor: appCtrl.appTheme.whiteColor,
           body: Column(children: <Widget>[
             VSpace(MediaQuery.of(context).padding.top),
-            //skip layout
-            Padding(
-                padding: const EdgeInsets.only(top: 10.0, right: 2.0),
-                child: Align(
-                    alignment: Alignment.center,
-                    child: Text(fonts.skip.tr,
-                            style: AppCss.poppinsBold16
-                                .textColor(appCtrl.appTheme.primary))
-                        .inkWell(onTap: () =>introCtrl.navigateToLogin()))),
+
             //intro page layout
             const IntroPageLayout(),
-
-            //indicator layout
-            IndicatorLayout(controller: introCtrl.pageController),
 
             //start button
             Padding(
@@ -48,14 +36,24 @@ class _IntroState extends State<Intro> {
                     const EdgeInsets.only(top: Insets.i40, bottom: Insets.i40),
                 child: Align(
                   alignment: Alignment.center,
-                  child: CommonButton(
-                      title: fonts.start.tr,
-                      color: appCtrl.appTheme.primary,
-                      radius: AppRadius.r25,
-                      width: Sizes.s150,
-                      onTap: () => introCtrl.navigateToLogin(),
-                      style: AppCss.poppinsMedium16
-                          .textColor(appCtrl.appTheme.accent)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      //indicator layout
+                      IndicatorLayout(controller: introCtrl.pageController)
+                          .paddingSymmetric(horizontal: Insets.i15),
+
+                      Icon(Icons.arrow_forward,
+                              color: appCtrl.appTheme.whiteColor)
+                          .paddingAll(Insets.i10)
+                          .decorated(
+                              color: appCtrl.appTheme.primary,
+                              borderRadius:
+                                  BorderRadius.circular(AppRadius.r50))
+                          .paddingSymmetric(horizontal: Insets.i15)
+                          .inkWell(onTap: () => introCtrl.navigateToLogin())
+                    ],
+                  ),
                 ))
           ]));
     });

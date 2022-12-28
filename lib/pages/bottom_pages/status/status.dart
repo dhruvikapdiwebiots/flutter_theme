@@ -34,6 +34,7 @@ class _StatusListState extends State<StatusList>
   Widget build(BuildContext context) {
     return GetBuilder<StatusController>(builder: (_) {
       return Scaffold(
+          backgroundColor: appCtrl.appTheme.whiteColor,
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
               File? pickedImage = await pickImageFromGallery(context);
@@ -42,20 +43,19 @@ class _StatusListState extends State<StatusList>
                     arguments: pickedImage);
               }
             },
-            child: Icon(
-              Icons.add,
-              color: appCtrl.appTheme.whiteColor,
-            ),
+            child: Icon(Icons.add, color: appCtrl.appTheme.whiteColor),
           ),
           body: SafeArea(
               child: SingleChildScrollView(
             child: Column(children: <Widget>[
-              statusCtrl.user != null?   CurrentUserStatus(
-                currentUserId: statusCtrl.user["phone"],
-              ).marginSymmetric(vertical: Insets.i10): Container(),
+              statusCtrl.user != null
+                  ? CurrentUserStatus(
+                      currentUserId: statusCtrl.user["phone"],
+                    ).marginSymmetric(vertical: Insets.i10)
+                  : Container(),
               const Divider(),
               const StatusListLayout(),
-            ]),
+            ]).paddingAll(Insets.i10),
           )));
     });
   }

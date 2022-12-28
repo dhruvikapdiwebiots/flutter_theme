@@ -13,9 +13,7 @@ class BroadCastMessageCard extends StatelessWidget {
   Widget build(BuildContext context) {
     List selectedContact = document!["receiverId"];
     return Container(
-      decoration:
-      const BoxDecoration(border: Border(bottom: BorderSide(width: 0.2))),
-      padding: const EdgeInsets.symmetric(vertical: Insets.i10),
+
       margin: const EdgeInsets.only(
           bottom: Insets.i10, left: Insets.i5, right: Insets.i5),
 
@@ -43,7 +41,7 @@ class BroadCastMessageCard extends StatelessWidget {
                   .textColor(appCtrl.appTheme.grey)
           ),
         ),
-        leading:CircleAvatar(backgroundImage: AssetImage(imageAssets.user), radius: 25,),
+        leading:const Icon(Icons.volume_down).paddingAll(Insets.i15).decorated(color: appCtrl.appTheme.grey.withOpacity(.4),shape: BoxShape.circle),
         trailing: Text(
             DateFormat('HH:mm a').format(
                 DateTime.fromMillisecondsSinceEpoch(

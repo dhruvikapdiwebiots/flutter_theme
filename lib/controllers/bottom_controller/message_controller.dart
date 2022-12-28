@@ -90,7 +90,8 @@ class MessageController extends GetxController {
   //pick up contact and check if mobile exist
   saveContactInChat() async {
     // Add your onPressed code here!
-    Get.toNamed(routeName.contactList)!.then((value) async {
+    List<Contact> contacts = await permissionHandelCtrl.getContact();
+    Get.toNamed(routeName.contactList,arguments: contacts)!.then((value) async {
       MessageFirebaseApi().saveContact(value);
     });
   }

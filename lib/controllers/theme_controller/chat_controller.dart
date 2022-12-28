@@ -57,7 +57,6 @@ class ChatController extends GetxController {
       pName = pData["name"];
       chatId = data["chatId"];
       isUserAvailable = true;
-      print("pData : $pData");
       update();
     }
     update();
@@ -80,8 +79,7 @@ class ChatController extends GetxController {
   }
 
   seenMessage() async {
-
-    if(userData["phone"] != pData["senderPhone"]) {
+    if (userData["phone"] != pData["senderPhone"]) {
       FirebaseFirestore.instance
           .collection("messages")
           .doc(pId)
@@ -93,8 +91,9 @@ class ChatController extends GetxController {
           FirebaseFirestore.instance
               .collection("messages")
               .doc(pId)
-              .collection("chat").doc(value.docs[i].id).update(
-              {"isSeen": true});
+              .collection("chat")
+              .doc(value.docs[i].id)
+              .update({"isSeen": true});
         }
       });
     }
@@ -294,6 +293,7 @@ class ChatController extends GetxController {
     uploadTask.then((res) {
       res.ref.getDownloadURL().then((downloadUrl) {
         imageUrl = downloadUrl;
+        imageFile = null;
         isLoading = false;
         onSendMessage(imageUrl!, MessageType.image);
         update();
@@ -315,7 +315,7 @@ class ChatController extends GetxController {
     Reference reference = FirebaseStorage.instance.ref().child(fileName);
     var file = File(videoFile!.path);
     UploadTask uploadTask = reference.putFile(file);
-
+    videoFile = null;
     uploadTask.then((res) {
       res.ref.getDownloadURL().then((downloadUrl) {
         videoUrl = downloadUrl;
@@ -352,13 +352,14 @@ class ChatController extends GetxController {
     showModalBottomSheet(
       context: Get.context!,
       isDismissible: false,
-      backgroundColor: Colors.transparent,
+      backgroundColor: appCtrl.appTheme.transparentColor,
       builder: (BuildContext bc) {
         return Container(
             margin: const EdgeInsets.all(10),
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(10)),
+                color: appCtrl.appTheme.whiteColor,
+                borderRadius: BorderRadius.circular(10)),
             child: AudioRecordingPlugin(type: type, index: index));
       },
     );
@@ -372,6 +373,9 @@ class ChatController extends GetxController {
       String? newChatId =
           chatId == "0" ? now.microsecondsSinceEpoch.toString() : chatId;
       chatId = newChatId;
+      update();
+      imageUrl = "";
+      videoUrl = "";
       update();
       if (allData.data()["isBlock"] != null) {
         if (allData.data()["isBlock"] == true) {

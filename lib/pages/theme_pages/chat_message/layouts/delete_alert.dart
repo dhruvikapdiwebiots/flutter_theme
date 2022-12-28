@@ -11,6 +11,7 @@ class DeleteAlert extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<ChatController>(builder: (chatCtrl) {
       return AlertDialog(
+        backgroundColor: appCtrl.appTheme.whiteColor,
         title: const Text('Alert!'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
