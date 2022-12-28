@@ -32,10 +32,8 @@ class FirebaseCommonController extends GetxController {
   void groupTypingStatus(pId, documentId, isTyping) async {
     var user = appCtrl.storage.read("user");
     await FirebaseFirestore.instance
-        .collection("groupMessage")
+        .collection("groups")
         .doc(pId)
-        .collection("chat")
-        .doc(documentId)
         .update(
       {"status": isTyping ? "${user["name"]} is typing" : ""},
     );

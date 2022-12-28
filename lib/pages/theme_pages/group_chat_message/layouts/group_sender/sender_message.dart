@@ -1,6 +1,4 @@
 
-import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_contact_layout.dart';
-import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_location_layout.dart';
 import 'package:http/http.dart' as http;
 import '../../../../../config.dart';
 
@@ -79,18 +77,18 @@ class GroupSenderMessage extends StatelessWidget {
                             context: Get.context!,
                             builder: (BuildContext context) =>
                                 chatCtrl.buildPopupDialog(context, document!));
-                      }),
-                if (document!["type"] == MessageType.messageType.name)
-                  Align(
-                    alignment: Alignment.center,
-                    child: Text(document!["content"])
-                        .paddingSymmetric(
-                        horizontal: Insets.i8, vertical: Insets.i10)
-                        .decorated(
-                        color: appCtrl.appTheme.primary.withOpacity(.2),
-                        borderRadius: BorderRadius.circular(AppRadius.r8)).alignment(Alignment.center),
-                  ).paddingOnly(bottom: Insets.i8)
+                      })
               ]),
+              if (document!["type"] == MessageType.messageType.name)
+                Align(
+                  alignment: Alignment.center,
+                  child: Text(document!["content"])
+                      .paddingSymmetric(
+                      horizontal: Insets.i8, vertical: Insets.i10)
+                      .decorated(
+                      color: appCtrl.appTheme.primary.withOpacity(.2),
+                      borderRadius: BorderRadius.circular(AppRadius.r8)).alignment(Alignment.center),
+                ).paddingOnly(bottom: Insets.i8)
             ],
           ));
     });

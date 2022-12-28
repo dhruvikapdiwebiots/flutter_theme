@@ -16,6 +16,7 @@ class GroupChat extends StatelessWidget {
           return true;
         },
         child: Scaffold(
+          backgroundColor: appCtrl.appTheme.whiteColor,
             appBar: AppBar(
               centerTitle: false,
               // leadingWidth: 40,

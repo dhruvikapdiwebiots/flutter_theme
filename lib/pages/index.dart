@@ -63,6 +63,12 @@ export 'bottom_pages/status/layouts/status_layout.dart';
 export 'theme_pages/broadcast_chat/layouts/broadcast_app_bar.dart';
 export 'theme_pages/broadcast_chat/layouts/broadcast_box.dart';
 export 'theme_pages/broadcast_chat/layouts/broadcast_message.dart';
+export 'theme_pages/group_chat_message/layouts/group_app_bar.dart';
+export 'theme_pages/group_chat_message/layouts/group_build_loader.dart';
+export 'theme_pages/group_chat_message/layouts/group_input_box.dart';
+export 'theme_pages/group_chat_message/layouts/group_message_box.dart';
+export 'theme_pages/group_chat_message/layouts/group_contact_layout.dart';
+export 'theme_pages/group_chat_message/layouts/group_location_layout.dart';
 
 export '/utilities/type_list.dart';
 export '/models/bottom_nav_bar_model.dart';

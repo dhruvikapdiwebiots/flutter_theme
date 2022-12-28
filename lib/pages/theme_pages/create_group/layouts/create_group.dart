@@ -1,5 +1,3 @@
-import 'dart:developer';
-import 'dart:io';
 
 import '../../../../config.dart';
 
@@ -17,6 +15,7 @@ class CreateGroup extends StatelessWidget {
               padding: EdgeInsets.only(
                   bottom: MediaQuery.of(context).viewInsets.bottom),
               child: Container(
+                color: appCtrl.appTheme.whiteColor,
                   padding: const EdgeInsets.all(16),
                   height: MediaQuery.of(context).size.height / 2.2,
                   child: Form(
@@ -25,21 +24,16 @@ class CreateGroup extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.only(left: 8),
+                          const VSpace(Sizes.s15),
+                           Padding(
+                            padding: const EdgeInsets.only(left: 8),
                             child: Text(
-                              'setgroup',
+                              fonts.setGroup.tr,
                               textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 16.5),
+                              style: AppCss.poppinsBold16.textColor(appCtrl.appTheme.primary),
                             ),
                           ),
-                          const SizedBox(
-                            height: 20,
-                          ),
+                          const VSpace(Sizes.s20),
                           Row(
                             children: [
                               groupCtrl.pickerCtrl.image != null

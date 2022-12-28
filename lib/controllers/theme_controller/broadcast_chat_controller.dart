@@ -61,7 +61,7 @@ class BroadcastChatController extends GetxController {
         nameList = pData[i]["name"];
       }
     }
-    print("pId : $pId");
+    print("pId : $nameList");
     update();
 
     super.onReady();

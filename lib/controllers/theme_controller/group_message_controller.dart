@@ -4,9 +4,6 @@ import 'dart:io';
 
 import 'package:dartx/dartx_io.dart';
 import 'package:flutter_theme/config.dart';
-import 'package:flutter_theme/controllers/common_controller/picker_controller.dart';
-import 'package:flutter_theme/controllers/common_controller/picker_controller.dart';
-import 'package:flutter_theme/controllers/common_controller/picker_controller.dart';
 import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_delete_alert.dart';
 import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_file_bottom_sheet.dart';
 import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_receiver/group_receiver_message.dart';
@@ -23,6 +20,7 @@ class GroupChatMessageController extends GetxController {
       peerNo,
       status,
       statusLastSeen,
+      nameList,
       videoUrl;
   dynamic message;
   dynamic pData;
@@ -55,16 +53,37 @@ class GroupChatMessageController extends GetxController {
     pId = data["id"];
     pName = data["name"];
     getPeerStatus();
-    log("groupData : $pData");
+ /*   List receiver = pData["receiverId"];
+    for (var i = 0; i < receiver.length; i++) {
+      if (nameList != "") {
+        nameList = "$nameList, ${receiver[i]["name"]}";
+      } else {
+        nameList = pData[i]["name"];
+      }
+    }*/
+    print("id : $pData");
     update();
     super.onReady();
   }
 
   getPeerStatus() {
-    FirebaseFirestore.instance.collection('group').doc(pId).get().then((value) {
+
+    FirebaseFirestore.instance.collection('groups').doc(pId).get().then((value) {
       if (value.exists) {
         pData = value.data();
+        print("pData : $pData");
+        List receiver = pData["users"];
+        for (var i = 0; i < receiver.length; i++) {
+          print("na : ${receiver}");
+          if (nameList !=null) {
+            nameList = "$nameList, ${receiver[i]["name"]}";
+          } else {
+            nameList = receiver[i]["name"];
+          }
+        }
       }
+
+      update();
     });
 
     FirebaseFirestore.instance.collection('groupMessage').doc(pId).collection("chat").get().then((value) {
@@ -311,11 +330,11 @@ class GroupChatMessageController extends GetxController {
   Widget buildItem(int index, DocumentSnapshot document) {
     return Column(
       children: [
-        (document['sender'] == id)
+        (document['sender'] == user["id"])
             ? GroupSenderMessage(
                 document: document,
                 index: index,
-                currentUserId: id,
+                currentUserId: user["id"],
               )
             :
             // RECEIVER MESSAGE

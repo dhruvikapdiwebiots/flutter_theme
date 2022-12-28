@@ -13,15 +13,15 @@ class GroupChatMessageAppBar extends StatelessWidget with PreferredSizeWidget{
         actions: [
           IconButton(
             onPressed: (){},
-            icon: const Icon(Icons.video_call),
+            icon:  Icon(Icons.video_call,color: appCtrl.appTheme.whiteColor),
           ),
           IconButton(
             onPressed: callTap,
-            icon: const Icon(Icons.call),
+            icon:  Icon(Icons.call,color: appCtrl.appTheme.whiteColor,),
           ),
           IconButton(
             onPressed: () {},
-            icon: const Icon(Icons.more_vert),
+            icon:  Icon(Icons.more_vert,color: appCtrl.appTheme.whiteColor),
           ),
         ],
         title: Column(

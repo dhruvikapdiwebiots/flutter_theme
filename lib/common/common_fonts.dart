@@ -70,5 +70,6 @@ class Fonts{
   final cancel = "cancel";
   final unblock = "unblock";
   final block = "block";
+  final setGroup = "setGroup";
   String unblockUser(val) => "unblockUser".trParams({'pName':val});
 }

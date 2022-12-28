@@ -9,23 +9,36 @@ class GroupUserLastSeen extends StatelessWidget {
     return GetBuilder<GroupChatMessageController>(builder: (chatCtrl) {
       return StreamBuilder(
           stream: FirebaseFirestore.instance
-              .collection("groupMessage")
+              .collection("groups")
               .doc(chatCtrl.pId)
-              .collection("chat")
               .snapshots(),
           builder: (context, snapshot) {
-            return snapshot.data!.docs.isEmpty
-                ? Container()
-                : Text(
-                    snapshot.data!.docs[0]
-                            .data()["status"]
-                            .contains(chatCtrl.user["name"])
-                        ? ""
-                        : snapshot.data!.docs[0].data()["status"],
-                    textAlign: TextAlign.center,
-                    style: AppCss.poppinsMedium14
-                        .textColor(appCtrl.appTheme.whiteColor),
-                  );
+            if(snapshot.hasData) {
+              print("object : ${snapshot.data!.data()}");
+              return snapshot.data!.data()!["status"]  != ""
+                  ? Text(
+                snapshot.data!.data()!["status"]
+                    .contains(chatCtrl.user["name"])
+                    ? chatCtrl.nameList
+                    : snapshot.data!.data()!["status"],
+                textAlign: TextAlign.center,
+                style: AppCss.poppinsMedium14
+                    .textColor(appCtrl.appTheme.whiteColor),
+              )
+                  : Text(
+                chatCtrl.nameList!,
+                textAlign: TextAlign.center,
+                style: AppCss.poppinsMedium14
+                    .textColor(appCtrl.appTheme.whiteColor),
+              );
+            }else{
+              return Text(
+                chatCtrl.nameList!,
+                textAlign: TextAlign.center,
+                style: AppCss.poppinsMedium14
+                    .textColor(appCtrl.appTheme.whiteColor),
+              );
+            }
           });
     });
   }

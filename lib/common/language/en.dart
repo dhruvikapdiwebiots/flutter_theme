@@ -80,4 +80,5 @@ final dynamic en = {
   "unblock": "Unblock",
   "block": "Block",
   "unblockUser": "Unblock @pName to send message?",
+  "setGroup": "Create Group",
 };
