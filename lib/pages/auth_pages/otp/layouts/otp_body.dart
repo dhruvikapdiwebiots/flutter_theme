@@ -16,7 +16,7 @@ class OtpBody extends StatelessWidget {
               //verify number
               Text(fonts.verifyMobileNumber.tr,
                   style: AppCss.poppinsMedium18
-                      .textColor(appCtrl.appTheme.primary)),
+                      .textColor(appCtrl.appTheme.blackColor)),
               const VSpace(Sizes.s10),
 
               //otp contain
@@ -24,7 +24,7 @@ class OtpBody extends StatelessWidget {
                 fonts.otpContain.tr,
                 textAlign: TextAlign.center,
                 style:
-                    AppCss.poppinsMedium14.textColor(appCtrl.appTheme.primary),
+                    AppCss.poppinsMedium14.textColor(appCtrl.appTheme.blackColor.withOpacity(.5)),
               ),
               const VSpace(Sizes.s30),
               PinInputTextField(

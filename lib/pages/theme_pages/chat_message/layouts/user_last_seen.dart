@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:intl/intl.dart';
 
 import '../../../../config.dart';
@@ -7,8 +9,10 @@ class UserLastSeen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return GetBuilder<ChatController>(
       builder: (chatCtrl) {
+        log("pid : ${chatCtrl.pId}");
         return StreamBuilder(
             stream: FirebaseFirestore.instance
                 .collection('users')

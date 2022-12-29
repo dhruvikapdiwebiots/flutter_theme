@@ -23,12 +23,23 @@ class AllRegisteredContact extends StatelessWidget {
                 : null,
             size: 19.0,
           )),
-      leading: (data["image"] != null &&
-          data["image"]!.length > 0)
-          ? CircleAvatar(
-          backgroundImage:
-          NetworkImage(data["image"]!))
-          : CircleAvatar(child: Text(data["name"][0])),
+      leading: CachedNetworkImage(
+          imageUrl:   data["image"],
+          imageBuilder: (context, imageProvider) => CircleAvatar(
+            backgroundColor: const Color(0xffE6E6E6),
+            radius: 32,
+            backgroundImage:
+            NetworkImage(data["image"]),
+          ),
+          placeholder: (context, url) => const CircularProgressIndicator(strokeWidth: 2,).width(Sizes.s20).height(Sizes.s20).paddingAll(Insets.i15).decorated(
+              color: appCtrl.appTheme.grey.withOpacity(.4),
+              shape: BoxShape.circle),
+          errorWidget: (context, url, error) => Image.asset(
+            imageAssets.user,
+            color: appCtrl.appTheme.whiteColor,
+          ).paddingAll(Insets.i15).decorated(
+              color: appCtrl.appTheme.grey.withOpacity(.4),
+              shape: BoxShape.circle)),
       title: Text(data["name"] ?? ""),
       subtitle: Text(data["phone"] ?? ""),
     );

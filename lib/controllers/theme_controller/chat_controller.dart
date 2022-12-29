@@ -410,8 +410,15 @@ class ChatController extends GetxController {
             allData.data()["isBlock"] = false;
             allData.data()["blockBy"] = "";
             allData.data()["blockUserId"] = "";
+            isLoading = false;
+            update();
+            Get.forceAppUpdate();
+
             update();
           } else {
+            isLoading = false;
+            update();
+            Get.forceAppUpdate();
             await FirebaseFirestore.instance
                 .collection('messages')
                 .doc(newChatId)
@@ -428,6 +435,9 @@ class ChatController extends GetxController {
               "blockUserId": allData.data()["blockUserId"],
               'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
             }).then((snap) async {
+              isLoading = false;
+              update();
+              Get.forceAppUpdate();
               await FirebaseFirestore.instance
                   .collection("contacts")
                   .where("chatId", isEqualTo: newChatId)
@@ -512,6 +522,9 @@ class ChatController extends GetxController {
             "isSeen": false,
             'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
           }).then((snap) async {
+            isLoading = false;
+            update();
+            Get.forceAppUpdate();
             await FirebaseFirestore.instance
                 .collection("contacts")
                 .where("chatId", isEqualTo: newChatId)
@@ -602,6 +615,9 @@ class ChatController extends GetxController {
           "blockUserId": "",
           'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
         }).then((snap) async {
+          isLoading = false;
+          update();
+          Get.forceAppUpdate();
           await FirebaseFirestore.instance
               .collection("contacts")
               .where("chatId", isEqualTo: newChatId)
@@ -669,15 +685,28 @@ class ChatController extends GetxController {
                 "blockUserId": "",
                 "groupId": "",
                 "updateStamp": DateTime.now().millisecondsSinceEpoch.toString()
+              }).then((value) {
+                isLoading = false;
+                update();
+                Get.forceAppUpdate();
               });
             }
+          }).then((value) {
+            isLoading = false;
+            update();
+            Get.forceAppUpdate();
           });
+        }).then((value) {
+          isLoading = false;
+          update();
+          Get.forceAppUpdate();
         });
       }
       Get.forceAppUpdate();
     }
     isLoading = false;
     update();
+    Get.forceAppUpdate();
   }
 
   //delete chat layout

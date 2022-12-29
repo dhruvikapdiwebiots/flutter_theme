@@ -47,7 +47,7 @@ class CommonTextBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     InputBorder inputBorder = UnderlineInputBorder(
-        borderSide: BorderSide(color: appCtrl.appTheme.primary));
+        borderSide: BorderSide(color: appCtrl.appTheme.blackColor));
     return GetBuilder<AppController>(builder: (appCtrl) {
       return TextFormField(
           controller: controller,
@@ -69,9 +69,9 @@ class CommonTextBox extends StatelessWidget {
               errorText: errorText,
               counterText: "",
               hintStyle:
-                  AppCss.poppinsMedium14.textColor(appCtrl.appTheme.primary),
+                  AppCss.poppinsMedium14.textColor(appCtrl.appTheme.blackColor),
               labelStyle:
-                  AppCss.poppinsMedium14.textColor(appCtrl.appTheme.primary),
+                  AppCss.poppinsMedium14.textColor(appCtrl.appTheme.blackColor),
               border: border ?? inputBorder,
               focusedBorder: border ?? inputBorder,
               disabledBorder: border ?? inputBorder,

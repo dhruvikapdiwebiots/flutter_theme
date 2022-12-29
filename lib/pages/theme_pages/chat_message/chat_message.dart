@@ -67,32 +67,25 @@ class _ChatState extends State<Chat>
                   callTap: () {},
                   moreTap: () => chatCtrl.blockUser()),
               backgroundColor: appCtrl.appTheme.whiteColor,
-              body: chatCtrl.isLoading ? chatCtrl.isUserAvailable
-                  ? Stack(children: [
-                      Container(
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: AssetImage(imageAssets.chatBg),
-                                  fit: BoxFit.cover))),
-                      Stack(children: <Widget>[
-                        Column(children: <Widget>[
-                          // List of messages
-                          const MessageBox(),
-                          // Sticker
-                          Container(),
-                          // Input content
-                          const InputBox()
-                        ]),
-                        // Loading
-                        const BuildLoader()
-                      ])
-                    ])
+              body: chatCtrl.isUserAvailable
+                  ?  Stack(children: <Widget>[
+                Column(children: <Widget>[
+                  // List of messages
+                  const MessageBox(),
+                  // Sticker
+                  Container(),
+                  // Input content
+                  const InputBox()
+                ]),
+                // Loading
+                const BuildLoader()
+              ])
                   : Center(
                       child: CommonButton(
                         title: fonts.invite.tr,
                         onTap: () {},
                       ),
-                    ): LoginLoader(isLoading: chatCtrl.isLoading,)));
+                    )));
     });
   }
 }

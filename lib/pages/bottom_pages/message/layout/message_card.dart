@@ -32,7 +32,7 @@ class MessageCard extends StatelessWidget {
           },
           contentPadding: EdgeInsets.zero,
           title: Text(document!["sender"]['name'],
-              style: AppCss.poppinsblack16.textColor(appCtrl.appTheme.primary)),
+              style: AppCss.poppinsblack16.textColor(appCtrl.appTheme.blackColor)),
           subtitle: document!["lastMessage"] != null
               ? Padding(
                   padding: const EdgeInsets.only(top: Insets.i6),

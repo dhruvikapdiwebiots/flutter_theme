@@ -30,7 +30,7 @@ class BroadCastMessageCard extends StatelessWidget {
         title: Text(
             "${selectedContact.length} recipient",
             style: AppCss.poppinsblack16
-                .textColor(appCtrl.appTheme.primary)
+                .textColor(appCtrl.appTheme.blackColor)
         ),
         subtitle: Padding(
           padding: const EdgeInsets.only(top: 6.0),

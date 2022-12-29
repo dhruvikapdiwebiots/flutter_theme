@@ -19,7 +19,7 @@ class GroupMessageCard extends StatelessWidget {
             arguments: document!["group"]),
         contentPadding: EdgeInsets.zero,
         title: Text(document!["group"]['name'],
-            style: AppCss.poppinsblack16.textColor(appCtrl.appTheme.primary)),
+            style: AppCss.poppinsblack16.textColor(appCtrl.appTheme.blackColor)),
         subtitle: Padding(
           padding: const EdgeInsets.only(top: 6.0),
           child: Text(

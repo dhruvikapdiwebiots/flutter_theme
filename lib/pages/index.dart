@@ -71,6 +71,7 @@ export 'theme_pages/group_chat_message/layouts/group_contact_layout.dart';
 export 'theme_pages/group_chat_message/layouts/group_location_layout.dart';
 export 'theme_pages/setting/layouts/setting_list_card.dart';
 export 'theme_pages/setting/layouts/user_online_status.dart';
+export 'bottom_pages/message/layout/broadcast_card.dart';
 
 export '/utilities/type_list.dart';
 export '/models/bottom_nav_bar_model.dart';

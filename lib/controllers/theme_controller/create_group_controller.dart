@@ -64,15 +64,6 @@ class CreateGroupController extends GetxController {
     update();
   }
 
-// GET IMAGE FROM GALLERY
-  Future getImage(source) async {
-    final ImagePicker picker = ImagePicker();
-    imageFile = (await picker.pickImage(source: source))!;
-    if (imageFile != null) {
-      update();
-      uploadFile();
-    }
-  }
 
 // UPLOAD SELECTED IMAGE TO FIREBASE
   Future uploadFile() async {
@@ -123,7 +114,7 @@ class CreateGroupController extends GetxController {
       final now = DateTime.now();
       String broadcastId = now.microsecondsSinceEpoch.toString();
 
-       await checkChatAvailable();
+      await checkChatAvailable();
       await Future.delayed(Durations.s3);
       await Future.delayed(Durations.s3);
       await FirebaseFirestore.instance
@@ -190,11 +181,10 @@ class CreateGroupController extends GetxController {
         var data = {"broadcastId": broadcastId, "data": value.docs[0].data()};
         Get.toNamed(routeName.broadcastChat, arguments: data);
       });
-
     }
   }
 
-Future<List>  checkChatAvailable()async{
+  Future<List> checkChatAvailable() async {
     final user = appCtrl.storage.read("user");
     for (var i = 0; i < selectedContact.length; i++) {
       FirebaseFirestore.instance
@@ -204,17 +194,16 @@ Future<List>  checkChatAvailable()async{
           .then((value) async {
         for (var j = 0; j < value.docs.length; j++) {
           if (value.docs[j].data()["senderPhone"] == user["phone"] &&
-              value.docs[j].data()["receiverPhone"] ==
-                  selectedContact[i]["phone"] ||
+                  value.docs[j].data()["receiverPhone"] ==
+                      selectedContact[i]["phone"] ||
               value.docs[j].data()["senderPhone"] ==
-                  selectedContact[i]["phone"] &&
+                      selectedContact[i]["phone"] &&
                   value.docs[j].data()["receiverPhone"] == user["phone"]) {
-
             selectedContact[i]["chatId"] = value.docs[j].data()["chatId"];
             update();
             newContact.add(selectedContact[i]);
-          }else{
-            selectedContact[i]["chatId"] =null;
+          } else {
+            selectedContact[i]["chatId"] = null;
             newContact.add(selectedContact[i]);
           }
         }
@@ -223,7 +212,6 @@ Future<List>  checkChatAvailable()async{
     }
 
     return newContact;
-
   }
 
   @override

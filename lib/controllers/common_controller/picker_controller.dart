@@ -29,6 +29,7 @@ class PickerController extends GetxController {
   imagePickerOption(BuildContext context) {
     showModalBottomSheet(
         context: context,
+
         shape: const RoundedRectangleBorder(
           borderRadius:
               BorderRadius.vertical(top: Radius.circular(AppRadius.r25)),

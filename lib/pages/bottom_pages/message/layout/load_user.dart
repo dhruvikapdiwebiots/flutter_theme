@@ -1,4 +1,4 @@
-import 'package:flutter_theme/pages/bottom_pages/message/layout/broadcast_card.dart';
+import 'dart:developer';
 
 import '../../../../config.dart';
 
@@ -11,7 +11,8 @@ class LoadUser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+  log("broad : ${document!["isBroadcast"]}");
+  log("isBroadcastSender : ${document!["isBroadcastSender"]}");
     if (document!["isGroup"] == false && document!["isBroadcast"] == false ) {
       if (document!["senderPhone"] == currentUserId ) {
         return   ReceiverMessageCard(
@@ -41,7 +42,13 @@ class LoadUser extends StatelessWidget {
               currentUserId: currentUserId,
             )
           : Container();
-    } else{
+    } else if( document!["isBroadcastSender"] == true){
+      return MessageCard(
+        blockBy: blockBy,
+        document: document,
+        currentUserId: currentUserId,
+      );
+    }else{
       return Container();
     }
   }

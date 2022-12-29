@@ -9,6 +9,7 @@ class ImagePickerLayout extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       height: Sizes.s150,
+      color: appCtrl.appTheme.whiteColor,
       alignment: Alignment.bottomCenter,
       child: Column(children: [
         const VSpace(Sizes.s20),

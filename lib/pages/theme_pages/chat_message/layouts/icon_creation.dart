@@ -26,7 +26,7 @@ class IconCreation extends StatelessWidget {
           const VSpace(Sizes.s8),
           Text(
             text!,
-            style: AppCss.poppinsblack14.textColor(appCtrl.appTheme.primary),
+            style: AppCss.poppinsblack14.textColor(appCtrl.appTheme.blackColor),
           )
         ],
       ),
