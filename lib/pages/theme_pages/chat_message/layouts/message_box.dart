@@ -1,4 +1,3 @@
-import 'package:flutter_theme/models/message_model.dart';
 
 import '../../../../config.dart';
 

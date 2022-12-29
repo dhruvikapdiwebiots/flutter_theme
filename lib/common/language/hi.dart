@@ -1,4 +1,3 @@
-import '../../config.dart';
 
 final dynamic hi = {
   "title": "अधिक से अधिक",

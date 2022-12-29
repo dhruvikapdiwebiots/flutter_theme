@@ -50,7 +50,7 @@ class _VideoDocState extends State<VideoDoc> {
                       aspectRatio: videoController!.value.aspectRatio,
                       // Use the VideoPlayer widget to display the video.
                       child: VideoPlayer(videoController!),
-                    ).height(Sizes.s250),
+                    ).height(Sizes.s250).clipRRect(all: AppRadius.r8),
                     IconButton(
                         icon: Icon(
                                 videoController!.value.isPlaying
@@ -77,7 +77,7 @@ class _VideoDocState extends State<VideoDoc> {
                     DateTime.fromMillisecondsSinceEpoch(
                         int.parse(widget.document!['timestamp']))),style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.whiteColor),).marginAll(Insets.i10)
               ],
-            ).inkWell(onTap: (){
+            ).paddingSymmetric(horizontal: Insets.i8,vertical: Insets.i8).inkWell(onTap: (){
               launchUrl(Uri.parse(widget.document!["content"]));
             });
           } else {

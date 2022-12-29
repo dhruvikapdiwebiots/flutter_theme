@@ -48,7 +48,7 @@ class _DashboardState extends State<Dashboard>
                   actions: [
                     if (dashboardCtrl.selectedIndex == 1) const PopUpAction(),
                   ],
-                  title: Text("Chatter"),
+                  title: Text(fonts.chatter.tr),
 
                   bottom: TabBar(
                     controller: dashboardCtrl.controller,

@@ -122,10 +122,9 @@ class CreateGroupController extends GetxController {
       update();
       final now = DateTime.now();
       String broadcastId = now.microsecondsSinceEpoch.toString();
-int counter =0;
+
        await checkChatAvailable();
       await Future.delayed(Durations.s3);
-       print("object : $newContact");
       await Future.delayed(Durations.s3);
       await FirebaseFirestore.instance
           .collection('broadcast')
@@ -188,7 +187,6 @@ int counter =0;
           .where("broadcastId", isEqualTo: broadcastId)
           .get()
           .then((value) {
-        print("value.docs[0].data() : ${value.docs[0].data()}");
         var data = {"broadcastId": broadcastId, "data": value.docs[0].data()};
         Get.toNamed(routeName.broadcastChat, arguments: data);
       });
@@ -211,15 +209,12 @@ Future<List>  checkChatAvailable()async{
               value.docs[j].data()["senderPhone"] ==
                   selectedContact[i]["phone"] &&
                   value.docs[j].data()["receiverPhone"] == user["phone"]) {
-            print("old");
+
             selectedContact[i]["chatId"] = value.docs[j].data()["chatId"];
             update();
-            print("old : ${selectedContact[i]}");
             newContact.add(selectedContact[i]);
           }else{
-            print("new");
             selectedContact[i]["chatId"] =null;
-            print("old : ${selectedContact[i]}");
             newContact.add(selectedContact[i]);
           }
         }

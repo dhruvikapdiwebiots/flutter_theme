@@ -123,7 +123,9 @@ class OtpController extends GetxController {
             if (resultData["name"] == "") {
               Get.toNamed(routeName.editProfile,
                   arguments: {"resultData": resultData, "isPhoneLogin": true});
+              await appCtrl.storage.write("user", value.docs[0].data());
             } else {
+              await appCtrl.storage.write("user", value.docs[0].data());
               homeNavigation(resultData);
             }
           }

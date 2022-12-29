@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import '../config.dart';
 
@@ -30,6 +29,5 @@ class AppArray{
     {'icon': Icons.message, 'title': "chats"},
     {'icon': Icons.delete_forever, 'title': "deleteAccount"},
     {'icon': Icons.logout, 'title': "logout"},
-    //{'icon': Icons.supervised_user_circle_sharp, 'title': "inviteFriend"},
   ];
 }

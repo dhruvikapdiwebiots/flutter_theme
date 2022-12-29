@@ -24,9 +24,10 @@ class ChatController extends GetxController {
   bool isUserAvailable = true;
   XFile? imageFile;
   XFile? videoFile;
+  String? audioFile;
   File? image;
   File? video;
-  bool? isLoading = true;
+  bool isLoading = true;
   bool typing = false, isBlock = false;
   final pickerCtrl = Get.isRegistered<PickerController>()
       ? Get.find<PickerController>()
@@ -111,6 +112,8 @@ class ChatController extends GetxController {
           "${file.name}-${DateTime.now().millisecondsSinceEpoch.toString()}";
 
       imageUrl = await pickerCtrl.uploadImage(file, fileNameText: fileName);
+
+      log("fileName : $fileName");
       onSendMessage(
           "${result.files.single.name}-BREAK-$imageUrl",
           result.files.single.path.toString().contains(".mp4")
@@ -172,8 +175,7 @@ class ChatController extends GetxController {
         "blockUserId": pId,
         'messageType': "sender",
         'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-      });
-      final msgList = await FirebaseFirestore.instance
+      });await FirebaseFirestore.instance
           .collection("contacts")
           .where("chatId", isEqualTo: newChatId)
           .get()
@@ -236,7 +238,7 @@ class ChatController extends GetxController {
         'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
       });
 
-      final msgList = await FirebaseFirestore.instance
+   await FirebaseFirestore.instance
           .collection("contacts")
           .where("chatId", isEqualTo: newChatId)
           .get()
@@ -314,8 +316,9 @@ class ChatController extends GetxController {
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     Reference reference = FirebaseStorage.instance.ref().child(fileName);
     var file = File(videoFile!.path);
+
     UploadTask uploadTask = reference.putFile(file);
-    videoFile = null;
+
     uploadTask.then((res) {
       res.ref.getDownloadURL().then((downloadUrl) {
         videoUrl = downloadUrl;
@@ -327,6 +330,14 @@ class ChatController extends GetxController {
         update();
         Fluttertoast.showToast(msg: 'Image is Not Valid');
       });
+    }).then((value) {
+        videoFile = null;
+        pickerCtrl.videoFile = null;
+
+        pickerCtrl.video = null;
+        videoUrl = "";
+        update();
+        pickerCtrl.update();
     });
   }
 
@@ -362,11 +373,24 @@ class ChatController extends GetxController {
                 borderRadius: BorderRadius.circular(10)),
             child: AudioRecordingPlugin(type: type, index: index));
       },
-    );
+    ).then((value)async {
+
+      File file = File(value);
+      String fileName =
+          "${file.name}-${DateTime.now().millisecondsSinceEpoch.toString()}";
+
+      audioFile = await pickerCtrl.uploadAudio(file, fileNameText: fileName);
+
+
+      onSendMessage(audioFile!, MessageType.audio);
+
+    });
   }
 
   // SEND MESSAGE CLICK
   void onSendMessage(String content, MessageType type) async {
+    isLoading = true;
+    update();
     if (content.trim() != '') {
       textEditingController.clear();
       final now = DateTime.now();
@@ -376,6 +400,7 @@ class ChatController extends GetxController {
       update();
       imageUrl = "";
       videoUrl = "";
+      audioFile = "";
       update();
       if (allData.data()["isBlock"] != null) {
         if (allData.data()["isBlock"] == true) {
@@ -651,6 +676,8 @@ class ChatController extends GetxController {
       }
       Get.forceAppUpdate();
     }
+    isLoading = false;
+    update();
   }
 
   //delete chat layout

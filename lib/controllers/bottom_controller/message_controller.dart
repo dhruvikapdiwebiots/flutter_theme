@@ -1,7 +1,5 @@
 import 'dart:developer';
 import 'dart:io';
-import 'package:flutter_theme/models/message_model.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_theme/config.dart';
 
 class MessageController extends GetxController {

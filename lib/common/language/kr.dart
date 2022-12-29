@@ -1,4 +1,4 @@
-import '../../config.dart';
+
 
 final dynamic kr = {
   "title": "점점 더",

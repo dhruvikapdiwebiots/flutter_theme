@@ -1,4 +1,3 @@
-import '../../config.dart';
 
 final dynamic ar = {
   "title": "المزيد والمزيد",

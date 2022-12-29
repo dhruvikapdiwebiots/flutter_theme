@@ -8,7 +8,7 @@ class GroupBuildLoader extends StatelessWidget {
     return GetBuilder<GroupChatMessageController>(
         builder: (chatCtrl) {
           return Positioned(
-            child: chatCtrl.isLoading!
+            child: chatCtrl.isLoading
                 ? Container(
               color: Colors.white.withOpacity(0.8),
               child: Center(

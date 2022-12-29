@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-
 import '../../../config.dart';
 
 class ContactList extends StatelessWidget {
@@ -18,23 +16,17 @@ class ContactList extends StatelessWidget {
         },
         child: Scaffold(
           appBar: AppBar(
-            title: Text(
-              fonts.contact.tr,
-            ),
-            automaticallyImplyLeading: false,
-            leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back,
-                color: appCtrl.appTheme.whiteColor,
-              ),
-              onPressed: () {
-                Get.back();
-                contactCtrl.searchText.text = "";
-                contactCtrl.contactList = [];
-                contactCtrl.searchContactList = [];
-              },
-            ),
-          ),
+              title: Text(fonts.contact.tr),
+              automaticallyImplyLeading: false,
+              leading: IconButton(
+                  icon: Icon(Icons.arrow_back,
+                      color: appCtrl.appTheme.whiteColor),
+                  onPressed: () {
+                    Get.back();
+                    contactCtrl.searchText.text = "";
+                    contactCtrl.contactList = [];
+                    contactCtrl.searchContactList = [];
+                  })),
           body: SafeArea(
               child: Stack(
             children: [
@@ -113,7 +105,8 @@ class ContactList extends StatelessWidget {
                                                     if (snapshot.data != null) {
                                                       if (!snapshot.data!.docs
                                                           .isNotEmpty) {
-                                                        return Text("Invite")
+                                                        return Text(
+                                                                fonts.invite.tr)
                                                             .inkWell(onTap:
                                                                 () async {
                                                           if (Platform
@@ -174,9 +167,15 @@ class ContactList extends StatelessWidget {
                                                           MemoryImage(
                                                               c.avatar!))
                                                   : CircleAvatar(
-                                                      child: Text(c.displayName!.length >2 ? c.displayName!.replaceAll(" ", "")
-                                                          .substring(0, 2)
-                                                          .toUpperCase(): c.displayName![0])),
+                                                      child: Text(c.displayName!
+                                                                  .length >
+                                                              2
+                                                          ? c.displayName!
+                                                              .replaceAll(
+                                                                  " ", "")
+                                                              .substring(0, 2)
+                                                              .toUpperCase()
+                                                          : c.displayName![0])),
                                               title: Text(c.displayName ?? ""),
                                               subtitle: Text(
                                                   c.phones![0].value ?? ""),
@@ -194,7 +193,8 @@ class ContactList extends StatelessWidget {
                                                     if (snapshot.data != null) {
                                                       if (!snapshot.data!.docs
                                                           .isNotEmpty) {
-                                                        return const Text("Invite")
+                                                        return Text(
+                                                                fonts.invite.tr)
                                                             .inkWell(onTap:
                                                                 () async {
                                                           if (Platform
@@ -230,7 +230,6 @@ class ContactList extends StatelessWidget {
                                     },
                                   ),
                           ),
-
                         ],
                       ),
                     )

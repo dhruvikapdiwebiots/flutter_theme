@@ -1,16 +1,10 @@
-import 'dart:async';
+
 import 'dart:io';
-import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../config.dart';
 
-
-Future<Directory?> _getDownloadDirectory() async {
-  return await getApplicationDocumentsDirectory();
-}
 
 class GroupAudioDoc extends StatelessWidget {
   final VoidCallback? onLongPress;

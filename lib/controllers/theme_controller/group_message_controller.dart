@@ -53,15 +53,7 @@ class GroupChatMessageController extends GetxController {
     pId = data["id"];
     pName = data["name"];
     getPeerStatus();
- /*   List receiver = pData["receiverId"];
-    for (var i = 0; i < receiver.length; i++) {
-      if (nameList != "") {
-        nameList = "$nameList, ${receiver[i]["name"]}";
-      } else {
-        nameList = pData[i]["name"];
-      }
-    }*/
-    print("id : $pData");
+
     update();
     super.onReady();
   }
@@ -71,10 +63,8 @@ class GroupChatMessageController extends GetxController {
     FirebaseFirestore.instance.collection('groups').doc(pId).get().then((value) {
       if (value.exists) {
         pData = value.data();
-        print("pData : $pData");
         List receiver = pData["users"];
         for (var i = 0; i < receiver.length; i++) {
-          print("na : ${receiver}");
           if (nameList !=null) {
             nameList = "$nameList, ${receiver[i]["name"]}";
           } else {
@@ -133,7 +123,7 @@ class GroupChatMessageController extends GetxController {
   locationShare() async {
     pickerCtrl.dismissKeyboard();
     Get.back();
-    Position? position =
+
         await permissionHandelCtrl.getCurrentPosition().then((value) async {
 
       var locationString =
@@ -282,7 +272,7 @@ class GroupChatMessageController extends GetxController {
         'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
       });
 
-      final msgList = await FirebaseFirestore.instance
+      await FirebaseFirestore.instance
           .collection("contacts").where("isGroup",isEqualTo: true)
           .get()
           .then((value) {

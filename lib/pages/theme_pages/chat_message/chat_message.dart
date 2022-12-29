@@ -1,6 +1,5 @@
 
 import 'package:flutter_theme/config.dart';
-import 'package:flutter_theme/pages/theme_pages/call_screen/layouts/call_utility.dart';
 
 class Chat extends StatefulWidget {
   const Chat({Key? key}) : super(key: key);
@@ -50,16 +49,6 @@ class _ChatState extends State<Chat>
     Get.toNamed(routeName.callScreen,arguments:user );*/
   }
 
-  call(bool isVideoCall) async {
-    var data = appCtrl.storage.read("user");
-
-    CallUtils.dial(
-        currentUserUid: chatCtrl.pId,
-        fromData: data,
-        toData: chatCtrl.pData,
-        context: context,
-        isVideoCall: isVideoCall);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +67,7 @@ class _ChatState extends State<Chat>
                   callTap: () {},
                   moreTap: () => chatCtrl.blockUser()),
               backgroundColor: appCtrl.appTheme.whiteColor,
-              body: chatCtrl.isUserAvailable
+              body: chatCtrl.isLoading ? chatCtrl.isUserAvailable
                   ? Stack(children: [
                       Container(
                           decoration: BoxDecoration(
@@ -103,7 +92,7 @@ class _ChatState extends State<Chat>
                         title: fonts.invite.tr,
                         onTap: () {},
                       ),
-                    )));
+                    ): LoginLoader(isLoading: chatCtrl.isLoading,)));
     });
   }
 }

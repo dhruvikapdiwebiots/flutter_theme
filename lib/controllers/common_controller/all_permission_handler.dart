@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../config.dart';
@@ -106,7 +105,7 @@ class PermissionHandlerController extends GetxController {
   Future<Position?> getCurrentPosition() async {
     final hasPermission = await handlePermission();
     if (!hasPermission) {
-      LocationPermission permission = await Geolocator.requestPermission();
+     await Geolocator.requestPermission();
       getCurrentPosition();
     } else {
       final position = await geoLocatorPlatform.getCurrentPosition();

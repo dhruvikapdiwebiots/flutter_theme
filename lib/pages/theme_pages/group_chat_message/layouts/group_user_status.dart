@@ -14,7 +14,6 @@ class GroupUserLastSeen extends StatelessWidget {
               .snapshots(),
           builder: (context, snapshot) {
             if(snapshot.hasData) {
-              print("object : ${snapshot.data!.data()}");
               return snapshot.data!.data()!["status"]  != ""
                   ? Text(
                 snapshot.data!.data()!["status"]
@@ -26,14 +25,14 @@ class GroupUserLastSeen extends StatelessWidget {
                     .textColor(appCtrl.appTheme.whiteColor),
               )
                   : Text(
-                chatCtrl.nameList!,
+                chatCtrl.nameList ?? "",
                 textAlign: TextAlign.center,
                 style: AppCss.poppinsMedium14
                     .textColor(appCtrl.appTheme.whiteColor),
               );
             }else{
               return Text(
-                chatCtrl.nameList!,
+                chatCtrl.nameList ??"",
                 textAlign: TextAlign.center,
                 style: AppCss.poppinsMedium14
                     .textColor(appCtrl.appTheme.whiteColor),

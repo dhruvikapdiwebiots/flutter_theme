@@ -168,8 +168,12 @@ class AudioRecordingPluginState extends State<AudioRecordingPlugin> {
   // stop player
   void stopPlayer() {
     mPlayer!.stopPlayer().then((value) {
+      _timer!.cancel();
+      recordedFile = File(mPath);
       setState(() {});
     });
+
+
   }
 
   @override
@@ -247,7 +251,7 @@ class AudioRecordingPluginState extends State<AudioRecordingPlugin> {
         const SizedBox(height: 10),
         CommonButton(title: fonts.done.tr,style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.whiteColor),onTap: (){
           stopPlayer();
-          Get.back(result: recordedFile);
+          Get.back(result: mPath);
         },),
         if (isLoading)
           Padding(

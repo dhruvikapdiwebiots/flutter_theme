@@ -225,15 +225,4 @@ unblockConfirmation(pName, value, chatId, pId) async {
     transitionDuration: const Duration(milliseconds: 300),
   );
 
-  //block check
-  blockCheck() async {
-    var user = appCtrl.storage.read("user");
-    FirebaseFirestore.instance
-        .collection("blocks")
-        .doc(user["id"])
-        .get()
-        .then((value) {
-      return value;
-    });
-  }
 }

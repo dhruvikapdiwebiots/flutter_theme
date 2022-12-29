@@ -1,5 +1,6 @@
 final dynamic en = {
   "title": "More and More",
+  "chatter": "Chatter",
   "subtitle": "Stay in touch with the people who matter most",
   "subtitle2": "Talk to people who has similar intrest as you",
   "subtitle3": "Let's chat over chatter",
@@ -81,4 +82,5 @@ final dynamic en = {
   "block": "Block",
   "unblockUser": "Unblock @pName to send message?",
   "setGroup": "Create Group",
+  "yourPhone": "Your Phone!",
 };

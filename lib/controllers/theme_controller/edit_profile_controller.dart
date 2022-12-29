@@ -188,7 +188,7 @@ class EditProfileController extends GetxController {
     log("reference : $reference");
     var file = File(imageFile!.path);
     UploadTask uploadTask = reference.putFile(file);
-    log("uploadTask : ${uploadTask}");
+
     uploadTask.then((res) {
       log("res : $res");
       res.ref.getDownloadURL().then((downloadUrl) async {

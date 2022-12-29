@@ -36,7 +36,7 @@ class LocationLayout extends StatelessWidget {
           .decorated(
               color: appCtrl.appTheme.primary,
               borderRadius: BorderRadius.circular(AppRadius.r10))
-          .paddingSymmetric(vertical: Insets.i10),
+          .paddingSymmetric(horizontal: Insets.i8),
     );
   }
 }

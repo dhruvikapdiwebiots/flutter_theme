@@ -1,5 +1,5 @@
 import 'package:flutter_theme/config.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:flutter_contacts/flutter_contacts.dart' as contact;
 
 class ContactListController extends GetxController {
   List<Contact>? contacts;
@@ -72,7 +72,7 @@ class ContactListController extends GetxController {
         }
       }
     } else {
-      if (val.length > 5) {
+      if (val.length > 2) {
         for (int i = 0; i < contactList.length; i++) {
           if (contactList[i].phones!.isNotEmpty) {
             if (contactList[i].displayName!.toLowerCase().contains(val)) {

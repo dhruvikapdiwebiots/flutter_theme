@@ -15,9 +15,10 @@ class ContactLayout extends StatelessWidget {
     return InkWell(
         onLongPress: onLongPress,
         child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: Insets.i8),
             decoration: BoxDecoration(
-              color: appCtrl.appTheme.primary,
-              borderRadius: BorderRadius.circular(AppRadius.r15),
+              color: appCtrl.appTheme.primary.withOpacity(.8),
+              borderRadius: BorderRadius.circular(AppRadius.r8),
             ),
             width: Sizes.s280,
 

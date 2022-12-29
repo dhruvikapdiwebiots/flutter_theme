@@ -12,7 +12,6 @@ class ReceiverMessageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(document!["receiverPhone"]);
     return Container(
       margin: const EdgeInsets.only(
           bottom: Insets.i10, left: Insets.i5, right: Insets.i5),

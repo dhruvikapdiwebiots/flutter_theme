@@ -22,6 +22,7 @@ class AppController extends GetxController {
   String device = "";
   dynamic userAppSettingsVal;
   dynamic usageControlsVal;
+  var deviceData = <String, dynamic>{};
 
 //list of bottommost page
   List<Widget> widgetOptions = <Widget>[];
@@ -80,7 +81,7 @@ class AppController extends GetxController {
   }
 
   Future<void> initPlatformState() async {
-    var deviceData = <String, dynamic>{};
+
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     try {
       if (Platform.isAndroid) {

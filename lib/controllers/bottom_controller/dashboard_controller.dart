@@ -1,6 +1,5 @@
 
 import 'package:flutter_theme/config.dart';
-import 'package:flutter_theme/models/call_model.dart';
 import 'package:flutter_theme/pages/bottom_pages/status/status.dart';
 
 class DashboardController extends GetxController with GetSingleTickerProviderStateMixin {
@@ -11,19 +10,12 @@ class DashboardController extends GetxController with GetSingleTickerProviderSta
   List bottomList = [];
   final statusCtrl = Get.isRegistered<StatusController>() ? Get.find<StatusController>() :Get.put(StatusController());
   List actionList = [];
-/*
-//list of bottommost page
-  List<Widget> widgetOptions = <Widget>[
-    Text("Message"),
-    Message(),
-    StatusList(),
-  ];*/
 
 
 //list of bottommost page
   List<Widget> widgetOptions = <Widget>[
-    StatusList(),
-    Message(),
+    const StatusList(),
+    const Message(),
     Setting(),
   ];
 

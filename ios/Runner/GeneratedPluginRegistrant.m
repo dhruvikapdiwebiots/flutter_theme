@@ -6,6 +6,12 @@
 
 #import "GeneratedPluginRegistrant.h"
 
+#if __has_include(<advance_pdf_viewer/FlutterPluginPdfViewerPlugin.h>)
+#import <advance_pdf_viewer/FlutterPluginPdfViewerPlugin.h>
+#else
+@import advance_pdf_viewer;
+#endif
+
 #if __has_include(<agora_rtc_engine/AgoraRtcNgPlugin.h>)
 #import <agora_rtc_engine/AgoraRtcNgPlugin.h>
 #else
@@ -72,6 +78,12 @@
 @import firebase_storage;
 #endif
 
+#if __has_include(<flutter_contacts/FlutterContactsPlugin.h>)
+#import <flutter_contacts/FlutterContactsPlugin.h>
+#else
+@import flutter_contacts;
+#endif
+
 #if __has_include(<flutter_local_notifications/FlutterLocalNotificationsPlugin.h>)
 #import <flutter_local_notifications/FlutterLocalNotificationsPlugin.h>
 #else
@@ -82,6 +94,12 @@
 #import <flutter_login_facebook/FlutterLoginFacebookPlugin.h>
 #else
 @import flutter_login_facebook;
+#endif
+
+#if __has_include(<flutter_pdfview/FLTPDFViewFlutterPlugin.h>)
+#import <flutter_pdfview/FLTPDFViewFlutterPlugin.h>
+#else
+@import flutter_pdfview;
 #endif
 
 #if __has_include(<flutter_sound/FlutterSound.h>)
@@ -168,6 +186,12 @@
 @import sqflite;
 #endif
 
+#if __has_include(<syncfusion_flutter_pdfviewer/SyncfusionFlutterPdfViewerPlugin.h>)
+#import <syncfusion_flutter_pdfviewer/SyncfusionFlutterPdfViewerPlugin.h>
+#else
+@import syncfusion_flutter_pdfviewer;
+#endif
+
 #if __has_include(<url_launcher_ios/FLTURLLauncherPlugin.h>)
 #import <url_launcher_ios/FLTURLLauncherPlugin.h>
 #else
@@ -189,6 +213,7 @@
 @implementation GeneratedPluginRegistrant
 
 + (void)registerWithRegistry:(NSObject<FlutterPluginRegistry>*)registry {
+  [FlutterPluginPdfViewerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterPluginPdfViewerPlugin"]];
   [AgoraRtcNgPlugin registerWithRegistrar:[registry registrarForPlugin:@"AgoraRtcNgPlugin"]];
   [AudioSessionPlugin registerWithRegistrar:[registry registrarForPlugin:@"AudioSessionPlugin"]];
   [AudioplayersDarwinPlugin registerWithRegistrar:[registry registrarForPlugin:@"AudioplayersDarwinPlugin"]];
@@ -200,8 +225,10 @@
   [FLTFirebaseCorePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseCorePlugin"]];
   [FLTFirebaseMessagingPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseMessagingPlugin"]];
   [FLTFirebaseStoragePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseStoragePlugin"]];
+  [FlutterContactsPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterContactsPlugin"]];
   [FlutterLocalNotificationsPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterLocalNotificationsPlugin"]];
   [FlutterLoginFacebookPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterLoginFacebookPlugin"]];
+  [FLTPDFViewFlutterPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTPDFViewFlutterPlugin"]];
   [FlutterSound registerWithRegistrar:[registry registrarForPlugin:@"FlutterSound"]];
   [FluttertoastPlugin registerWithRegistrar:[registry registrarForPlugin:@"FluttertoastPlugin"]];
   [GeolocatorPlugin registerWithRegistrar:[registry registrarForPlugin:@"GeolocatorPlugin"]];
@@ -216,6 +243,7 @@
   [FLTSharePlusPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTSharePlusPlugin"]];
   [FLTSharedPreferencesPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTSharedPreferencesPlugin"]];
   [SqflitePlugin registerWithRegistrar:[registry registrarForPlugin:@"SqflitePlugin"]];
+  [SyncfusionFlutterPdfViewerPlugin registerWithRegistrar:[registry registrarForPlugin:@"SyncfusionFlutterPdfViewerPlugin"]];
   [FLTURLLauncherPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTURLLauncherPlugin"]];
   [FLTVideoPlayerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTVideoPlayerPlugin"]];
   [WakelockPlugin registerWithRegistrar:[registry registrarForPlugin:@"WakelockPlugin"]];

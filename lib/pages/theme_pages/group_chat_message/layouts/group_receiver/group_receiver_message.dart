@@ -1,5 +1,3 @@
-import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_contact_layout.dart';
-import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_location_layout.dart';
 
 import '../../../../../config.dart';
 

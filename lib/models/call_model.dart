@@ -28,7 +28,7 @@ class Call {
 
   // to map
   Map<String, dynamic> toMap(Call call) {
-    Map<String, dynamic> callMap = Map();
+    Map<String, dynamic> callMap = {};
     callMap["caller_id"] = call.callerId;
     callMap["caller_name"] = call.callerName;
     callMap["caller_pic"] = call.callerPic;

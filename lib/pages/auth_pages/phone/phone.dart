@@ -1,5 +1,3 @@
-import 'dart:async';
-import 'dart:math';
 
 import 'package:flip_card/flip_card.dart';
 
@@ -69,7 +67,7 @@ class Phone extends StatelessWidget {
                 key: phoneCtrl.cardKey,
                 flipOnTouch: false,
                 front: Container(
-                    margin: EdgeInsets.all(10),
+                    margin: const EdgeInsets.all(10),
                     width: MediaQuery.of(context).size.height * 0.5,
                     padding: const EdgeInsets.symmetric(
                         horizontal: Insets.i20, vertical: Insets.i20),
@@ -82,7 +80,7 @@ class Phone extends StatelessWidget {
                       key: phoneCtrl.formKey,
                       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                         const VSpace(Sizes.s15),
-                        Text("Your Phone!",
+                        Text(fonts.yourPhone.tr,
                             style:
                             AppCss.poppinsblack20.textColor(appCtrl.appTheme.primary)),
                         const VSpace(Sizes.s15),
@@ -146,94 +144,6 @@ class Phone extends StatelessWidget {
               ),
             ],
           )
-          /*Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-            const VSpace(Sizes.s20),
-            phoneCtrl.switchScreen? Padding(
-                padding: const EdgeInsets.all(12),
-                child: TweenAnimationBuilder<double>(
-                    duration: const Duration(seconds: 1),
-                  child: null,
-                  tween: Tween(begin: 0,end: phoneCtrl.val),
-
-                  builder: (context,value,child) {
-                    return Transform(
-                      transform: Matrix4.identity()..setEntry(3, 2, 0.001)..rotateY(value),alignment: Alignment.bottomCenter,
-
-                      child:  Container(
-                          width: MediaQuery.of(context).size.height * 0.5,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: Insets.i20, vertical: Insets.i20),
-                          decoration: BoxDecoration(
-                            color: appCtrl.appTheme.whiteColor,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const VSpace(Sizes.s15),
-                                Text("Your Phone!",
-                                    style: AppCss.poppinsblack20
-                                        .textColor(appCtrl.appTheme.primary)),
-                                const VSpace(Sizes.s15),
-                                Text(fonts.phoneDesc.tr,
-                                    style: AppCss.poppinsMedium14
-                                        .textColor(appCtrl.appTheme.primary)
-                                        .textHeight(1.2)
-                                        .letterSpace(.1)),
-                                const VSpace(Sizes.s45),
-                                CommonTextBox(
-                                    labelText: fonts.mobileNumber.tr,
-                                    focusNode: phoneCtrl.phoneFocus,
-                                    controller: phoneCtrl.phone,
-                                    textInputAction: TextInputAction.done,
-                                    keyboardType: TextInputType.phone,
-                                    maxLength: 10,
-                                    onChanged: (val) {
-                                      if (val.length == 10) {
-                                        phoneCtrl.isCorrect = true;
-                                      } else {
-                                        phoneCtrl.isCorrect = false;
-                                      }
-                                      phoneCtrl.update();
-                                    },
-                                    suffixIcon: phoneCtrl.isCorrect
-                                        ? const Icon(
-                                            Icons.check_circle,
-                                            color: Colors.green,
-                                          )
-                                        : const Icon(
-                                            Icons.cancel,
-                                            color: Colors.red,
-                                          ),
-                                    errorText: phoneCtrl.mobileNumber
-                                        ? fonts.phoneError.tr
-                                        : null),
-                                const VSpace(Sizes.s55),
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Icon(Icons.arrow_forward,
-                                          color: appCtrl.appTheme.whiteColor)
-                                      .paddingAll(Insets.i8)
-                                      .decorated(
-                                          color: appCtrl.appTheme.primary,
-                                          borderRadius:
-                                              BorderRadius.circular(AppRadius.r50))
-                                      .inkWell(
-                                          onTap: () {
-                                            print("object");
-
-
-                                            phoneCtrl.val = pi;
-                                            phoneCtrl.switchScreen = false;
-                                            phoneCtrl.update();
-                                            */ /*phoneCtrl.checkValidation();*/ /*
-                                          }),
-                                )
-                              ])),
-                    );
-                  }
-                )):Otp()
-          ])*/
         ]),
       );
     });

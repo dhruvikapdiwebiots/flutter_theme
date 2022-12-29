@@ -1,8 +1,4 @@
 import 'dart:async';
-import 'dart:io';
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_theme/config.dart';
 
 class SplashController extends GetxController{
@@ -26,7 +22,7 @@ class SplashController extends GetxController{
   //navigate to login page
   loginNavigation() async {
     var user = appCtrl.storage.read("user") ?? "";
-    print("user : $user");
+
     if(user == "") {
       Get.offAllNamed(routeName.phone);
     }else{
@@ -40,8 +36,7 @@ class SplashController extends GetxController{
     var user = appCtrl.storage.read("user")??"";
 
     bool isIntro = appCtrl.storage.read("isIntro") ?? false;
-    print("user : $user");
-    print("isIntro : $isIntro");
+
     if (user == "") {
       // Checking if user is already login or not
      Get.toNamed(routeName.phone);

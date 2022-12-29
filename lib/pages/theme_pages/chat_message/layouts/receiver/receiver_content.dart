@@ -13,16 +13,16 @@ class ReceiverContent extends StatelessWidget {
     return InkWell(
       onLongPress:  onLongPress,
       child: Container(
-        padding:
-        const EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-        width: 220.0,
+        padding: const EdgeInsets.symmetric(
+            horizontal: Insets.i15, vertical: Insets.i10),
+        width: Sizes.s220,
         decoration: BoxDecoration(
             color: appCtrl.appTheme.gray,
             borderRadius: const BorderRadius.only(
                 topRight: Radius.circular(Insets.i20),
                 bottomLeft: Radius.circular(Insets.i20),
                 bottomRight: Radius.circular(Insets.i20))),
-        margin: const EdgeInsets.only(left: 2.0),
+        margin: const EdgeInsets.symmetric(horizontal: 8),
         child:  Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.end,

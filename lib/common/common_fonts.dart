@@ -2,6 +2,7 @@ import 'package:flutter_theme/config.dart';
 
 class Fonts{
   final title = "title";
+  final chatter = "chatter";
   final subtitle = "subtitle";
   final subtitle2 = "subtitle2";
   final subtitle3 = "subtitle3";
@@ -71,5 +72,6 @@ class Fonts{
   final unblock = "unblock";
   final block = "block";
   final setGroup = "setGroup";
+  final yourPhone = "yourPhone";
   String unblockUser(val) => "unblockUser".trParams({'pName':val});
 }
