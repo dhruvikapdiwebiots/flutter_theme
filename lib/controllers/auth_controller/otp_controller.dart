@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_theme/config.dart';
 
 class OtpController extends GetxController {
@@ -18,22 +20,24 @@ class OtpController extends GetxController {
   }
 
 // Dismiss KEYBOARD
-
   void dismissKeyboard() {
     FocusScope.of(Get.context!).requestFocus(FocusNode());
   }
 
+  //navigate to dashboard
   homeNavigation(user) async {
     appCtrl.storage.write("id", user["id"]);
     await appCtrl.storage.write("user", user);
+    await appCtrl.storage.write("isIntro", true);
     await FirebaseFirestore.instance
         .collection('users')
         .doc(user["id"])
         .update({'status': "Online"});
-
+log('check : ${appCtrl.storage.read("isIntro")}');
     Get.toNamed(routeName.dashboard);
   }
 
+  //show toast
   void showToast(message, Color color) {
     Fluttertoast.showToast(
         msg: message,
@@ -125,7 +129,7 @@ class OtpController extends GetxController {
                   arguments: {"resultData": resultData, "isPhoneLogin": true});
               await appCtrl.storage.write("user", value.docs[0].data());
             } else {
-              await appCtrl.storage.write("user", value.docs[0].data());
+              await appCtrl.storage.write("user", resultData);
               homeNavigation(resultData);
             }
           }

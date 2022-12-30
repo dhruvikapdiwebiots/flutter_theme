@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter_contacts/contact.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../config.dart';

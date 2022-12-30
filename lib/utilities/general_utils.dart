@@ -1,5 +1,5 @@
 import 'dart:math' as math;
-
+import 'package:flutter_contacts/flutter_contacts.dart';
 import '../config.dart';
 
 var loadingCtrl = Get.find<AppController>();
@@ -58,8 +58,8 @@ String phoneNumberExtension(phoneNumber) {
 }
 
 Future<List<Contact>>  getAllContacts() async {
-  var contacts = (await ContactsService.getContacts(
-      withThumbnails: false, iOSLocalizedLabels: false));
+  var contacts = (await FlutterContacts.getContacts(
+      withPhoto: true, withProperties: true));
   return contacts;
 }
 

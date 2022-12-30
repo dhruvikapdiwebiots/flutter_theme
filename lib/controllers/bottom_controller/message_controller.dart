@@ -39,13 +39,7 @@ class MessageController extends GetxController {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User user = auth.currentUser!;
     contactUserList =   await permissionHandelCtrl.getContact();
-    for (final contact in contactUserList) {
-      ContactsService.getAvatar(contact).then((avatar) {
-        if (avatar == null) return; // Don't redraw if no change.
-        contact.avatar = avatar;
-        update();
-      });
-    }
+
     currentUser = user;
     update();
     notificationCtrl.configLocalNotification();

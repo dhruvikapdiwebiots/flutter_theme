@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dartx/dartx_io.dart';
+import 'package:flutter_contacts/contact.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/pages/theme_pages/broadcast_chat/layouts/broadcast_sender.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -174,7 +175,7 @@ class BroadcastChatController extends GetxController {
       Get.toNamed(routeName.contactList)!.then((value) async {
         Contact contact = value;
         onSendMessage(
-            '${contact.displayName}-BREAK-${contact.phones![0].value}-BREAK-${contact.avatar!}',
+            '${contact.displayName}-BREAK-${contact.phones[0].number}-BREAK-${contact.photo!}',
             MessageType.contact);
       });
     } else {

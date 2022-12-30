@@ -1,8 +1,13 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:flutter_theme/config.dart';
 
-class SplashController extends GetxController{
-  final firebaseCtrl = Get.isRegistered<FirebaseCommonController>() ? Get.find<FirebaseCommonController>() : Get.put(FirebaseCommonController());
+class SplashController extends GetxController {
+  final firebaseCtrl = Get.isRegistered<FirebaseCommonController>()
+      ? Get.find<FirebaseCommonController>()
+      : Get.put(FirebaseCommonController());
+  final storage = GetStorage();
+
   @override
   void onReady() {
     // TODO: implement onReady
@@ -15,39 +20,36 @@ class SplashController extends GetxController{
   // START TIME
   startTime() async {
     var duration =
-    const Duration(seconds: 3); // timedelay to display splash screen
+        const Duration(seconds: 3); // timedelay to display splash screen
     return Timer(duration, navigationPage);
   }
 
   //navigate to login page
   loginNavigation() async {
-    var user = appCtrl.storage.read("user") ?? "";
+    var user = storage.read("user");
 
-    if(user == "") {
+    if (user == "") {
       Get.offAllNamed(routeName.phone);
-    }else{
+    } else {
       Get.offAllNamed(routeName.dashboard);
     }
-
   }
 
   //check whether user login or not
   void navigationPage() async {
-    var user = appCtrl.storage.read("user")??"";
-
-    bool isIntro = appCtrl.storage.read("isIntro") ?? false;
-
+    var user = storage.read("user");
+    log("user : $user");
+    bool isIntro = storage.read("isIntro") ?? false;
+    log("isIntro : $isIntro");
     if (user == "") {
       // Checking if user is already login or not
-     Get.toNamed(routeName.phone);
+      Get.toNamed(routeName.phone);
     } else {
-      if(isIntro ==true) {
+      if (isIntro == true && isIntro.toString() == "true") {
         loginNavigation(); // navigate to homepage if user id is not null
-      }else{
+      } else {
         Get.toNamed(routeName.intro);
       }
-
     }
   }
-
 }

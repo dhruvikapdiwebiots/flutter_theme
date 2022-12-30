@@ -54,24 +54,11 @@ class _GroupChatMessageState extends State<GroupChatMessage>
           child: Scaffold(
               appBar: GroupChatMessageAppBar(name: chatCtrl.pName),
               backgroundColor: Colors.white,
-              body: Stack(children: [
-                Container(
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage(imageAssets.chatBg),
-                            fit: BoxFit.cover))),
-                Stack(children: <Widget>[
-                  Column(children: <Widget>[
-                    // List of messages
-                    const GroupMessageBox(),
-                    // Sticker
-                    Container(),
-                    // Input content
-                    const GroupInputBox()
-                  ]),
-                  // Loading
-                  const GroupBuildLoader()
-                ])
+              body: Stack(children: <Widget>[
+                //body layout
+                const GroupChatBody(),
+                // Loading
+                if (chatCtrl.isLoading) const GroupBuildLoader()
               ])));
     });
   }

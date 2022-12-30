@@ -56,7 +56,7 @@ class AppTheme {
         return AppTheme(
           isDark: false,
           txt: const Color(0xFF001928),
-          primary: const Color(0xFF285486),
+          primary: const Color(0xFF335382),
           secondary: const Color(0xFF6EBAE7),
           accent: const Color(0xFFefefef),
           grey: Colors.grey,

@@ -83,4 +83,5 @@ final dynamic en = {
   "unblockUser": "Unblock @pName to send message?",
   "setGroup": "Create Group",
   "yourPhone": "Your Phone!",
+    "enterYourMessage": "Enter your message",
 };

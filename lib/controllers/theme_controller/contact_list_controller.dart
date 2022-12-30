@@ -1,89 +1,76 @@
+import 'dart:developer';
+
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_contacts/flutter_contacts.dart' as contact;
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class ContactListController extends GetxController {
-  List<Contact>? contacts;
-  List<Contact> contactList = [];
-  List<Contact>? searchContactList = [];
+  List<contact.Contact>? contacts;
+  List<contact.Contact> contactList = [];
+  List<contact.Contact>? searchContactList = [];
   List selectedContact = [];
   bool isLoading = true;
+  int counter =0;
   static const pageSize = 20;
   TextEditingController searchText = TextEditingController();
   final messageCtrl = Get.isRegistered<MessageController>()
       ? Get.find<MessageController>()
       : Get.put(MessageController());
 
+
+  final PagingController<int, contact.Contact> pagingController =
+  PagingController(firstPageKey: 0);
+
   @override
-  void onReady() async {
-    // TODO: implement onReady
-    isLoading = true;
-    update();
-    contactList = await permissionHandelCtrl.getContact();
-    for (final contact in contactList) {
-      ContactsService.getAvatar(contact).then((avatar) {
-        if (avatar == null) return; // Don't redraw if no change.
-        contact.avatar = avatar;
-        update();
-      });
-    }
-    update();
-    isLoading = false;
-    super.onReady();
+  void onInit() {
+    // TODO: implement onInit
+    pagingController.addPageRequestListener((pageKey) {
+
+      fetchPage(pageKey,"");
+    });
+    super.onInit();
   }
 
-  getFirebaseContact(contacts) async {
-    final msgList = await FirebaseFirestore.instance.collection("users").get();
+   fetchPage(int pageKey,search) async {
+    try {
+counter ++;
 
-    for (final user in msgList.docs) {
-      for (final contact in contacts!) {
-        String phone = contact.phones![0].value.toString();
-        if (phone.length > 10) {
-          if (phone.contains(" ")) {
-            phone = phone.replaceAll(" ", "");
-          }
-          if (phone.contains("-")) {
-            phone = phone.replaceAll("-", "");
-          }
-          if (phone.contains("+")) {
-            phone = phone.replaceAll("+91", "");
-          }
-        }
-        if (phone == user.data()["phone"]) {
-          final storeUser = appCtrl.storage.read("user");
-          if (user.data()["id"] != storeUser["id"]) {
-            contactList.add(Contact.fromMap(contact));
-          }
-        }
-      }
-    }
-    update();
-  }
+      contacts = await contact.FlutterContacts.getContacts(withPhoto: true, withProperties: true,withThumbnail: true);
 
-  searchContact(val, isTapSearch) async {
-    searchContactList = [];
-    isLoading = true;
-    update();
-    if (isTapSearch) {
-      for (int i = 0; i < contactList.length; i++) {
-        if (contactList[i].phones!.isNotEmpty) {
-          if (contactList[i].displayName!.toLowerCase().contains(val)) {
-            searchContactList!.add(contactList[i]);
-          }
-        }
-      }
-    } else {
-      if (val.length > 2) {
-        for (int i = 0; i < contactList.length; i++) {
-          if (contactList[i].phones!.isNotEmpty) {
-            if (contactList[i].displayName!.toLowerCase().contains(val)) {
-              searchContactList!.add(contactList[i]);
+      if(search == "") {
+        pagingController.itemList = [];
+        contactList = [];
+        contactList = contacts!;
+      }else{
+      pagingController.itemList = [];
+      contactList = [];
+        for (int i = 0; i < contacts!.length; i++) {
+          if (contacts![i].phones.isNotEmpty) {
+            if (contacts![i].displayName.toLowerCase().contains(search)) {
+              contactList.add(contacts![i]);
             }
           }
         }
       }
+      update();
+      final isLastPage = contactList.length < pageSize;
+      if (isLastPage) {
+        pagingController.appendLastPage(contactList);
+      } else {
+        final nextPageKey = pageKey + contactList.length;
+        pagingController.appendPage(contactList, nextPageKey);
+      }
+
+      update();
+    } catch (error) {
+      pagingController.error = error;
     }
-    await Future.delayed(Durations.s2);
-    isLoading = false;
-    update();
+  }
+
+  @override
+  void onReady() async {
+    // TODO: implement onReady
+update();
+    super.onReady();
   }
 }

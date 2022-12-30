@@ -53,11 +53,11 @@ class StatusLayout extends StatelessWidget {
                   color: appCtrl.appTheme.grey.withOpacity(.4),
                   shape: BoxShape.circle)),
           Icon(
-            CupertinoIcons.add,
-            color: appCtrl.appTheme.whiteColor,
-            size: Sizes.s20,
-          ).paddingAll(Insets.i2).decorated(
-              color: appCtrl.appTheme.primary, shape: BoxShape.circle),
+            CupertinoIcons.add_circled_solid,
+            color: appCtrl.appTheme.primary,
+
+          ).decorated(
+              color: appCtrl.appTheme.whiteColor, shape: BoxShape.circle),
         ]));
   }
 }

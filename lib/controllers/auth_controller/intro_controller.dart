@@ -1,11 +1,12 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter_theme/config.dart';
 
 class IntroController extends GetxController {
   var pageController = PageController(initialPage: 0);
   List pageViewModelData = [];
-
+  final storage = GetStorage();
   var title = fonts.title;
   var subtitle = fonts.subtitle;
   var subtitle2 = fonts.subtitle2;
@@ -56,8 +57,9 @@ class IntroController extends GetxController {
 
 //navigate to Login
   navigateToLogin() async{
-    await appCtrl.storage.write("isIntro", true);
+    await storage.write("isIntro", true);
     Get.toNamed(routeName.phone);
+    log("isIntro : ${storage.read("isIntro")}");
   }
 
   @override

@@ -32,10 +32,7 @@ class SenderImage extends StatelessWidget {
                       color: appCtrl.appTheme.accent,
                       borderRadius:  BorderRadius.circular(AppRadius.r8),
                     ),
-                    child: CircularProgressIndicator(
-                      valueColor:
-                          AlwaysStoppedAnimation<Color>(appCtrl.appTheme.accent),
-                    )),
+                    child: Container()),
                 imageUrl: document!['content'],
                 width: Sizes.s200,
                 height: Sizes.s200,

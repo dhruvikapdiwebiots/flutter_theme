@@ -61,8 +61,36 @@ class ChatController extends GetxController {
       update();
     }
     update();
+    getChatData();
     seenMessage();
     super.onReady();
+  }
+
+  //get chat data
+  getChatData() async {
+    if (chatId == "0") {
+      await FirebaseFirestore.instance
+          .collectionGroup("contacts")
+          .get()
+          .then((value) {
+        for (int i = 0; i < value.docs.length; i++) {
+          if (value.docs[i].data()["isOneToOne"] == true) {
+            if (value.docs[i].data()["senderPhone"] == pData["phone"] &&
+                value.docs[i].data()["receiverPhone"] == userData["phone"]) {
+              allData = value.docs[i];
+              chatId = value.docs[i]["chatId"];
+            }
+            if (value.docs[i].data()["senderPhone"] == userData["phone"] &&
+                value.docs[i].data()["receiverPhone"] == pData["phone"]) {
+              allData = value.docs[i];
+              chatId = value.docs[i]["chatId"];
+            }
+            update();
+          }
+        }
+        update();
+      });
+    }
   }
 
   //update typing status
@@ -175,7 +203,8 @@ class ChatController extends GetxController {
         "blockUserId": pId,
         'messageType': "sender",
         'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-      });await FirebaseFirestore.instance
+      });
+      await FirebaseFirestore.instance
           .collection("contacts")
           .where("chatId", isEqualTo: newChatId)
           .get()
@@ -238,7 +267,7 @@ class ChatController extends GetxController {
         'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
       });
 
-   await FirebaseFirestore.instance
+      await FirebaseFirestore.instance
           .collection("contacts")
           .where("chatId", isEqualTo: newChatId)
           .get()
@@ -331,13 +360,13 @@ class ChatController extends GetxController {
         Fluttertoast.showToast(msg: 'Image is Not Valid');
       });
     }).then((value) {
-        videoFile = null;
-        pickerCtrl.videoFile = null;
+      videoFile = null;
+      pickerCtrl.videoFile = null;
 
-        pickerCtrl.video = null;
-        videoUrl = "";
-        update();
-        pickerCtrl.update();
+      pickerCtrl.video = null;
+      videoUrl = "";
+      update();
+      pickerCtrl.update();
     });
   }
 
@@ -349,7 +378,7 @@ class ChatController extends GetxController {
       Get.toNamed(routeName.contactList)!.then((value) async {
         Contact contact = value;
         onSendMessage(
-            '${contact.displayName}-BREAK-${contact.phones![0].value}-BREAK-${contact.avatar!}',
+            '${contact.displayName}-BREAK-${contact.phones[0].number}-BREAK-${contact.photo}',
             MessageType.contact);
       });
     } else {
@@ -373,17 +402,14 @@ class ChatController extends GetxController {
                 borderRadius: BorderRadius.circular(10)),
             child: AudioRecordingPlugin(type: type, index: index));
       },
-    ).then((value)async {
-
+    ).then((value) async {
       File file = File(value);
       String fileName =
           "${file.name}-${DateTime.now().millisecondsSinceEpoch.toString()}";
 
       audioFile = await pickerCtrl.uploadAudio(file, fileNameText: fileName);
 
-
       onSendMessage(audioFile!, MessageType.audio);
-
     });
   }
 
@@ -494,6 +520,7 @@ class ChatController extends GetxController {
                     "isBlock": true,
                     "isBroadcast": false,
                     "isBroadcastSender": false,
+                    "isOneToOne": true,
                     "blockBy": allData.data()["blockBy"],
                     "blockUserId": allData.data()["blockUserId"],
                     "groupId": "",
@@ -587,6 +614,7 @@ class ChatController extends GetxController {
                   "isBlock": false,
                   "isBroadcast": false,
                   "isBroadcastSender": false,
+                  "isOneToOne": true,
                   "blockBy": "",
                   "blockUserId": "",
                   "groupId": "",
@@ -681,6 +709,7 @@ class ChatController extends GetxController {
                 "isBlock": false,
                 "isBroadcast": false,
                 "isBroadcastSender": false,
+                "isOneToOne": true,
                 "blockBy": "",
                 "blockUserId": "",
                 "groupId": "",

@@ -1,4 +1,7 @@
+import 'package:flutter_contacts/contact.dart';
+
 import '../../../../config.dart';
+
 
 class StatusFirebaseApi {
   //add status
@@ -56,9 +59,9 @@ class StatusFirebaseApi {
     List<Status> statusData = [];
     for (int i = 0; i < statusesSnapshot.docs.length; i++) {
       for (int j = 0; j < contacts.length; j++) {
-        if (contacts[j].phones!.isNotEmpty) {
+        if (contacts[j].phones.isNotEmpty) {
           String phone =
-              phoneNumberExtension(contacts[j].phones![0].value.toString());
+              phoneNumberExtension(contacts[j].phones[0].number.toString());
           if (phone == statusesSnapshot.docs[i].data()["phoneNumber"]) {
             if (statusesSnapshot.docs[i].data()["uid"] != user["id"]) {
               Status tempStatus =

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_theme/config.dart';
 
 class CreateGroupController extends GetxController {
@@ -23,13 +24,7 @@ class CreateGroupController extends GetxController {
 
   Future<void> refreshContacts() async {
     contacts = await permissionHandelCtrl.getContact();
-    for (final contact in contacts!) {
-      ContactsService.getAvatar(contact).then((avatar) {
-        if (avatar == null) return; // Don't redraw if no change.
-        contact.avatar = avatar;
-        update();
-      });
-    }
+
     update();
     getFirebaseContact(contacts);
   }
@@ -82,15 +77,6 @@ class CreateGroupController extends GetxController {
         Fluttertoast.showToast(msg: 'Image is Not Valid');
       });
     });
-  }
-
-  void updateContact() async {
-    Contact ninja = contacts!
-        .firstWhere((contact) => contact.familyName!.startsWith("Ninja"));
-    ninja.avatar = null;
-    await ContactsService.updateContact(ninja);
-
-    refreshContacts();
   }
 
   addGroupBottomSheet() async {

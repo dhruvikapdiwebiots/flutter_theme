@@ -74,5 +74,6 @@ class Fonts{
   final setGroup = "setGroup";
   final yourPhone = "yourPhone";
   final broadCast = "broadCast";
+  final enterYourMessage = "enterYourMessage";
   String unblockUser(val) => "unblockUser".trParams({'pName':val});
 }

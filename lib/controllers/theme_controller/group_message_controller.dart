@@ -1,13 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:dartx/dartx_io.dart';
 import 'package:flutter_theme/config.dart';
-import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_delete_alert.dart';
-import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_file_bottom_sheet.dart';
-import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_receiver/group_receiver_message.dart';
-import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_sender/sender_message.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class GroupChatMessageController extends GetxController {
@@ -17,7 +12,6 @@ class GroupChatMessageController extends GetxController {
       pName,
       groupId,
       imageUrl,
-      peerNo,
       status,
       statusLastSeen,
       nameList,
@@ -58,14 +52,18 @@ class GroupChatMessageController extends GetxController {
     super.onReady();
   }
 
+//get group data
   getPeerStatus() {
-
-    FirebaseFirestore.instance.collection('groups').doc(pId).get().then((value) {
+    FirebaseFirestore.instance
+        .collection('groups')
+        .doc(pId)
+        .get()
+        .then((value) {
       if (value.exists) {
         pData = value.data();
         List receiver = pData["users"];
         for (var i = 0; i < receiver.length; i++) {
-          if (nameList !=null) {
+          if (nameList != null) {
             nameList = "$nameList, ${receiver[i]["name"]}";
           } else {
             nameList = receiver[i]["name"];
@@ -76,9 +74,14 @@ class GroupChatMessageController extends GetxController {
       update();
     });
 
-    FirebaseFirestore.instance.collection('groupMessage').doc(pId).collection("chat").get().then((value) {
+    FirebaseFirestore.instance
+        .collection('groupMessage')
+        .doc(pId)
+        .collection("chat")
+        .get()
+        .then((value) {
       if (value.docs.isNotEmpty) {
-        documentId = value.docs[0].id  ;
+        documentId = value.docs[0].id;
       }
     });
 
@@ -124,8 +127,7 @@ class GroupChatMessageController extends GetxController {
     pickerCtrl.dismissKeyboard();
     Get.back();
 
-        await permissionHandelCtrl.getCurrentPosition().then((value) async {
-
+    await permissionHandelCtrl.getCurrentPosition().then((value) async {
       var locationString =
           'https://www.google.com/maps/search/?api=1&query=${value!.latitude},${value.longitude}';
       onSendMessage(locationString, MessageType.location);
@@ -149,16 +151,6 @@ class GroupChatMessageController extends GetxController {
         });
   }
 
-// GET IMAGE FROM GALLERY
-  Future getImage(source) async {
-    final ImagePicker picker = ImagePicker();
-    imageFile = (await picker.pickImage(source: source))!;
-    if (imageFile != null) {
-      isLoading = true;
-      update();
-      uploadFile();
-    }
-  }
 
 // UPLOAD SELECTED IMAGE TO FIREBASE
   Future uploadFile() async {
@@ -207,7 +199,7 @@ class GroupChatMessageController extends GetxController {
       Get.toNamed(routeName.contactList)!.then((value) async {
         Contact contact = value;
         onSendMessage(
-            '${contact.displayName}-BREAK-${contact.phones![0].value}-BREAK-${contact.avatar!}',
+            '${contact.displayName}-BREAK-${contact.phones[0].number}-BREAK-${contact.photo}',
             MessageType.contact);
       });
     } else {
@@ -273,10 +265,10 @@ class GroupChatMessageController extends GetxController {
       });
 
       await FirebaseFirestore.instance
-          .collection("contacts").where("isGroup",isEqualTo: true)
+          .collection("contacts")
+          .where("isGroup", isEqualTo: true)
           .get()
           .then((value) {
-
         if (value.docs.isNotEmpty) {
           for (var i = 0; i < value.docs.length; i++) {
             final snapshot = value.docs[i].data();
@@ -289,12 +281,15 @@ class GroupChatMessageController extends GetxController {
                     .collection('contacts')
                     .doc(value.docs[i].id)
                     .update({
-
                   "updateStamp":
                       DateTime.now().millisecondsSinceEpoch.toString(),
                   "lastMessage": content,
                   "senderPhone": user["phone"],
-                  'sender': {"id" :user['id'],"name":user['name'],"phone":user["phone"]},
+                  'sender': {
+                    "id": user['id'],
+                    "name": user['name'],
+                    "phone": user["phone"]
+                  },
                 });
               }
             }
@@ -334,9 +329,9 @@ class GroupChatMessageController extends GetxController {
     );
   }
 
-  // ON BACKPRESS
+  // ON BACK PRESS
   Future<bool> onBackPress() {
-    firebaseCtrl.groupTypingStatus(pId,documentId,false);
+    firebaseCtrl.groupTypingStatus(pId, documentId, false);
     Get.back();
     return Future.value(false);
   }

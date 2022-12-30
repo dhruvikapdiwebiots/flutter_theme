@@ -1,4 +1,4 @@
-
+import 'dart:developer';
 import 'dart:io';
 
 import '../../../config.dart';
@@ -16,9 +16,9 @@ class MessageFirebaseApi {
         await FirebaseFirestore.instance.collection('users').get();
     for (int i = 0; i < statusesSnapshot.docs.length; i++) {
       for (int j = 0; j < contacts.length; j++) {
-        if (contacts[j].phones!.isNotEmpty) {
+        if (contacts[j].phones.isNotEmpty) {
           String phone =
-          phoneNumberExtension(contacts[j].phones![0].value.toString());
+              phoneNumberExtension(contacts[j].phones[0].number.toString());
 
           if (phone == statusesSnapshot.docs[i]["phone"]) {
             var messageSnapshot = await FirebaseFirestore.instance
@@ -65,7 +65,7 @@ class MessageFirebaseApi {
     if (value != null) {
       Contact contact = value;
 
-      String phone = contact.phones![0].value!;
+      String phone = contact.phones[0].number;
       if (phone.length > 10) {
         if (phone.contains(" ")) {
           phone = phone.replaceAll(" ", "");
@@ -123,17 +123,18 @@ class MessageFirebaseApi {
   //chat list
 
   List chatListWidget(
-      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,MessageController messageCtrl) {
+      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
+      MessageController messageCtrl) {
     List message = [];
 
     for (int j = 0; j < messageCtrl.contactUserList.length; j++) {
-      if (messageCtrl.contactUserList[j].phones!.isNotEmpty) {
+      if (messageCtrl.contactUserList[j].phones.isNotEmpty) {
         String phone = phoneNumberExtension(
-            messageCtrl.contactUserList[j].phones![0].value.toString());
+            messageCtrl.contactUserList[j].phones[0].number.toString());
         for (int a = 0; a < snapshot.data!.docs.length; a++) {
           if (snapshot.data!.docs[a].data()["isGroup"] == false) {
             if (snapshot.data!.docs[a].data()["senderPhone"] ==
-                messageCtrl.storageUser["phone"] ||
+                    messageCtrl.storageUser["phone"] ||
                 snapshot.data!.docs[a].data()["receiverPhone"] == phone &&
                     snapshot.data!.docs[a].data()["senderPhone"] == phone ||
                 snapshot.data!.docs[a].data()["receiverPhone"] ==

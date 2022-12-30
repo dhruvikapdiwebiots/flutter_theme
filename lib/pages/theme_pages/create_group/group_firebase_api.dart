@@ -65,6 +65,7 @@ class GroupFirebaseApi{
         },
         'receiver': null,
         "isBroadcast": false,
+        "isBroadcastSender": false,
         'group': {
           "id": value.id,
           "name": groupCtrl.txtGroupName.text,

@@ -1,4 +1,3 @@
-
 import 'package:flutter_theme/config.dart';
 
 class Chat extends StatefulWidget {
@@ -49,7 +48,6 @@ class _ChatState extends State<Chat>
     Get.toNamed(routeName.callScreen,arguments:user );*/
   }
 
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ChatController>(builder: (_) {
@@ -59,8 +57,7 @@ class _ChatState extends State<Chat>
               appBar: ChatMessageAppBar(
                   name: chatCtrl.pName,
                   isBlock: chatCtrl.isBlock
-                      ? chatCtrl.blockBy ==
-                              chatCtrl.userData["id"]
+                      ? chatCtrl.blockBy == chatCtrl.userData["id"]
                           ? true
                           : false
                       : false,
@@ -68,18 +65,18 @@ class _ChatState extends State<Chat>
                   moreTap: () => chatCtrl.blockUser()),
               backgroundColor: appCtrl.appTheme.whiteColor,
               body: chatCtrl.isUserAvailable
-                  ?  Stack(children: <Widget>[
-                Column(children: <Widget>[
-                  // List of messages
-                  const MessageBox(),
-                  // Sticker
-                  Container(),
-                  // Input content
-                  const InputBox()
-                ]),
-                // Loading
-                const BuildLoader()
-              ])
+                  ? Stack(children: <Widget>[
+                      Column(children: <Widget>[
+                        // List of messages
+                        const MessageBox(),
+                        // Sticker
+                        Container(),
+                        // Input content
+                        const InputBox()
+                      ]),
+                      // Loading
+                      const BuildLoader()
+                    ])
                   : Center(
                       child: CommonButton(
                         title: fonts.invite.tr,
