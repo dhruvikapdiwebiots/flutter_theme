@@ -6,7 +6,7 @@ class FirebaseAuthController extends GetxController {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   var firebaseAuth = FirebaseAuth.instance;
   bool isLoading = false;
-  final facebookLogin = FacebookLogin(debug: true);
+
   var auth = FirebaseAuth.instance;
 
   //sign in
@@ -59,42 +59,6 @@ class FirebaseAuthController extends GetxController {
       });
     } catch (e) {
       log("catch : $e");
-    }
-  }
-
-  loginWithFB() async {
-    log('login');
-    isLoading = false;
-    final result = await facebookLogin.logIn(permissions: [
-      FacebookPermission.publicProfile,
-      FacebookPermission.email,
-    ]);
-
-    log("result : $result");
-// Check result status
-    switch (result.status) {
-      case FacebookLoginStatus.success:
-        final token = result.accessToken!.token;
-        final facebookAuthCred = FacebookAuthProvider.credential(token);
-        final user =
-            (await firebaseAuth.signInWithCredential(facebookAuthCred)).user;
-        dynamic resultData = await getUserData(user!);
-        if (resultData["phone"] == "") {
-          Get.toNamed(routeName.editProfile,
-              arguments: {"resultData": resultData, "isPhoneLogin": false});
-        } else {
-          homeNavigation(resultData);
-        }
-        log("user : $user");
-
-        break;
-      case FacebookLoginStatus.cancel:
-        // User cancel log in
-        break;
-      case FacebookLoginStatus.error:
-        // Log in failed
-        log('Error while log in: ${result.error}');
-        break;
     }
   }
 

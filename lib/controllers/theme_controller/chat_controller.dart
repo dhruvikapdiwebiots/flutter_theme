@@ -107,11 +107,12 @@ class ChatController extends GetxController {
     });
   }
 
+  //seen all message
   seenMessage() async {
-    if (userData["phone"] != pData["senderPhone"]) {
-      FirebaseFirestore.instance
+    if (userData["id"] == allData["receiver"]["id"]) {
+    await  FirebaseFirestore.instance
           .collection("messages")
-          .doc(pId)
+          .doc(chatId)
           .collection("chat")
           .where("isSeen", isEqualTo: false)
           .get()
@@ -119,7 +120,7 @@ class ChatController extends GetxController {
         for (var i = 0; i < value.docs.length; i++) {
           FirebaseFirestore.instance
               .collection("messages")
-              .doc(pId)
+              .doc(chatId)
               .collection("chat")
               .doc(value.docs[i].id)
               .update({"isSeen": true});
@@ -428,6 +429,11 @@ class ChatController extends GetxController {
       videoUrl = "";
       audioFile = "";
       update();
+      if(pData["pushToken"] != "" && pData["pushToken"] != null) {
+        firebaseCtrl.sendNotification(title: "$pName • $content",
+            msg: content,
+            token: pData["pushToken"]);
+      }
       if (allData.data()["isBlock"] != null) {
         if (allData.data()["isBlock"] == true) {
           if (allData.data()["blockBy"] == userData["id"]) {

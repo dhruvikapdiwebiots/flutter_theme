@@ -9,6 +9,7 @@ class DashboardController extends GetxController with GetSingleTickerProviderSta
   late int iconCount = 0;
   List bottomList = [];
   final statusCtrl = Get.isRegistered<StatusController>() ? Get.find<StatusController>() :Get.put(StatusController());
+  final settingCtrl = Get.isRegistered<SettingController>() ? Get.find<SettingController>() :Get.put(SettingController());
   List actionList = [];
 
 
@@ -26,6 +27,9 @@ class DashboardController extends GetxController with GetSingleTickerProviderSta
     update();
     if(selectedIndex ==0){
       statusCtrl.getStatus();
+    }
+    if(selectedIndex ==2){
+      settingCtrl.onReady();
     }
   }
 

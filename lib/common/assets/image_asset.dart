@@ -13,6 +13,7 @@ class ImageAssets{
   final String user = 'assets/images/user.png';
   final String map = 'assets/images/mapview.png';
   final String bg = 'assets/images/bg.png';
+  final String noChat = 'assets/images/noChat.png';
   final String logo1 =
       'https://pngimage.net/wp-content/uploads/2018/06/user-logo-png-4.png';
 

@@ -26,7 +26,7 @@ class _GroupSenderMessageState extends State<GroupSenderMessage> {
       return Container(
           margin: const EdgeInsets.only(bottom: 2.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+
             children: <Widget>[
               Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
                 if (widget.document!["type"] == MessageType.text.name)

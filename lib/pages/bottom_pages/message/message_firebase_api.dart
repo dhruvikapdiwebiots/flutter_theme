@@ -1,11 +1,13 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter_contacts/flutter_contacts.dart';
+
 import '../../../config.dart';
 
 class MessageFirebaseApi {
   String? currentUserId;
-
+  final messageCtrl = Get.find<MessageController>();
   //get contact list
   getContactList(List<Contact> contacts) async {
     List message = [];
@@ -88,14 +90,22 @@ class MessageFirebaseApi {
           .get();
       if (m.docs.isEmpty) {
         if (Platform.isAndroid) {
-
-          final uri = Uri(scheme: "sms", path: phone,queryParameters: <String, String>{
-            'body': Uri.encodeComponent('Download the ChatBox App'),
-          },);
+          final uri = Uri(
+            scheme: "sms",
+            path: phone,
+            queryParameters: <String, String>{
+              'body': Uri.encodeComponent('Download the ChatBox App'),
+            },
+          );
           await launchUrl(uri);
         }
       } else {
-        var data = {"data": m.docs[0].data(), "chatId": "0","allData":m.docs[0]};
+        var data = {
+          "data": m.docs[0].data(),
+          "chatId": "0",
+          "allData": m.docs[0]
+        };
+        Get.back();
         Get.toNamed(routeName.chat, arguments: data);
       }
     }
@@ -120,43 +130,59 @@ class MessageFirebaseApi {
     return contactList;
   }
 
-  //chat list
-
-  List chatListWidget(
-      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
-      MessageController messageCtrl) {
-    List message = [];
-
-    for (int j = 0; j < messageCtrl.contactUserList.length; j++) {
-      if (messageCtrl.contactUserList[j].phones.isNotEmpty) {
-        String phone = phoneNumberExtension(
-            messageCtrl.contactUserList[j].phones[0].number.toString());
-        for (int a = 0; a < snapshot.data!.docs.length; a++) {
-          if (snapshot.data!.docs[a].data()["isGroup"] == false) {
-            if (snapshot.data!.docs[a].data()["senderPhone"] ==
-                    messageCtrl.storageUser["phone"] ||
-                snapshot.data!.docs[a].data()["receiverPhone"] == phone &&
-                    snapshot.data!.docs[a].data()["senderPhone"] == phone ||
-                snapshot.data!.docs[a].data()["receiverPhone"] ==
-                    messageCtrl.storageUser["phone"]) {
-              message.add(snapshot.data!.docs[a]);
-            }
-          } else {
-            if (snapshot.data!.docs[a].data()["senderPhone"] ==
-                messageCtrl.storageUser["phone"]) {
-              message.add(snapshot.data!.docs[a]);
-            } else {
-              List groupReceiver = snapshot.data!.docs[a].data()["receiverId"];
-              if (groupReceiver
-                  .where((element) => element["phone"] == phone)
-                  .isNotEmpty) {
-                message.add(snapshot.data!.docs[a]);
-              }
+  //get all exist users
+  Future<List> getExistUser() async {
+    List contactList= [];
+    final msgList = await FirebaseFirestore.instance.collection("users").get();
+    List<Contact> contactUserList  = await FlutterContacts.getContacts(withPhoto: true, withProperties: true,withThumbnail: true);
+    for (final user in msgList.docs) {
+      for (final contact in contactUserList) {
+        if (contact.phones.isNotEmpty) {
+          String phone = phoneNumberExtension(contact.phones[0].number.toString());
+          if (phone == user.data()["phone"]) {
+            log("us : ${user.data()}");
+            final storeUser = appCtrl.storage.read("user");
+            if (user.data()["id"] != storeUser["id"]) {
+              contactList.add(user.data());
             }
           }
         }
-        return message;
       }
+    }
+    return contactList;
+  }
+
+  //chat list
+
+  List chatListWidget(
+      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+    List message = [];
+
+    for (int j = 0; j < messageCtrl.contactExistList.length; j++) {
+      for (int a = 0; a < snapshot.data!.docs.length; a++) {
+        if (snapshot.data!.docs[a].data()["isGroup"] == false) {
+          if (snapshot.data!.docs[a].data()["senderPhone"] ==
+              messageCtrl.storageUser["phone"] ||
+              snapshot.data!.docs[a].data()["receiverPhone"] == messageCtrl.contactExistList[j]["phone"] &&
+                  snapshot.data!.docs[a].data()["senderPhone"] == messageCtrl.contactExistList[j]["phone"] ||
+              snapshot.data!.docs[a].data()["receiverPhone"] ==
+                  messageCtrl.storageUser["phone"]) {
+            if(!message.contains(snapshot.data!.docs[a])) {
+              message.add(snapshot.data!.docs[a]);
+            }
+          }
+        } else {
+          List groupReceiver = snapshot.data!.docs[a].data()["receiverId"];
+          if (groupReceiver
+              .where((element) => element["phone"] == messageCtrl.contactExistList[j]["phone"])
+              .isNotEmpty) {
+            if(!message.contains(snapshot.data!.docs[a])) {
+              message.add(snapshot.data!.docs[a]);
+            }
+          }
+        }
+      }
+      return message;
     }
     return message;
   }

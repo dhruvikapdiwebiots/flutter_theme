@@ -8,7 +8,7 @@ class UserImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return  Hero(
       tag: "user",
-      child: image != null &&
+      child:
           image != ""
           ? Container(
         height: Sizes.s60,

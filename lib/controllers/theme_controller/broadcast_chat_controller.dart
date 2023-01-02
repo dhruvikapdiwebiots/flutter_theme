@@ -244,7 +244,7 @@ class BroadcastChatController extends GetxController {
                   "phone": pData[i]["phone"]
                 },
                 'receiverPhone': pData[i]["phone"],
-                "isBroadcastSender": true,
+                "isBroadcastSender": false,
                 "isSeen": false,
                 'senderPhone': userData["phone"],
                 "lastMessage": content,
@@ -276,7 +276,7 @@ class BroadcastChatController extends GetxController {
             "isBlock": false,
             "isSeen": false,
             "isBroadcast": false,
-            "isBroadcastSender": true,
+
             "blockBy": "",
             "blockUserId": "",
             'timestamp': DateTime

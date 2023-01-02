@@ -1,72 +1,121 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+
+//when app in background
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print('Handling a background message ${message.messageId}');
+  print(message.data);
+  AndroidNotification? android = message.notification?.android;
+}
+
+/// Create a [AndroidNotificationChannel] for heads up notifications
+AndroidNotificationChannel? channel;
+
+/// Initialize the [FlutterLocalNotificationsPlugin] package.
+FlutterLocalNotificationsPlugin? flutterLocalNotificationsPlugin;
+
+
 class NotificationController extends GetxController{
+  AndroidNotificationChannel? channel;
+
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
-// NOTIFICATION REGISTRATION
-  void registerNotification() {
-    firebaseMessaging.requestPermission();
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      _showNotificationWithDefaultSound();
+  Future<void> initNotification() async {
+    //when app in background
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-      return;
+    if (!kIsWeb) {
+      channel = const AndroidNotificationChannel(
+        'high_importance_channel', // id
+        'High Importance Notifications', // title
+        description:
+        'This channel is used for important notifications.', // description
+        importance: Importance.high,
+      );
+
+      flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+      /// We use this channel in the `AndroidManifest.xml` file to override the
+      /// default FCM channel to enable heads up notifications.
+      await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.createNotificationChannel(channel!);
+    }
+
+    //when app is [closed | killed | terminated]
+    FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) {
+      if (message != null) {
+        print("Notification On InitMsg");
+        print(message);
+      }
     });
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      return;
-    });
 
-    final user = appCtrl.storage.read("user");
+    var initialzationSettingsAndroid = const AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettings = InitializationSettings(android: initialzationSettingsAndroid);
 
-    firebaseMessaging.getToken().then((token) {
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(user["id"])
-          .update({'pushToken': token});
-    }).catchError((err) {
-      Fluttertoast.showToast(msg: err.message.toString());
-    });
-  }
-
-  Future _showNotificationWithDefaultSound() async {
-    var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
-        'your channel id', 'your channel name',
-        importance: Importance.max, priority: Priority.high);
-    var platformChannelSpecifics = NotificationDetails(
-      android: androidPlatformChannelSpecifics,
-    );
-    await flutterLocalNotificationsPlugin.show(
-      0,
-      'New Post',
-      'How to Show Notification in Flutter',
-      platformChannelSpecifics,
-      payload: 'Default_Sound',
-    );
-  }
-
-  Future onSelectNotification(String payload) async {
-    showDialog(
-      context: Get.context!,
-      builder: (_) {
-        return AlertDialog(
-          title: const Text("PayLoad"),
-          content: Text("Payload : $payload"),
-        );
-      },
-    );
-  }
-
-  // LOCAL CONFIGRATION OF NOTIFICATION
-  void configLocalNotification() {
-    var initializationSettingsAndroid =
-    const AndroidInitializationSettings('@mipmap/ic_launcher');
-
-    var initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
-    );
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+    //when app in foreground
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification notification = message.notification!;
+
+      //check for custom channel
+      String channelId = message.notification!.android!.channelId!;
+      print(channelId);
+      //end check
+
+      AndroidNotification? android = message.notification?.android;
+      if (android != null && !kIsWeb) {
+        flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+              android: channelId != null
+                  ? AndroidNotificationDetails(
+                channelId,
+                'custom notification title',
+               channelDescription:  'custom notification description',
+                icon: android.smallIcon,
+                //sound: sound,
+              )
+                  : AndroidNotificationDetails(
+                channel!.id,
+                channel!.name,
+                channelDescription: channel!.description,
+                icon: android.smallIcon,
+              ),
+            ));
+      }
+      //Navigator.pushNamed(context, '/result', arguments: message.data);
+    });
+
+    //when app in background
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('A new onMessageOpenedApp event was published!');
+      print(message);
+    });
+
+    requestPermissions();
+  }
+
+  requestPermissions() async {
+    NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
+      announcement: true,
+      carPlay: true,
+      criticalAlert: true,
+    );
+
+    print(settings.authorizationStatus);
+  }
+
+  @override
+  void onReady() {
+    // TODO: implement onReady
+    initNotification();
+    super.onReady();
   }
 
 }

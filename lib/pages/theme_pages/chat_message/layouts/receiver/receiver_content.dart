@@ -16,9 +16,9 @@ class ReceiverContent extends StatelessWidget {
         padding: const EdgeInsets.symmetric(
             horizontal: Insets.i15, vertical: Insets.i10),
         width: Sizes.s220,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             color: Color(0xffF2F2F2),
-            borderRadius: const BorderRadius.only(
+            borderRadius: BorderRadius.only(
                 topRight: Radius.circular(Insets.i20),
                 bottomLeft: Radius.circular(Insets.i20),
                 bottomRight: Radius.circular(Insets.i20))),

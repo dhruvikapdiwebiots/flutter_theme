@@ -24,25 +24,29 @@ class _ChatCardState extends State<ChatCard> {
                 if (!snapshot.hasData) {
                   return Center(
                       child: CircularProgressIndicator(
-                    valueColor:
+                        valueColor:
                         AlwaysStoppedAnimation<Color>(appCtrl.appTheme.primary),
-                  )).height(MediaQuery.of(context).size.height).expanded();
+                      )).height(MediaQuery.of(context).size.height).expanded();
                 } else {
-                  List message = MessageFirebaseApi().chatListWidget(snapshot,messageCtrl);
-                  return message.isNotEmpty
+                  List message = MessageFirebaseApi().chatListWidget(snapshot);
+                  return !snapshot.hasData ? Center(
+                      child: CircularProgressIndicator(
+                        valueColor:
+                        AlwaysStoppedAnimation<Color>(appCtrl.appTheme.primary),
+                      )).height(MediaQuery.of(context).size.height).expanded(): message.isNotEmpty
                       ? ListView.builder(
-                          shrinkWrap: true,
-                          padding: const EdgeInsets.all(10.0),
-                          itemBuilder: (context, index) {
-                            return LoadUser(
-                                document: message[index],
-                                blockBy:messageCtrl.storageUser["id"],
-                                currentUserId:
-                                    messageCtrl.storageUser["phone"]);
-                          },
-                          itemCount: message.length,
-                        )
-                      : Container();
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.all(10.0),
+                    itemBuilder: (context, index) {
+                      return LoadUser(
+                          document: message[index],
+                          blockBy:messageCtrl.storageUser["id"],
+                          currentUserId:
+                          messageCtrl.storageUser["phone"]);
+                    },
+                    itemCount: message.length,
+                  )
+                      : Center(child: Image.asset(imageAssets.noChat)).height(MediaQuery.of(context).size.height).expanded();
                 }
               }),
         ],

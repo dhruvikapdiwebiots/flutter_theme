@@ -47,7 +47,7 @@ class _MessageState extends State<Message>
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height - 50,
 
-                child: const ChatCard()),
+                child:const ChatCard()),
           ])));
     });
   }

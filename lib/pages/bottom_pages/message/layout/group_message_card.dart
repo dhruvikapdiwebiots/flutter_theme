@@ -28,7 +28,7 @@ class GroupMessageCard extends StatelessWidget {
                       ? "You Create this group ${document!["group"]['name']}"
                       : "${document!["sender"]['name']} added you"
                   : document!["lastMessage"],
-              style: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.grey)),
+              style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.grey).letterSpace(.2)),
         ),
         leading: document!["group"]['image'] != null &&
                 document!["group"]['image'] != ""

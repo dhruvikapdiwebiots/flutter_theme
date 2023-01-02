@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter_theme/config.dart';
@@ -48,11 +49,9 @@ class _StatusListState extends State<StatusList>
           body: SafeArea(
               child: SingleChildScrollView(
             child: Column(children: <Widget>[
-              statusCtrl.user != null
-                  ? CurrentUserStatus(
-                      currentUserId: statusCtrl.user["phone"],
-                    ).marginSymmetric(vertical: Insets.i10)
-                  : Container(),
+              CurrentUserStatus(
+                currentUserId: statusCtrl.user != null ? statusCtrl.user["phone"] :"",
+              ).marginSymmetric(vertical: Insets.i10),
               const Divider(),
               const StatusListLayout(),
             ]).paddingAll(Insets.i10),

@@ -59,7 +59,7 @@ String phoneNumberExtension(phoneNumber) {
 
 Future<List<Contact>>  getAllContacts() async {
   var contacts = (await FlutterContacts.getContacts(
-      withPhoto: true, withProperties: true));
+      withPhoto: true, withProperties: true,withThumbnail: true));
   return contacts;
 }
 

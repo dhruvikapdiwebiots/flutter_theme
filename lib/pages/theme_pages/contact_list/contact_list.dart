@@ -65,7 +65,8 @@ class ContactList extends StatelessWidget {
                                     var id = contactCtrl.contactList
                                         .indexWhere((c) => c.id == c.id);
                                     contactCtrl.contactList[id] = item;
-                                    Get.back(result: item);
+
+                                    MessageFirebaseApi().saveContact(item);
                                   },
                                   leading: (item.photo != null &&
                                           item.photo!.isNotEmpty)

@@ -1,6 +1,6 @@
+import 'dart:developer';
 import 'dart:io';
 
-import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_theme/config.dart';
 
 class CreateGroupController extends GetxController {
@@ -35,7 +35,7 @@ class CreateGroupController extends GetxController {
     for (final user in msgList.docs) {
       for (final contact in contacts!) {
         if (contact.phones!.isNotEmpty) {
-          String phone = contact.phones![0].value.toString();
+          String phone = contact.phones![0].number.toString();
           if (phone.length > 10) {
             if (phone.contains(" ")) {
               phone = phone.replaceAll(" ", "");
@@ -48,6 +48,7 @@ class CreateGroupController extends GetxController {
             }
           }
           if (phone == user.data()["phone"]) {
+            log("us : ${user.data()}");
             final storeUser = appCtrl.storage.read("user");
             if (user.data()["id"] != storeUser["id"]) {
               contactList.add(user.data());
@@ -147,6 +148,7 @@ class CreateGroupController extends GetxController {
           'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
           "lastMessage": "",
           "isBroadcast": true,
+          "isBroadcastSender": false,
           "isGroup": false,
           "isBlock": false,
           "updateStamp": DateTime.now().millisecondsSinceEpoch.toString()
@@ -187,10 +189,14 @@ class CreateGroupController extends GetxController {
                   value.docs[j].data()["receiverPhone"] == user["phone"]) {
             selectedContact[i]["chatId"] = value.docs[j].data()["chatId"];
             update();
-            newContact.add(selectedContact[i]);
+            if(!newContact.contains(selectedContact[i])) {
+              newContact.add(selectedContact[i]);
+            }
           } else {
             selectedContact[i]["chatId"] = null;
-            newContact.add(selectedContact[i]);
+            if(!newContact.contains(selectedContact[i])) {
+              newContact.add(selectedContact[i]);
+            }
           }
         }
         update();

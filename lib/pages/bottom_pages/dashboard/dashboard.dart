@@ -1,5 +1,8 @@
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_theme/config.dart';
+
+
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -84,6 +87,7 @@ class _DashboardState extends State<Dashboard>
                       ]),
                 ),
                 body: TabBarView(
+
                   controller: dashboardCtrl.controller,
                   children: dashboardCtrl.widgetOptions,
                 ))):Container(),

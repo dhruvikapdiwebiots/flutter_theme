@@ -48,12 +48,14 @@ class MessageCard extends StatelessWidget {
                       currentUserId != document!["senderPhone"]
                           ? Container()
                           : const HSpace(Sizes.s10),
-                      Text(
-                          document!["lastMessage"].contains("http")
-                              ? "Media Share"
-                              : document!["lastMessage"],
-                          style: AppCss.poppinsMedium14
-                              .textColor(appCtrl.appTheme.grey)),
+                      Expanded(
+                        child: Text(
+                            document!["lastMessage"].contains("http")
+                                ? "Media Share"
+                                : document!["lastMessage"],
+                            style: AppCss.poppinsMedium14
+                                .textColor(appCtrl.appTheme.grey),overflow: TextOverflow.ellipsis),
+                      ),
                     ],
                   ),
                 )

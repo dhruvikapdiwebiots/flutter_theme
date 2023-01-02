@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
-import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_theme/config.dart';
 
 final permissionHandelCtrl = Get.isRegistered<PermissionHandlerController>()
@@ -29,13 +28,13 @@ class StatusController extends GetxController {
   @override
   void onReady() async{
     // TODO: implement onReady
-    final data = appCtrl.storage.read("user");
-    currentUserId = data["id"];
-    user = data;
+    final data = appCtrl.storage.read("user") ?? "";
+    if(data != "") {
+      currentUserId = data["id"];
+      user = data;
+    }
     update();
     contactList =   await permissionHandelCtrl.getContact();
-    notificationCtrl.configLocalNotification();
-    notificationCtrl.registerNotification();
     update();
     super.onReady();
   }
@@ -53,10 +52,11 @@ class StatusController extends GetxController {
 
 //get status of user according to contact in firebase
   Future getStatus() async {
+    log("us : ${appCtrl.storage.read("user")}");
     List<Status> statusData = [];
     try {
       statusData = await getStatusList(contactList);
-      log("new : $statusData");
+
     } catch (e) {
       log("message : $e");
     }

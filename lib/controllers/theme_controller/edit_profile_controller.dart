@@ -90,18 +90,56 @@ class EditProfileController extends GetxController {
   updateUserData() async {
     isLoading = true;
     update();
-    if(isPhoneLogin) {
-      FirebaseFirestore.instance
-          .collection("users")
-          .where("email", isEqualTo: emailText.text)
-          .limit(1)
-          .get()
-          .then((value) {
-        if (value.docs.isNotEmpty) {
-          ScaffoldMessenger.of(Get.context!)
-              .showSnackBar(
-              const SnackBar(content: Text("Email Already Exist")));
-        } else {
+    final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+    firebaseMessaging.getToken().then((token) async {
+      if (isPhoneLogin) {
+        FirebaseFirestore.instance
+            .collection("users")
+            .where("email", isEqualTo: emailText.text)
+            .limit(1)
+            .get()
+            .then((value) {
+          if (value.docs.isNotEmpty) {
+            ScaffoldMessenger.of(Get.context!)
+                .showSnackBar(
+                const SnackBar(content: Text("Email Already Exist")));
+          } else {
+            FirebaseFirestore.instance.collection('users')
+                .doc(user["id"])
+                .update(
+                {
+                  'image': "",
+                  'name': nameText.text,
+                  'status': "Online",
+                  "typeStatus": "",
+                  "phone": phoneText.text,
+                  "email": emailText.text,
+                  "statusDesc": statusText.text,
+                  "pushToken": token
+                })
+                .then((result) async {
+              log("new USer true");
+              FirebaseFirestore.instance.collection('users')
+                  .doc(user["id"])
+                  .get()
+                  .then((value) async {
+                await storage.write("id", user["id"]);
+                await storage.write("user", value.data());
+              });
+
+              Get.offAllNamed(routeName.dashboard);
+            }).catchError((onError) {
+              log("onError");
+            });
+          }
+        });
+      } else {
+        FirebaseFirestore.instance
+            .collection("users")
+            .where("email", isEqualTo: emailText.text)
+            .limit(1)
+            .get()
+            .then((value) {
           FirebaseFirestore.instance.collection('users').doc(user["id"]).update(
               {
                 'image': "",
@@ -110,49 +148,25 @@ class EditProfileController extends GetxController {
                 "typeStatus": "",
                 "phone": phoneText.text,
                 "email": emailText.text,
-                "statusDesc": statusText.text
-              }).then((result)async {
+                "statusDesc": statusText.text,
+                "pushToken": token
+              }).then((result) async {
             log("new USer true");
-            FirebaseFirestore.instance.collection('users').doc(user["id"]).get().then((value) async{
+            FirebaseFirestore.instance.collection('users').doc(user["id"])
+                .get()
+                .then((value) async {
               await storage.write("id", user["id"]);
               await storage.write("user", value.data());
             });
-
             Get.offAllNamed(routeName.dashboard);
           }).catchError((onError) {
             log("onError");
           });
-        }
-      });
-    }else{
-      FirebaseFirestore.instance
-          .collection("users")
-          .where("email", isEqualTo: emailText.text)
-          .limit(1)
-          .get()
-          .then((value) {
-        FirebaseFirestore.instance.collection('users').doc(user["id"]).update({
-          'image': "",
-          'name': nameText.text,
-          'status': "Online",
-          "typeStatus": "",
-          "phone": phoneText.text,
-          "email": emailText.text ,
-          "statusDesc": statusText.text
-        }).then((result)async {
-          log("new USer true");
-          FirebaseFirestore.instance.collection('users').doc(user["id"]).get().then((value) async{
-            await storage.write("id", user["id"]);
-            await storage.write("user", value.data());
-          });
-          Get.offAllNamed(routeName.dashboard);
-        }).catchError((onError) {
-          log("onError");
         });
-      });
-    }
-    isLoading = false;
-    update();
+      }
+      isLoading = false;
+      update();
+    });
   }
 
   @override

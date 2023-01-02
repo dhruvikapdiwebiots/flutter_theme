@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_theme/config.dart';
 
 class MessageController extends GetxController {
@@ -10,6 +11,7 @@ class MessageController extends GetxController {
   bool isHomePageSelected = true;
   List contactList = [];
   List<Contact> contactUserList = [];
+  List contactExistList = [];
   bool isLoading = false;
   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
@@ -38,13 +40,10 @@ class MessageController extends GetxController {
     update();
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User user = auth.currentUser!;
-    contactUserList =   await permissionHandelCtrl.getContact();
-
     currentUser = user;
     update();
-    notificationCtrl.configLocalNotification();
-    notificationCtrl.registerNotification();
     contactList = await MessageFirebaseApi().getUser();
+    contactExistList = await MessageFirebaseApi().getExistUser();
     update();
     super.onReady();
   }
@@ -83,8 +82,6 @@ class MessageController extends GetxController {
   saveContactInChat() async {
     // Add your onPressed code here!
     List<Contact> contacts = await permissionHandelCtrl.getContact();
-    Get.toNamed(routeName.contactList,arguments: contacts)!.then((value) async {
-      MessageFirebaseApi().saveContact(value);
-    });
+    Get.toNamed(routeName.contactList,arguments: contacts);
   }
 }
