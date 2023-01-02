@@ -5,8 +5,9 @@ import '../../../../../config.dart';
 class Content extends StatelessWidget {
   final dynamic document;
   final GestureLongPressCallback? onLongPress;
+  final bool isBroadcast;
 
-  const Content({Key? key, this.document, this.onLongPress}) : super(key: key);
+  const Content({Key? key, this.document, this.onLongPress,this.isBroadcast = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +48,7 @@ class Content extends StatelessWidget {
                         .textColor(appCtrl.appTheme.whiteColor),
                   ),
                   const HSpace(Sizes.s5),
+                  if(!isBroadcast)
                   Icon(Icons.done_all_outlined,
                       size: Sizes.s15,
                       color: document!['isSeen'] == true

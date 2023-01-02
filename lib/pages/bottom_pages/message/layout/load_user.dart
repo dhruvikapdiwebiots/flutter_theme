@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import '../../../../config.dart';
 
@@ -33,7 +32,7 @@ class LoadUser extends StatelessWidget {
               currentUserId: currentUserId,
             )
           : Container();
-    } else if (document!["isBroadcast"] == true || document!["isBroadcastSender"] == false) {
+    } else if (document!["isBroadcast"] == true ) {
 
       return document!["senderPhone"] == currentUserId
           ? BroadCastMessageCard(
@@ -41,13 +40,7 @@ class LoadUser extends StatelessWidget {
               currentUserId: currentUserId,
             )
           : Container();
-    } else if( document!["isBroadcastSender"] == true ){
-      return MessageCard(
-        blockBy: blockBy,
-        document: document,
-        currentUserId: currentUserId,
-      );
-    }else{
+    } else{
       return Container();
     }
   }

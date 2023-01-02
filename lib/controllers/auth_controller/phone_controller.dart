@@ -18,7 +18,7 @@ class PhoneController extends GetxController {
   final formKey = GlobalKey<FormState>();
   GlobalKey<FlipCardState> cardKey = GlobalKey<FlipCardState>();
   bool showFrontSide =true;
-  final otpCtrl = Get.isRegistered<OtpController>() ? Get.find<OtpController>(): Get.put(OtpController());
+
 
   // CHECK VALIDATION
 
@@ -27,8 +27,7 @@ class PhoneController extends GetxController {
     if (formKey.currentState!.validate()) {
       dismissKeyboard();
       mobileNumber = false;
-      otpCtrl.onVerifyCode(phone.text);
-      cardKey.currentState!.toggleCard();
+      Get.toNamed(routeName.otp,arguments: phone.text);
 
     }
   }

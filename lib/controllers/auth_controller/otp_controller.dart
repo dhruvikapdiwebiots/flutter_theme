@@ -9,13 +9,14 @@ class OtpController extends GetxController {
   double val = 0;
   bool isCodeSent = false, isLoading = false;
   String? verificationCode, mobileNumber;
+  bool isValid = false;
 
   @override
   void onReady() {
     // TODO: implement onReady
-    /*mobileNumber = Get.arguments ;*/
+    mobileNumber = Get.arguments;
     update();
-
+    onVerifyCode(mobileNumber);
     super.onReady();
   }
 
@@ -55,6 +56,7 @@ class OtpController extends GetxController {
   void onVerifyCode(phone) {
     mobileNumber = phone;
     isCodeSent = true;
+    isLoading = true;
     update();
 
     verificationCompleted(AuthCredential phoneAuthCredential) {
@@ -75,6 +77,7 @@ class OtpController extends GetxController {
     verificationFailed(FirebaseAuthException authException) {
       showToast(authException.message, Colors.red);
       isCodeSent = false;
+      isLoading = false;
       update();
     }
 
@@ -94,6 +97,8 @@ class OtpController extends GetxController {
           update();
         },
         codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
+    isLoading = false;
+    update();
   }
 
   //on form submit

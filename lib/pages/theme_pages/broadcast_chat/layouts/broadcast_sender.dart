@@ -37,7 +37,8 @@ class _BroadcastSenderState extends State<BroadcastSender> {
                               .buildPopupDialog(context, widget.document!),
                         );
                       },
-                      document: widget.document),
+                      document: widget.document,
+                      isBroadcast: true),
                 if (widget.document!["type"] == MessageType.image.name)
                   SenderImage(
                       document: widget.document,

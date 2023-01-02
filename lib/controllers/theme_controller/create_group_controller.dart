@@ -29,6 +29,7 @@ class CreateGroupController extends GetxController {
     getFirebaseContact(contacts);
   }
 
+  //get firebase register contact list
   getFirebaseContact(contacts) async {
     final msgList = await FirebaseFirestore.instance.collection("users").get();
 
@@ -148,7 +149,6 @@ class CreateGroupController extends GetxController {
           'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
           "lastMessage": "",
           "isBroadcast": true,
-          "isBroadcastSender": false,
           "isGroup": false,
           "isBlock": false,
           "updateStamp": DateTime.now().millisecondsSinceEpoch.toString()

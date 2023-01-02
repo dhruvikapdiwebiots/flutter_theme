@@ -8,7 +8,7 @@ class Setting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SettingController>(builder: (_) {
-      print(" dsf : R${settingCtrl.user}");
+
       return Scaffold(
         backgroundColor: appCtrl.appTheme.whiteColor,
         body: settingCtrl.user != null || settingCtrl.user != ""

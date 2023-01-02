@@ -244,7 +244,6 @@ class BroadcastChatController extends GetxController {
                   "phone": pData[i]["phone"]
                 },
                 'receiverPhone': pData[i]["phone"],
-                "isBroadcastSender": false,
                 "isSeen": false,
                 'senderPhone': userData["phone"],
                 "lastMessage": content,
@@ -306,7 +305,6 @@ class BroadcastChatController extends GetxController {
                   .toString(),
               "lastMessage": content,
               "isBroadcast": false,
-              "isBroadcastSender": true,
               "isGroup": false,
               "isBlock": false,
               "isSeen": false,
@@ -355,7 +353,6 @@ class BroadcastChatController extends GetxController {
               .update({
             "updateStamp": DateTime.now().millisecondsSinceEpoch.toString(),
             "lastMessage": content,
-            "isBroadcastSender": true,
           });
         });
       });

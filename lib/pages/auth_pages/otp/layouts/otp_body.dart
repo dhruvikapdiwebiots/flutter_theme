@@ -8,63 +8,64 @@ class OtpBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<OtpController>(builder: (otpCtrl) {
-      return GetBuilder<PhoneController>(builder: (phoneCtrl) {
-        return Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              //verify number
-              Text(fonts.verifyMobileNumber.tr,
-                  style: AppCss.poppinsMedium18
-                      .textColor(appCtrl.appTheme.blackColor)),
-              const VSpace(Sizes.s10),
+      return Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            //verify number
+            Text(fonts.verifyMobileNumber.tr,
+                style: AppCss.poppinsMedium18
+                    .textColor(appCtrl.appTheme.blackColor)),
+            const VSpace(Sizes.s10),
 
-              //otp contain
-              Text(
-                fonts.otpContain.tr,
-                textAlign: TextAlign.center,
-                style:
-                    AppCss.poppinsMedium14.textColor(appCtrl.appTheme.blackColor.withOpacity(.5)),
+            //otp contain
+            Text(
+              fonts.otpContain.tr,
+              textAlign: TextAlign.center,
+              style: AppCss.poppinsMedium14
+                  .textColor(appCtrl.appTheme.blackColor.withOpacity(.5)),
+            ),
+            const VSpace(Sizes.s30),
+            PinInputTextField(
+              pinLength: 6,
+              decoration: CirclePinDecoration(
+                textStyle: AppCss.poppinsMedium18.textColor(appCtrl.appTheme.blackColor),
+                bgColorBuilder: PinListenColorBuilder(
+                    appCtrl.appTheme.grey.withOpacity(.5),
+                    appCtrl.appTheme.grey.withOpacity(.5)),
+                hintTextStyle: TextStyle(color: appCtrl.appTheme.whiteColor),
+                hintText: "000000",
+                gapSpace: 6,
+                strokeColorBuilder: PinListenColorBuilder(
+                    appCtrl.appTheme.grey.withOpacity(.5),
+                    appCtrl.appTheme.grey.withOpacity(.5)),
               ),
-              const VSpace(Sizes.s30),
-              PinInputTextField(
-                pinLength: 6,
-                decoration: UnderlineDecoration(
-                    colorBuilder: PinListenColorBuilder(
-                        appCtrl.appTheme.blackColor,
-                        appCtrl.appTheme.blackColor),
-                    hintText: "000000"),
-                controller: otpCtrl.otp,
-                autoFocus: true,
-                textInputAction: TextInputAction.done,
+              controller: otpCtrl.otp,
+              autoFocus: true,
+              textInputAction: TextInputAction.done,
+              onSubmit: (pin) {
+                if (pin.length == 6) {
+                  otpCtrl.onFormSubmitted();
+                }
+              },
+              onChanged: (String value) {
+                if (value.length == 6) {
+                  otpCtrl.onFormSubmitted();
+                }
+              },
+              focusNode: FocusNode(),
+            ),
+            const VSpace(Sizes.s30),
 
-                onSubmit: (pin) {
-                  if (pin.length == 6) {
-                    otpCtrl.onFormSubmitted();
-                  }
-                },
-                onChanged: (String value) {
-                  if (value.length == 6) {
-                    otpCtrl.onFormSubmitted();
-                  }
-                },
-                focusNode: FocusNode(),
-              ),
-              const VSpace(Sizes.s30),
-
-              //done button
-              CommonButton(
-                  title: fonts.done.tr.toUpperCase(),
-                  radius: AppRadius.r25,
-                  onTap: () {
-                    phoneCtrl.cardKey.currentState!.toggleCard();
-                    phoneCtrl.update();
-                  },
-                  style: AppCss.poppinsMedium18
-                      .textColor(appCtrl.appTheme.accent)),
-              const VSpace(Sizes.s10)
-            ]);
-      });
+            //done button
+            CommonButton(
+                title: fonts.done.tr.toUpperCase(),
+                radius: AppRadius.r25,
+                onTap: () => otpCtrl.onFormSubmitted(),
+                style: AppCss.poppinsMedium18
+                    .textColor(appCtrl.appTheme.accent)),
+            const VSpace(Sizes.s10)
+          ]);
     });
   }
 }

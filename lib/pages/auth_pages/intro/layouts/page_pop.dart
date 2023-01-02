@@ -43,7 +43,7 @@ final int? index,selectedIndex;
                           imageData.subtitleText.tr,
                           textAlign: TextAlign.center,
                           style: AppCss.poppinsBold20
-                              .textColor(appCtrl.appTheme.primary).letterSpace(.2).textHeight(1.2)
+                              .textColor(appCtrl.appTheme.blackColor).letterSpace(.2).textHeight(1.2)
                         ),
                       ),
                     ]),
