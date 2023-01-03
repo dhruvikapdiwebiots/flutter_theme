@@ -74,7 +74,6 @@ dependencies:
   file_picker: ^5.2.3
   path:
   share_plus: ^6.3.0
-  ntp: ^2.0.0
   permission_handler: ^10.2.0
   geolocator: ^9.0.2
   url_launcher: ^6.1.7
@@ -87,7 +86,7 @@ dependencies:
   #camera: ^0.10.0+4
   device_info_plus: ^8.0.0
   flutter_contacts: ^1.1.5+1
-
+  intl_phone_number_input: ^0.7.1
 
 
 

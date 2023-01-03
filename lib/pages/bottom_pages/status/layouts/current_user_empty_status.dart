@@ -20,7 +20,7 @@ class CurrentUserEmptyStatus extends StatelessWidget {
               shape: BoxShape.circle),
           Icon(
             CupertinoIcons.add_circled_solid,
-            color: appCtrl.appTheme.primary,
+            color:appCtrl.isTheme? appCtrl.appTheme.white: appCtrl.appTheme.primary,
 
           ).decorated(
               color: appCtrl.appTheme.whiteColor, shape: BoxShape.circle),

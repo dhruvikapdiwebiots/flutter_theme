@@ -44,6 +44,7 @@ class _StatusListState extends State<StatusList>
                     arguments: pickedImage);
               }
             },
+            backgroundColor: appCtrl.appTheme.primary,
             child: Icon(Icons.add, color: appCtrl.appTheme.whiteColor),
           ),
           body: SafeArea(

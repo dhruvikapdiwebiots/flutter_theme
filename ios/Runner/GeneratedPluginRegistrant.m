@@ -120,6 +120,18 @@
 @import just_audio;
 #endif
 
+#if __has_include(<libphonenumber/LibphonenumberPlugin.h>)
+#import <libphonenumber/LibphonenumberPlugin.h>
+#else
+@import libphonenumber;
+#endif
+
+#if __has_include(<libphonenumber_plugin/FLTLibphonenumberPlugin.h>)
+#import <libphonenumber_plugin/FLTLibphonenumberPlugin.h>
+#else
+@import libphonenumber_plugin;
+#endif
+
 #if __has_include(<local_auth/FLTLocalAuthPlugin.h>)
 #import <local_auth/FLTLocalAuthPlugin.h>
 #else
@@ -208,6 +220,8 @@
   [FLTGoogleSignInPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTGoogleSignInPlugin"]];
   [FLTImagePickerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTImagePickerPlugin"]];
   [JustAudioPlugin registerWithRegistrar:[registry registrarForPlugin:@"JustAudioPlugin"]];
+  [LibphonenumberPlugin registerWithRegistrar:[registry registrarForPlugin:@"LibphonenumberPlugin"]];
+  [FLTLibphonenumberPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTLibphonenumberPlugin"]];
   [FLTLocalAuthPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTLocalAuthPlugin"]];
   [LocationPlugin registerWithRegistrar:[registry registrarForPlugin:@"LocationPlugin"]];
   [FLTPathProviderPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTPathProviderPlugin"]];

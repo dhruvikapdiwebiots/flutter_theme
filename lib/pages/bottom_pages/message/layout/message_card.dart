@@ -117,7 +117,7 @@ class MessageCard extends StatelessWidget {
               DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(
                   int.parse(document!['updateStamp']))),
               style:
-                  AppCss.poppinsMedium12.textColor(appCtrl.appTheme.primary))),
+                  AppCss.poppinsMedium12.textColor(appCtrl.appTheme.grey))),
     );
   }
 }

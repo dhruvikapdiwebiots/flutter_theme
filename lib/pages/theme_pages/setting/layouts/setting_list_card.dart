@@ -13,14 +13,15 @@ class SettingListCard extends StatelessWidget {
             Get.toNamed(routeName.otherSetting);
           } else if(index ==1){
             var user = appCtrl.storage.read("user");
-
+            Get.offAllNamed(routeName.phone);
+            Get.offAllNamed(routeName.phone);
             await FirebaseFirestore.instance
                 .collection("users")
                 .doc(user["id"]).delete();
             FirebaseAuth.instance.signOut();
             await appCtrl.storage.remove("user");
             await appCtrl.storage.remove("id");
-            Get.offAllNamed(routeName.phone);
+
           }else if (index == 2) {
             var user = appCtrl.storage.read("user");
 

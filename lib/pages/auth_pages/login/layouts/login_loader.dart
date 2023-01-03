@@ -9,7 +9,8 @@ class LoginLoader extends StatelessWidget {
     return Positioned(
       child: isLoading
           ? Container(
-
+height: MediaQuery.of(context).size.height,
+        color: appCtrl.appTheme.blackColor.withOpacity(.2),
         child: Center(
           child: CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(

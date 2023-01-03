@@ -9,7 +9,7 @@ class PopUpAction extends StatelessWidget {
       builder: (dashboardCtrl) {
         return PopupMenuButton(
           color: appCtrl.appTheme.whiteColor,
-            icon: Icon(Icons.more_vert, color: appCtrl.appTheme.whiteColor),
+            icon: Icon(Icons.more_vert, color: appCtrl.appTheme.white),
             itemBuilder: (context) {
               return [
                 ...dashboardCtrl.actionList
@@ -21,7 +21,7 @@ class PopUpAction extends StatelessWidget {
                     dashboardCtrl.selectedPopTap = e.key;
                     dashboardCtrl.update();
                   },
-                  child: Text(trans(e.value["title"])),
+                  child: Text(trans(e.value["title"]),style: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.blackColor),),
                 ))
                     .toList(),
               ];

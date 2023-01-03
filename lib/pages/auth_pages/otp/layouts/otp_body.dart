@@ -41,7 +41,6 @@ class OtpBody extends StatelessWidget {
                     appCtrl.appTheme.grey.withOpacity(.5)),
               ),
               controller: otpCtrl.otp,
-              autoFocus: true,
               textInputAction: TextInputAction.done,
               onSubmit: (pin) {
                 if (pin.length == 6) {

@@ -4,13 +4,14 @@ import 'dart:async';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_theme/config.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 class PhoneController extends GetxController {
   bool mobileNumber = false;
   TextEditingController phone = TextEditingController();
-
+String dialCode ="";
   bool isCorrect = false;
-  bool visible = false,switchScreen = true;
+  bool visible = false,error = true;
   Timer timer= Timer(const Duration(seconds: 1),(){});
   double val =0;
   bool displayFront = true;
@@ -18,19 +19,27 @@ class PhoneController extends GetxController {
   final formKey = GlobalKey<FormState>();
   GlobalKey<FlipCardState> cardKey = GlobalKey<FlipCardState>();
   bool showFrontSide =true;
+  var otpCtrl = Get.isRegistered<OtpController>() ? Get.find<OtpController>() :Get.put(OtpController());
 
+  PhoneNumber number = PhoneNumber(isoCode: 'IN');
 
   // CHECK VALIDATION
 
   void checkValidation() async {
 
-    if (formKey.currentState!.validate()) {
+    if (phone.text.isNotEmpty) {
       dismissKeyboard();
       mobileNumber = false;
-      Get.toNamed(routeName.otp,arguments: phone.text);
+      otpCtrl.onVerifyCode(phone.text,dialCode);
+      Get.to(() => Otp(),transition: Transition.downToUp,arguments: phone.text);
 
+    }else{
+      print("object");
+      mobileNumber = true;
     }
+    update();
   }
+  
 
 //   Dismiss KEYBOARD
 

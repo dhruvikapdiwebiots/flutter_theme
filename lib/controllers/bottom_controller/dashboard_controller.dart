@@ -15,8 +15,9 @@ class DashboardController extends GetxController with GetSingleTickerProviderSta
 
 //list of bottommost page
   List<Widget> widgetOptions = <Widget>[
-    const StatusList(),
     const Message(),
+    const StatusList(),
+
     Setting(),
   ];
 

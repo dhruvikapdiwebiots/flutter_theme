@@ -75,5 +75,6 @@ class Fonts{
   final yourPhone = "yourPhone";
   final broadCast = "broadCast";
   final enterYourMessage = "enterYourMessage";
+  final requestOTP = "requestOTP";
   String unblockUser(val) => "unblockUser".trParams({'pName':val});
 }

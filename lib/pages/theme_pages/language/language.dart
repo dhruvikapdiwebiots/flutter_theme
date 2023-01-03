@@ -10,6 +10,7 @@ class LanguageScreen extends StatelessWidget {
     return GetBuilder<LanguageController>(builder: (_) {
       return GetBuilder<AppController>(builder: (appCtrl) {
         return Scaffold(
+          backgroundColor: appCtrl.appTheme.white,
           body: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -29,9 +30,18 @@ class LanguageScreen extends StatelessWidget {
                             value: e.key,
                             groupValue: appCtrl.currVal,
                             contentPadding: EdgeInsets.zero,
-                            title: Text(trans(e.value['name'].toString()),
-                                style: AppCss.poppinsSemiBold14
-                                    .textColor(appCtrl.appTheme.txt)),
+                            title: Row(
+                              children: [
+                                Text(trans(e.value['name'].toString()),
+                                    style: AppCss.poppinsSemiBold14
+                                        .textColor(appCtrl.appTheme.txt)),
+                                const HSpace(Sizes.s15),
+                                Text("-   ${e.value['name'].toString().toCapitalized()}",
+                                    style: AppCss.poppinsMedium12
+                                        .textColor(appCtrl.appTheme.txt))
+                              ],
+                            ),
+
                             onChanged: (int? val) {
                               appCtrl.currVal = val!;
                               languageCtrl.languageSelection(e.value);

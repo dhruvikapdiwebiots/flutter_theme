@@ -16,7 +16,7 @@ class OtpController extends GetxController {
     // TODO: implement onReady
     mobileNumber = Get.arguments;
     update();
-    onVerifyCode(mobileNumber);
+    //onVerifyCode(mobileNumber);
     super.onReady();
   }
 
@@ -53,7 +53,7 @@ class OtpController extends GetxController {
   }
 
   //on verify code
-  void onVerifyCode(phone) {
+  void onVerifyCode(phone,dialCode) {
     mobileNumber = phone;
     isCodeSent = true;
     isLoading = true;
@@ -88,7 +88,7 @@ class OtpController extends GetxController {
 
     //   Change country code
     firebaseAuth.verifyPhoneNumber(
-        phoneNumber: "+91$mobileNumber",
+        phoneNumber: "$dialCode$mobileNumber",
         timeout: const Duration(seconds: 60),
         verificationCompleted: verificationCompleted,
         verificationFailed: verificationFailed,

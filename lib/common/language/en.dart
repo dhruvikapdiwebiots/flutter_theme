@@ -82,6 +82,8 @@ final dynamic en = {
   "block": "Block",
   "unblockUser": "Unblock @pName to send message?",
   "setGroup": "Create Group",
+  "requestOTP": "Request OTP",
+  "newBroadCast": "New Broadcast",
   "yourPhone": "Your Phone!",
     "enterYourMessage": "Enter your message",
 };

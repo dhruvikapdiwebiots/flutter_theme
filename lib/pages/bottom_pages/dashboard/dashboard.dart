@@ -1,5 +1,4 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_theme/config.dart';
 
 
@@ -49,14 +48,14 @@ class _DashboardState extends State<Dashboard>
                   automaticallyImplyLeading: false,
                   elevation: 0,
                   actions: [
-                    if (dashboardCtrl.selectedIndex == 1) const PopUpAction(),
+                    if (dashboardCtrl.selectedIndex == 0) const PopUpAction(),
                   ],
                   title: Text(fonts.chatter.tr),
 
                   bottom: TabBar(
                     controller: dashboardCtrl.controller,
-                      labelColor: appCtrl.appTheme.primary,
-                      unselectedLabelColor: appCtrl.appTheme.whiteColor,
+                      labelColor: appCtrl.isTheme?appCtrl.appTheme.secondary : appCtrl.appTheme.primary,
+                      unselectedLabelColor: appCtrl.appTheme.white,
                       indicatorSize: TabBarIndicatorSize.label,
                       padding: EdgeInsets.zero,
                       labelStyle: AppCss.poppinsMedium14,

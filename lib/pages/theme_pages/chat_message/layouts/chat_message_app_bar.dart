@@ -8,7 +8,8 @@ class ChatMessageAppBar extends StatelessWidget with PreferredSizeWidget{
 
   @override
   Widget build(BuildContext context) {
-    return  AppBar(
+    return  AppBar( backgroundColor: appCtrl.appTheme.primary,
+
         actions: [
           IconButton(
             onPressed: (){},

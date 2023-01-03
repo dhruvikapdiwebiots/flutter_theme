@@ -157,16 +157,16 @@ class MessageFirebaseApi {
   List chatListWidget(
       AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
     List message = [];
-
+    final storageUser = appCtrl.storage.read("user");
     for (int j = 0; j < messageCtrl.contactExistList.length; j++) {
       for (int a = 0; a < snapshot.data!.docs.length; a++) {
         if (snapshot.data!.docs[a].data()["isGroup"] == false) {
           if (snapshot.data!.docs[a].data()["senderPhone"] ==
-              messageCtrl.storageUser["phone"] ||
+              storageUser["phone"] ||
               snapshot.data!.docs[a].data()["receiverPhone"] == messageCtrl.contactExistList[j]["phone"] &&
                   snapshot.data!.docs[a].data()["senderPhone"] == messageCtrl.contactExistList[j]["phone"] ||
               snapshot.data!.docs[a].data()["receiverPhone"] ==
-                  messageCtrl.storageUser["phone"]) {
+                  storageUser["phone"]) {
             if(!message.contains(snapshot.data!.docs[a])) {
               message.add(snapshot.data!.docs[a]);
             }

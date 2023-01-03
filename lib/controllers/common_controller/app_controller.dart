@@ -57,6 +57,7 @@ class AppController extends GetxController {
     update();
     await storage.write("isDarkMode", isTheme);
     ThemeService().switchTheme(isTheme);
+
     update();
     Get.forceAppUpdate();
   }

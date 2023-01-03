@@ -37,7 +37,7 @@ class _MessageState extends State<Message>
           key: messageCtrl.scaffoldKey,
           backgroundColor: appCtrl.appTheme.whiteColor,
           floatingActionButton: FloatingActionButton(
-            onPressed: () => messageCtrl.saveContactInChat(),
+            onPressed: () =>   Get.to(() => ContactList(),transition: Transition.downToUp),
             backgroundColor: appCtrl.appTheme.primary,
             child:  Icon(Icons.message,color: appCtrl.appTheme.whiteColor),
           ),

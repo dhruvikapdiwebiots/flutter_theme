@@ -11,10 +11,10 @@ class OtherSetting extends StatelessWidget {
         backgroundColor: appCtrl.appTheme.whiteColor,
         appBar: AppBar(
             backgroundColor: appCtrl.appTheme.primary,
-            iconTheme: IconThemeData(color: appCtrl.appTheme.whiteColor),
+            iconTheme: IconThemeData(color: appCtrl.appTheme.white),
             title: Text(fonts.chats.tr,
                 style: AppCss.poppinsblack18
-                    .textColor(appCtrl.appTheme.whiteColor))),
+                    .textColor(appCtrl.appTheme.white))),
         body: Column(
           children: [
             ListTile(

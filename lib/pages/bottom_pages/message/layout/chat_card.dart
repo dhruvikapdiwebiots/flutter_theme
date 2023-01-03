@@ -33,8 +33,8 @@ class _ChatCardState extends State<ChatCard> {
                       child: CircularProgressIndicator(
                         valueColor:
                         AlwaysStoppedAnimation<Color>(appCtrl.appTheme.primary),
-                      )).height(MediaQuery.of(context).size.height).expanded(): message.isNotEmpty
-                      ? ListView.builder(
+                      )).height(MediaQuery.of(context).size.height).expanded():
+                      ListView.builder(
                     shrinkWrap: true,
                     padding: const EdgeInsets.all(10.0),
                     itemBuilder: (context, index) {
@@ -45,8 +45,7 @@ class _ChatCardState extends State<ChatCard> {
                           messageCtrl.storageUser["phone"]);
                     },
                     itemCount: message.length,
-                  )
-                      : Center(child: Image.asset(imageAssets.noChat)).height(MediaQuery.of(context).size.height).expanded();
+                  );
                 }
               }),
         ],

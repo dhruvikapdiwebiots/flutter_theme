@@ -78,10 +78,4 @@ class MessageController extends GetxController {
     return statusData;
   }
 
-  //pick up contact and check if mobile exist
-  saveContactInChat() async {
-    // Add your onPressed code here!
-    List<Contact> contacts = await permissionHandelCtrl.getContact();
-    Get.toNamed(routeName.contactList,arguments: contacts);
-  }
 }
