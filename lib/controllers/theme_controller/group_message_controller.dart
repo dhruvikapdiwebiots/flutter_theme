@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:dartx/dartx_io.dart';
 import 'package:flutter_theme/config.dart';
+import 'package:flutter_theme/pages/theme_pages/chat_message/chat_message_api.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class GroupChatMessageController extends GetxController {
@@ -263,43 +264,10 @@ class GroupChatMessageController extends GetxController {
         "status": "",
         'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
       });
-
-      await FirebaseFirestore.instance
-          .collection("contacts")
-          .where("isGroup", isEqualTo: true)
-          .get()
-          .then((value) {
-        if (value.docs.isNotEmpty) {
-          for (var i = 0; i < value.docs.length; i++) {
-            final snapshot = value.docs[i].data();
-            log("dd : ${snapshot["groupId"] == id}");
-            if (snapshot["isGroup"] == true) {
-              if (snapshot["groupId"] == pId) {
-                List receiver = value.docs[i].data()["receiverId"];
-                receiver.add(user);
-                FirebaseFirestore.instance
-                    .collection('contacts')
-                    .doc(value.docs[i].id)
-                    .update({
-                  "updateStamp":
-                      DateTime.now().millisecondsSinceEpoch.toString(),
-                  "lastMessage": content,
-                  "senderPhone": user["phone"],
-                  'sender': {
-                    "id": user['id'],
-                    "name": user['name'],
-                    "phone": user["phone"]
-                  },
-                });
-              }
-            }
-          }
-
-          listScrollController.animateTo(0.0,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeOut);
-        }
-      });
+      await ChatMessageApi().saveGroupData(id, pId, content);
+      listScrollController.animateTo(0.0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut);
     }
   }
 

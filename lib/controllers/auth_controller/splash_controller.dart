@@ -31,7 +31,7 @@ contactCtrl.update();
 
   //navigate to login page
   loginNavigation() async {
-    var user = storage.read("user");
+    var user = storage.read("user") ??"";
 
     if (user == "" || user == null) {
       Get.offAllNamed(routeName.phone);
@@ -42,8 +42,8 @@ contactCtrl.update();
 
   //check whether user login or not
   void navigationPage() async {
-    print("dd : ${storage.read("languageCode")}");
-    appCtrl.languageVal = storage.read(session.languageCode);
+
+    appCtrl.languageVal = storage.read(session.languageCode) ?? "en";
     if(appCtrl.languageVal == "en"){
       var locale = const Locale("en", 'US');
       Get.updateLocale(locale);

@@ -18,56 +18,49 @@ class ContactListController extends GetxController {
   TextEditingController searchText = TextEditingController();
 
 
-  fetchPage( search) async {
-    try {
-      counter++;
-      await contact.FlutterContacts.getContacts(
-          withPhoto: true, withProperties: true, withThumbnail: true)
-          .then((contacts) {
-        log("check : $counter");
-        contacts.where((c) => c.phones.isNotEmpty).forEach((Contact p) async {
-          if (p.phones.isNotEmpty) {
-            String phone = phoneNumberExtension(p.phones[0].number);
-            await FirebaseFirestore.instance
-                .collection("users")
-                .where("phone", isEqualTo: phone)
-                .get()
-                .then((value) {
-              if (value.docs.isNotEmpty) {
+  Future<void> fetchPage(search) async {
+    await permissionHandelCtrl.getContact().then((contacts) {
+      contacts.where((c) => c.phones.isNotEmpty).forEach((Contact p) async {
+        if (p.phones.isNotEmpty) {
+          String phone = phoneNumberExtension(p.phones[0].number);
+          await FirebaseFirestore.instance
+              .collection("users")
+              .where("phone", isEqualTo: phone)
+              .get()
+              .then((value) {
+            if (value.docs.isNotEmpty) {
 
-                UserContactModel userContactModel = UserContactModel(
-                    isRegister: true,
-                    phoneNumber: phone,
-                    uid: value.docs[0].data()["id"],
-                    image: value.docs[0].data()["image"],
-                    username: value.docs[0].data()["name"]);
-                registerContactList!.add(userContactModel);
-              }else{
-                UserContactModel userContactModel = UserContactModel(
-                    isRegister: false,
-                    phoneNumber: phone,
-                    contactImage: p.photo,
-                    uid: "0",
-                    username: p.displayName);
-                unRegisterContactList!.add(userContactModel);
-              }
-            });
-          }
-        });
-
-        ContactModel contactModel = ContactModel(title: "Register User with",userTitle: registerContactList);
-        contactList.add(contactModel);
-        ContactModel unRegisterContactModel = ContactModel(title: "Invite User for use Chatter",userTitle: unRegisterContactList);
-        contactList.add(unRegisterContactModel);
-        update();
-
+              UserContactModel userContactModel = UserContactModel(
+                  isRegister: true,
+                  phoneNumber: phone,
+                  uid: value.docs[0].data()["id"],
+                  image: value.docs[0].data()["image"],
+                  username: value.docs[0].data()["name"]);
+              registerContactList!.add(userContactModel);
+            }else{
+              UserContactModel userContactModel = UserContactModel(
+                  isRegister: false,
+                  phoneNumber: phone,
+                  contactImage: p.photo,
+                  uid: "0",
+                  username: p.displayName);
+              unRegisterContactList!.add(userContactModel);
+            }
+          });
+        }
       });
-      log("contactList : ${contactList[1].userTitle}");
+
+      ContactModel contactModel = ContactModel(title: "Register User with",userTitle: registerContactList);
+      contactList.add(contactModel);
+      ContactModel unRegisterContactModel = ContactModel(title: "Invite User for use Chatter",userTitle: unRegisterContactList);
+      contactList.add(unRegisterContactModel);
       update();
-    } catch (error) {
-      log("error : $error");
-    }
+
+    });
+
+    update();
   }
+
 
   @override
   void onReady() async {
