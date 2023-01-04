@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import '../../../config.dart';
 
@@ -8,6 +9,7 @@ class ContactList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return GetBuilder<ContactListController>(builder: (_) {
       return WillPopScope(
         onWillPop: () async {
@@ -77,7 +79,8 @@ class ContactList extends StatelessWidget {
                                         itemBuilder: (context, index) =>
                                             ListTile(
                                           onTap: () {
-                                            // MessageFirebaseApi().saveContact(c.value);
+                                            log("dsgdsg : ${e.value.userTitle![index]}");
+                                            MessageFirebaseApi().saveContact(e.value.userTitle![index],e.value.userTitle![index].isRegister);
                                           },
                                           leading: e.value.userTitle![index]
                                                   .isRegister!

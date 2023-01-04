@@ -4,6 +4,8 @@ import 'dart:io';
 
 import 'package:dartx/dartx_io.dart';
 import 'package:flutter_theme/config.dart';
+import 'package:flutter_theme/models/contact_model.dart';
+import 'package:flutter_theme/pages/theme_pages/chat_message/chat_message_api.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ChatController extends GetxController {
@@ -19,7 +21,8 @@ class ChatController extends GetxController {
       videoUrl,
       blockBy;
   dynamic message;
-  dynamic pData, allData, userData;
+  dynamic pData,allData, userData;
+  UserContactModel? userContactModel;
   bool positionStreamStarted = false;
   bool isUserAvailable = true;
   XFile? imageFile;
@@ -50,47 +53,40 @@ class ChatController extends GetxController {
     if (data == "No User") {
       isUserAvailable = false;
     } else {
-      pData = data["data"];
-      allData = data["allData"];
-      isBlock = allData.data()["isBlock"] ?? false;
-      blockBy = allData.data()["blockBy"] ?? "";
-      pId = pData["id"];
-      pName = pData["name"];
+      userContactModel = data["data"];
+      pId = userContactModel!.uid;
+      pName = userContactModel!.username;
       chatId = data["chatId"];
       isUserAvailable = true;
       update();
     }
     update();
     getChatData();
-    seenMessage();
+
     super.onReady();
   }
 
   //get chat data
   getChatData() async {
-    if (chatId == "0") {
+    if (chatId != "0") {
       await FirebaseFirestore.instance
-          .collectionGroup("contacts")
+          .collection("users").doc(userData["id"]).collection("chats").where("chatId",isEqualTo: chatId)
           .get()
           .then((value) {
-        for (int i = 0; i < value.docs.length; i++) {
-          if (value.docs[i].data()["isOneToOne"] == true) {
-            if (value.docs[i].data()["senderPhone"] == pData["phone"] &&
-                value.docs[i].data()["receiverPhone"] == userData["phone"]) {
-              allData = value.docs[i];
-              chatId = value.docs[i]["chatId"];
-            }
-            if (value.docs[i].data()["senderPhone"] == userData["phone"] &&
-                value.docs[i].data()["receiverPhone"] == pData["phone"]) {
-              allData = value.docs[i];
-              chatId = value.docs[i]["chatId"];
-            }
-            update();
-          }
-        }
+        allData = value.docs[0].data();
+
         update();
+        seenMessage();
       });
     }
+    await FirebaseFirestore.instance
+        .collection("users").doc(userContactModel!.uid)
+        .get()
+        .then((value) {
+      pData = value.data();
+      update();
+    });
+
   }
 
   //update typing status
@@ -109,23 +105,25 @@ class ChatController extends GetxController {
 
   //seen all message
   seenMessage() async {
-    if (userData["id"] == allData["receiver"]["id"]) {
-    await  FirebaseFirestore.instance
-          .collection("messages")
-          .doc(chatId)
-          .collection("chat")
-          .where("isSeen", isEqualTo: false)
-          .get()
-          .then((value) {
-        for (var i = 0; i < value.docs.length; i++) {
-          FirebaseFirestore.instance
-              .collection("messages")
-              .doc(chatId)
-              .collection("chat")
-              .doc(value.docs[i].id)
-              .update({"isSeen": true});
-        }
-      });
+    if(allData != null ) {
+      if (userData["id"] == allData["id"]) {
+        await FirebaseFirestore.instance
+            .collection("messages")
+            .doc(chatId)
+            .collection("chat")
+            .where("isSeen", isEqualTo: false)
+            .get()
+            .then((value) {
+          for (var i = 0; i < value.docs.length; i++) {
+            FirebaseFirestore.instance
+                .collection("messages")
+                .doc(chatId)
+                .collection("chat")
+                .doc(value.docs[i].id)
+                .update({"isSeen": true});
+          }
+        });
+      }
     }
   }
 
@@ -434,309 +432,33 @@ class ChatController extends GetxController {
             msg: content,
             token: pData["pushToken"]);
       }
-      if (allData.data()["isBlock"] != null) {
-        if (allData.data()["isBlock"] == true) {
-          if (allData.data()["blockBy"] == userData["id"]) {
-            await unblockConfirmation(
-                pName, allData.data()["isBlock"], chatId, pId);
-            allData.data()["isBlock"] = false;
-            allData.data()["blockBy"] = "";
-            allData.data()["blockUserId"] = "";
-            isLoading = false;
-            update();
-            Get.forceAppUpdate();
-
-            update();
-          } else {
-            isLoading = false;
-            update();
-            Get.forceAppUpdate();
-            await FirebaseFirestore.instance
-                .collection('messages')
-                .doc(newChatId)
-                .collection("chat")
-                .add({
-              'sender': userData["id"],
-              'receiver': pId,
-              'content': content,
-              "chatId": newChatId,
-              'type': type.name,
-              'messageType': "sender",
-              "isBlock": true,
-              "blockBy": allData.data()["blockBy"],
-              "blockUserId": allData.data()["blockUserId"],
-              'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-            }).then((snap) async {
-              isLoading = false;
-              update();
-              Get.forceAppUpdate();
-              await FirebaseFirestore.instance
-                  .collection("contacts")
-                  .where("chatId", isEqualTo: newChatId)
-                  .get()
-                  .then((value) async {
-                if (value.docs.isNotEmpty) {
-                  await FirebaseFirestore.instance
-                      .collection('contacts')
-                      .doc(value.docs[0].id)
-                      .update({
-                    "updateStamp":
-                        DateTime.now().millisecondsSinceEpoch.toString(),
-                    "senderPhone": userData['phone'],
-                    'sender': {
-                      "id": userData['id'],
-                      "name": userData['name'],
-                      "image": userData["image"],
-                      "phone": userData["phone"]
-                    },
-                    "blockUserMessage": content,
-                    "receiverPhone": pData["phone"],
-                    "receiver": {
-                      "id": pId,
-                      "name": pName,
-                      "image": pData["image"],
-                      "phone": pData["phone"]
-                    }
-                  }).then((value) {
-                    textEditingController.text = "";
-                    update();
-                  });
-                } else {
-                  FirebaseFirestore.instance.collection('contacts').add({
-                    'sender': {
-                      "id": userData["id"],
-                      "name": userData["name"],
-                      "image": userData["image"],
-                      "phone": userData["phone"]
-                    },
-                    'receiver': {
-                      "id": pId,
-                      "name": pName,
-                      "image": pData["image"],
-                      "phone": pData["phone"]
-                    },
-                    "blockUserMessage": content,
-                    'receiverPhone': pData["phone"],
-                    "senderPhone": userData['phone'],
-                    'chatId': newChatId,
-                    'timestamp':
-                        DateTime.now().millisecondsSinceEpoch.toString(),
-                    "lastMessage": content,
-                    "isGroup": false,
-                    "isBlock": true,
-                    "isBroadcast": false,
-                    "isBroadcastSender": false,
-                    "isOneToOne": true,
-                    "blockBy": allData.data()["blockBy"],
-                    "blockUserId": allData.data()["blockUserId"],
-                    "groupId": "",
-                    "updateStamp":
-                        DateTime.now().millisecondsSinceEpoch.toString()
-                  });
-                }
-              });
-            });
-          }
-        } else {
-          await FirebaseFirestore.instance
-              .collection('messages')
-              .doc(newChatId)
-              .collection("chat")
-              .add({
-            'sender': userData["id"],
-            'receiver': pId,
-            'content': content,
-            "chatId": newChatId,
-            'type': type.name,
-            'messageType': "sender",
-            "isBlock": false,
-            "blockBy": "",
-            "blockUserId": "",
-            "isSeen": false,
-            'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-          }).then((snap) async {
-            isLoading = false;
-            update();
-            Get.forceAppUpdate();
-            await FirebaseFirestore.instance
-                .collection("contacts")
-                .where("chatId", isEqualTo: newChatId)
-                .get()
-                .then((value) async {
-              if (value.docs.isNotEmpty) {
-                await FirebaseFirestore.instance
-                    .collection('contacts')
-                    .doc(value.docs[0].id)
-                    .update({
-                  "updateStamp":
-                      DateTime.now().millisecondsSinceEpoch.toString(),
-                  "lastMessage": content,
-                  "senderPhone": userData['phone'],
-                  'sender': {
-                    "id": userData['id'],
-                    "name": userData['name'],
-                    "image": userData["image"],
-                    "phone": userData["phone"]
-                  },
-                  "isGroup": false,
-                  "isBlock": false,
-                  "isBroadcast": false,
-                  "isBroadcastSender": false,
-                  "blockBy": "",
-                  "isSeen": false,
-                  "blockUserId": "",
-                  "receiverPhone": pData["phone"],
-                  "receiver": {
-                    "id": pId,
-                    "name": pName,
-                    "image": pData["image"],
-                    "phone": pData["phone"]
-                  }
-                }).then((value) {
-                  textEditingController.text = "";
-                  update();
-                });
-              } else {
-                FirebaseFirestore.instance.collection('contacts').add({
-                  'sender': {
-                    "id": userData["id"],
-                    "name": userData["name"],
-                    "image": userData["image"],
-                    "phone": userData["phone"]
-                  },
-                  'receiver': {
-                    "id": pId,
-                    "name": pName,
-                    "image": pData["image"],
-                    "phone": pData["phone"]
-                  },
-                  'receiverPhone': pData["phone"],
-                  "senderPhone": userData['phone'],
-                  'chatId': newChatId,
-                  'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-                  "lastMessage": content,
-                  "isGroup": false,
-                  "isSeen": false,
-                  "isBlock": false,
-                  "isBroadcast": false,
-                  "isBroadcastSender": false,
-                  "isOneToOne": true,
-                  "blockBy": "",
-                  "blockUserId": "",
-                  "groupId": "",
-                  "updateStamp":
-                      DateTime.now().millisecondsSinceEpoch.toString()
-                });
-              }
-            });
-          });
-        }
-      } else {
-        await FirebaseFirestore.instance
-            .collection('messages')
-            .doc(newChatId)
-            .collection("chat")
-            .add({
-          'sender': userData["id"],
-          'receiver': pId,
-          'content': content,
-          "chatId": newChatId,
-          'type': type.name,
-          'messageType': "sender",
-          "isBlock": false,
-          "isSeen": false,
-          "blockBy": "",
-          "blockUserId": "",
-          'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-        }).then((snap) async {
-          isLoading = false;
-          update();
-          Get.forceAppUpdate();
-          await FirebaseFirestore.instance
-              .collection("contacts")
-              .where("chatId", isEqualTo: newChatId)
-              .get()
-              .then((value) async {
-            if (value.docs.isNotEmpty) {
-              await FirebaseFirestore.instance
-                  .collection('contacts')
-                  .doc(value.docs[0].id)
-                  .update({
-                "updateStamp": DateTime.now().millisecondsSinceEpoch.toString(),
-                "lastMessage": content,
-                "senderPhone": userData['phone'],
-                "isSeen": false,
-                'sender': {
-                  "id": userData['id'],
-                  "name": userData['name'],
-                  "image": userData["image"],
-                  "phone": userData["phone"]
-                },
-                "isGroup": false,
-                "isBlock": false,
-                "isBroadcast": false,
-                "isBroadcastSender": false,
-                "blockBy": "",
-                "blockUserId": "",
-                "receiverPhone": pData["phone"],
-                "receiver": {
-                  "id": pId,
-                  "name": pName,
-                  "image": pData["image"],
-                  "phone": pData["phone"]
-                }
-              }).then((value) {
-                textEditingController.text = "";
-                update();
-              });
-            } else {
-              dynamic user = appCtrl.storage.read("user");
-
-              FirebaseFirestore.instance.collection('contacts').add({
-                'sender': {
-                  "id": user["id"],
-                  "name": user["name"],
-                  "image": user["image"],
-                  "phone": user["phone"]
-                },
-                "isSeen": false,
-                'receiver': {
-                  "id": pId,
-                  "name": pName,
-                  "image": pData["image"],
-                  "phone": pData["phone"]
-                },
-                'receiverPhone': pData["phone"],
-                "senderPhone": user['phone'],
-                'chatId': newChatId,
-                'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-                "lastMessage": content,
-                "isGroup": false,
-                "isBlock": false,
-                "isBroadcast": false,
-                "isBroadcastSender": false,
-                "isOneToOne": true,
-                "blockBy": "",
-                "blockUserId": "",
-                "groupId": "",
-                "updateStamp": DateTime.now().millisecondsSinceEpoch.toString()
-              }).then((value) {
-                isLoading = false;
-                update();
-                Get.forceAppUpdate();
-              });
-            }
-          }).then((value) {
-            isLoading = false;
-            update();
-            Get.forceAppUpdate();
-          });
-        }).then((value) {
-          isLoading = false;
-          update();
-          Get.forceAppUpdate();
-        });
-      }
+      await FirebaseFirestore.instance
+          .collection('messages')
+          .doc(newChatId)
+          .collection("chat")
+          .add({
+        'sender': userData["id"],
+        'receiver': pData["id"],
+        'content': content,
+        "chatId": newChatId,
+        'type': type.name,
+        'messageType': "sender",
+        "isBlock": false,
+        "isSeen": false,
+        "blockBy": "",
+        "blockUserId": "",
+        'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+      }).then((snap) async {
+        isLoading = false;
+        update();
+        Get.forceAppUpdate();
+        await ChatMessageApi().saveMessageInUserCollection(userData["id"], pData["id"], newChatId, content);
+        await ChatMessageApi().saveMessageInUserCollection(pData["id"], userData["id"], newChatId, content);
+      }).then((value) {
+        isLoading = false;
+        update();
+        Get.forceAppUpdate();
+      });
       Get.forceAppUpdate();
     }
     isLoading = false;

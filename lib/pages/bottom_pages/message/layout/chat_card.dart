@@ -17,7 +17,7 @@ class _ChatCardState extends State<ChatCard> {
         children: [
           StreamBuilder(
               stream: FirebaseFirestore.instance
-                  .collection("contacts")
+                  .collection("users").doc(messageCtrl.currentUserId).collection("chats")
                   .orderBy("updateStamp", descending: true)
                   .snapshots(),
               builder: (context, snapshot) {
@@ -29,6 +29,7 @@ class _ChatCardState extends State<ChatCard> {
                       )).height(MediaQuery.of(context).size.height).expanded();
                 } else {
                   List message = MessageFirebaseApi().chatListWidget(snapshot);
+                  print("mess : ${message.length}");
                   return !snapshot.hasData ? Center(
                       child: CircularProgressIndicator(
                         valueColor:
@@ -42,10 +43,11 @@ class _ChatCardState extends State<ChatCard> {
                           document: message[index],
                           blockBy:messageCtrl.storageUser["id"],
                           currentUserId:
-                          messageCtrl.storageUser["phone"]);
+                          messageCtrl.storageUser["id"]);
                     },
                     itemCount: message.length,
                   );
+                  return Container();
                 }
               }),
         ],

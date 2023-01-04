@@ -2,12 +2,14 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:flutter_theme/models/contact_model.dart';
 
 import '../../../config.dart';
 
 class MessageFirebaseApi {
   String? currentUserId;
   final messageCtrl = Get.find<MessageController>();
+
   //get contact list
   getContactList(List<Contact> contacts) async {
     List message = [];
@@ -63,50 +65,79 @@ class MessageFirebaseApi {
   }
 
   //check contact in firebase and if not exists
-  saveContact(value) async {
-    if (value != null) {
-      Contact contact = value;
-
-      String phone = contact.phones[0].number;
-      if (phone.length > 10) {
-        if (phone.contains(" ")) {
-          phone = phone.replaceAll(" ", "");
-        }
-        if (phone.contains("-")) {
-          phone = phone.replaceAll("-", "");
-        }
-        if (phone.contains("+")) {
-          phone = phone.replaceAll("+91", "");
-        }
-        if (phone.length > 10) {
-          phone = phone.substring(3);
-        }
-      }
-
-      final m = await FirebaseFirestore.instance
+  saveContact(value, isRegister) async {
+    if (isRegister) {
+      UserContactModel userContact = value;
+      log("val: ${userContact.uid}");
+      await FirebaseFirestore.instance
           .collection('users')
-          .where('phone', isEqualTo: phone)
-          .limit(1)
-          .get();
-      if (m.docs.isEmpty) {
-        if (Platform.isAndroid) {
-          final uri = Uri(
-            scheme: "sms",
-            path: phone,
-            queryParameters: <String, String>{
-              'body': Uri.encodeComponent('Download the ChatBox App'),
-            },
-          );
-          await launchUrl(uri);
+          .doc(userContact.phoneNumber)
+          .collection("chats")
+          .get()
+          .then((value) {
+        bool isEmpty = value.docs
+            .where((element) =>
+                element.data()["senderId"] == userContact.uid ||
+                element.data()["receiverId"] == userContact.uid)
+            .isNotEmpty;
+        if(!isEmpty){
+          var data ={
+            "chatId":"0",
+            "data":userContact
+          };
+          Get.back();
+        Get.toNamed(routeName.chat,arguments: data);
+        }else{
+          var contactDat = value.docs.where((element) =>  element.data()["senderId"] == userContact.uid ||
+              element.data()["receiverId"] == userContact.uid);
+          print("contact : $contactDat");
+          var data ={
+            "chatId":"0",
+            "data":userContact
+          };
+        //  Get.toNamed(routeName.chat,arguments: data);
         }
-      } else {
-        var data = {
-          "data": m.docs[0].data(),
-          "chatId": "0",
-          "allData": m.docs[0]
-        };
-        Get.back();
-        Get.toNamed(routeName.chat, arguments: data);
+      });
+    } else {
+      if (value != null) {
+        Contact contact = value;
+
+        String phone = contact.phones[0].number;
+        if (phone.length > 10) {
+          if (phone.contains(" ")) {
+            phone = phone.replaceAll(" ", "");
+          }
+          if (phone.contains("-")) {
+            phone = phone.replaceAll("-", "");
+          }
+          if (phone.contains("+")) {
+            phone = phone.replaceAll("+91", "");
+          }
+          if (phone.length > 10) {
+            phone = phone.substring(3);
+          }
+        }
+
+        final m = await FirebaseFirestore.instance
+            .collection('users')
+            .where('phone', isEqualTo: phone)
+            .limit(1)
+            .get();
+        if (m.docs.isEmpty) {
+          if (Platform.isAndroid) {
+            final uri = Uri(
+              scheme: "sms",
+              path: phone,
+              queryParameters: <String, String>{
+                'body': Uri.encodeComponent('Download the ChatBox App'),
+              },
+            );
+            await launchUrl(uri);
+          }
+        } else {
+          /* Get.back();
+        Get.toNamed(routeName.chat, arguments: data);*/
+        }
       }
     }
   }
@@ -132,13 +163,15 @@ class MessageFirebaseApi {
 
   //get all exist users
   Future<List> getExistUser() async {
-    List contactList= [];
+    List contactList = [];
     final msgList = await FirebaseFirestore.instance.collection("users").get();
-    List<Contact> contactUserList  = await FlutterContacts.getContacts(withPhoto: true, withProperties: true,withThumbnail: true);
+    List<Contact> contactUserList = await FlutterContacts.getContacts(
+        withPhoto: true, withProperties: true, withThumbnail: true);
     for (final user in msgList.docs) {
       for (final contact in contactUserList) {
         if (contact.phones.isNotEmpty) {
-          String phone = phoneNumberExtension(contact.phones[0].number.toString());
+          String phone =
+              phoneNumberExtension(contact.phones[0].number.toString());
           if (phone == user.data()["phone"]) {
             log("us : ${user.data()}");
             final storeUser = appCtrl.storage.read("user");
@@ -157,32 +190,8 @@ class MessageFirebaseApi {
   List chatListWidget(
       AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
     List message = [];
-    final storageUser = appCtrl.storage.read("user");
-    for (int j = 0; j < messageCtrl.contactExistList.length; j++) {
-      for (int a = 0; a < snapshot.data!.docs.length; a++) {
-        if (snapshot.data!.docs[a].data()["isGroup"] == false) {
-          if (snapshot.data!.docs[a].data()["senderPhone"] ==
-              storageUser["phone"] ||
-              snapshot.data!.docs[a].data()["receiverPhone"] == messageCtrl.contactExistList[j]["phone"] &&
-                  snapshot.data!.docs[a].data()["senderPhone"] == messageCtrl.contactExistList[j]["phone"] ||
-              snapshot.data!.docs[a].data()["receiverPhone"] ==
-                  storageUser["phone"]) {
-            if(!message.contains(snapshot.data!.docs[a])) {
-              message.add(snapshot.data!.docs[a]);
-            }
-          }
-        } else {
-          List groupReceiver = snapshot.data!.docs[a].data()["receiverId"];
-          if (groupReceiver
-              .where((element) => element["phone"] == messageCtrl.contactExistList[j]["phone"])
-              .isNotEmpty) {
-            if(!message.contains(snapshot.data!.docs[a])) {
-              message.add(snapshot.data!.docs[a]);
-            }
-          }
-        }
-      }
-      return message;
+    for (int a = 0; a < snapshot.data!.docs.length; a++) {
+      message.add(snapshot.data!.docs[a]);
     }
     return message;
   }

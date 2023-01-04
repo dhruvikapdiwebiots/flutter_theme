@@ -20,11 +20,11 @@ class ContactListController extends GetxController {
 
   fetchPage( search) async {
     try {
-counter++;
+      counter++;
       await contact.FlutterContacts.getContacts(
-              withPhoto: true, withProperties: true, withThumbnail: true)
+          withPhoto: true, withProperties: true, withThumbnail: true)
           .then((contacts) {
-            log("check : ${counter}");
+        log("check : $counter");
         contacts.where((c) => c.phones.isNotEmpty).forEach((Contact p) async {
           if (p.phones.isNotEmpty) {
             String phone = phoneNumberExtension(p.phones[0].number);
@@ -62,7 +62,7 @@ counter++;
         update();
 
       });
-    log("contactList : ${contactList[1].userTitle}");
+      log("contactList : ${contactList[1].userTitle}");
       update();
     } catch (error) {
       log("error : $error");
