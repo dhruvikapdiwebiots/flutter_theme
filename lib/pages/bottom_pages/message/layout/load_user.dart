@@ -25,7 +25,7 @@ class LoadUser extends StatelessWidget {
     } else if (document!["isGroup"] == true) {
       List user = document!["receiverId"];
       return user
-              .where((element) => element["phone"] == currentUserId)
+              .where((element) => element["id"] == currentUserId)
               .isNotEmpty
           ? GroupMessageCard(
               document: document,

@@ -17,8 +17,7 @@ class GroupChatMessageController extends GetxController {
       statusLastSeen,
       nameList,
       videoUrl;
-  dynamic message;
-  dynamic pData;
+  dynamic message,pData;
   bool positionStreamStarted = false;
   XFile? imageFile;
   File? image;
@@ -45,8 +44,8 @@ class GroupChatMessageController extends GetxController {
     imageUrl = '';
     var data = Get.arguments;
     pData = data;
-    pId = data["id"];
-    pName = data["name"];
+    pId = pData["groupId"];
+    pName = pData["name"];
     getPeerStatus();
 
     update();
@@ -61,11 +60,12 @@ class GroupChatMessageController extends GetxController {
         .get()
         .then((value) {
       if (value.exists) {
-        pData = value.data();
         List receiver = pData["users"];
         for (var i = 0; i < receiver.length; i++) {
           if (nameList != null) {
-            nameList = "$nameList, ${receiver[i]["name"]}";
+            if(receiver[i]["name"] !=  user["name"]) {
+              nameList = "$nameList, ${receiver[i]["name"]}";
+            }
           } else {
             nameList = receiver[i]["name"];
           }
@@ -246,6 +246,9 @@ class GroupChatMessageController extends GetxController {
 
   // SEND MESSAGE CLICK
   void onSendMessage(String content, MessageType type, {groupId}) async {
+    isLoading = true;
+    textEditingController.clear();
+    update();
     if (content.trim() != '') {
       var user = appCtrl.storage.read("user");
       id = user["id"];
@@ -264,7 +267,9 @@ class GroupChatMessageController extends GetxController {
         "status": "",
         'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
       });
-      await ChatMessageApi().saveGroupData(id, pId, content);
+      await ChatMessageApi().saveGroupData(id, pId, content,pData);
+      isLoading = false;
+      update();
       listScrollController.animateTo(0.0,
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeOut);

@@ -36,7 +36,7 @@ class GroupChatMessageAppBar extends StatelessWidget with PreferredSizeWidget{
                     fontSize: 16),
               ),
               const VSpace(Sizes.s6),
-         //    const GroupUserLastSeen()
+             const GroupUserLastSeen()
             ]));
   }
 

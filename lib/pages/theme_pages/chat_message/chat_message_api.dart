@@ -1,11 +1,14 @@
+import 'dart:developer';
+
 import '../../../config.dart';
 
 class ChatMessageApi{
-  final chatCtrl = Get.isRegistered<ChatController>() ? Get.find<ChatController>() : Get.put(ChatController());
+
   
   
   //save message in user 
   saveMessageInUserCollection(id, receiverId,newChatId,content,{isBlock = false})async{
+    final chatCtrl = Get.isRegistered<ChatController>() ? Get.find<ChatController>() : Get.put(ChatController());
     await FirebaseFirestore.instance
         .collection("users")
         .doc(id).collection("chats").where("chatId",isEqualTo: newChatId)
@@ -64,31 +67,30 @@ class ChatMessageApi{
   }
 
   //save group data
-  saveGroupData(id, groupId,content)async{
+  saveGroupData(id, groupId,content,pData)async{
     var user = appCtrl.storage.read("user");
-    await FirebaseFirestore.instance
-        .collection("users").doc(id).collection("chats")
-        .where("isGroup", isEqualTo: true)
-        .get()
-        .then((value) {
-      if (value.docs.isNotEmpty) {
-        for (var i = 0; i < value.docs.length; i++) {
-          final snapshot = value.docs[i].data();
-          if (snapshot["groupId"] == groupId) {
-            List receiver = value.docs[i].data()["receiverId"];
-            receiver.add(user);
-            FirebaseFirestore.instance
-                .collection("users").doc(id).collection("chats")
-                .doc(value.docs[i].id)
-                .update({
-              "updateStamp":
-              DateTime.now().millisecondsSinceEpoch.toString(),
-              "lastMessage": content,
-              "senderId": user["id"],
-            });
-          }
-        }
-      }
-    });
+    List receiver = pData["users"];
+    log("receiver : ${receiver.length}");
+   receiver.asMap().entries.forEach((element) async{
+     await FirebaseFirestore.instance
+         .collection("users").doc(receiver[element.key]["id"]).collection("chats")
+         .where("groupId", isEqualTo: groupId)
+         .get()
+         .then((value) {
+           log("value.docs : ${value.docs}");
+       if (value.docs.isNotEmpty) {
+         FirebaseFirestore.instance
+             .collection("users").doc(id).collection("chats")
+             .doc(value.docs[0].id)
+             .update({
+           "updateStamp":
+           DateTime.now().millisecondsSinceEpoch.toString(),
+           "lastMessage": content,
+           "senderId": user["id"],
+         });
+       }
+     });
+   });
+
   }
 }

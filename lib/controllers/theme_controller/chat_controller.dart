@@ -74,7 +74,7 @@ class ChatController extends GetxController {
           .get()
           .then((value) {
         allData = value.docs[0].data();
-log("allData : $allData");
+        log("allData : $allData");
         update();
         seenMessage();
       });

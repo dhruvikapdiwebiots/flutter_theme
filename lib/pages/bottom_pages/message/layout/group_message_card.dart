@@ -11,6 +11,7 @@ class GroupMessageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(document!["groupId"]);
     return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection("groups")
@@ -26,6 +27,7 @@ class GroupMessageCard extends StatelessWidget {
               child: ListTile(
                   onTap: () {
 
+                        Get.toNamed(routeName.groupChatMessage,arguments: snapshot.data);
                   },
                   contentPadding: EdgeInsets.zero,
                   leading: CachedNetworkImage(
@@ -35,7 +37,7 @@ class GroupMessageCard extends StatelessWidget {
                             backgroundColor: const Color(0xffE6E6E6),
                             radius: 28,
                             backgroundImage: NetworkImage(
-                                '${document!["receiver"]['image']}'),
+                                '${(snapshot.data!)['image']}'),
                           ),
                       placeholder: (context, url) => Image.asset(
                         imageAssets.user,
