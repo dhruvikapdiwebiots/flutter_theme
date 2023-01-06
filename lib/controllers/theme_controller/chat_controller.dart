@@ -250,9 +250,10 @@ class ChatController extends GetxController {
 
   //send video after recording or pick from media
   videoSend() async {
-    await pickerCtrl.videoPickerOption(Get.context!);
+     pickerCtrl.videoPickerOption(Get.context!);
     videoFile = pickerCtrl.videoFile;
     update();
+    log("videoFile : $videoFile");
     const Duration(seconds: 2);
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     Reference reference = FirebaseStorage.instance.ref().child(fileName);
@@ -287,11 +288,15 @@ class ChatController extends GetxController {
     PermissionStatus permissionStatus =
         await permissionHandelCtrl.getContactPermission();
     if (permissionStatus == PermissionStatus.granted) {
-      Get.toNamed(routeName.contactList)!.then((value) async {
-        Contact contact = value;
-        onSendMessage(
-            '${contact.displayName}-BREAK-${contact.phones[0].number}-BREAK-${contact.photo}',
-            MessageType.contact);
+      Get.toNamed(routeName.allContactList)!.then((value) async {
+        if(value !=null) {
+          Contact contact = value;
+          log("ccc : $contact");
+          onSendMessage(
+              '${contact.displayName}-BREAK-${contact.phones[0].number}-BREAK-${contact.photo}',
+              MessageType.contact);
+        }
+
       });
     } else {
       permissionHandelCtrl.handleInvalidPermissions(permissionStatus);

@@ -66,7 +66,7 @@ class SplashController extends GetxController {
     log("user : $user");
     bool isIntro = storage.read(session.isIntro) ?? false;
     log("isIntro : $isIntro");
-    if (user == "" || user == null) {
+    if (user == "" && user == null) {
       // Checking if user is already login or not
       Get.toNamed(routeName.phone);
     } else {

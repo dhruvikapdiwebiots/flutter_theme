@@ -29,7 +29,6 @@ class PickerController extends GetxController {
   imagePickerOption(BuildContext context) {
     showModalBottomSheet(
         context: context,
-
         shape: const RoundedRectangleBorder(
           borderRadius:
               BorderRadius.vertical(top: Radius.circular(AppRadius.r25)),
@@ -48,7 +47,7 @@ class PickerController extends GetxController {
   }
 
   //video picker option
-  videoPickerOption(BuildContext context) {
+   videoPickerOption(BuildContext context) {
     showModalBottomSheet(
         context: context,
         shape: const RoundedRectangleBorder(
@@ -68,6 +67,7 @@ class PickerController extends GetxController {
               Get.back(result: video);
             }
             update();
+            Get.forceAppUpdate();
           }, galleryTap: () async {
             final ImagePicker picker = ImagePicker();
             videoFile = (await picker.pickVideo(source: ImageSource.gallery))!;
@@ -77,13 +77,15 @@ class PickerController extends GetxController {
               Get.back(result: video);
             }
             update();
+            Get.forceAppUpdate();
           });
         });
   }
 
-  Future<String> uploadImage(File file,{String? fileNameText}) async {
+  Future<String> uploadImage(File file, {String? fileNameText}) async {
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    Reference reference = FirebaseStorage.instance.ref().child( fileNameText ?? fileName);
+    Reference reference =
+        FirebaseStorage.instance.ref().child(fileNameText ?? fileName);
     UploadTask uploadTask = reference.putFile(file);
     TaskSnapshot snap = await uploadTask;
     String downloadUrl = await snap.ref.getDownloadURL();
@@ -91,10 +93,10 @@ class PickerController extends GetxController {
     return imageUrl!;
   }
 
-
-  Future<String> uploadAudio(File file,{String? fileNameText}) async {
+  Future<String> uploadAudio(File file, {String? fileNameText}) async {
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    Reference reference = FirebaseStorage.instance.ref().child( fileNameText ?? fileName);
+    Reference reference =
+        FirebaseStorage.instance.ref().child(fileNameText ?? fileName);
     UploadTask uploadTask = reference.putFile(file);
     TaskSnapshot snap = await uploadTask;
     String downloadUrl = await snap.ref.getDownloadURL();

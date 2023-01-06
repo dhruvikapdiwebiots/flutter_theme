@@ -145,12 +145,12 @@ class OtpController extends GetxController {
           update();
         });
       } else {
-        isLoading = true;
+        isLoading = false;
         update();
         showToast(fonts.otpError.tr, Colors.red);
       }
     }).catchError((error) {
-      isLoading = true;
+      isLoading = false;
       update();
       showToast(fonts.somethingWrong.tr, Colors.red);
     });

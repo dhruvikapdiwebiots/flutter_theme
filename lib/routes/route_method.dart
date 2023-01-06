@@ -4,6 +4,8 @@
 
 
 
+import 'package:flutter_theme/pages/theme_pages/all_contact/all_contact_list.dart';
+
 import '../config.dart';
 import 'route_name.dart';
 
@@ -22,6 +24,7 @@ class AppRoute {
     GetPage(name: _routeName.chat, page: () =>const Chat()),
     GetPage(name: _routeName.setting, page: () => Setting()),
     GetPage(name: _routeName.contactList, page: () => ContactList()),
+    GetPage(name: _routeName.allContactList, page: () => AllContactList()),
     GetPage(name: _routeName.groupChat, page: () => GroupChat()),
     GetPage(name: _routeName.groupChatMessage, page: () =>const GroupChatMessage()),
     GetPage(name: _routeName.confirmationScreen, page: () =>const ConfirmStatusScreen()),

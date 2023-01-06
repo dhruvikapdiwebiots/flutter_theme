@@ -10,6 +10,7 @@ class RouteName {
   final String chat = '/chat';
   final String setting = '/setting';
   final String contactList = '/contactList';
+  final String allContactList = '/allContactList';
   final String groupChat = '/groupChat';
   final String groupChatMessage = '/groupChatMessage';
   final String confirmationScreen = '/confirmationScreen';

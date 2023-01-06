@@ -22,7 +22,7 @@ class InputBox extends StatelessWidget {
                     TextStyle(color: appCtrl.appTheme.primary, fontSize: 15.0),
                 controller: chatCtrl.textEditingController,
                 decoration: InputDecoration.collapsed(
-                  hintText: 'Enter your message',
+                  hintText: fonts.enterYourMessage.tr,
                   hintStyle: TextStyle(color: appCtrl.appTheme.gray),
                 ),
                 focusNode: chatCtrl.focusNode,

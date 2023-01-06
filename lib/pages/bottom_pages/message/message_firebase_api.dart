@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_theme/models/contact_model.dart';
 
 import '../../../config.dart';
@@ -9,6 +8,9 @@ import '../../../config.dart';
 class MessageFirebaseApi {
   String? currentUserId;
   final messageCtrl = Get.find<MessageController>();
+  final permissionHandelCtrl = Get.isRegistered<PermissionHandlerController>()
+      ? Get.find<PermissionHandlerController>()
+      : Get.put(PermissionHandlerController());
 
   //get contact list
   getContactList(List<Contact> contacts) async {
@@ -86,7 +88,7 @@ class MessageFirebaseApi {
             .isNotEmpty;
         if (!isEmpty) {
           var data = {"chatId": "0", "data": userContact};
-          log("reg : ${data}");
+
           Get.back();
           Get.toNamed(routeName.chat, arguments: data);
         } else {
@@ -139,8 +141,7 @@ class MessageFirebaseApi {
   Future<List> getExistUser() async {
     List contactList = [];
     final msgList = await FirebaseFirestore.instance.collection("users").get();
-    List<Contact> contactUserList = await FlutterContacts.getContacts(
-        withPhoto: true, withProperties: true, withThumbnail: true);
+    List<Contact> contactUserList =  await permissionHandelCtrl.getContact();
     for (final user in msgList.docs) {
       for (final contact in contactUserList) {
         if (contact.phones.isNotEmpty) {
