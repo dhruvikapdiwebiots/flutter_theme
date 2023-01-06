@@ -36,3 +36,4 @@ final appCtrl = Get.isRegistered<AppController>()
 final firebaseCtrl = Get.isRegistered<FirebaseCommonController>()
     ? Get.find<FirebaseCommonController>()
     : Get.put(FirebaseCommonController());
+

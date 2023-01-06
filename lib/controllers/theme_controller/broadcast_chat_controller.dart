@@ -5,6 +5,7 @@ import 'package:dartx/dartx_io.dart';
 import 'package:flutter_contacts/contact.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/pages/theme_pages/broadcast_chat/layouts/broadcast_sender.dart';
+import 'package:flutter_theme/pages/theme_pages/chat_message/chat_message_api.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class BroadcastChatController extends GetxController {
@@ -47,7 +48,7 @@ class BroadcastChatController extends GetxController {
     groupId = '';
     isLoading = false;
     imageUrl = '';
-    userData = appCtrl.storage.read("user");
+    userData = appCtrl.storage.read(session.user);
     var data = Get.arguments;
 
     broadData = data["data"];
@@ -205,16 +206,15 @@ class BroadcastChatController extends GetxController {
   void onSendMessage(String content, MessageType type) async {
     if (content.trim() != '') {
       textEditingController.clear();
-      for(var i=0;i<pData.length;i++) {
-        if(pData[i]["chatId"] != null){
-
+      for (var i = 0; i < pData.length; i++) {
+        if (pData[i]["chatId"] != null) {
           await FirebaseFirestore.instance
               .collection('messages')
               .doc(pData[i]["chatId"])
               .collection("chat")
               .add({
             'sender': userData["id"],
-            'receiver': pId,
+            'receiver': pData[i],
             'content': content,
             "chatId": pData[i]["chatId"],
             'type': type.name,
@@ -223,40 +223,13 @@ class BroadcastChatController extends GetxController {
             "isSeen": false,
             "blockBy": "",
             "blockUserId": "",
-            'timestamp': DateTime
-                .now()
-                .millisecondsSinceEpoch
-                .toString(),
+            'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
           }).then((snap) async {
-            FirebaseFirestore.instance.collection("contacts").where("chatId",isEqualTo: pData[i]["chatId"]).get().then((value)async{
-              await FirebaseFirestore.instance
-                  .collection('contacts').doc(value.docs[0].id)
-                  .update({
-                'sender': {
-                  "id": userData['id'],
-                  "name": userData['name'],
-                  "phone": userData["phone"]
-                },
-                "receiver": {
-                  "id": pData[i]["id"],
-                  "name": pData[i]["name"],
-                  "image": pData[i]["image"],
-                  "phone": pData[i]["phone"]
-                },
-                'receiverPhone': pData[i]["phone"],
-                "isSeen": false,
-                'senderPhone': userData["phone"],
-                "lastMessage": content,
-                "updateStamp": DateTime
-                    .now()
-                    .millisecondsSinceEpoch
-                    .toString()
-              });
-            });
 
+            await ChatMessageApi().saveMessageInUserCollection(
+                pData[i]["id"], userData["id"], pData[i]["chatId"], content,isBroadcast: true,userData["id"]);
           });
-        }else{
-
+        } else {
           final now = DateTime.now();
           String? newChatId = now.microsecondsSinceEpoch.toString();
           update();
@@ -275,54 +248,38 @@ class BroadcastChatController extends GetxController {
             "isBlock": false,
             "isSeen": false,
             "isBroadcast": false,
-
             "blockBy": "",
             "blockUserId": "",
-            'timestamp': DateTime
-                .now()
-                .millisecondsSinceEpoch
-                .toString(),
+            'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
           }).then((snap) async {
-            await FirebaseFirestore.instance
-                .collection('contacts')
-                .add({
-              'sender': {
-                "id": userData['id'],
-                "name": userData['name'],
-                "phone": userData["phone"]
-              },
-              'receiver': {
-                "id": pData[i]['id'],
-                "name": pData[i]['name'],
-                "phone": pData[i]["phone"]
-              },
-              'chatId': newChatId,
-              'receiverPhone': pData[i]["phone"],
-              'senderPhone': userData["phone"],
-              'timestamp': DateTime
-                  .now()
-                  .millisecondsSinceEpoch
-                  .toString(),
-              "lastMessage": content,
-              "isBroadcast": false,
-              "isGroup": false,
-              "isBlock": false,
-              "isSeen": false,
-              "updateStamp": DateTime
-                  .now()
-                  .millisecondsSinceEpoch
-                  .toString()
-            });
+            await ChatMessageApi().saveMessageInUserCollection(
+                pData[i]["id"], userData["id"], pData[i]["chatId"], content,isBroadcast: true,userData["id"]);
           });
-
         }
       }
 
-      FirebaseFirestore.instance.collection("broadcast").doc(pId).update(
-          {"users" :pData});
+      FirebaseFirestore.instance
+          .collection("broadcast")
+          .doc(pId)
+          .update({"users": pData});
 
-      FirebaseFirestore.instance.collection("contacts").where("broadcastId",isEqualTo: pId).get().then((snap) {
-        FirebaseFirestore.instance.collection("contacts").doc(snap.docs[0].id).update({"receiverId":pData});
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(userData["id"])
+          .collection("chats")
+          .where("broadcastId", isEqualTo: pId)
+          .get()
+          .then((snap) {
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(userData["id"])
+            .collection("chats")
+            .doc(snap.docs[0].id)
+            .update({
+          "receiverId": pData,
+          "updateStamp": DateTime.now().millisecondsSinceEpoch.toString(),
+          "lastMessage": content
+        });
       });
 
       FirebaseFirestore.instance
@@ -338,23 +295,14 @@ class BroadcastChatController extends GetxController {
         'type': type.name,
         'messageType': "sender",
         "status": "",
-        'timestamp': DateTime.now()
-            .millisecondsSinceEpoch
-            .toString(),
-      }).then((value)async {
+        'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+      }).then((value) async {
         await FirebaseFirestore.instance
-            .collection("contacts")
+            .collection('users')
+            .doc(userData["id"])
+            .collection("chats")
             .where("broadcastId", isEqualTo: pId)
-            .get()
-            .then((value) async {
-          await FirebaseFirestore.instance
-              .collection('contacts')
-              .doc(value.docs[0].id)
-              .update({
-            "updateStamp": DateTime.now().millisecondsSinceEpoch.toString(),
-            "lastMessage": content,
-          });
-        });
+            .get();
       });
 
       Get.forceAppUpdate();
@@ -365,7 +313,6 @@ class BroadcastChatController extends GetxController {
   Widget buildPopupDialog(
       BuildContext context, DocumentSnapshot documentReference) {
     return DeleteAlert(
-
       documentReference: documentReference,
     );
   }

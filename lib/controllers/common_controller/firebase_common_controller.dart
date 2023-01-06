@@ -9,7 +9,7 @@ class FirebaseCommonController extends GetxController {
 
   //online status update
   void setIsActive() async {
-    var user = appCtrl.storage.read("user") ?? "";
+    var user = appCtrl.storage.read(session.user) ?? "";
     if(user != "") {
       await FirebaseFirestore.instance.collection("users")
           .doc(user["id"])
@@ -28,7 +28,7 @@ class FirebaseCommonController extends GetxController {
 
   //last seen update
   void setLastSeen() async {
-    var user = appCtrl.storage.read("user") ?? "";
+    var user = appCtrl.storage.read(session.user) ?? "";
     if(user != "") {
       await FirebaseFirestore.instance.collection("users")
           .doc(user["id"])
@@ -46,7 +46,7 @@ class FirebaseCommonController extends GetxController {
 
   //last seen update
   void groupTypingStatus(pId, documentId, isTyping) async {
-    var user = appCtrl.storage.read("user");
+    var user = appCtrl.storage.read(session.user);
     await FirebaseFirestore.instance
         .collection("groups")
         .doc(pId)
@@ -57,7 +57,7 @@ class FirebaseCommonController extends GetxController {
 
   //typing update
   void setTyping() async {
-    var user = appCtrl.storage.read("user");
+    var user = appCtrl.storage.read(session.user);
     await FirebaseFirestore.instance.collection("users").doc(user["id"]).update(
       {
         "status": "typing...",
@@ -67,7 +67,7 @@ class FirebaseCommonController extends GetxController {
   }
 
   statusDeleteAfter24Hours() async {
-   /* var user = appCtrl.storage.read("user") ?? "";
+   /* var user = appCtrl.storage.read(session.user) ?? "";
     if(user != "") {
       FirebaseFirestore.instance
           .collection('status')

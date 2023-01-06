@@ -9,7 +9,7 @@ class GroupFirebaseApi {
     groupCtrl.dismissKeyboard();
     Get.back();
     groupCtrl.isLoading = true;
-    final user = appCtrl.storage.read("user");
+    final user = appCtrl.storage.read(session.user);
     groupCtrl.update();
     var userData = {
       "id": user["id"],

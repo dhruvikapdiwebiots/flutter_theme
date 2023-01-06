@@ -6,7 +6,7 @@ import '../../../../config.dart';
 class StatusFirebaseApi {
   //add status
   addStatus(imageUrl) async {
-    var user = appCtrl.storage.read("user");
+    var user = appCtrl.storage.read(session.user);
     List<PhotoUrl> statusImageUrls = [];
 
     var statusesSnapshot = await FirebaseFirestore.instance
@@ -53,7 +53,7 @@ class StatusFirebaseApi {
 
   //get status list
   Future<List<Status>> getStatusUserList(List<Contact> contacts) async {
-    var user = appCtrl.storage.read("user");
+    var user = appCtrl.storage.read(session.user);
     var statusesSnapshot =
         await FirebaseFirestore.instance.collection('status').get();
     List<Status> statusData = [];

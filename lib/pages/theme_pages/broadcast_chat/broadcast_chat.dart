@@ -40,32 +40,19 @@ class _BroadcastChatState extends State<BroadcastChat>
               appBar: BroadCastAppBar(
                   name: "${chatCtrl.totalUser} recipients",nameList: chatCtrl.nameList,),
               backgroundColor: Colors.white,
-              body: chatCtrl.isUserAvailable
-                  ? Stack(children: [
-                Container(
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage(imageAssets.chatBg),
-                            fit: BoxFit.cover))),
-                Stack(children: <Widget>[
-                  Column(children: <Widget>[
-                    // List of messages
-                    const BroadcastMessage(),
-                    // Sticker
-                    Container(),
-                    // Input content
-                    const BroadcastInputBox()
-                  ]),
-                  // Loading
-                  LoginLoader(isLoading: chatCtrl.isLoading!,)
-                ])
-              ])
-                  : Center(
-                child: CommonButton(
-                  title: fonts.invite.tr,
-                  onTap: () {},
-                ),
-              )));
+              body:  Stack(children: <Widget>[
+                Column(children: <Widget>[
+                  // List of messages
+                  const BroadcastMessage(),
+                  // Sticker
+                  Container(),
+                  // Input content
+                  const BroadcastInputBox()
+                ]),
+                // Loading
+                if(chatCtrl.isLoading!)
+                LoginLoader(isLoading: chatCtrl.isLoading!,)
+              ])));
     });
   }
 }

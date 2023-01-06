@@ -12,7 +12,7 @@ class SettingListCard extends StatelessWidget {
           if (index == 0) {
             Get.toNamed(routeName.otherSetting);
           } else if(index ==1){
-            var user = appCtrl.storage.read("user");
+            var user = appCtrl.storage.read(session.user);
             Get.offAllNamed(routeName.phone);
             Get.offAllNamed(routeName.phone);
             await FirebaseFirestore.instance
@@ -23,7 +23,7 @@ class SettingListCard extends StatelessWidget {
             await appCtrl.storage.remove("id");
 
           }else if (index == 2) {
-            var user = appCtrl.storage.read("user");
+            var user = appCtrl.storage.read(session.user);
 
             await FirebaseFirestore.instance
                 .collection("users")

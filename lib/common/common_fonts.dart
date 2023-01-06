@@ -76,5 +76,7 @@ class Fonts{
   final broadCast = "broadCast";
   final enterYourMessage = "enterYourMessage";
   final requestOTP = "requestOTP";
+  final noItemFound = "noItemFound";
+  final noMoreItemFound = "noMoreItemFound";
   String unblockUser(val) => "unblockUser".trParams({'pName':val});
 }

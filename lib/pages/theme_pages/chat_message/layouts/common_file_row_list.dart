@@ -1,4 +1,6 @@
 
+import 'dart:developer';
+
 import '../../../../../../config.dart';
 
 class CommonFileRowList extends StatelessWidget {
@@ -32,6 +34,7 @@ class CommonFileRowList extends StatelessWidget {
                 chatCtrl.pickerCtrl.imagePickerOption(Get.context!);
                 chatCtrl.imageFile = chatCtrl.pickerCtrl.imageFile;
                 chatCtrl.update();
+                log("image : ${chatCtrl.imageFile}");
                 chatCtrl.uploadFile();
               },
               icons: Icons.insert_photo,

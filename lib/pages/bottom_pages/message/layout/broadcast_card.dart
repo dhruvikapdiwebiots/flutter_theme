@@ -35,7 +35,7 @@ class BroadCastMessageCard extends StatelessWidget {
         subtitle: Padding(
           padding: const EdgeInsets.only(top: 6.0),
           child: Text(
-              currentUserId == document!["senderPhone"]
+              currentUserId == document!["senderId"]
                   ? "You Create this broadcast":"",
               style: AppCss.poppinsMedium14
                   .textColor(appCtrl.appTheme.grey)
@@ -47,7 +47,7 @@ class BroadCastMessageCard extends StatelessWidget {
                 DateTime.fromMillisecondsSinceEpoch(
                     int.parse(document!['updateStamp']))),
             style:  AppCss.poppinsMedium12
-                .textColor(appCtrl.appTheme.primary)
+                .textColor(appCtrl.appTheme.grey)
         ),
       ),
     );

@@ -41,7 +41,7 @@ class OtherSetting extends StatelessWidget {
                 onTap: () async {
                   appCtrl.isRTL = !appCtrl.isRTL;
                   appCtrl.update();
-                  await appCtrl.storage.write("isRTL", appCtrl.isRTL);
+                  await appCtrl.storage.write(session.isRTL, appCtrl.isRTL);
                   Get.forceAppUpdate();
                 },
                 title: Text("RTL",

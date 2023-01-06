@@ -35,7 +35,6 @@ class _StatusScreenViewState extends State<StatusScreenView> {
         controller: controller,
       ));
     }
-
   }
 
   @override

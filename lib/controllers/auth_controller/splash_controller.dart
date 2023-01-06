@@ -7,9 +7,7 @@ class SplashController extends GetxController {
       ? Get.find<FirebaseCommonController>()
       : Get.put(FirebaseCommonController());
   final storage = GetStorage();
-  final contactCtrl = Get.isRegistered<ContactListController>()
-      ? Get.find<ContactListController>()
-      : Get.put(ContactListController());
+
 
 
   @override
@@ -17,8 +15,7 @@ class SplashController extends GetxController {
     // TODO: implement onReady
     //Firebase.initializeApp();
     startTime();
-contactCtrl.fetchPage("");
-contactCtrl.update();
+
     super.onReady();
   }
 
@@ -31,7 +28,7 @@ contactCtrl.update();
 
   //navigate to login page
   loginNavigation() async {
-    var user = storage.read("user") ??"";
+    var user = storage.read(session.user) ??"";
 
     if (user == "" || user == null) {
       Get.offAllNamed(routeName.phone);
@@ -65,9 +62,9 @@ contactCtrl.update();
     appCtrl.update();
     Get.forceAppUpdate();
 
-    var user = storage.read("user") ;
+    var user = storage.read(session.user) ;
     log("user : $user");
-    bool isIntro = storage.read("isIntro") ?? false;
+    bool isIntro = storage.read(session.isIntro) ?? false;
     log("isIntro : $isIntro");
     if (user == "" || user == null) {
       // Checking if user is already login or not

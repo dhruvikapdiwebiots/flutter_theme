@@ -34,7 +34,6 @@ String dialCode ="";
       Get.to(() => Otp(),transition: Transition.downToUp,arguments: phone.text);
 
     }else{
-      print("object");
       mobileNumber = true;
     }
     update();

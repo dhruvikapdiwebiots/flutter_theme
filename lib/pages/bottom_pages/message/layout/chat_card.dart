@@ -29,7 +29,6 @@ class _ChatCardState extends State<ChatCard> {
                       )).height(MediaQuery.of(context).size.height).expanded();
                 } else {
                   List message = MessageFirebaseApi().chatListWidget(snapshot);
-                  print("mess : ${message.length}");
                   return !snapshot.hasData ? Center(
                       child: CircularProgressIndicator(
                         valueColor:

@@ -47,7 +47,7 @@ class LoginController extends GetxController {
 
   //get storage data
   getData() async {
-    var users = storage.read('user') ?? '';
+    var users = storage.read(session.user) ?? '';
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
     log("user : $users");

@@ -85,5 +85,7 @@ final dynamic en = {
   "requestOTP": "Request OTP",
   "newBroadCast": "New Broadcast",
   "yourPhone": "Your Phone!",
-    "enterYourMessage": "Enter your message",
+  "enterYourMessage": "Enter your message",
+  "noItemFound": "No Item Found",
+  "noMoreItemFound": "No More Item Found",
 };

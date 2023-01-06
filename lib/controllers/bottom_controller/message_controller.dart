@@ -31,7 +31,7 @@ class MessageController extends GetxController {
   @override
   void onReady() async {
     // TODO: implement onReady
-    final data = appCtrl.storage.read("user");
+    final data = appCtrl.storage.read(session.user);
     if(data != null) {
       currentUserId = data["id"];
       storageUser = data;

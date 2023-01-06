@@ -14,9 +14,11 @@ class SenderImage extends StatelessWidget {
     return Container(
       decoration: BoxDecoration( borderRadius: BorderRadius.circular(AppRadius.r10), color: appCtrl.appTheme.primary,),
       margin: const EdgeInsets.symmetric(horizontal: Insets.i10,vertical: Insets.i5),
-      child: TextButton(
+      padding: const EdgeInsets.all(Insets.i5),
+      child: InkWell(
         onLongPress: onLongPress,
-        onPressed: onPressed,
+        onTap: onPressed,
+
         child: Stack(
           alignment: Alignment.bottomRight,
           children: [
@@ -39,9 +41,19 @@ class SenderImage extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
-            Text(DateFormat('HH:mm a').format(
-                DateTime.fromMillisecondsSinceEpoch(
-                    int.parse(document!['timestamp']))),style: AppCss.poppinsBold12.textColor(appCtrl.appTheme.whiteColor),).marginSymmetric(horizontal: Insets.i10,vertical: Insets.i10)
+            Row(
+              children: [
+                Text(DateFormat('HH:mm a').format(
+                    DateTime.fromMillisecondsSinceEpoch(
+                        int.parse(document!['timestamp']))),style: AppCss.poppinsBold12.textColor(appCtrl.appTheme.whiteColor),),
+                const HSpace(Sizes.s5),
+                Icon(Icons.done_all_outlined,
+                    size: Sizes.s15,
+                    color: document!['isSeen'] == true
+                        ? appCtrl.appTheme.secondary
+                        : appCtrl.appTheme.whiteColor)
+              ],
+            ).marginSymmetric(horizontal: Insets.i10,vertical: Insets.i10)
           ],
         ),
       ),

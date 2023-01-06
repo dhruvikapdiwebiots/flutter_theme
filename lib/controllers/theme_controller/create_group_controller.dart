@@ -25,7 +25,8 @@ class CreateGroupController extends GetxController {
 
   //refresh and get contact
   Future<void> refreshContacts() async {
-
+    isLoading = true;
+    update();
     contacts = await permissionHandelCtrl.getContact();
 
     update();
@@ -34,9 +35,8 @@ class CreateGroupController extends GetxController {
 
   //get firebase register contact list
   getFirebaseContact(List<Contact> contacts) async {
-    isLoading = true;
-    update();
-    var user = appCtrl.storage.read("user");
+
+    var user = appCtrl.storage.read(session.user);
     contacts.asMap().entries.forEach((contact) {
       if (contact.value.phones.isNotEmpty) {
         if (user["phone"] !=
@@ -89,7 +89,7 @@ class CreateGroupController extends GetxController {
   }
 
   addGroupBottomSheet() async {
-    final user = appCtrl.storage.read("user");
+    final user = appCtrl.storage.read(session.user);
     if (isGroup) {
       showModalBottomSheet(
           isScrollControlled: true,
@@ -108,8 +108,62 @@ class CreateGroupController extends GetxController {
       String broadcastId = now.microsecondsSinceEpoch.toString();
 
       await checkChatAvailable();
+      log("newContact : $newContact");
       await Future.delayed(Durations.s3);
-      await Future.delayed(Durations.s3);
+      await FirebaseFirestore.instance
+          .collection('broadcast')
+          .doc(broadcastId)
+          .set({
+        "users": newContact,
+        "broadcastId": broadcastId,
+        "createdBy": user,
+        'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+      });
+
+      FirebaseFirestore.instance
+          .collection('broadcastMessage')
+          .doc(broadcastId)
+          .collection("chat")
+          .add({
+        'sender': user["id"],
+        'senderName': user["name"],
+        'receiver': newContact,
+        'content': "You created this broadcast",
+        "broadcastId": broadcastId,
+        'type': MessageType.messageType.name,
+        'messageType': "sender",
+        "status": "",
+        'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+      });
+
+      await FirebaseFirestore.instance.collection('users').doc(user["id"]).collection("chats").add({
+        'receiver': null,
+        'broadcastId': broadcastId,
+        'receiverId': newContact,
+        'senderId': user["id"],
+        'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+        "lastMessage": "You created this broadcast",
+        "isBroadcast": true,
+        "isGroup": false,
+        "isBlock": false,
+        "updateStamp": DateTime.now().millisecondsSinceEpoch.toString()
+      }).then((value) {
+        selectedContact = [];
+        newContact = [];
+        update();
+      });
+
+      isLoading = false;
+      update();
+      Get.back();
+      FirebaseFirestore.instance.collection('users').doc(user["id"]).collection("chats")
+          .where("broadcastId", isEqualTo: broadcastId)
+          .get()
+          .then((value) {
+        var data = {"broadcastId": broadcastId, "data": value.docs[0].data()};
+        Get.toNamed(routeName.broadcastChat, arguments: data);
+      });
+
      /* await FirebaseFirestore.instance
           .collection('broadcast')
           .doc(broadcastId)
@@ -178,28 +232,42 @@ class CreateGroupController extends GetxController {
   }
 
   Future<List> checkChatAvailable() async {
-    final user = appCtrl.storage.read("user");
+    final user = appCtrl.storage.read(session.user);
     selectedContact.asMap().entries.forEach((e)async{
-      await FirebaseFirestore.instance.collection("users").doc(user["id"]).collection("chats").get().then((value){
-       value.docs.asMap().entries.forEach((element) {
-         if (value.docs[element.key].data()["senderPhone"] == user["phone"] &&
-             value.docs[element.key].data()["receiverPhone"] ==
-                 selectedContact[e.key]["phone"] ||
-             value.docs[element.key].data()["senderPhone"] ==
-                 selectedContact[e.key]["phone"] &&
-                 value.docs[element.key].data()["receiverPhone"] == user["phone"]) {
-           selectedContact[e.key]["chatId"] = value.docs[element.key].data()["chatId"];
-           update();
-           if (!newContact.contains(selectedContact[e.key])) {
-             newContact.add(selectedContact[e.key]);
-           }
-         } else {
-           selectedContact[e.key]["chatId"] = null;
-           if (!newContact.contains(selectedContact[e.key])) {
-             newContact.add(selectedContact[e.key]);
-           }
-         }
-       });
+      log("e.value : ${e.value}");
+      await FirebaseFirestore.instance.collection("users").doc(user["id"]).collection("chats").where("isOneToOne",isEqualTo: true).get().then((value){
+        log("value.docs.isNotEmpty : ${value.docs.isNotEmpty}");
+        if(value.docs.isNotEmpty) {
+          value.docs
+              .asMap()
+              .entries
+              .forEach((element) {
+            log("element.value : ${element.value.data()}");
+            if (element.value.data()["senderPhone"] == user["phone"] &&
+                element.value.data()["receiverPhone"] ==
+                    e.value["phone"] ||
+                element.value.data()["senderPhone"] ==
+                    e.value["phone"] &&
+                    element.value.data()["receiverPhone"] == user["phone"]) {
+              e.value["chatId"] = element.value.data()["chatId"];
+              update();
+              if (!newContact.contains(e.value)) {
+                newContact.add(e.value);
+              }
+            } else {
+              e.value["chatId"] = null;
+              if (!newContact.contains(e.value)) {
+                newContact.add(e.value);
+              }
+            }
+          });
+        }else{
+          e.value["chatId"] = null;
+          if (!newContact.contains(e.value)) {
+            newContact.add(e.value);
+          }
+        }
+        update();
       });
     });
 
@@ -221,6 +289,7 @@ class CreateGroupController extends GetxController {
     } else {
       selectedContact.add(data);
     }
+
     update();
   }
 

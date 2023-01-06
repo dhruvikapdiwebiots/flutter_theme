@@ -7,8 +7,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 //when app in background
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print('Handling a background message ${message.messageId}');
-  print(message.data);
+  log('Handling a background message ${message.messageId}');
+  log("message.data : ${message.data}");
   AndroidNotification? android = message.notification?.android;
 }
 
@@ -27,7 +27,7 @@ class NotificationController extends GetxController{
   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
   Future<void> initNotification() async {
-    print('initCall');
+    log('initCall');
     //when app in background
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
@@ -53,8 +53,8 @@ class NotificationController extends GetxController{
         .getInitialMessage()
         .then((RemoteMessage? message) {
       if (message != null) {
-        print("Notification On InitMsg");
-        print(message);
+        log("Notification On InitMsg");
+        log("Notification On InitMsg: $message");
         //Navigator.pushNamed(context, '/result', arguments: message.data);
         showFlutterNotification(message);
       }
@@ -66,10 +66,10 @@ class NotificationController extends GetxController{
         android: initialzationSettingsAndroid, );
 
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
-    print('initCheck');
+    log('initCheck');
     //when app in foreground
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('message : $message');
+      log('message : $message');
       RemoteNotification notification = message.notification!;
 
       AndroidNotification? android = message.notification?.android;
@@ -94,8 +94,8 @@ class NotificationController extends GetxController{
 
     //when app in background
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('A new onMessageOpenedApp event was published!');
-      print(message);
+      log('A new onMessageOpenedApp event was published!');
+      log("onMessageOpenedApp: $message");
 
       showFlutterNotification(message);
     });
@@ -132,7 +132,7 @@ class NotificationController extends GetxController{
       criticalAlert: true,
     );
 
-    print(settings.authorizationStatus);
+    log("settings.authorizationStatus: ${settings.authorizationStatus}");
   }
 
   @override

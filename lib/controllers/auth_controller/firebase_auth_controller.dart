@@ -134,8 +134,8 @@ class FirebaseAuthController extends GetxController {
 
   //navigate to home
   homeNavigation(user) async {
-    await appCtrl.storage.write("id", user["id"]);
-    await appCtrl.storage.write("user", user);
+    await appCtrl.storage.write(session.id, user["id"]);
+    await appCtrl.storage.write(session.user, user);
     FirebaseFirestore.instance
         .collection('users')
         .doc(user["id"])

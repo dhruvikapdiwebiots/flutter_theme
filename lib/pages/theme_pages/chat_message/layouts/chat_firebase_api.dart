@@ -5,7 +5,7 @@ class ChatFirebaseApi{
 
   //unblock
   unblockFunction(value,chatId,pId)async{
-    var user = appCtrl.storage.read("user");
+    var user = appCtrl.storage.read(session.user);
     DateTime now = DateTime.now();
     String? newChatId = chatId == "0"
         ? now.microsecondsSinceEpoch.toString()

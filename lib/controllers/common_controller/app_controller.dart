@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_theme/pages/theme_pages/language/language.dart';
 
 import '../../config.dart';
 
@@ -47,7 +46,7 @@ class AppController extends GetxController {
   //get data from storage
   getData() async {
     //theme check
-    bool loadThemeFromStorage = storage.read('isDarkMode') ?? false;
+    bool loadThemeFromStorage = storage.read(session.isDarkMode) ?? false;
     if (loadThemeFromStorage) {
       isTheme = true;
     } else {
@@ -55,7 +54,7 @@ class AppController extends GetxController {
     }
 
     update();
-    await storage.write("isDarkMode", isTheme);
+    await storage.write(session.isDarkMode, isTheme);
     ThemeService().switchTheme(isTheme);
 
     update();

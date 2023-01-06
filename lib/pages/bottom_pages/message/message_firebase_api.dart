@@ -14,7 +14,7 @@ class MessageFirebaseApi {
   getContactList(List<Contact> contacts) async {
     List message = [];
 
-    final data = appCtrl.storage.read("user");
+    final data = appCtrl.storage.read(session.user);
     currentUserId = data["id"];
     var statusesSnapshot =
         await FirebaseFirestore.instance.collection('users').get();
@@ -66,78 +66,52 @@ class MessageFirebaseApi {
 
   //check contact in firebase and if not exists
   saveContact(value, isRegister) async {
+    final data = appCtrl.storage.read(session.user);
+    currentUserId = data["id"];
+    UserContactModel userContact = value;
     if (isRegister) {
-      UserContactModel userContact = value;
       log("val: ${userContact.uid}");
       await FirebaseFirestore.instance
           .collection('users')
-          .doc(userContact.phoneNumber)
+          .doc(currentUserId)
           .collection("chats")
+          .where("isOneToOne", isEqualTo: true)
           .get()
           .then((value) {
+
         bool isEmpty = value.docs
             .where((element) =>
                 element.data()["senderId"] == userContact.uid ||
                 element.data()["receiverId"] == userContact.uid)
             .isNotEmpty;
-        if(!isEmpty){
-          var data ={
-            "chatId":"0",
-            "data":userContact
-          };
+        if (!isEmpty) {
+          var data = {"chatId": "0", "data": userContact};
+          log("reg : ${data}");
           Get.back();
-        Get.toNamed(routeName.chat,arguments: data);
-        }else{
-          var contactDat = value.docs.where((element) =>  element.data()["senderId"] == userContact.uid ||
-              element.data()["receiverId"] == userContact.uid);
-          print("contact : $contactDat");
-          var data ={
-            "chatId":"0",
-            "data":userContact
-          };
-        //  Get.toNamed(routeName.chat,arguments: data);
+          Get.toNamed(routeName.chat, arguments: data);
+        } else {
+          value.docs.asMap().entries.forEach((element) { 
+            if(element.value.data()["senderId"]  == userContact.uid ||
+                element.value.data()["receiverId"] == userContact.uid){
+              var data = {"chatId": element.value.data()["chatId"], "data": userContact};
+              Get.back();
+              Get.toNamed(routeName.chat,arguments: data);
+            }
+          });
+          
+          //
         }
       });
     } else {
-      if (value != null) {
-        Contact contact = value;
-
-        String phone = contact.phones[0].number;
-        if (phone.length > 10) {
-          if (phone.contains(" ")) {
-            phone = phone.replaceAll(" ", "");
-          }
-          if (phone.contains("-")) {
-            phone = phone.replaceAll("-", "");
-          }
-          if (phone.contains("+")) {
-            phone = phone.replaceAll("+91", "");
-          }
-          if (phone.length > 10) {
-            phone = phone.substring(3);
-          }
-        }
-
-        final m = await FirebaseFirestore.instance
-            .collection('users')
-            .where('phone', isEqualTo: phone)
-            .limit(1)
-            .get();
-        if (m.docs.isEmpty) {
-          if (Platform.isAndroid) {
-            final uri = Uri(
-              scheme: "sms",
-              path: phone,
-              queryParameters: <String, String>{
-                'body': Uri.encodeComponent('Download the ChatBox App'),
-              },
-            );
-            await launchUrl(uri);
-          }
-        } else {
-          /* Get.back();
-        Get.toNamed(routeName.chat, arguments: data);*/
-        }
+      if (Platform.isAndroid) {
+        final uri = Uri(
+          scheme: "sms",
+          path: userContact.phoneNumber,
+          queryParameters: <String, String>{
+            'body': Uri.encodeComponent('Download the ChatBox App'),
+          },
+        );
+        await launchUrl(uri);
       }
     }
   }
@@ -174,7 +148,7 @@ class MessageFirebaseApi {
               phoneNumberExtension(contact.phones[0].number.toString());
           if (phone == user.data()["phone"]) {
             log("us : ${user.data()}");
-            final storeUser = appCtrl.storage.read("user");
+            final storeUser = appCtrl.storage.read(session.user);
             if (user.data()["id"] != storeUser["id"]) {
               contactList.add(user.data());
             }

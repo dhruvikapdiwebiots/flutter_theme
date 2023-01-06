@@ -14,6 +14,7 @@ class PermissionHandlerController extends GetxController {
   final GeolocatorPlatform geoLocatorPlatform = GeolocatorPlatform.instance;
   final List<PositionItem> _positionItems = <PositionItem>[];
 
+
   //location
   Future<bool> handlePermission() async {
     bool serviceEnabled;
@@ -121,7 +122,7 @@ class PermissionHandlerController extends GetxController {
 
   Future<bool> permissionGranted() async {
     PermissionStatus permissionStatus =
-        await permissionHandelCtrl.getContactPermission();
+        await getContactPermission();
     if (permissionStatus == PermissionStatus.granted) {
       return true;
     } else {
@@ -131,7 +132,7 @@ class PermissionHandlerController extends GetxController {
 
  Future<List<Contact>> getContact() async {
    List<Contact> contacts = [];
-    bool permissionStatus = await permissionHandelCtrl.permissionGranted();
+    bool permissionStatus = await permissionGranted();
     if (permissionStatus) {
       contacts = await getAllContacts();
     }

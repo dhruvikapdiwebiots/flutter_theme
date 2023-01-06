@@ -64,7 +64,6 @@ class Phone extends StatelessWidget {
                                 child: Expanded(
                                     child: InternationalPhoneNumberInput(
                                   onInputChanged: (PhoneNumber number) {
-                                    print(number.dialCode);
                                     phoneCtrl.dialCode = number.dialCode!;
                                     phoneCtrl.update();
                                     if(number.phoneNumber!.isNotEmpty){
@@ -97,7 +96,7 @@ class Phone extends StatelessWidget {
                                       borderSide: BorderSide.none,
                                       gapPadding: 0),
                                   onSaved: (PhoneNumber number) {
-                                    print('On Saved: $number');
+
                                   },
                                 )),
                               ),

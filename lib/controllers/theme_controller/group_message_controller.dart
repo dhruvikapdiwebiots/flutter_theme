@@ -37,7 +37,7 @@ class GroupChatMessageController extends GetxController {
   @override
   void onReady() {
     // TODO: implement onReady
-    user = appCtrl.storage.read("user");
+    user = appCtrl.storage.read(session.user);
     id = user["id"];
     groupId = '';
     isLoading = false;
@@ -250,7 +250,7 @@ class GroupChatMessageController extends GetxController {
     textEditingController.clear();
     update();
     if (content.trim() != '') {
-      var user = appCtrl.storage.read("user");
+      var user = appCtrl.storage.read(session.user);
       id = user["id"];
       FirebaseFirestore.instance
           .collection('groupMessage')

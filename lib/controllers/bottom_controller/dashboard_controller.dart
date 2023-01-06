@@ -1,12 +1,15 @@
 
+import 'dart:developer';
+
 import 'package:flutter_theme/config.dart';
-import 'package:flutter_theme/pages/bottom_pages/status/status.dart';
+
 
 class DashboardController extends GetxController with GetSingleTickerProviderStateMixin {
   int selectedIndex = 0;
   int selectedPopTap = 0;
   TabController? controller;
   late int iconCount = 0;
+  List<Contact> contacts = [];
   List bottomList = [];
   final statusCtrl = Get.isRegistered<StatusController>() ? Get.find<StatusController>() :Get.put(StatusController());
   final settingCtrl = Get.isRegistered<SettingController>() ? Get.find<SettingController>() :Get.put(SettingController());
@@ -36,7 +39,7 @@ class DashboardController extends GetxController with GetSingleTickerProviderSta
 
 
   @override
-  void onReady() {
+  void onReady() async{
     // TODO: implement onReady
 
 
@@ -50,6 +53,8 @@ class DashboardController extends GetxController with GetSingleTickerProviderSta
     });
    // firebaseCtrl.statusDeleteAfter24Hours();
     update();
+
+
     super.onReady();
   }
 

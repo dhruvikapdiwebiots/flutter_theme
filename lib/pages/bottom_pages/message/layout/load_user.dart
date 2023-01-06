@@ -34,7 +34,7 @@ class LoadUser extends StatelessWidget {
           : Container();
     } else if (document!["isBroadcast"] == true ) {
 
-      return document!["senderPhone"] == currentUserId
+      return document!["senderId"] == currentUserId
           ? BroadCastMessageCard(
               document: document,
               currentUserId: currentUserId,

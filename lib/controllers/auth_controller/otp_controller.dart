@@ -27,16 +27,16 @@ class OtpController extends GetxController {
 
   //navigate to dashboard
   homeNavigation(user) async {
-    appCtrl.storage.write("id", user["id"]);
-    await appCtrl.storage.write("user", user);
-    await appCtrl.storage.write("isIntro", true);
+    appCtrl.storage.write(session.id, user["id"]);
+    await appCtrl.storage.write(session.user, user);
+    await appCtrl.storage.write(session.isIntro, true);
     final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
     firebaseMessaging.getToken().then((token) async {
       await FirebaseFirestore.instance
           .collection('users')
           .doc(user["id"])
           .update({'status': "Online", "pushToken": token});
-      log('check : ${appCtrl.storage.read("isIntro")}');
+      log('check : ${appCtrl.storage.read(session.isIntro)}');
       Get.toNamed(routeName.dashboard);
     });
   }
@@ -126,7 +126,7 @@ class OtpController extends GetxController {
                 "isPhoneLogin": true
               });
             } else {
-              await appCtrl.storage.write("user", value.docs[0].data());
+              await appCtrl.storage.write(session.user, value.docs[0].data());
               homeNavigation(value.docs[0].data());
             }
           } else {
@@ -135,9 +135,9 @@ class OtpController extends GetxController {
             if (resultData["name"] == "") {
               Get.toNamed(routeName.editProfile,
                   arguments: {"resultData": resultData, "isPhoneLogin": true});
-              await appCtrl.storage.write("user", value.docs[0].data());
+              await appCtrl.storage.write(session.user, value.docs[0].data());
             } else {
-              await appCtrl.storage.write("user", resultData);
+              await appCtrl.storage.write(session.user, resultData);
               homeNavigation(resultData);
             }
           }

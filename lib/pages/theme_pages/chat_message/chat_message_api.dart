@@ -7,13 +7,14 @@ class ChatMessageApi{
   
   
   //save message in user 
-  saveMessageInUserCollection(id, receiverId,newChatId,content,{isBlock = false})async{
+  saveMessageInUserCollection(id, receiverId,newChatId,content,senderId,{isBlock = false,isBroadcast = false})async{
     final chatCtrl = Get.isRegistered<ChatController>() ? Get.find<ChatController>() : Get.put(ChatController());
     await FirebaseFirestore.instance
         .collection("users")
         .doc(id).collection("chats").where("chatId",isEqualTo: newChatId)
         .get()
         .then((value) async {
+          log("ess : ${value.docs.isNotEmpty}");
       if (value.docs.isNotEmpty) {
         await FirebaseFirestore.instance
             .collection('users')
@@ -21,12 +22,12 @@ class ChatMessageApi{
             .update({
           "updateStamp": DateTime.now().millisecondsSinceEpoch.toString(),
           "lastMessage": content,
-          "senderId": id,
+          "senderId": senderId,
           "isSeen": false,
           "isGroup": false,
           "isBlock": isBlock ?? false,
           "isBroadcast": false,
-          "isBroadcastSender": false,
+          "isBroadcastSender": isBroadcast??false,
           "blockBy": isBlock ? id :"",
           "blockUserId":  isBlock ? receiverId :"",
           "receiverId": receiverId,
@@ -35,19 +36,19 @@ class ChatMessageApi{
           chatCtrl.update();
         });
       } else {
-        dynamic user = appCtrl.storage.read("user");
+        dynamic user = appCtrl.storage.read(session.user);
 
         FirebaseFirestore.instance.collection('users').doc(id).collection("chats").add({
           "isSeen": false,
           'receiverId': receiverId,
-          "senderId": id,
+          "senderId": senderId,
           'chatId': newChatId,
           'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
           "lastMessage": content,
           "isGroup": false,
           "isBlock": isBlock ?? false,
           "isBroadcast": false,
-          "isBroadcastSender": false,
+          "isBroadcastSender": isBroadcast??false,
           "isOneToOne": true,
           "blockBy": isBlock ? id :"",
           "blockUserId":  isBlock ? receiverId :"",
@@ -68,7 +69,7 @@ class ChatMessageApi{
 
   //save group data
   saveGroupData(id, groupId,content,pData)async{
-    var user = appCtrl.storage.read("user");
+    var user = appCtrl.storage.read(session.user);
     List receiver = pData["users"];
     log("receiver : ${receiver.length}");
    receiver.asMap().entries.forEach((element) async{

@@ -57,9 +57,9 @@ class IntroController extends GetxController {
 
 //navigate to Login
   navigateToLogin() async{
-    await storage.write("isIntro", true);
+    await storage.write(session.isIntro, true);
     Get.toNamed(routeName.phone);
-    log("isIntro : ${storage.read("isIntro")}");
+    log("isIntro : ${storage.read(session.isIntro)}");
   }
 
   @override

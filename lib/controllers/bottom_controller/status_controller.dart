@@ -3,9 +3,6 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter_theme/config.dart';
 
-final permissionHandelCtrl = Get.isRegistered<PermissionHandlerController>()
-    ? Get.find<PermissionHandlerController>()
-    : Get.put(PermissionHandlerController());
 
 class StatusController extends GetxController {
   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
@@ -25,10 +22,14 @@ class StatusController extends GetxController {
       ? Get.find<PickerController>()
       : Get.put(PickerController());
 
+  final permissionHandelCtrl = Get.isRegistered<PermissionHandlerController>()
+      ? Get.find<PermissionHandlerController>()
+      : Get.put(PermissionHandlerController());
+
   @override
   void onReady() async{
     // TODO: implement onReady
-    final data = appCtrl.storage.read("user") ?? "";
+    final data = appCtrl.storage.read(session.user) ?? "";
     if(data != "") {
       currentUserId = data["id"];
       user = data;
@@ -52,7 +53,7 @@ class StatusController extends GetxController {
 
 //get status of user according to contact in firebase
   Future getStatus() async {
-    log("us : ${appCtrl.storage.read("user")}");
+    log("us : ${appCtrl.storage.read(session.user)}");
     List<Status> statusData = [];
     try {
       statusData = await getStatusList(contactList);

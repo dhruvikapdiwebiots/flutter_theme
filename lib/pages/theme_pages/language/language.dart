@@ -22,31 +22,36 @@ class LanguageScreen extends StatelessWidget {
                           vertical: Insets.i12, horizontal: Insets.i10),
                       child: InkWell(
                         onTap: () => languageCtrl.languageSelection(e.value),
-                        child: RadioListTile(
-                            dense: true,
-                            visualDensity: const VisualDensity(
-                                horizontal: VisualDensity.minimumDensity,
-                                vertical: VisualDensity.minimumDensity),
-                            value: e.key,
-                            groupValue: appCtrl.currVal,
-                            contentPadding: EdgeInsets.zero,
-                            title: Row(
-                              children: [
+                        child: Theme(
+                          data: Theme.of(context).copyWith(
+                              unselectedWidgetColor: appCtrl.appTheme.grey,
+                              disabledColor: appCtrl.appTheme.grey),
+                          child: RadioListTile(
+                              dense: true,
+                              visualDensity: const VisualDensity(
+                                  horizontal: VisualDensity.minimumDensity,
+                                  vertical: VisualDensity.minimumDensity),
+                              value: e.key,
+                              groupValue: appCtrl.currVal,
+                              contentPadding: EdgeInsets.zero,
+                              title: Row(children: [
                                 Text(trans(e.value['name'].toString()),
-                                    style: AppCss.poppinsSemiBold14
-                                        .textColor(appCtrl.appTheme.txt)),
+                                    style: AppCss.poppinsSemiBold14.textColor(
+                                        appCtrl.isTheme
+                                            ? appCtrl.appTheme.whiteColor
+                                            : appCtrl.appTheme.blackColor)),
                                 const HSpace(Sizes.s15),
-                                Text("-   ${e.value['name'].toString().toCapitalized()}",
+                                Text(
+                                    "-   ${e.value['name'].toString().toCapitalized()}",
                                     style: AppCss.poppinsMedium12
-                                        .textColor(appCtrl.appTheme.txt))
-                              ],
-                            ),
-
-                            onChanged: (int? val) {
-                              appCtrl.currVal = val!;
-                              languageCtrl.languageSelection(e.value);
-                            },
-                            activeColor: appCtrl.appTheme.primary),
+                                        .textColor(appCtrl.appTheme.grey))
+                              ]),
+                              onChanged: (int? val) {
+                                appCtrl.currVal = val!;
+                                languageCtrl.languageSelection(e.value);
+                              },
+                              activeColor: appCtrl.appTheme.primary),
+                        ),
                       ));
                 }).toList()
               ]),

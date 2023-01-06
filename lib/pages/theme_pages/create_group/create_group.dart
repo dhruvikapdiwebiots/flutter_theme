@@ -35,33 +35,31 @@ class GroupChat extends StatelessWidget {
                 : Container(),
             body: Stack(children: [
               SingleChildScrollView(
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                if (groupChatCtrl.selectedContact.isNotEmpty)
-                  const SelectedContactList(),
-                if (groupChatCtrl.contactList.isNotEmpty)
-                  Column(children: [
-                    ...groupChatCtrl.contactList.asMap().entries.map((e) {
-                      return AllRegisteredContact(
-                          onTap: ()=> groupChatCtrl.selectUserTap(e.value),
-                          isExist: groupChatCtrl.selectedContact.any(
-                              (file) => file["phone"] == e.value["phone"]),
-                          data: e.value);
-                    }).toList()
-                  ])
-              ])),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                    if (groupChatCtrl.selectedContact.isNotEmpty)
+                      const SelectedContactList(),
+                    if (groupChatCtrl.contactList.isNotEmpty)
+                      Column(children: [
+                        ...groupChatCtrl.contactList.asMap().entries.map((e) {
+                          return AllRegisteredContact(
+                              onTap: () => groupChatCtrl.selectUserTap(e.value),
+                              isExist: groupChatCtrl.selectedContact.any(
+                                  (file) => file["phone"] == e.value["phone"]),
+                              data: e.value);
+                        }).toList()
+                      ])
+                  ])),
               if (groupChatCtrl.isLoading)
-            groupChatCtrl.isLoading
-                ? Container(
-              height: MediaQuery.of(context).size.height,
-              color: appCtrl.appTheme.grey.withOpacity(.5),
+                Container(
+                  height: MediaQuery.of(context).size.height,
+                  color: appCtrl.appTheme.grey.withOpacity(.2),
                   child: Center(
                       child: CircularProgressIndicator(
                           valueColor: AlwaysStoppedAnimation<Color>(
                               appCtrl.appTheme.primary))),
                 )
-                : Container()
             ])),
       );
     });

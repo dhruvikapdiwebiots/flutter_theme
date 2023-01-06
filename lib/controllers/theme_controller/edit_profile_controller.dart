@@ -51,7 +51,7 @@ class EditProfileController extends GetxController {
   var userId = '';
 
   homeNavigation(userid) async {
-    await storage.write("id", userid);
+    await storage.write(session.id, userid);
     FirebaseFirestore.instance
         .collection('users')
         .doc(user["id"])
@@ -76,7 +76,7 @@ class EditProfileController extends GetxController {
   }
 
   getData() async {
-    userId = storage.read('id') ?? '';
+    userId = storage.read(session.id) ?? '';
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
     if (user == null) {
@@ -124,7 +124,7 @@ class EditProfileController extends GetxController {
                   .get()
                   .then((value) async {
                 await storage.write("id", user["id"]);
-                await storage.write("user", value.data());
+                await storage.write(session.user, value.data());
               });
 
               Get.offAllNamed(routeName.dashboard);
@@ -155,8 +155,8 @@ class EditProfileController extends GetxController {
             FirebaseFirestore.instance.collection('users').doc(user["id"])
                 .get()
                 .then((value) async {
-              await storage.write("id", user["id"]);
-              await storage.write("user", value.data());
+              await storage.write(session.id, user["id"]);
+              await storage.write(session.user, value.data());
             });
             Get.offAllNamed(routeName.dashboard);
           }).catchError((onError) {
@@ -207,7 +207,7 @@ class EditProfileController extends GetxController {
       log("res : $res");
       res.ref.getDownloadURL().then((downloadUrl) async {
         user["image"] = imageUrl;
-        await storage.write("user", user);
+        await storage.write(session.user, user);
         imageUrl = downloadUrl;
         log(user["id"]);
         await FirebaseFirestore.instance
@@ -218,7 +218,7 @@ class EditProfileController extends GetxController {
               .collection('users')
               .doc(user["id"]).get().then((snap) async{
 
-                await appCtrl.storage.write("user",snap.data());
+                await appCtrl.storage.write(session.user,snap.data());
                 user = snap.data();
                 update();
           });

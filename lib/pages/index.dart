@@ -78,6 +78,8 @@ export 'theme_pages/group_chat_message/layouts/group_chat_body.dart';
 export 'theme_pages/group_chat_message/layouts/group_file_bottom_sheet.dart';
 export 'theme_pages/group_chat_message/layouts/group_receiver/group_receiver_message.dart';
 export 'theme_pages/group_chat_message/layouts/group_sender/sender_message.dart';
+export 'bottom_pages/status/status.dart';
+export 'theme_pages/language/language.dart';
 
 export '/utilities/type_list.dart';
 export '/models/bottom_nav_bar_model.dart';
