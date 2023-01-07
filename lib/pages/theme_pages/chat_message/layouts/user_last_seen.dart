@@ -36,7 +36,7 @@ class UserLastSeen extends StatelessWidget {
                         : snapshot.data!.docs[0]["status"],
                     textAlign: TextAlign.center,
                     style: AppCss.poppinsMedium14
-                        .textColor(appCtrl.appTheme.grey),
+                        .textColor(appCtrl.isTheme ? appCtrl.appTheme.white: appCtrl.appTheme.whiteColor),
                   );
                 }
               } else {

@@ -19,9 +19,6 @@ class MessageController extends GetxController {
   XFile? imageFile;
   File? image;
   List selectedContact = [];
-  final permissionHandelCtrl = Get.isRegistered<PermissionHandlerController>()
-      ? Get.find<PermissionHandlerController>()
-      : Get.put(PermissionHandlerController());
   final notificationCtrl = Get.isRegistered<NotificationController>()
       ? Get.find<NotificationController>()
       : Get.put(NotificationController());

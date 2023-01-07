@@ -30,10 +30,24 @@ class _StatusScreenViewState extends State<StatusScreenView> {
 
   void initStoryPageItems() {
     for (int i = 0; i < status!.photoUrl!.length; i++) {
-      storyItems.add(StoryItem.pageImage(
-        url: status!.photoUrl![i].image!,
-        controller: controller,
-      ));
+      if (status!.photoUrl![i].statusType == StatusType.text.name) {
+        int value = int.parse(status!.photoUrl![i].statusBgColor!, radix: 16);
+        Color finalColor =  Color(value);
+        storyItems.add(StoryItem.text(
+            title: status!.photoUrl![i].statusText!,
+            textStyle: TextStyle(
+                color: appCtrl.appTheme.whiteColor,
+                fontSize: 23,
+                height: 1.6,
+                fontWeight: FontWeight.w700),
+            backgroundColor: finalColor
+        ));
+      } else {
+        storyItems.add(StoryItem.pageImage(
+          url: status!.photoUrl![i].image!,
+          controller: controller,
+        ));
+      }
     }
   }
 
@@ -43,6 +57,7 @@ class _StatusScreenViewState extends State<StatusScreenView> {
       body: storyItems.isEmpty
           ? const CircularProgressIndicator()
           : StoryView(
+
         storyItems: storyItems,
         controller: controller,
         onVerticalSwipeComplete: (direction) {

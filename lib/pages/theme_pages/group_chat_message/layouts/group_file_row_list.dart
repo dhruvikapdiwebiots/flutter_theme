@@ -21,7 +21,6 @@ class GroupFileRowList extends StatelessWidget {
               onTap: () async {
                 chatCtrl.pickerCtrl.dismissKeyboard();
                 Get.back();
-                await chatCtrl.pickerCtrl.videoPickerOption(context);
                 chatCtrl.videoSend();
               }),
           const HSpace(Sizes.s40),

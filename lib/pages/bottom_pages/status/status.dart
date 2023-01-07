@@ -2,6 +2,8 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter_theme/config.dart';
+import 'package:flutter_theme/pages/bottom_pages/status/layouts/text_status.dart';
+import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
 class StatusList extends StatefulWidget {
   const StatusList({Key? key}) : super(key: key);
@@ -36,16 +38,41 @@ class _StatusListState extends State<StatusList>
     return GetBuilder<StatusController>(builder: (_) {
       return Scaffold(
           backgroundColor: appCtrl.appTheme.whiteColor,
-          floatingActionButton: FloatingActionButton(
-            onPressed: () async {
-              File? pickedImage = await pickImageFromGallery(context);
-              if (pickedImage != null) {
-                Get.toNamed(routeName.confirmationScreen,
-                    arguments: pickedImage);
-              }
-            },
-            backgroundColor: appCtrl.appTheme.primary,
-            child: Icon(Icons.add, color: appCtrl.appTheme.whiteColor),
+          floatingActionButton: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                height: 43,
+                margin: const EdgeInsets.only(bottom: 18),
+                child: FloatingActionButton(
+                    backgroundColor: const Color(0xffebecee),
+                    child: Icon(Icons.edit,
+                        size: 23.0, color: Colors.blueGrey[700]),
+                    onPressed: ()=>Get.to(const TextStatus())!.then((value) {
+                      log("value : $value");
+                    })),
+              ),
+              FloatingActionButton(
+                onPressed: () async {
+                  /*File? pickedImage = await pickImageFromGallery(context);
+                  if (pickedImage != null) {
+                    Get.toNamed(routeName.confirmationScreen,
+                        arguments: pickedImage);
+                  }*/
+                  final List<AssetEntity>? result = await AssetPicker.pickAssets(context, pickerConfig: AssetPickerConfig(
+                    maxAssets: 1,
+                    specialPickerType: SpecialPickerType.wechatMoment,
+                  ),);
+                  log("result : ${result![0].title}");
+                  Get.toNamed(routeName.confirmationScreen,
+                      arguments: result.d);
+                 //StatusFirebaseApi().addStatus(result[0].file, StatusType.image.name);
+                },
+                backgroundColor: appCtrl.appTheme.primary,
+                child: Icon(Icons.add, color: appCtrl.appTheme.whiteColor)
+              )
+            ],
           ),
           body: SafeArea(
               child: SingleChildScrollView(

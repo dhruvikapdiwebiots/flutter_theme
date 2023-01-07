@@ -74,7 +74,9 @@ class Phone extends StatelessWidget {
                                   onInputValidated: (bool value) {
                                     phoneCtrl.isCorrect = value;
                                     phoneCtrl.update();
-                                    phoneCtrl.dismissKeyboard();
+                                    if(phoneCtrl.isCorrect){
+                                      phoneCtrl.dismissKeyboard();
+                                    }
                                   },
                                   selectorConfig: const SelectorConfig(
                                       leadingPadding: 0,

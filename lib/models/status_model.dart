@@ -50,14 +50,20 @@ class Status {
 class PhotoUrl {
   String? image;
   String? timestamp;
+  String? statusType;
+  String? statusText;
+  String? statusBgColor;
   bool? isExpired;
 
-  PhotoUrl({this.image, this.timestamp, this.isExpired});
+  PhotoUrl({this.image, this.timestamp, this.isExpired, this.statusType});
 
   PhotoUrl.fromJson(Map<String, dynamic> json) {
     image = json['image'];
     timestamp = json['timestamp'];
     isExpired = json['isExpired'];
+    statusType = json['statusType'];
+    statusText = json['statusText'];
+    statusBgColor = json['statusBgColor'];
   }
 
   Map<String, dynamic> toJson() {
@@ -65,6 +71,9 @@ class PhotoUrl {
     data['image'] = image;
     data['timestamp'] = timestamp;
     data['isExpired'] = isExpired;
+    data['statusType'] = statusType;
+    data['statusText'] = statusText;
+    data['statusBgColor'] = statusBgColor;
     return data;
   }
 }

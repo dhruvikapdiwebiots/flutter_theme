@@ -5,7 +5,7 @@ import '../../../../config.dart';
 
 class StatusFirebaseApi {
   //add status
-  addStatus(imageUrl) async {
+  addStatus(imageUrl,statusType,{statusText,statusBgColor}) async {
     var user = appCtrl.storage.read(session.user);
     List<PhotoUrl> statusImageUrls = [];
 
@@ -18,9 +18,13 @@ class StatusFirebaseApi {
       Status status = Status.fromJson(statusesSnapshot.docs[0].data());
       statusImageUrls = status.photoUrl!;
       var data = {
-        "image": imageUrl!,
+        "image":statusType == StatusType.text.name ? "": imageUrl!,
         "timestamp": DateTime.now().millisecondsSinceEpoch.toString(),
-        "isExpired": false
+        "isExpired": false,
+        "statusType":statusType,
+        "statusText": statusText,
+        "statusBgColor": statusBgColor,
+
       };
 
       statusImageUrls.add(PhotoUrl.fromJson(data));
@@ -32,9 +36,12 @@ class StatusFirebaseApi {
       return;
     } else {
       var data = {
-        "image": imageUrl!,
+        "image":statusType == StatusType.text.name ? "": imageUrl!,
         "timestamp": DateTime.now().millisecondsSinceEpoch.toString(),
-        "isExpired": false
+        "isExpired": false,
+        "statusType":statusType,
+        "statusText": statusText,
+        "statusBgColor": statusBgColor,
       };
       statusImageUrls = [PhotoUrl.fromJson(data)];
     }

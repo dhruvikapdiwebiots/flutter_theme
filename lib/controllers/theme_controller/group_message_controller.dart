@@ -20,6 +20,7 @@ class GroupChatMessageController extends GetxController {
   dynamic message,pData;
   bool positionStreamStarted = false;
   XFile? imageFile;
+  XFile? videoFile;
   File? image;
   bool isLoading = true;
   dynamic user;
@@ -174,9 +175,14 @@ class GroupChatMessageController extends GetxController {
   }
 
   videoSend() async {
+    pickerCtrl.videoPickerOption(Get.context!);
+    videoFile = pickerCtrl.videoFile;
+    update();
+    log("videoFile : $videoFile");
+    const Duration(seconds: 2);
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     Reference reference = FirebaseStorage.instance.ref().child(fileName);
-    var file = File(imageFile!.path);
+    var file = File(videoFile!.path);
     UploadTask uploadTask = reference.putFile(file);
     uploadTask.then((res) {
       res.ref.getDownloadURL().then((downloadUrl) {
@@ -189,6 +195,14 @@ class GroupChatMessageController extends GetxController {
         update();
         Fluttertoast.showToast(msg: 'Image is Not Valid');
       });
+    }).then((value) {
+      videoFile = null;
+      pickerCtrl.videoFile = null;
+
+      pickerCtrl.video = null;
+      videoUrl = "";
+      update();
+      pickerCtrl.update();
     });
   }
 
@@ -197,11 +211,14 @@ class GroupChatMessageController extends GetxController {
     PermissionStatus permissionStatus =
         await permissionHandelCtrl.getContactPermission();
     if (permissionStatus == PermissionStatus.granted) {
-      Get.toNamed(routeName.contactList)!.then((value) async {
-        Contact contact = value;
-        onSendMessage(
-            '${contact.displayName}-BREAK-${contact.phones[0].number}-BREAK-${contact.photo}',
-            MessageType.contact);
+      Get.toNamed(routeName.allContactList)!.then((value) async {
+        if(value !=null) {
+          Contact contact = value;
+          onSendMessage(
+              '${contact.displayName}-BREAK-${contact.phones[0]
+                  .number}-BREAK-${contact.photo}',
+              MessageType.contact);
+        }
       });
     } else {
       permissionHandelCtrl.handleInvalidPermissions(permissionStatus);

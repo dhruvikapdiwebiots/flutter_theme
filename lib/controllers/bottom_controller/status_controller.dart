@@ -40,13 +40,18 @@ class StatusController extends GetxController {
     super.onReady();
   }
 
+// Dismiss KEYBOARD
+  void dismissKeyboard() {
+    FocusScope.of(Get.context!).requestFocus(FocusNode());
+  }
+
   //add status
   addStatus(File file) async {
     isLoading = true;
     update();
     imageUrl = await pickerCtrl.uploadImage(file);
     update();
-    await StatusFirebaseApi().addStatus(imageUrl);
+    await StatusFirebaseApi().addStatus(imageUrl,StatusType.image.name);
     isLoading = false;
     update();
   }

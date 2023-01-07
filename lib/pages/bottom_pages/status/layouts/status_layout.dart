@@ -26,7 +26,12 @@ class StatusLayout extends StatelessWidget {
         ),
         trailing: Icon(Icons.more_horiz,color: appCtrl.appTheme.primary,),
         leading: Stack(alignment: Alignment.bottomRight, children: [
-          CachedNetworkImage(
+          (snapshot!.data!)
+              .docs[0]["photoUrl"][0]["statusType"] == StatusType.text.name ? CircleAvatar(radius: AppRadius.r30,backgroundColor: Color(int.parse(
+              (snapshot!.data!)
+                  .docs[0]["photoUrl"][0]['statusBgColor'],
+              radix: 16)),child: Text( (snapshot!.data!)
+              .docs[0]["photoUrl"][0]["statusText"],style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.whiteColor),),) :   CachedNetworkImage(
               imageUrl:  (snapshot!.data!)
                   .docs[0]["photoUrl"][0]["image"]
                   .toString(),
