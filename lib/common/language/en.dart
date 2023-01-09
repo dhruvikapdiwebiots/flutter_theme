@@ -88,4 +88,5 @@ final dynamic en = {
   "enterYourMessage": "Enter your message",
   "noItemFound": "No Item Found",
   "noMoreItemFound": "No More Item Found",
+  "noInternet": "No Internet",
 };

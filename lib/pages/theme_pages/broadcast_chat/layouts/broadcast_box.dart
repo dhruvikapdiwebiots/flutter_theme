@@ -19,7 +19,7 @@ class BroadcastInputBox extends StatelessWidget {
             Flexible(
               child: TextField(
                 style:
-                    TextStyle(color: appCtrl.appTheme.primary, fontSize: 15.0),
+                    TextStyle(color: appCtrl.appTheme.blackColor, fontSize: 15.0),
                 controller: chatCtrl.textEditingController,
                 decoration: InputDecoration.collapsed(
                   hintText: 'Enter your message',

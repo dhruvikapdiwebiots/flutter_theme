@@ -59,19 +59,9 @@ class OtpController extends GetxController {
     isLoading = true;
     update();
 
-    verificationCompleted(AuthCredential phoneAuthCredential) {
+    verificationCompleted(AuthCredential phoneAuthCredential) async {
       firebaseAuth
-          .signInWithCredential(phoneAuthCredential)
-          .then((UserCredential value) {
-        if (value.user != null) {
-          // Handle loogged in state
-          homeNavigation(value.user);
-        } else {
-          showToast(fonts.otpError.tr, Colors.red);
-        }
-      }).catchError((error) {
-        showToast(fonts.tryAgain.tr, Colors.red);
-      });
+          .signInWithCredential(phoneAuthCredential);
     }
 
     verificationFailed(FirebaseAuthException authException) {
@@ -83,14 +73,21 @@ class OtpController extends GetxController {
 
     codeAutoRetrievalTimeout(String verificationId) {
       verificationId = verificationId;
+      print(verificationId);
+      print("Timout");
       update();
     }
 
     //   Change country code
     firebaseAuth.verifyPhoneNumber(
         phoneNumber: "$dialCode$mobileNumber",
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          // ANDROID ONLY!
+
+          // Sign the user in (or link) with the auto-generated credential
+          await firebaseAuth.signInWithCredential(credential);
+        },
         timeout: const Duration(seconds: 60),
-        verificationCompleted: verificationCompleted,
         verificationFailed: verificationFailed,
         codeSent: (String verificationId, int? resendToken) async {
           verificationCode = verificationId;
@@ -106,12 +103,14 @@ class OtpController extends GetxController {
     dismissKeyboard();
     isLoading = true;
     update();
-    AuthCredential authCredential = PhoneAuthProvider.credential(
+    PhoneAuthCredential authCredential = PhoneAuthProvider.credential(
         verificationId: verificationCode!, smsCode: otp.text);
-
+    log("authCredential : ${authCredential.smsCode}");
+    log("authCredential : ${authCredential.accessToken}");
     firebaseAuth
         .signInWithCredential(authCredential)
         .then((UserCredential value) async {
+  log("value : $value");
       if (value.user != null) {
         User user = value.user!;
         FirebaseFirestore.instance

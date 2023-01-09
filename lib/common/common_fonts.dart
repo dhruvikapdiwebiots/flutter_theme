@@ -78,5 +78,6 @@ class Fonts{
   final requestOTP = "requestOTP";
   final noItemFound = "noItemFound";
   final noMoreItemFound = "noMoreItemFound";
+  final noInternet = "noInternet";
   String unblockUser(val) => "unblockUser".trParams({'pName':val});
 }

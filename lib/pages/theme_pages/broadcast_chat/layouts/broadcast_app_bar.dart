@@ -7,7 +7,14 @@ class BroadCastAppBar extends StatelessWidget with PreferredSizeWidget{
   @override
   Widget build(BuildContext context) {
     return  AppBar(
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+            icon: Icon(Icons.arrow_back,
+                color: appCtrl.appTheme.whiteColor),
+            onPressed: () {
+              Get.back();
 
+            }),
         title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

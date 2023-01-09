@@ -1,6 +1,9 @@
 
+import 'dart:async';
 import 'dart:developer';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_theme/config.dart';
 
 
@@ -14,7 +17,9 @@ class DashboardController extends GetxController with GetSingleTickerProviderSta
   final statusCtrl = Get.isRegistered<StatusController>() ? Get.find<StatusController>() :Get.put(StatusController());
   final settingCtrl = Get.isRegistered<SettingController>() ? Get.find<SettingController>() :Get.put(SettingController());
   List actionList = [];
-
+  ConnectivityResult connectionStatus = ConnectivityResult.none;
+  final Connectivity connectivity = Connectivity();
+  late StreamSubscription<ConnectivityResult> connectivitySubscription;
 
 //list of bottommost page
   List<Widget> widgetOptions = <Widget>[
@@ -24,6 +29,30 @@ class DashboardController extends GetxController with GetSingleTickerProviderSta
     Setting(),
   ];
 
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initConnectivity() async {
+    late ConnectivityResult result;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      result = await connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      log('Couldn\'t check connectivity status', error: e);
+      return;
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+
+    return updateConnectionStatus(result);
+  }
+
+  Future<void> updateConnectionStatus(ConnectivityResult result) async {
+    connectionStatus = result;
+    update();
+
+  }
+
   //on tap select
   onTapSelect(val) async {
     selectedIndex = val;
@@ -31,9 +60,6 @@ class DashboardController extends GetxController with GetSingleTickerProviderSta
     update();
     if(selectedIndex ==0){
       statusCtrl.getStatus();
-    }
-    if(selectedIndex ==2){
-      settingCtrl.onReady();
     }
   }
 

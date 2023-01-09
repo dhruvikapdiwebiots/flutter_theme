@@ -13,8 +13,10 @@ class EditProfile extends StatelessWidget {
       return Scaffold(
         backgroundColor: appCtrl.appTheme.whiteColor,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
+            leading: Icon(Icons.arrow_back,color: appCtrl.appTheme.whiteColor).inkWell(onTap: ()=> Get.back()),
             backgroundColor: appCtrl.appTheme.primary,
-            title: Text(fonts.saveProfile.tr)),
+            title: Text(fonts.saveProfile.tr,style: AppCss.poppinsblack16.textColor(appCtrl.appTheme.whiteColor),)),
         body: editCtrl.isLoading ?LoginLoader(isLoading: editCtrl.isLoading).height(MediaQuery.of(context).size.height) : SingleChildScrollView(
             child: Form(
           key: editCtrl.formKey,

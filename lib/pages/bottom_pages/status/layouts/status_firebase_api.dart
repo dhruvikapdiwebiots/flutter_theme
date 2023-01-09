@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_contacts/contact.dart';
 
 import '../../../../config.dart';
@@ -79,6 +81,7 @@ class StatusFirebaseApi {
         }
       }
     }
+    log("statusData : $statusData");
 
     return statusData;
   }

@@ -369,6 +369,7 @@ class ChatController extends GetxController {
               'messageType': "sender",
               "isBlock": false,
               "isSeen": false,
+              "isBroadcast": false,
               "blockBy": "",
               "blockUserId": "",
               'timestamp': DateTime
@@ -403,6 +404,7 @@ class ChatController extends GetxController {
             'messageType': "sender",
             "isBlock": false,
             "isSeen": false,
+            "isBroadcast": false,
             "blockBy": "",
             "blockUserId": "",
             'timestamp': DateTime
@@ -440,6 +442,7 @@ class ChatController extends GetxController {
           'messageType': "sender",
           "isBlock": false,
           "isSeen": false,
+          "isBroadcast": false,
           "blockBy": "",
           "blockUserId": "",
           'timestamp': DateTime

@@ -1,4 +1,3 @@
-
 import '../../../../config.dart';
 
 class GroupDeleteAlert extends StatelessWidget {
@@ -50,34 +49,38 @@ class GroupDeleteAlert extends StatelessWidget {
                   .get()
                   .then((value) {
                 if (value.docs.isEmpty) {
-                  FirebaseFirestore.instance
-                      .collection("contacts")
-                      .where("groupId", isEqualTo: chatCtrl.pId)
-                      .get()
-                      .then((value) {
-                    FirebaseFirestore.instance
-                        .collection("contacts")
-                        .doc(value.docs[0].id)
+                  List receiver = value.docs[0].data()["receiver"];
+                  receiver.asMap().entries.forEach((element) async {
+                    await FirebaseFirestore.instance
+                        .collection("users")
+                        .doc(element.value['id'])
                         .delete();
                   });
                 } else {
-                  FirebaseFirestore.instance
-                      .collection("contacts")
-                      .where("groupId", isEqualTo: chatCtrl.pId)
-                      .get()
-                      .then((value) {
-                    if (value.docs.isNotEmpty) {
-                      FirebaseFirestore.instance
-                          .collection('contacts')
-                          .doc(value.docs[0].id)
-                          .update({
-                        "updateStamp":
-                            DateTime.now().millisecondsSinceEpoch.toString(),
-                        "lastMessage": value.docs[0].data()["content"],
-                        "senderId":chatCtrl.user["id"],
-                        "sender":{"id":chatCtrl.user["id"],"name":chatCtrl.user["name"]}
-                      });
-                    }
+                  List receiver = value.docs[0].data()["receiver"];
+                  receiver.asMap().entries.forEach((element) async {
+                    await FirebaseFirestore.instance
+                        .collection("users")
+                        .doc(element.value["id"])
+                        .collection("chats")
+                        .where("groupId")
+                        .get()
+                        .then((contact) {
+                      if (contact.docs.isNotEmpty) {
+                        FirebaseFirestore.instance
+                            .collection("users")
+                            .doc(element.value["id"])
+                            .collection("chats")
+                            .doc(contact.docs[0].id)
+                            .update({
+                          "updateStamp":
+                              DateTime.now().millisecondsSinceEpoch.toString(),
+                          "lastMessage": value.docs[0].data()["content"],
+                          "senderId": chatCtrl.user["id"],
+                          "sender": chatCtrl.user
+                        });
+                      }
+                    });
                   });
                 }
               });

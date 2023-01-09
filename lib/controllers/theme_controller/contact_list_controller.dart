@@ -48,7 +48,9 @@ class ContactListController extends GetxController {
                   uid: value.docs[0].data()["id"],
                   image: value.docs[0].data()["image"],
                   username: value.docs[0].data()["name"]);
-              registerContactList!.add(userContactModel);
+              if(!registerContactList!.contains(userContactModel)) {
+                registerContactList!.add(userContactModel);
+              }
               update();
               nameList!.add(userContactModel);
             } else {
@@ -58,7 +60,9 @@ class ContactListController extends GetxController {
                   contactImage: p.photo,
                   uid: "0",
                   username: p.displayName);
-              unRegisterContactList!.add(userContactModel);
+              if(!unRegisterContactList!.contains(userContactModel)) {
+                unRegisterContactList!.add(userContactModel);
+              }
               nameList!.add(userContactModel);
             }
           });

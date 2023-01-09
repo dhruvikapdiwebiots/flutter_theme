@@ -46,12 +46,13 @@ class StatusController extends GetxController {
   }
 
   //add status
-  addStatus(File file) async {
+  addStatus(File file,StatusType statusType) async {
     isLoading = true;
     update();
     imageUrl = await pickerCtrl.uploadImage(file);
     update();
-    await StatusFirebaseApi().addStatus(imageUrl,StatusType.image.name);
+    log("imageUrl : $imageUrl");
+    await StatusFirebaseApi().addStatus(imageUrl,statusType.name);
     isLoading = false;
     update();
   }

@@ -30,10 +30,14 @@ class GroupContent extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(document!['content'],
-                  style: AppCss.poppinsMedium14
-                      .textColor(appCtrl.appTheme.accent)),
+              Expanded(
+                child: Text(document!['content'],
+                    style: AppCss.poppinsMedium14
+                        .textColor(appCtrl.appTheme.whiteColor).letterSpace(.2)
+                        .textHeight(1.2)),
+              ),
               Text(
                 DateFormat('HH:mm a').format(
                     DateTime.fromMillisecondsSinceEpoch(

@@ -42,6 +42,11 @@ class _StatusScreenViewState extends State<StatusScreenView> {
                 fontWeight: FontWeight.w700),
             backgroundColor: finalColor
         ));
+      } else if(status!.photoUrl![i].statusType == StatusType.video.name){
+        storyItems.add(StoryItem.pageVideo(
+            status!.photoUrl![i].image!,
+            controller: controller),
+        );
       } else {
         storyItems.add(StoryItem.pageImage(
           url: status!.photoUrl![i].image!,
@@ -49,6 +54,9 @@ class _StatusScreenViewState extends State<StatusScreenView> {
         ));
       }
     }
+    setState(() {
+      
+    });
   }
 
   @override

@@ -11,6 +11,7 @@ class GroupChatMessageController extends GetxController {
       id,
       documentId,
       pName,
+      groupImage,
       groupId,
       imageUrl,
       status,
@@ -47,6 +48,7 @@ class GroupChatMessageController extends GetxController {
     pData = data;
     pId = pData["groupId"];
     pName = pData["name"];
+    groupImage = pData["image"];
     getPeerStatus();
 
     update();
@@ -55,15 +57,17 @@ class GroupChatMessageController extends GetxController {
 
 //get group data
   getPeerStatus() {
+    nameList ="";
     FirebaseFirestore.instance
         .collection('groups')
         .doc(pId)
         .get()
         .then((value) {
       if (value.exists) {
+
         List receiver = pData["users"];
         for (var i = 0; i < receiver.length; i++) {
-          if (nameList != null) {
+          if (nameList != null && nameList != "") {
             if(receiver[i]["name"] !=  user["name"]) {
               nameList = "$nameList, ${receiver[i]["name"]}";
             }
@@ -73,6 +77,7 @@ class GroupChatMessageController extends GetxController {
         }
       }
 
+log("pData : ${pData["image"]}");
       update();
     });
 
@@ -281,6 +286,7 @@ class GroupChatMessageController extends GetxController {
         "groupId": pId,
         'type': type.name,
         'messageType': "sender",
+
         "status": "",
         'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
       });

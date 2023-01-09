@@ -33,7 +33,7 @@ class Content extends StatelessWidget {
               Expanded(
                 child: Text(document!['content'],
                     style: AppCss.poppinsMedium14
-                        .textColor(appCtrl.appTheme.accent)
+                        .textColor(appCtrl.appTheme.whiteColor)
                         .letterSpace(.2)
                         .textHeight(1.2)),
               ),

@@ -120,6 +120,7 @@ class PermissionHandlerController extends GetxController {
   }
 
   Future<bool> permissionGranted() async {
+
     PermissionStatus permissionStatus =
         await getContactPermission();
     if (permissionStatus == PermissionStatus.granted) {

@@ -20,7 +20,7 @@ class ContactList extends StatelessWidget {
         child: Scaffold(
           backgroundColor: appCtrl.appTheme.whiteColor,
           appBar: AppBar(
-              title: Text(fonts.contact.tr),
+              title: Text(fonts.contact.tr,style: AppCss.poppinsMedium16.textColor(appCtrl.appTheme.whiteColor),),
               automaticallyImplyLeading: false,
               leading: IconButton(
                   icon: Icon(Icons.arrow_back,

@@ -15,7 +15,7 @@ class MessageCard extends StatelessWidget {
     return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection("users")
-            .doc(document!["receiverId"])
+            .doc(document!["senderId"])
             .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {

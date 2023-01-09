@@ -14,14 +14,13 @@ class AppArray{
   var bottomList = [
     {'icon': Icons.message, 'title': "chats"},
     {'icon': Icons.image, 'title': "status"},
-    {'icon': Icons.settings, 'title': "setting"},
   ];
 
   //action list
   var actionList = [
     {'title': "newBroadCast"},
     {'title': "newGroup"},
-    /*{'title': "setting"},*/
+    {'title': "setting"},
   ];
 
   //setting list

@@ -10,6 +10,11 @@ class Setting extends StatelessWidget {
     return GetBuilder<SettingController>(builder: (_) {
 
       return Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          leading: Icon(Icons.arrow_back,color: appCtrl.appTheme.whiteColor,).inkWell(onTap: ()=>Get.back()),
+          title: Text(fonts.setting.tr,style: AppCss.poppinsMedium16.textColor(appCtrl.appTheme.whiteColor),),
+        ),
         backgroundColor: appCtrl.appTheme.whiteColor,
         body: settingCtrl.user != null || settingCtrl.user != ""
             ? Column(children: [

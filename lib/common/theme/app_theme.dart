@@ -55,10 +55,10 @@ class AppTheme {
       case ThemeType.light:
         return AppTheme(
           isDark: false,
-          txt: const Color(0xFF001928),
-          primary: const Color(0xFF335382),
+          txt: const Color(0xFF000E08),
+          primary: const Color(0xFF3467B8),
           secondary: const Color(0xFF6EBAE7),
-          accent: const Color(0xFFefefef),
+          accent: const Color(0xFF797C7B),
           grey: Colors.grey,
           gray: const Color(0xFFaeaeae),
           darkGray: const Color(0xFFE8E8E8),
@@ -78,7 +78,7 @@ class AppTheme {
             txt: Colors.white,
             primary: Colors.black,
             secondary: const Color(0xFF6EBAE7),
-            accent: const Color(0xFFefefef),
+            accent: const Color(0xFF797C7B),
             grey: Colors.grey,
             gray: const Color(0xFFaeaeae),
             darkGray: const Color(0xFFE8E8E8),

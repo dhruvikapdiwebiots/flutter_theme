@@ -9,17 +9,19 @@ class ChatMessageAppBar extends StatelessWidget with PreferredSizeWidget{
   @override
   Widget build(BuildContext context) {
     return  AppBar( backgroundColor: appCtrl.appTheme.primary,
-
+automaticallyImplyLeading: false,
+        leading: Icon(Icons.arrow_back,color: appCtrl.appTheme.whiteColor,).inkWell(onTap: ()=>Get.back()),
         actions: [
           IconButton(
             onPressed: (){},
-            icon: const Icon(Icons.video_call),
+            icon:  Icon(Icons.video_call,color: appCtrl.appTheme.whiteColor),
           ),
           IconButton(
             onPressed: callTap,
-            icon: const Icon(Icons.call),
+            icon:  Icon(Icons.call,color: appCtrl.appTheme.whiteColor),
           ),
           PopupMenuButton<int>(
+            icon: Icon(Icons.more_vert,color: appCtrl.appTheme.whiteColor),
             itemBuilder: (context) {
               return <PopupMenuEntry<int>>[
                 PopupMenuItem(value: 0,onTap: moreTap,child: Text(isBlock ? fonts.unblock.tr : fonts.block.tr),),
@@ -34,7 +36,7 @@ class ChatMessageAppBar extends StatelessWidget with PreferredSizeWidget{
                 name ?? "",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: appCtrl.appTheme.accent,
+                    color: appCtrl.appTheme.whiteColor,
                     fontWeight: FontWeight.bold,
                     fontSize: 16),
               ),

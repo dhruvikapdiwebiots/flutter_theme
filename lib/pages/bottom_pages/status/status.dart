@@ -49,36 +49,34 @@ class _StatusListState extends State<StatusList>
                     backgroundColor: const Color(0xffebecee),
                     child: Icon(Icons.edit,
                         size: 23.0, color: Colors.blueGrey[700]),
-                    onPressed: ()=>Get.to(const TextStatus())!.then((value) {
-                      log("value : $value");
-                    })),
+                    onPressed: () => Get.to(const TextStatus())!.then((value) {
+                          log("value : $value");
+                        })),
               ),
               FloatingActionButton(
-                onPressed: () async {
-                  /*File? pickedImage = await pickImageFromGallery(context);
-                  if (pickedImage != null) {
-                    Get.toNamed(routeName.confirmationScreen,
-                        arguments: pickedImage);
-                  }*/
-                  final List<AssetEntity>? result = await AssetPicker.pickAssets(context, pickerConfig: AssetPickerConfig(
-                    maxAssets: 1,
-                    specialPickerType: SpecialPickerType.wechatMoment,
-                  ),);
-                  log("result : ${result![0].title}");
-                  Get.toNamed(routeName.confirmationScreen,
-                      arguments: result.d);
-                 //StatusFirebaseApi().addStatus(result[0].file, StatusType.image.name);
-                },
-                backgroundColor: appCtrl.appTheme.primary,
-                child: Icon(Icons.add, color: appCtrl.appTheme.whiteColor)
-              )
+                  onPressed: () async {
+                    final List<AssetEntity>? result =
+                        await AssetPicker.pickAssets(
+                      context,
+                      pickerConfig: AssetPickerConfig(
+                        maxAssets: 1,
+                        specialPickerType: SpecialPickerType.wechatMoment,
+                      ),
+                    );
+                    File? videoFile = await result![0].file;
+                    statusCtrl.addStatus(videoFile!,result[0].title!.contains("mp4")? StatusType.video :StatusType.image);
+
+                  },
+                  backgroundColor: appCtrl.appTheme.primary,
+                  child: Icon(Icons.add, color: appCtrl.appTheme.whiteColor))
             ],
           ),
           body: SafeArea(
               child: SingleChildScrollView(
             child: Column(children: <Widget>[
               CurrentUserStatus(
-                currentUserId: statusCtrl.user != null ? statusCtrl.user["phone"] :"",
+                currentUserId:
+                    statusCtrl.user != null ? statusCtrl.user["phone"] : "",
               ).marginSymmetric(vertical: Insets.i10),
               const Divider(),
               const StatusListLayout(),

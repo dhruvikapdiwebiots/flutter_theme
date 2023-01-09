@@ -18,20 +18,22 @@ class GroupChat extends StatelessWidget {
             backgroundColor: appCtrl.appTheme.whiteColor,
             appBar: AppBar(
                 centerTitle: false,
+                automaticallyImplyLeading: false,
+                leading: Icon(Icons.arrow_back,color: appCtrl.appTheme.whiteColor).inkWell(onTap: ()=> Get.back()),
                 backgroundColor: appCtrl.appTheme.primary,
                 title: Text(
                     groupChatCtrl.isGroup
                         ? fonts.selectContacts.tr
                         : fonts.broadCast.tr,
                     style: AppCss.poppinsMedium18
-                        .textColor(appCtrl.appTheme.white))),
+                        .textColor(appCtrl.appTheme.whiteColor))),
             floatingActionButton: groupChatCtrl.selectedContact.isNotEmpty
                 ? FloatingActionButton(
                     onPressed: () => groupChatCtrl.addGroupBottomSheet(),
                     backgroundColor: appCtrl.isTheme
                         ? appCtrl.appTheme.secondary
                         : appCtrl.appTheme.primary,
-                    child: const Icon(Icons.arrow_right_alt))
+                    child:  Icon(Icons.arrow_right_alt,color: appCtrl.appTheme.whiteColor))
                 : Container(),
             body: Stack(children: [
               SingleChildScrollView(

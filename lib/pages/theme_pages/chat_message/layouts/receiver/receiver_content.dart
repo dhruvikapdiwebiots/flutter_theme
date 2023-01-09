@@ -1,3 +1,4 @@
+
 import 'package:intl/intl.dart';
 
 import '../../../../../config.dart';
@@ -10,6 +11,7 @@ class ReceiverContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return InkWell(
       onLongPress:  onLongPress,
       child: Container(
@@ -33,12 +35,21 @@ class ReceiverContent extends StatelessWidget {
                   style: AppCss.poppinsMedium14
                       .textColor(appCtrl.appTheme.primary).letterSpace(.2).textHeight(1.2)),
             ),
-            Text(
-              DateFormat('HH:mm a').format(
-                  DateTime.fromMillisecondsSinceEpoch(
-                      int.parse(document!['timestamp']))),
-              style: AppCss.poppinsMedium12
-                  .textColor(appCtrl.appTheme.primary),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                if(document!['isBroadcast'])
+                  const Icon(Icons.volume_down,size: Sizes.s15),
+                const HSpace(Sizes.s5),
+
+                Text(
+                  DateFormat('HH:mm a').format(
+                      DateTime.fromMillisecondsSinceEpoch(
+                          int.parse(document!['timestamp']))),
+                  style: AppCss.poppinsMedium12
+                      .textColor(appCtrl.appTheme.primary),
+                ),
+              ],
             )
           ],
         ),

@@ -26,8 +26,7 @@ class ChatMessageApi{
           "isSeen": false,
           "isGroup": false,
           "isBlock": isBlock ?? false,
-          "isBroadcast": false,
-          "isBroadcastSender": isBroadcast??false,
+          "isBroadcast": isBroadcast,
           "blockBy": isBlock ? id :"",
           "blockUserId":  isBlock ? receiverId :"",
           "receiverId": receiverId,
@@ -47,8 +46,7 @@ class ChatMessageApi{
           "lastMessage": content,
           "isGroup": false,
           "isBlock": isBlock ?? false,
-          "isBroadcast": false,
-          "isBroadcastSender": isBroadcast??false,
+          "isBroadcast": isBroadcast,
           "isOneToOne": true,
           "blockBy": isBlock ? id :"",
           "blockUserId":  isBlock ? receiverId :"",
@@ -73,15 +71,16 @@ class ChatMessageApi{
     List receiver = pData["users"];
     log("receiver : ${receiver.length}");
    receiver.asMap().entries.forEach((element) async{
+
      await FirebaseFirestore.instance
-         .collection("users").doc(receiver[element.key]["id"]).collection("chats")
+         .collection("users").doc(element.value["id"]).collection("chats")
          .where("groupId", isEqualTo: groupId)
          .get()
          .then((value) {
            log("value.docs : ${value.docs}");
        if (value.docs.isNotEmpty) {
          FirebaseFirestore.instance
-             .collection("users").doc(id).collection("chats")
+             .collection("users").doc(element.value["id"]).collection("chats")
              .doc(value.docs[0].id)
              .update({
            "updateStamp":

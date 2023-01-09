@@ -17,10 +17,14 @@ class GroupInputBox extends StatelessWidget {
           const HSpace(Sizes.s15),
           Flexible(
             child: TextField(
-              style: TextStyle(color: appCtrl.appTheme.primary, fontSize: 15.0),
+              style: TextStyle(color: appCtrl.appTheme.txt, fontSize: 15.0),
               controller: chatCtrl.textEditingController,
+              minLines: 1,
+              maxLines: 5,
               decoration: InputDecoration.collapsed(
+
                 hintText: fonts.enterYourMessage.tr,
+
                 hintStyle: TextStyle(color: appCtrl.appTheme.gray),
               ),
               focusNode: chatCtrl.focusNode,

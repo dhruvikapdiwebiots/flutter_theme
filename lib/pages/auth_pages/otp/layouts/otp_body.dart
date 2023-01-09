@@ -28,6 +28,7 @@ class OtpBody extends StatelessWidget {
             const VSpace(Sizes.s30),
             PinInputTextField(
               pinLength: 6,
+
               decoration: CirclePinDecoration(
                 textStyle: AppCss.poppinsMedium18.textColor(appCtrl.appTheme.blackColor),
                 bgColorBuilder: PinListenColorBuilder(
@@ -62,7 +63,7 @@ class OtpBody extends StatelessWidget {
                 radius: AppRadius.r25,
                 onTap: () => otpCtrl.onFormSubmitted(),
                 style: AppCss.poppinsMedium18
-                    .textColor(appCtrl.appTheme.accent)),
+                    .textColor(appCtrl.appTheme.whiteColor)),
             const VSpace(Sizes.s10)
           ]);
     });
