@@ -64,8 +64,11 @@ class _StatusListState extends State<StatusList>
                       ),
                     );
                     File? videoFile = await result![0].file;
-                    statusCtrl.addStatus(videoFile!,result[0].title!.contains("mp4")? StatusType.video :StatusType.image);
-
+                    statusCtrl.addStatus(
+                        videoFile!,
+                        result[0].title!.contains("mp4")
+                            ? StatusType.video
+                            : StatusType.image);
                   },
                   backgroundColor: appCtrl.appTheme.primary,
                   child: Icon(Icons.add, color: appCtrl.appTheme.whiteColor))
@@ -73,14 +76,22 @@ class _StatusListState extends State<StatusList>
           ),
           body: SafeArea(
               child: SingleChildScrollView(
-            child: Column(children: <Widget>[
-              CurrentUserStatus(
-                currentUserId:
-                    statusCtrl.user != null ? statusCtrl.user["phone"] : "",
-              ).marginSymmetric(vertical: Insets.i10),
-              const Divider(),
-              const StatusListLayout(),
-            ]).paddingAll(Insets.i10),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  CurrentUserStatus(
+                    statusCtrl: statusCtrl,
+                    currentUserId:
+                        statusCtrl.user != null ? statusCtrl.user["phone"] : "",
+                  ).marginSymmetric(vertical: Insets.i10),
+                  const Divider(),
+                  const VSpace(Sizes.s15),
+                  Text("Recent Updates",
+                      style: AppCss.poppinsblack14
+                          .textColor(appCtrl.appTheme.txt)),
+                  const VSpace(Sizes.s10),
+                  const StatusListLayout(),
+                ]).paddingAll(Insets.i10),
           )));
     });
   }

@@ -9,7 +9,7 @@ class OtpController extends GetxController {
   TextEditingController otp = TextEditingController();
   double val = 0;
   bool isCodeSent = false, isLoading = false;
-  String? verificationCode, mobileNumber;
+  String? verificationCode, mobileNumber,dialCode;
   bool isValid = false;
 
   @override
@@ -56,18 +56,21 @@ class OtpController extends GetxController {
   //on verify code
   void onVerifyCode(phone,dialCode) {
     mobileNumber = phone;
+    dialCode = dialCode;
+    log("phone : $phone");
+    log("phone : $dialCode");
     isCodeSent = true;
     isLoading = true;
     update();
 
-    verificationCompleted(AuthCredential phoneAuthCredential) {
-      firebaseAuth
+    verificationCompleted(PhoneAuthCredential phoneAuthCredential)async {
+     /* firebaseAuth
           .signInWithCredential(phoneAuthCredential)
           .then((UserCredential value) {
        log("users : $value");
       }).catchError((error) {
         showToast("Try again in sometime", Colors.red);
-      });
+      });*/
     }
 
     verificationFailed(FirebaseAuthException authException) {
@@ -91,7 +94,7 @@ class OtpController extends GetxController {
     //   Change country code
 
     firebaseAuth.verifyPhoneNumber(
-        phoneNumber: "$dialCode $mobileNumber",
+        phoneNumber: "$dialCode$mobileNumber",
         timeout: const Duration(seconds: 60),
         verificationCompleted: verificationCompleted,
         verificationFailed: verificationFailed,
@@ -106,7 +109,8 @@ class OtpController extends GetxController {
     dismissKeyboard();
     isLoading = true;
     update();
-    AuthCredential authCredential = PhoneAuthProvider.credential(
+
+    PhoneAuthCredential authCredential = PhoneAuthProvider.credential(
         verificationId: verificationCode!, smsCode: otp.text);
     log("authCredential : ${authCredential.accessToken}");
     firebaseAuth
@@ -153,7 +157,8 @@ class OtpController extends GetxController {
     }).catchError((error) {
       isLoading = false;
       update();
-      showToast(fonts.somethingWrong.tr, Colors.red);
+      log("err : ${error.toString()}");
+      showToast(error.toString(), Colors.red);
     });
   }
 

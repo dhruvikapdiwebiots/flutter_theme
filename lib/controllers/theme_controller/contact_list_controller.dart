@@ -4,7 +4,6 @@ import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/models/contact_model.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
-
 class ContactListController extends GetxController {
   List<ContactModel> contactList = [];
   List<UserContactModel>? searchContactList = [];
@@ -22,13 +21,14 @@ class ContactListController extends GetxController {
   final permissionHandelCtrl = Get.isRegistered<PermissionHandlerController>()
       ? Get.find<PermissionHandlerController>()
       : Get.put(PermissionHandlerController());
-  
+
   //fetch data
   Future<void> fetchPage(pageKey) async {
     contactList = [];
     registerContactList = [];
     unRegisterContactList = [];
-    storageContact = await  permissionHandelCtrl.getContact();
+    storageContact = await permissionHandelCtrl.getContact();
+    var user = appCtrl.storage.read("user");
     if (storageContact.isNotEmpty) {
       log("storageContact : ${storageContact.length}");
       storageContact
@@ -48,8 +48,10 @@ class ContactListController extends GetxController {
                   uid: value.docs[0].data()["id"],
                   image: value.docs[0].data()["image"],
                   username: value.docs[0].data()["name"]);
-              if(!registerContactList!.contains(userContactModel)) {
-                registerContactList!.add(userContactModel);
+              if (phone != user["phone"]) {
+                if (!registerContactList!.contains(userContactModel)) {
+                  registerContactList!.add(userContactModel);
+                }
               }
               update();
               nameList!.add(userContactModel);
@@ -60,7 +62,7 @@ class ContactListController extends GetxController {
                   contactImage: p.photo,
                   uid: "0",
                   username: p.displayName);
-              if(!unRegisterContactList!.contains(userContactModel)) {
+              if (!unRegisterContactList!.contains(userContactModel)) {
                 unRegisterContactList!.add(userContactModel);
               }
               nameList!.add(userContactModel);
@@ -95,16 +97,13 @@ class ContactListController extends GetxController {
   }
 
   searchList(pageKey, search) async {
-    if(search != "" && search != null) {
+    if (search != "" && search != null) {
       try {
         searchContactList = [];
         update();
         log("nameList : ${nameList!.length}");
         List<ContactModel> filter = [];
-        contactList
-            .asMap()
-            .entries
-            .forEach((element) {
+        contactList.asMap().entries.forEach((element) {
           pagingController.itemList = [];
 
           element.value.userTitle!.asMap().entries.forEach((contact) {
@@ -119,8 +118,7 @@ class ContactListController extends GetxController {
           update();
         });
         ContactModel unRegisterContactModel = ContactModel(
-            title: "Invite User for use Chatter",
-            userTitle: searchContactList);
+            title: "Invite User for use Chatter", userTitle: searchContactList);
         filter.add(unRegisterContactModel);
         final isLastPage = filter.length < pageSize;
         if (isLastPage) {
@@ -134,7 +132,7 @@ class ContactListController extends GetxController {
       }
       update();
       log("pagingController : ${pagingController.itemList!.length}");
-    }else{
+    } else {
       fetchPage(0);
     }
   }

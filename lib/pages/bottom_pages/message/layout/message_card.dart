@@ -61,7 +61,7 @@ class MessageCard extends StatelessWidget {
                                       backgroundColor: const Color(0xffE6E6E6),
                                       radius: 28,
                                       backgroundImage: NetworkImage(
-                                          '${document!["receiver"]['image']}'),
+                                          '${(snapshot.data!).docs[0]["image"]}'),
                                     ),
                                 placeholder: (context, url) => Image.asset(
                                       imageAssets.user,
@@ -88,12 +88,25 @@ class MessageCard extends StatelessWidget {
                               shape: BoxShape.circle);
                         }
                       }),
-                  trailing: Text(
-                      DateFormat('HH:mm a').format(
-                          DateTime.fromMillisecondsSinceEpoch(
-                              int.parse(document!['updateStamp']))),
-                      style: AppCss.poppinsMedium12
-                          .textColor(appCtrl.appTheme.grey)),
+                  trailing: Column(
+                    children: [
+                      Text(
+                          DateFormat('HH:mm a').format(
+                              DateTime.fromMillisecondsSinceEpoch(
+                                  int.parse(document!['updateStamp']))),
+                          style: AppCss.poppinsMedium12
+                              .textColor(appCtrl.appTheme.grey)),
+                      if(currentUserId == document!["senderId"])
+                        CircleAvatar(
+                          backgroundColor: appCtrl.appTheme.redColor,
+                          radius: AppRadius.r10,
+                          child:  Text("1",
+                              textAlign: TextAlign.center,
+                              style: AppCss.poppinsMedium12
+                                  .textColor(appCtrl.appTheme.whiteColor)).paddingSymmetric(vertical: Insets.i5),
+                        )
+                    ],
+                  ),
                   title: Text(snapshot.data!["name"],
                       style: AppCss.poppinsblack16
                           .textColor(appCtrl.appTheme.blackColor)),
@@ -101,11 +114,13 @@ class MessageCard extends StatelessWidget {
                       ? Padding(
                           padding: const EdgeInsets.only(top: 6.0),
                           child: Row(children: [
+                            if(currentUserId == document!["senderId"])
                             Icon(Icons.done_all,
                                 color: document!["isSeen"]
                                     ? appCtrl.appTheme.primary
                                     : appCtrl.appTheme.grey,
                                 size: Sizes.s16),
+                            if(currentUserId == document!["senderId"])
                             const HSpace(Sizes.s10),
                             Expanded(
                               child: Text(

@@ -41,13 +41,7 @@ class _MessageState extends State<Message>
             backgroundColor: appCtrl.appTheme.primary,
             child:  Icon(Icons.message,color: appCtrl.appTheme.whiteColor),
           ),
-          body: Stack(fit: StackFit.expand, children: <Widget>[
-            SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height - 50,
-
-            child:const ChatCard()),
-          ]));
+          body:const ChatCard());
     });
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:video_player/video_player.dart';
 
@@ -19,6 +21,10 @@ class _StatusLayoutState extends State<StatusLayout> {
 
   @override
   void initState() {
+    log("dfdf : ${(widget.snapshot!.data!)
+        .docs[0]["photoUrl"][(widget.snapshot!.data!).docs[0]["photoUrl"]
+        .length - 1]
+    ["statusType"]}");
     // TODO: implement initState
     if ((widget.snapshot!.data!)
         .docs[0]["photoUrl"][(widget.snapshot!.data!).docs[0]["photoUrl"]
@@ -73,7 +79,8 @@ class _StatusLayoutState extends State<StatusLayout> {
               (widget.snapshot!.data!).docs[0]["photoUrl"]
               [(widget.snapshot!.data!).docs[0]["photoUrl"].length - 1]
               ["statusText"],
-              style: AppCss.poppinsMedium12
+              textAlign: TextAlign.center,
+              style: AppCss.poppinsMedium10
                   .textColor(appCtrl.appTheme.whiteColor),
             ),
           ).paddingAll(Insets.i2).decorated(

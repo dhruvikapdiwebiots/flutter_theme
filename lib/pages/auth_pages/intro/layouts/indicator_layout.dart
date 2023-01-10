@@ -16,7 +16,7 @@ class IndicatorLayout extends StatelessWidget {
             dotWidth: 12,
             type: WormType.thin,
             activeDotColor: appCtrl.appTheme.primary,
-            dotColor: appCtrl.appTheme.grey
+            dotColor: appCtrl.appTheme.whiteColor
           // strokeWidth: 5,
         ));
   }

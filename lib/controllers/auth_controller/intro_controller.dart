@@ -7,10 +7,12 @@ class IntroController extends GetxController {
   var pageController = PageController(initialPage: 0);
   List pageViewModelData = [];
   final storage = GetStorage();
-  var title = fonts.title;
-  var subtitle = fonts.subtitle;
-  var subtitle2 = fonts.subtitle2;
-  var subtitle3 = fonts.subtitle3;
+  var intro1 = fonts.intro1;
+  var intro2 = fonts.intro2;
+  var intro3 = fonts.intro3;
+  var introDesc1 = fonts.introDesc1;
+  var introDesc2 = fonts.introDesc2;
+  var introDesc3 = fonts.introDesc3;
   bool isAnimate1 = false;
   bool isAnimate2 = false;
   bool isAnimate3 = false;
@@ -21,21 +23,21 @@ class IntroController extends GetxController {
   void onReady() {
     // TODO: implement onReady
     pageViewModelData.add(PageViewData(
-      titleText: title,
-      subtitleText: subtitle,
-      assetsImage: imageAssets.intro,
+      titleText: intro1,
+      subtitleText: fonts.introDesc1,
+      assetsImage: svgAssets.intro1,
     ));
 
     pageViewModelData.add(PageViewData(
-      titleText: title,
-      subtitleText: subtitle2,
-      assetsImage: imageAssets.intro1,
+      titleText: intro2,
+      subtitleText: fonts.introDesc2,
+      assetsImage: svgAssets.intro2,
     ));
 
     pageViewModelData.add(PageViewData(
-      titleText: title,
-      subtitleText: subtitle3,
-      assetsImage: imageAssets.intro2,
+      titleText: intro3,
+      subtitleText: fonts.introDesc3,
+      assetsImage: svgAssets.intro3,
     ));
 
     // set timer and page controller according to current Index

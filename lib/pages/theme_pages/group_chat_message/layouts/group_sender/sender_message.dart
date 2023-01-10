@@ -200,6 +200,13 @@ class _GroupSenderMessageState extends State<GroupSenderMessage> {
                         .split("-BREAK-")[1]));
                   })
                       : Container(),
+                if(widget.document!["type"] == MessageType.gif.name)
+                  InkWell(onLongPress: () {
+                    showDialog(
+                        context: Get.context!,
+                        builder: (BuildContext context) => chatCtrl
+                            .buildPopupDialog(context, widget.document!));
+                  } ,child: Image.network(widget.document!["content"],height: Sizes.s100,))
               ]),
 
               if (widget.document!["type"] == MessageType.messageType.name)

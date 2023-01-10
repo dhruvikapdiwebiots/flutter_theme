@@ -23,6 +23,7 @@ class AppTheme {
   Color white;
   Color whiteColor;
   Color blackColor;
+  Color redColor;
   Color textColor;
   Color bg1;
   Color error;
@@ -42,6 +43,7 @@ class AppTheme {
     required this.white,
     required this.whiteColor,
     required this.blackColor,
+    required this.redColor,
     required this.textColor,
     required this.transparentColor,
     required this.bg1,
@@ -70,6 +72,7 @@ class AppTheme {
           error: Colors.red,
           borderGray: const Color(0xFFE6E8EA),
           blackColor: Colors.black,
+          redColor: Colors.red,
         );
 
       case ThemeType.dark:
@@ -85,6 +88,7 @@ class AppTheme {
             white: Colors.white,
             whiteColor: Colors.black,
             blackColor: Colors.white,
+            redColor: Colors.red,
             textColor: const Color(0xFF636363),
             bg1: const Color(0xFFD4DEE5),
             error: Colors.red,

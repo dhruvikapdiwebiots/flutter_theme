@@ -75,7 +75,9 @@ class StatusFirebaseApi {
             if (statusesSnapshot.docs[i].data()["uid"] != user["id"]) {
               Status tempStatus =
                   Status.fromJson(statusesSnapshot.docs[i].data());
-              statusData.add(tempStatus);
+              if(!statusData.contains(tempStatus)) {
+                statusData.add(tempStatus);
+              }
             }
           }
         }

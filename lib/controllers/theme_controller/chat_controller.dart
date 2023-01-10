@@ -68,13 +68,15 @@ class ChatController extends GetxController {
 
   //get chat data
   getChatData() async {
+    log("chatId : $chatId");
     if (chatId != "0") {
       await FirebaseFirestore.instance
-          .collection("users").doc(userData["id"]).collection("chats").where("chatId",isEqualTo: chatId)
+          .collection("users").doc(userData["id"]).collection("chat").where("chatId",isEqualTo: chatId)
           .get()
           .then((value) {
-        allData = value.docs[0].data();
-        log("allData : $allData");
+        log("allData : ${value.docs}");
+        /*allData = value.docs[0].data();
+        log("allData : $allData");*/
         update();
         seenMessage();
       });
@@ -105,26 +107,39 @@ class ChatController extends GetxController {
 
   //seen all message
   seenMessage() async {
-    if(allData != null ) {
-      if (userData["id"] == allData["id"]) {
-        await FirebaseFirestore.instance
-            .collection("messages")
-            .doc(chatId)
-            .collection("chat")
-            .where("isSeen", isEqualTo: false)
-            .get()
-            .then((value) {
-          for (var i = 0; i < value.docs.length; i++) {
-            FirebaseFirestore.instance
-                .collection("messages")
-                .doc(chatId)
-                .collection("chat")
-                .doc(value.docs[i].id)
-                .update({"isSeen": true});
-          }
-        });
-      }
+    if (userData["id"] == pId) {
+      await FirebaseFirestore.instance
+          .collection("messages")
+          .doc(chatId)
+          .collection("chat")
+          .where("isSeen", isEqualTo: false)
+          .get()
+          .then((value) {
+        for (var i = 0; i < value.docs.length; i++) {
+          FirebaseFirestore.instance
+              .collection("messages")
+              .doc(chatId)
+              .collection("chat")
+              .doc(value.docs[i].id)
+              .update({"isSeen": true});
+        }
+      });
     }
+
+    FirebaseFirestore.instance.collection("users").doc(userData["id"]).collection("chats").where("chatId",isEqualTo: chatId).get().then((value){
+      if(value.docs.isNotEmpty){
+        FirebaseFirestore.instance.collection("users").doc(userData["id"]).collection("chats").doc(value.docs[0].id).update(
+            {"isSeen":true});
+      }
+    });
+
+    FirebaseFirestore.instance.collection("users").doc(pId).collection("chats").where("chatId",isEqualTo: chatId).get().then((value){
+      if(value.docs.isNotEmpty){
+        FirebaseFirestore.instance.collection("users").doc(pId).collection("chats").doc(
+            value.docs[0].id).update(
+            {"isSeen":true});
+      }
+    });
   }
 
   //share document
@@ -204,7 +219,7 @@ class ChatController extends GetxController {
         'messageType': "sender",
         'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
       });
-      await ChatMessageApi().saveMessageInUserCollection(userData["id"], pData["id"], newChatId, "You unblock this contact",isBlock: true,userData["id"]);
+      await ChatMessageApi().saveMessageInUserCollection(userData["id"], pId, newChatId, "You unblock this contact",isBlock: true,userData["id"]);
     } else {
       FirebaseFirestore.instance
           .collection('messages')
@@ -346,7 +361,7 @@ class ChatController extends GetxController {
       audioFile = "";
       update();
       if(pData["pushToken"] != "" && pData["pushToken"] != null) {
-        firebaseCtrl.sendNotification(title: "$pName • $content",
+        firebaseCtrl.sendNotification(title: pName,
             msg: content,
             token: pData["pushToken"]);
       }
@@ -397,7 +412,7 @@ class ChatController extends GetxController {
               .collection("chat")
               .add({
             'sender': userData["id"],
-            'receiver': pData["id"],
+            'receiver': pId,
             'content': content,
             "chatId": newChatId,
             'type': type.name,
@@ -429,13 +444,14 @@ class ChatController extends GetxController {
         update();
         Get.forceAppUpdate();
       }else{
+        log("message se");
         await FirebaseFirestore.instance
             .collection('messages')
             .doc(newChatId)
             .collection("chat")
             .add({
           'sender': userData["id"],
-          'receiver': pData["id"],
+          'receiver': pId,
           'content': content,
           "chatId": newChatId,
           'type': type.name,
@@ -453,10 +469,12 @@ class ChatController extends GetxController {
           isLoading = false;
           update();
           Get.forceAppUpdate();
+          log("check");
           await ChatMessageApi().saveMessageInUserCollection(
-              userData["id"], pData["id"], newChatId, content,userData["id"]);
+              userData["id"], pId, newChatId, content,userData["id"]);
           await ChatMessageApi().saveMessageInUserCollection(
-              pData["id"], userData["id"], newChatId, content,userData["id"]);
+              pId, pId, newChatId, content,userData["id"]);
+
         }).then((value) {
           isLoading = false;
           update();

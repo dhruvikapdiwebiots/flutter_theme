@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import '../../../../config.dart';
 
 class GroupInputBox extends StatelessWidget {
@@ -16,10 +18,16 @@ class GroupInputBox extends StatelessWidget {
         child: Row(children: <Widget>[
           const HSpace(Sizes.s15),
           Flexible(
-            child: TextField(
+            child: TextFormField(
               style: TextStyle(color: appCtrl.appTheme.txt, fontSize: 15.0),
               controller: chatCtrl.textEditingController,
               minLines: 1,
+              onTap: (){
+                log("message :${chatCtrl.textEditingController.text}");
+              },
+              onSaved: (val){
+                log("message :${val}");
+              },
               maxLines: 5,
               decoration: InputDecoration.collapsed(
 
@@ -29,7 +37,13 @@ class GroupInputBox extends StatelessWidget {
               ),
               focusNode: chatCtrl.focusNode,
               onChanged: (val) {
+
                 chatCtrl.textEditingController.addListener(() {
+                  if(val.contains(".gif")){
+
+                    chatCtrl.onSendMessage(val, MessageType.gif);
+                    chatCtrl.textEditingController.clear();
+                  }
                   if (chatCtrl.textEditingController.text.isNotEmpty) {
                     chatCtrl.typing = true;
                     firebaseCtrl.groupTypingStatus(

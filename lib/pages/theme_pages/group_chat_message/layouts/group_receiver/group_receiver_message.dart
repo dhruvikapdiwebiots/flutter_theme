@@ -193,6 +193,9 @@ class _GroupReceiverMessageState extends State<GroupReceiverMessage> {
                 })
                     : Container(),
 
+              if(widget.document!["type"] == MessageType.gif.name)
+                Image.network(widget.document!["content"],height: Sizes.s100,)
+
             ],
           ),
           if (widget.document!["type"] == MessageType.messageType.name)

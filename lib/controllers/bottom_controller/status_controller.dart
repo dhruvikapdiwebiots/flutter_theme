@@ -15,6 +15,7 @@ class StatusController extends GetxController {
   bool isLoading = false;
   List selectedContact = [];
   Stream<QuerySnapshot>? stream;
+  DateTime date = DateTime.now();
   final notificationCtrl = Get.isRegistered<NotificationController>()
       ? Get.find<NotificationController>()
       : Get.put(NotificationController());

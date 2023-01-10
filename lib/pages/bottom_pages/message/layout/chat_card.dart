@@ -18,7 +18,7 @@ class _ChatCardState extends State<ChatCard> {
           overscroll.disallowIndicator();
           return false;
         },
-        child: Column(
+        child: ListView(
           children: [
             StreamBuilder(
                 stream: FirebaseFirestore.instance
@@ -41,6 +41,7 @@ class _ChatCardState extends State<ChatCard> {
                         )).height(MediaQuery.of(context).size.height).expanded():
                         ListView.builder(
                       shrinkWrap: true,
+physics: const NeverScrollableScrollPhysics(),
                       padding: const EdgeInsets.all(10.0),
                       itemBuilder: (context, index) {
                         return LoadUser(

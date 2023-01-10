@@ -197,19 +197,27 @@ class _ReceiverMessageState extends State<ReceiverMessage> {
                           .split("-BREAK-")[1]));
                     })
                         : Container(),
-                  if (widget.document!["type"] == MessageType.messageType.name)
-                    Align(
-                      alignment: Alignment.center,
-                      child: Text(widget.document!["content"])
-                          .paddingSymmetric(
-                          horizontal: Insets.i8, vertical: Insets.i10)
-                          .decorated(
-                          color: appCtrl.appTheme.primary.withOpacity(.2),
-                          borderRadius: BorderRadius.circular(AppRadius.r8))
-                          .alignment(Alignment.center),
-                    ).paddingOnly(bottom: Insets.i8)
+                  if(widget.document!["type"] == MessageType.gif.name)
+                    InkWell(onLongPress: () {
+                      showDialog(
+                          context: Get.context!,
+                          builder: (BuildContext context) => chatCtrl
+                              .buildPopupDialog(context, widget.document!));
+                    } ,child: Image.network(widget.document!["content"],height: Sizes.s100,))
+
                 ],
               ),
+              if (widget.document!["type"] == MessageType.messageType.name)
+                Align(
+                  alignment: Alignment.center,
+                  child: Text(widget.document!["content"])
+                      .paddingSymmetric(
+                      horizontal: Insets.i8, vertical: Insets.i10)
+                      .decorated(
+                      color: appCtrl.appTheme.primary.withOpacity(.2),
+                      borderRadius: BorderRadius.circular(AppRadius.r8))
+                      .alignment(Alignment.center),
+                ).paddingOnly(bottom: Insets.i8)
             ]),
       );
     });

@@ -1,5 +1,4 @@
 import 'package:flutter/gestures.dart';
-import 'package:pin_input_text_field/pin_input_text_field.dart';
 import 'package:pinput/pinput.dart';
 
 import '../../../../config.dart';
@@ -120,18 +119,17 @@ class OtpBody extends StatelessWidget {
 
                 textAlign: TextAlign.center,
                 text: TextSpan(
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {},
+                   
                     text: "Didn't Receive Code?",
                     style: AppCss.poppinsMedium16
                         .textColor(appCtrl.appTheme.txt),
                     children: <TextSpan>[
                       TextSpan(
                           recognizer: TapGestureRecognizer()
-                            ..onTap = () {},
+                            ..onTap = () => otpCtrl.onVerifyCode(otpCtrl.mobileNumber, otpCtrl.dialCode),
                           text: " Resend",
                           style: AppCss.poppinsMedium16
-                              .textColor(appCtrl.appTheme.txt))
+                              .textColor(appCtrl.appTheme.txt).textDecoration(TextDecoration.underline))
                     ])).alignment(Alignment.center)
 
       ]);

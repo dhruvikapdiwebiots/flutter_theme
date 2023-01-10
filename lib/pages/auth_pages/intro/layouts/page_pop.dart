@@ -17,24 +17,16 @@ final int? index,selectedIndex;
                 width: MediaQuery.of(context).size.width - 100,
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          AnimatedContainer(
-                            duration: const Duration(seconds: 1),
-                            height: index == selectedIndex ?  Sizes.s250 :0,
-                            width: index == selectedIndex ? Sizes.s250:0,
-                            decoration: BoxDecoration(color: appCtrl.appTheme.borderGray,shape: BoxShape.circle),
-                          ).paddingAll(Insets.i40).decorated(color: appCtrl.appTheme.grey.withOpacity(.2),shape: BoxShape.circle),
-                          Image.asset(
-                            imageData.assetsImage,
-                            fit: BoxFit.fill,
-                          ),
-                        ],
-                      ),
-                      const VSpace(Sizes.s22),
+                      SvgPicture.asset(
+                        imageData.assetsImage,
+                        height: Sizes.s400,
+                        fit: BoxFit.fill,
+                      ).paddingSymmetric(vertical: Insets.i10),
+                      const VSpace(Sizes.s25),
+                      Image.asset(imageAssets.line),
+                      const VSpace(Sizes.s25),
 
                       AnimatedOpacity(
                         duration: const Duration(seconds: 2),
@@ -42,8 +34,8 @@ final int? index,selectedIndex;
                         child: Text(
                           imageData.subtitleText.tr,
                           textAlign: TextAlign.center,
-                          style: AppCss.poppinsBold20
-                              .textColor(appCtrl.appTheme.txt).letterSpace(.2).textHeight(1.2)
+                          style: AppCss.poppinsMedium14
+                              .textColor(appCtrl.appTheme.txt).letterSpace(.2).textHeight(1.3)
                         ),
                       ),
                     ]),

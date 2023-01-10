@@ -209,72 +209,13 @@ class BroadcastChatController extends GetxController {
   void onSendMessage(String content, MessageType type) async {
     log("pData : ${pData.length}");
     if (content.trim() != '') {
-
       textEditingController.clear();
+      await saveMessageInLoop(content, type);
+      await Future.delayed(Durations.s4);
+      log("newpData : $newpData");
 
 
-      pData.asMap().entries.forEach((element) async {
-        log("cha : ${element.value["chatId"]}");
-        if (element.value["chatId"] != null) {
-          newpData.add(element.value);
-          await FirebaseFirestore.instance
-              .collection("messages")
-              .doc(element.value["chatId"])
-              .collection("chat")
-              .add({
-            'sender': userData["id"],
-            'receiver': element.value["id"],
-            'content': content,
-            "chatId": element.value["chatId"],
-            'type': type.name,
-            'messageType': "sender",
-            "isBlock": false,
-            "isSeen": false,
-            "isBroadcast": true,
-            "blockBy": "",
-            "blockUserId": "",
-            'timestamp': DateTime
-                .now()
-                .millisecondsSinceEpoch
-                .toString(),
-          }).then((value)async {
-            await ChatMessageApi().saveMessageInUserCollection(
-                element.value["id"], element.value["id"], element.value["chatId"], content,isBroadcast: true,userData["id"]);
-          });
-        }else{
-          final now = DateTime.now();
-          String? newChatId = now.microsecondsSinceEpoch.toString();
-          update();
-          element.value["chatId"] = newChatId;
-          await FirebaseFirestore.instance
-              .collection("messages")
-              .doc(element.value["chatId"])
-              .collection("chat")
-              .add({
-            'sender': userData["id"],
-            'receiver': element.value["id"],
-            'content': content,
-            "chatId": element.value["chatId"],
-            'type': type.name,
-            'messageType': "sender",
-            "isBlock": false,
-            "isSeen": false,
-            "isBroadcast": true,
-            "blockBy": "",
-            "blockUserId": "",
-            'timestamp': DateTime
-                .now()
-                .millisecondsSinceEpoch
-                .toString(),
-          }).then((value)async {
-            newpData.add(element.value);
-            await ChatMessageApi().saveMessageInUserCollection(
-                element.value["id"], element.value["id"], element.value["chatId"], content,isBroadcast: true,userData["id"]);
-          });
-        }
-      });
-
-      FirebaseFirestore.instance
+      await FirebaseFirestore.instance
           .collection('users')
           .doc(userData["id"])
           .collection("chats")
@@ -287,6 +228,7 @@ class BroadcastChatController extends GetxController {
             .collection("chats")
             .doc(snap.docs[0].id)
             .update({
+          "receiverId": newpData,
           "updateStamp": DateTime.now().millisecondsSinceEpoch.toString(),
           "lastMessage": content
         });
@@ -299,7 +241,7 @@ class BroadcastChatController extends GetxController {
           .add({
         'sender': userData["id"],
         'senderName': userData["name"],
-        'receiver': pData,
+        'receiver': newpData,
         'content': content,
         "broadcastId": pId,
         'type': type.name,
@@ -315,10 +257,78 @@ class BroadcastChatController extends GetxController {
             .get();
       });
 
-
-
       Get.forceAppUpdate();
     }
+  }
+
+  saveMessageInLoop(String content, MessageType type) async {
+    pData.asMap().entries.forEach((element) async {
+      log("cha : ${element.value["chatId"]}");
+      if (element.value["chatId"] != null) {
+        newpData.add(element.value);
+        update();
+        await FirebaseFirestore.instance
+            .collection("messages")
+            .doc(element.value["chatId"])
+            .collection("chat")
+            .add({
+          'sender': userData["id"],
+          'receiver': element.value["id"],
+          'content': content,
+          "chatId": element.value["chatId"],
+          'type': type.name,
+          'messageType': "sender",
+          "isBlock": false,
+          "isSeen": false,
+          "isBroadcast": true,
+          "blockBy": "",
+          "blockUserId": "",
+          'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+        }).then((value) async {
+          await ChatMessageApi().saveMessageInUserCollection(
+              element.value["id"],
+              element.value["id"],
+              element.value["chatId"],
+              content,
+              isBroadcast: true,
+              userData["id"]);
+        });
+      } else {
+        final now = DateTime.now();
+        String? newChatId = now.microsecondsSinceEpoch.toString();
+        update();
+        element.value["chatId"] = newChatId;
+        await FirebaseFirestore.instance
+            .collection("messages")
+            .doc(element.value["chatId"])
+            .collection("chat")
+            .add({
+          'sender': userData["id"],
+          'receiver': element.value["id"],
+          'content': content,
+          "chatId": element.value["chatId"],
+          'type': type.name,
+          'messageType': "sender",
+          "isBlock": false,
+          "isSeen": false,
+          "isBroadcast": true,
+          "blockBy": "",
+          "blockUserId": "",
+          'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+        }).then((value) async {
+          newpData.add(element.value);
+          update();
+          await ChatMessageApi().saveMessageInUserCollection(
+              element.value["id"],
+              element.value["id"],
+              element.value["chatId"],
+              content,
+              isBroadcast: true,
+              userData["id"]);
+        });
+      }
+    });
+    log("loop : $newpData");
   }
 
   //delete chat layout

@@ -29,6 +29,7 @@ class _ChatState extends State<Chat>
     if (state == AppLifecycleState.resumed) {
       firebaseCtrl.setIsActive();
       chatCtrl.setTyping();
+      chatCtrl.setTyping();
     } else {
       firebaseCtrl.setLastSeen();
     }

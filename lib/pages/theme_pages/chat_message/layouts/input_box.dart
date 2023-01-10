@@ -17,7 +17,7 @@ class InputBox extends StatelessWidget {
           children: <Widget>[
           const HSpace(Sizes.s15),
             Flexible(
-              child: TextField(
+              child: TextFormField(
                 style:
                     TextStyle(color: appCtrl.appTheme.txt, fontSize: 15.0),
                 controller: chatCtrl.textEditingController,
@@ -27,6 +27,11 @@ class InputBox extends StatelessWidget {
                 ),
                 focusNode: chatCtrl.focusNode,
                 onChanged: (val){
+                  if(val.contains(".gif")){
+
+                    chatCtrl.onSendMessage(val, MessageType.gif);
+                    chatCtrl.textEditingController.clear();
+                  }
                   chatCtrl.setTyping();
                 },
               ),

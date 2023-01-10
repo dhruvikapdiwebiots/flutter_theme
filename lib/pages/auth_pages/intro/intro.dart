@@ -33,15 +33,21 @@ class _IntroState extends State<Intro> {
             //start button
             Padding(
                 padding:
-                    const EdgeInsets.only(top: Insets.i40, bottom: Insets.i40),
+                    const EdgeInsets.only(top: Insets.i40,),
                 child: Align(
                   alignment: Alignment.center,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       //indicator layout
-                      IndicatorLayout(controller: introCtrl.pageController)
-                          .paddingSymmetric(horizontal: Insets.i15),
+                      Stack(
+alignment: Alignment.bottomLeft,
+                        children: [
+                          Image.asset(imageAssets.wave,height:  Sizes.s180,width: Sizes.s280,),
+                          IndicatorLayout(controller: introCtrl.pageController)
+                              .paddingSymmetric(horizontal: Insets.i15,vertical: Insets.i25),
+                        ],
+                      ),
 
                       Icon(Icons.arrow_forward,
                               color: appCtrl.appTheme.whiteColor)

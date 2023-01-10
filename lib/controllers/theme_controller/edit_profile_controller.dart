@@ -89,6 +89,7 @@ class EditProfileController extends GetxController {
   //update user
   updateUserData() async {
     isLoading = true;
+    log("imageUrl : $imageUrl");
     update();
     final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
     firebaseMessaging.getToken().then((token) async {
@@ -108,7 +109,7 @@ class EditProfileController extends GetxController {
                 .doc(user["id"])
                 .update(
                 {
-                  'image': "",
+                  'image': imageUrl,
                   'name': nameText.text,
                   'status': "Online",
                   "typeStatus": "",
@@ -142,7 +143,7 @@ class EditProfileController extends GetxController {
             .then((value) {
           FirebaseFirestore.instance.collection('users').doc(user["id"]).update(
               {
-                'image': "",
+                'image': imageUrl,
                 'name': nameText.text,
                 'status': "Online",
                 "typeStatus": "",

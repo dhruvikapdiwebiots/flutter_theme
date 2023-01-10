@@ -1,11 +1,13 @@
 import 'dart:io';
 
+import 'package:wechat_assets_picker/wechat_assets_picker.dart';
+
 import '../../../../config.dart';
 
 class CurrentUserStatus extends StatelessWidget {
   final String? currentUserId;
-
-  const CurrentUserStatus({Key? key, this.currentUserId}) : super(key: key);
+final StatusController? statusCtrl;
+  const CurrentUserStatus({Key? key, this.currentUserId,this.statusCtrl}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,22 +20,32 @@ class CurrentUserStatus extends StatelessWidget {
           if (snapshot.data != null) {
             if (!snapshot.data!.docs.isNotEmpty) {
               return CurrentUserEmptyStatus(onTap: () async {
-                File? pickedImage = await pickImageFromGallery(context);
-                if (pickedImage != null) {
-                  Get.toNamed(routeName.confirmationScreen,
-                      arguments: pickedImage);
-                }
+                final List<AssetEntity>? result =
+                await AssetPicker.pickAssets(
+                  context,
+                  pickerConfig: AssetPickerConfig(
+                    maxAssets: 1,
+                    specialPickerType: SpecialPickerType.wechatMoment,
+                  ),
+                );
+                File? videoFile = await result![0].file;
+                statusCtrl!.addStatus(videoFile!,result[0].title!.contains("mp4")? StatusType.video :StatusType.image);
               });
             } else {
               return StatusLayout(snapshot: snapshot);
             }
           } else {
             return CurrentUserEmptyStatus(onTap: () async {
-              File? pickedImage = await pickImageFromGallery(context);
-              if (pickedImage != null) {
-                Get.toNamed(routeName.confirmationScreen,
-                    arguments: pickedImage);
-              }
+              final List<AssetEntity>? result =
+              await AssetPicker.pickAssets(
+                context,
+                pickerConfig: AssetPickerConfig(
+                  maxAssets: 1,
+                  specialPickerType: SpecialPickerType.wechatMoment,
+                ),
+              );
+              File? videoFile = await result![0].file;
+              statusCtrl!.addStatus(videoFile!,result[0].title!.contains("mp4")? StatusType.video :StatusType.image);
             });
           }
         });

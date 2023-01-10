@@ -4,6 +4,8 @@ class ImageAssets{
   final String login1 = 'assets/images/login1.png';
   final String otp = 'assets/images/otp.png';
   final String intro = 'assets/images/intro.png';
+  final String line = 'assets/images/line.png';
+  final String wave = 'assets/images/wave.png';
   final String intro1 = 'assets/images/intro1.png';
   final String intro2 = 'assets/images/intro2.png';
   final String facebook = 'assets/images/facebook.png';

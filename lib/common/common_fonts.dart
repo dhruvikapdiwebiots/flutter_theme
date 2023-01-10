@@ -1,11 +1,13 @@
 import 'package:flutter_theme/config.dart';
 
 class Fonts{
-  final title = "title";
+  final intro1 = "intro1";
+  final intro2 = "intro2";
+  final intro3 = "intro3";
   final chatter = "chatter";
-  final subtitle = "subtitle";
-  final subtitle2 = "subtitle2";
-  final subtitle3 = "subtitle3";
+  final introDesc1 = "introDesc1";
+  final introDesc2 = "introDesc2";
+  final introDesc3 = "introDesc3";
   final skip = "skip";
   final start = "start";
   final welcomeBack = "welcomeBack";

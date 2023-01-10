@@ -18,7 +18,8 @@ class GroupReceiverContent extends StatelessWidget {
             .snapshots(),
         builder: (context, snapshot) {
           return Container(
-            padding: const EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+
+            padding: const EdgeInsets.fromLTRB(Insets.i15, 10.0, Insets.i15, 10.0),
             width: 220.0,
             decoration: const BoxDecoration(
                 color: Color(0xffF2F2F2),
@@ -26,7 +27,7 @@ class GroupReceiverContent extends StatelessWidget {
                     topRight: Radius.circular(Insets.i20),
                     bottomLeft: Radius.circular(Insets.i20),
                     bottomRight: Radius.circular(Insets.i20))),
-            margin: const EdgeInsets.only(left: 2.0),
+            margin: const EdgeInsets.symmetric(vertical: Insets.i10,horizontal: Insets.i5),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -60,8 +61,8 @@ class GroupReceiverContent extends StatelessWidget {
                       style: AppCss.poppinsMedium12
                           .textColor(appCtrl.appTheme.primary),
                     )
-                  ],
-                ),
+                  ]
+                )
               ],
             ),
           );

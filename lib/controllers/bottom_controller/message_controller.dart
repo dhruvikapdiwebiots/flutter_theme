@@ -8,9 +8,11 @@ class MessageController extends GetxController {
   User? currentUser;
   dynamic storageUser;
   bool isHomePageSelected = true;
+
   List contactList = [];
   List<Contact> contactUserList = [];
   List contactExistList = [];
+  int unSeen = 0;
   bool isLoading = false;
   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
