@@ -32,8 +32,7 @@ class Otp extends StatelessWidget {
                       width: MediaQuery.of(context).size.width,
                     ),
                     const VSpace(Sizes.s15),
-                    const Padding(
-                        padding: EdgeInsets.all(Insets.i40), child: OtpBody())
+                   const OtpBody()
                   ],
                 ),
               ),

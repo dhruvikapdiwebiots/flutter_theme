@@ -26,6 +26,7 @@ class ChatMessageApi{
           "isSeen": false,
           "isGroup": false,
           "isBlock": isBlock ?? false,
+          "isOneToOne": true,
           "isBroadcast": isBroadcast,
           "blockBy": isBlock ? id :"",
           "blockUserId":  isBlock ? receiverId :"",
@@ -33,29 +34,6 @@ class ChatMessageApi{
         }).then((value) {
           chatCtrl.textEditingController.text = "";
           chatCtrl.update();
-        });
-      } else {
-        dynamic user = appCtrl.storage.read(session.user);
-
-        FirebaseFirestore.instance.collection('users').doc(id).collection("chats").add({
-          "isSeen": false,
-          'receiverId': receiverId,
-          "senderId": senderId,
-          'chatId': newChatId,
-          'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-          "lastMessage": content,
-          "isGroup": false,
-          "isBlock": isBlock ?? false,
-          "isBroadcast": isBroadcast,
-          "isOneToOne": true,
-          "blockBy": isBlock ? id :"",
-          "blockUserId":  isBlock ? receiverId :"",
-          "groupId": "",
-          "updateStamp": DateTime.now().millisecondsSinceEpoch.toString()
-        }).then((value) {
-          chatCtrl.isLoading = false;
-          chatCtrl.update();
-          Get.forceAppUpdate();
         });
       }
     }).then((value) {

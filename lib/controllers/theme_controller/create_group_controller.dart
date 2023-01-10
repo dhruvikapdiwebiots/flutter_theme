@@ -163,92 +163,33 @@ class CreateGroupController extends GetxController {
         var data = {"broadcastId": broadcastId, "data": value.docs[0].data()};
         Get.toNamed(routeName.broadcastChat, arguments: data);
       });
-
-     /* await FirebaseFirestore.instance
-          .collection('broadcast')
-          .doc(broadcastId)
-          .set({
-        "users": newContact,
-        "broadcastId": broadcastId,
-        "createdBy": user,
-        'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-      });
-
-      FirebaseFirestore.instance
-          .collection('broadcastMessage')
-          .doc(broadcastId)
-          .collection("chat")
-          .add({
-        'sender': user["id"],
-        'senderName': user["name"],
-        'receiver': newContact,
-        'content': "You created this broadcast",
-        "broadcastId": broadcastId,
-        'type': MessageType.messageType.name,
-        'messageType': "sender",
-        "status": "",
-        'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-      });
-
-      await FirebaseFirestore.instance
-          .collection("broadcast")
-          .doc(broadcastId)
-          .get()
-          .then((value) async {
-        await FirebaseFirestore.instance.collection('contacts').add({
-          'sender': {
-            "id": user['id'],
-            "name": user['name'],
-            "phone": user["phone"]
-          },
-          'receiver': null,
-          'broadcastId': broadcastId,
-          'receiverId': newContact,
-          'senderPhone': user["phone"],
-          'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-          "lastMessage": "",
-          "isBroadcast": true,
-          "isGroup": false,
-          "isBlock": false,
-          "updateStamp": DateTime.now().millisecondsSinceEpoch.toString()
-        });
-      }).then((value) {
-        selectedContact = [];
-        newContact = [];
-        update();
-      });
-      isLoading = false;
-      update();
-      Get.back();
-      FirebaseFirestore.instance
-          .collection('contacts')
-          .where("broadcastId", isEqualTo: broadcastId)
-          .get()
-          .then((value) {
-        var data = {"broadcastId": broadcastId, "data": value.docs[0].data()};
-        Get.toNamed(routeName.broadcastChat, arguments: data);
-      });*/
     }
   }
 
   Future<List> checkChatAvailable() async {
     final user = appCtrl.storage.read(session.user);
     selectedContact.asMap().entries.forEach((e)async{
-      log("e.value : ${e.value}");
+      log("e.value : ${e.value["chatId"]}");
       await FirebaseFirestore.instance.collection("users").doc(user["id"]).collection("chats").where("isOneToOne",isEqualTo: true).get().then((value){
-        log("value.docs.isNotEmpty : ${value.docs.isNotEmpty}");
+        log("value.docs.isNotEmpty : ${value.docs}");
         if(value.docs.isNotEmpty) {
           value.docs
               .asMap()
               .entries
               .forEach((element) {
             log("element.value : ${element.value.data()}");
-            if (element.value.data()["senderPhone"] == user["phone"] &&
-                element.value.data()["receiverPhone"] ==
-                    e.value["phone"] ||
-                element.value.data()["senderPhone"] ==
-                    e.value["phone"] &&
-                    element.value.data()["receiverPhone"] == user["phone"]) {
+            log("exist : ${element.value.data()["senderId"] == user["id"] &&
+                element.value.data()["receiverId"] ==
+                    e.value["id"] ||
+                element.value.data()["senderId"] ==
+                    e.value["id"] &&
+                    element.value.data()["receiverId"] == user["id"]}");
+            if (element.value.data()["senderId"] == user["id"] &&
+                element.value.data()["receiverId"] ==
+                    e.value["id"] ||
+                element.value.data()["senderId"] ==
+                    e.value["id"] &&
+                    element.value.data()["receiverId"] == user["id"]) {
               e.value["chatId"] = element.value.data()["chatId"];
               update();
               if (!newContact.contains(e.value)) {
@@ -269,7 +210,10 @@ class CreateGroupController extends GetxController {
         }
         update();
       });
+      log("newContact : ${newContact[0]}");
+      log("newContact : ${newContact[1]}");
     });
+
 
     return newContact;
   }

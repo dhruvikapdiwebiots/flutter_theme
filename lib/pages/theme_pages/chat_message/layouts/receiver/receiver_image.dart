@@ -10,10 +10,10 @@ class ReceiverImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(      decoration: BoxDecoration( borderRadius: BorderRadius.circular(AppRadius.r10), color: appCtrl.appTheme.primary,),
-      margin: const EdgeInsets.symmetric(horizontal: Insets.i10,vertical: Insets.i5),
+      padding: const EdgeInsets.symmetric(horizontal: Insets.i5,vertical: Insets.i5),
 
-      child: TextButton(
-          onPressed: onLongPress,
+      child: InkWell(
+          onLongPress: onLongPress,
           child: Stack(
             alignment: Alignment.bottomRight,
             children: [
@@ -24,7 +24,7 @@ class ReceiverImage extends StatelessWidget {
                   placeholder: (context, url) => Container(
                       width: Sizes.s220,
                       height: Sizes.s200,
-                     
+
                       decoration: BoxDecoration(
                         color: appCtrl.appTheme.accent,
                         borderRadius:  BorderRadius.circular(AppRadius.r8),

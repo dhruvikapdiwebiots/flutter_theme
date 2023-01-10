@@ -4,6 +4,7 @@ import 'package:flutter_theme/config.dart';
 
 class OtpController extends GetxController {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  final focusNode = FocusNode();
 
   TextEditingController otp = TextEditingController();
   double val = 0;
@@ -59,40 +60,42 @@ class OtpController extends GetxController {
     isLoading = true;
     update();
 
-    verificationCompleted(AuthCredential phoneAuthCredential) async {
+    verificationCompleted(AuthCredential phoneAuthCredential) {
       firebaseAuth
-          .signInWithCredential(phoneAuthCredential);
+          .signInWithCredential(phoneAuthCredential)
+          .then((UserCredential value) {
+       log("users : $value");
+      }).catchError((error) {
+        showToast("Try again in sometime", Colors.red);
+      });
     }
 
     verificationFailed(FirebaseAuthException authException) {
       showToast(authException.message, Colors.red);
       isCodeSent = false;
-      isLoading = false;
       update();
     }
 
-    codeAutoRetrievalTimeout(String verificationId) {
-      verificationId = verificationId;
+    codeSent(String verificationId, [int? forceResendingToken]) async {
       print(verificationId);
-      print("Timout");
+      verificationCode = verificationId;
+     update();
+    }
+    codeAutoRetrievalTimeout(String verificationId) {
+      print(verificationId);
+
+      verificationCode = verificationId;
       update();
     }
 
     //   Change country code
-    firebaseAuth.verifyPhoneNumber(
-        phoneNumber: "$dialCode$mobileNumber",
-        verificationCompleted: (PhoneAuthCredential credential) async {
-          // ANDROID ONLY!
 
-          // Sign the user in (or link) with the auto-generated credential
-          await firebaseAuth.signInWithCredential(credential);
-        },
+    firebaseAuth.verifyPhoneNumber(
+        phoneNumber: "$dialCode $mobileNumber",
         timeout: const Duration(seconds: 60),
+        verificationCompleted: verificationCompleted,
         verificationFailed: verificationFailed,
-        codeSent: (String verificationId, int? resendToken) async {
-          verificationCode = verificationId;
-          update();
-        },
+        codeSent: codeSent,
         codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
     isLoading = false;
     update();
@@ -103,9 +106,8 @@ class OtpController extends GetxController {
     dismissKeyboard();
     isLoading = true;
     update();
-    PhoneAuthCredential authCredential = PhoneAuthProvider.credential(
+    AuthCredential authCredential = PhoneAuthProvider.credential(
         verificationId: verificationCode!, smsCode: otp.text);
-    log("authCredential : ${authCredential.smsCode}");
     log("authCredential : ${authCredential.accessToken}");
     firebaseAuth
         .signInWithCredential(authCredential)

@@ -36,7 +36,7 @@ class ContactLayout extends StatelessWidget {
                   ),
                   Divider(
                       height: 7,
-                      color: appCtrl.appTheme.whiteColor.withOpacity(.2)),
+                      color: appCtrl.appTheme.whiteColor),
                   // ignore: deprecated_member_use
                   TextButton(
                       onPressed: () {},

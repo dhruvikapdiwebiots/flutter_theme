@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dartx/dartx_io.dart';
 import 'package:flutter_contacts/contact.dart';
 import 'package:flutter_theme/config.dart';
+import 'package:flutter_theme/pages/theme_pages/broadcast_chat/layouts/broadcast_delete_alert.dart';
 import 'package:flutter_theme/pages/theme_pages/broadcast_chat/layouts/broadcast_sender.dart';
 import 'package:flutter_theme/pages/theme_pages/chat_message/chat_message_api.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -22,6 +24,7 @@ class BroadcastChatController extends GetxController {
       blockBy;
   dynamic message, userData, broadData;
   List pData = [];
+  List newpData = [];
   bool positionStreamStarted = false;
   bool isUserAvailable = true;
   XFile? imageFile;
@@ -204,64 +207,72 @@ class BroadcastChatController extends GetxController {
 
   // SEND MESSAGE CLICK
   void onSendMessage(String content, MessageType type) async {
+    log("pData : ${pData.length}");
     if (content.trim() != '') {
+
       textEditingController.clear();
-      for (var i = 0; i < pData.length; i++) {
-        if (pData[i]["chatId"] != null) {
+
+
+      pData.asMap().entries.forEach((element) async {
+        log("cha : ${element.value["chatId"]}");
+        if (element.value["chatId"] != null) {
+          newpData.add(element.value);
           await FirebaseFirestore.instance
-              .collection('messages')
-              .doc(pData[i]["chatId"])
+              .collection("messages")
+              .doc(element.value["chatId"])
               .collection("chat")
               .add({
             'sender': userData["id"],
-            'receiver': pData[i],
+            'receiver': element.value["id"],
             'content': content,
-            "chatId": pData[i]["chatId"],
+            "chatId": element.value["chatId"],
             'type': type.name,
             'messageType': "sender",
             "isBlock": false,
             "isSeen": false,
+            "isBroadcast": true,
             "blockBy": "",
             "blockUserId": "",
-            'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-          }).then((snap) async {
-
+            'timestamp': DateTime
+                .now()
+                .millisecondsSinceEpoch
+                .toString(),
+          }).then((value)async {
             await ChatMessageApi().saveMessageInUserCollection(
-                pData[i]["id"], userData["id"], pData[i]["chatId"], content,isBroadcast: true,userData["id"]);
+                element.value["id"], element.value["id"], element.value["chatId"], content,isBroadcast: true,userData["id"]);
           });
-        } else {
+        }else{
           final now = DateTime.now();
           String? newChatId = now.microsecondsSinceEpoch.toString();
           update();
-          pData[i]["chatId"] = newChatId;
+          element.value["chatId"] = newChatId;
           await FirebaseFirestore.instance
-              .collection('messages')
-              .doc(newChatId)
+              .collection("messages")
+              .doc(element.value["chatId"])
               .collection("chat")
               .add({
             'sender': userData["id"],
-            'receiver': pId,
+            'receiver': element.value["id"],
             'content': content,
-            "chatId": newChatId,
+            "chatId": element.value["chatId"],
             'type': type.name,
             'messageType': "sender",
             "isBlock": false,
             "isSeen": false,
-            "isBroadcast": false,
+            "isBroadcast": true,
             "blockBy": "",
             "blockUserId": "",
-            'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-          }).then((snap) async {
+            'timestamp': DateTime
+                .now()
+                .millisecondsSinceEpoch
+                .toString(),
+          }).then((value)async {
+            newpData.add(element.value);
             await ChatMessageApi().saveMessageInUserCollection(
-                pData[i]["id"], userData["id"], pData[i]["chatId"], content,isBroadcast: true,userData["id"]);
+                element.value["id"], element.value["id"], element.value["chatId"], content,isBroadcast: true,userData["id"]);
           });
         }
-      }
-
-      FirebaseFirestore.instance
-          .collection("broadcast")
-          .doc(pId)
-          .update({"users": pData});
+      });
 
       FirebaseFirestore.instance
           .collection('users')
@@ -276,7 +287,6 @@ class BroadcastChatController extends GetxController {
             .collection("chats")
             .doc(snap.docs[0].id)
             .update({
-          "receiverId": pData,
           "updateStamp": DateTime.now().millisecondsSinceEpoch.toString(),
           "lastMessage": content
         });
@@ -305,6 +315,8 @@ class BroadcastChatController extends GetxController {
             .get();
       });
 
+
+
       Get.forceAppUpdate();
     }
   }
@@ -312,7 +324,7 @@ class BroadcastChatController extends GetxController {
   //delete chat layout
   Widget buildPopupDialog(
       BuildContext context, DocumentSnapshot documentReference) {
-    return DeleteAlert(
+    return BroadCastDeleteAlert(
       documentReference: documentReference,
     );
   }

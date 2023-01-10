@@ -25,8 +25,6 @@ class DashboardController extends GetxController with GetSingleTickerProviderSta
   List<Widget> widgetOptions = <Widget>[
     const Message(),
     const StatusList(),
-
-    Setting(),
   ];
 
   // Platform messages are asynchronous, so we initialize in an async method.

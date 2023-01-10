@@ -51,7 +51,7 @@ class ContactListTile extends StatelessWidget {
               style: TextStyle(
                   height: 1.4,
                   fontWeight: FontWeight.w500,
-                  color: appCtrl.appTheme.accent),
+                  color: appCtrl.appTheme.whiteColor),
             )));
   }
 }
