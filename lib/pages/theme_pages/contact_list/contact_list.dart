@@ -130,7 +130,7 @@ class ContactList extends StatelessWidget {
                                                       backgroundColor:
                                                           const Color(
                                                               0xffE6E6E6),
-                                                      radius: 30,
+                                                      radius: Sizes.s20,
                                                       backgroundImage:
                                                           NetworkImage(item
                                                               .userTitle![index]

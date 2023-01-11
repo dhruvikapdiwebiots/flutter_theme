@@ -26,7 +26,7 @@ class GroupInputBox extends StatelessWidget {
                 log("message :${chatCtrl.textEditingController.text}");
               },
               onSaved: (val){
-                log("message :${val}");
+                log("message :$val");
               },
               maxLines: 5,
               decoration: InputDecoration.collapsed(

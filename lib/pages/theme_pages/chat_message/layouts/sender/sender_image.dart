@@ -51,7 +51,7 @@ class SenderImage extends StatelessWidget {
                     size: Sizes.s15,
                     color: document!['isSeen'] == true
                         ? appCtrl.appTheme.secondary
-                        : appCtrl.appTheme.whiteColor)
+                        : appCtrl.appTheme.white)
               ],
             ).marginSymmetric(horizontal: Insets.i10,vertical: Insets.i10)
           ],

@@ -18,44 +18,46 @@ class _ChatCardState extends State<ChatCard> {
           overscroll.disallowIndicator();
           return false;
         },
-        child: ListView(
-          children: [
-            StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection("users").doc(messageCtrl.currentUserId).collection("chats")
-                    .orderBy("updateStamp", descending: true)
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(
-                        child: CircularProgressIndicator(
-                          valueColor:
-                          AlwaysStoppedAnimation<Color>(appCtrl.appTheme.primary),
-                        )).height(MediaQuery.of(context).size.height).expanded();
-                  } else {
-                    List message = MessageFirebaseApi().chatListWidget(snapshot);
-                    return !snapshot.hasData ? Center(
-                        child: CircularProgressIndicator(
-                          valueColor:
-                          AlwaysStoppedAnimation<Color>(appCtrl.appTheme.primary),
-                        )).height(MediaQuery.of(context).size.height).expanded():
-                        ListView.builder(
-                      shrinkWrap: true,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection("users").doc(messageCtrl.currentUserId).collection("chats")
+                      .orderBy("updateStamp", descending: true)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(
+                          child: CircularProgressIndicator(
+                            valueColor:
+                            AlwaysStoppedAnimation<Color>(appCtrl.appTheme.primary),
+                          )).height(MediaQuery.of(context).size.height).expanded();
+                    } else {
+                      List message = MessageFirebaseApi().chatListWidget(snapshot);
+                      return !snapshot.hasData ? Center(
+                          child: CircularProgressIndicator(
+                            valueColor:
+                            AlwaysStoppedAnimation<Color>(appCtrl.appTheme.primary),
+                          )).height(MediaQuery.of(context).size.height).expanded():
+                          ListView.builder(
+                        shrinkWrap: true,
 physics: const NeverScrollableScrollPhysics(),
-                      padding: const EdgeInsets.all(10.0),
-                      itemBuilder: (context, index) {
-                        return LoadUser(
-                            document: message[index],
-                            blockBy:messageCtrl.storageUser["id"],
-                            currentUserId:
-                            messageCtrl.storageUser["id"]);
-                      },
-                      itemCount: message.length,
-                    );
-                    return Container();
-                  }
-                }),
-          ],
+                        padding: const EdgeInsets.all(10.0),
+                        itemBuilder: (context, index) {
+                          return LoadUser(
+                              document: message[index],
+                              blockBy:messageCtrl.storageUser["id"],
+                              currentUserId:
+                              messageCtrl.storageUser["id"]);
+                        },
+                        itemCount: message.length,
+                      );
+                      return Container();
+                    }
+                  }),
+            ],
+          ),
         ),
       );
     });

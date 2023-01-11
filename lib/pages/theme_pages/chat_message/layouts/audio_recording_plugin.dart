@@ -213,7 +213,7 @@ class AudioRecordingPluginState extends State<AudioRecordingPlugin> {
                       height: Sizes.s50,
                       width: Sizes.s50,
                       decoration: BoxDecoration(
-                        color: appCtrl.appTheme.primary,
+                        color: appCtrl.isTheme ?appCtrl.appTheme.white : appCtrl.appTheme.primary,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(100)),
                       ),
@@ -221,17 +221,17 @@ class AudioRecordingPluginState extends State<AudioRecordingPlugin> {
                           onPressed: getRecorderFn(),
                           icon: mRecorder != null
                               ? mRecorder!.isRecording
-                                  ? const Icon(Icons.stop, color: Colors.white)
-                                  : const Icon(Icons.settings_voice,
-                                      color: Colors.white)
-                              : const Icon(Icons.settings_voice,
-                                  color: Colors.white))),
-                  Text(recordingTime.toString()),
+                                  ?  Icon(Icons.stop, color: appCtrl.appTheme.whiteColor)
+                                  :  Icon(Icons.settings_voice,
+                                      color: appCtrl.appTheme.whiteColor)
+                              :  Icon(Icons.settings_voice,
+                                  color: appCtrl.appTheme.whiteColor))),
+                  Text(recordingTime.toString(),style: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.whiteColor),),
                   Container(
                       height: 50,
                       width: 50,
                       decoration: BoxDecoration(
-                        color: appCtrl.appTheme.primary,
+                        color:appCtrl.isTheme ?appCtrl.appTheme.white :  appCtrl.appTheme.primary,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(100)),
                       ),
@@ -244,7 +244,7 @@ class AudioRecordingPluginState extends State<AudioRecordingPlugin> {
                                     ? Icons.stop
                                     : Icons.play_arrow
                                 : Icons.play_arrow,
-                            color: Colors.white,
+                            color:appCtrl.appTheme.whiteColor,
                           ))),
 
                 ])),
@@ -252,7 +252,7 @@ class AudioRecordingPluginState extends State<AudioRecordingPlugin> {
         CommonButton(title: fonts.done.tr,style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.whiteColor),onTap: (){
           stopPlayer();
           Get.back(result: mPath);
-        },),
+        },color:appCtrl.isTheme ?appCtrl.appTheme.white : appCtrl.appTheme.primary,),
         if (isLoading)
           Padding(
             padding: const EdgeInsets.all(10),

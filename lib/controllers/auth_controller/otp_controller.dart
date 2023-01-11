@@ -69,23 +69,21 @@ class OtpController extends GetxController {
           .then((UserCredential value) {
        log("users : $value");
       }).catchError((error) {
-        showToast("Try again in sometime", Colors.red);
+        showToast("Try again in sometime", appCtrl.appTheme.redColor);
       });*/
     }
 
     verificationFailed(FirebaseAuthException authException) {
-      showToast(authException.message, Colors.red);
+      showToast(authException.message, appCtrl.appTheme.redColor);
       isCodeSent = false;
       update();
     }
 
     codeSent(String verificationId, [int? forceResendingToken]) async {
-      print(verificationId);
       verificationCode = verificationId;
      update();
     }
     codeAutoRetrievalTimeout(String verificationId) {
-      print(verificationId);
 
       verificationCode = verificationId;
       update();
@@ -152,13 +150,13 @@ class OtpController extends GetxController {
       } else {
         isLoading = false;
         update();
-        showToast(fonts.otpError.tr, Colors.red);
+        showToast(fonts.otpError.tr, appCtrl.appTheme.redColor);
       }
     }).catchError((error) {
       isLoading = false;
       update();
       log("err : ${error.toString()}");
-      showToast(error.toString(), Colors.red);
+      showToast(error.toString(), appCtrl.appTheme.redColor);
     });
   }
 

@@ -17,17 +17,18 @@ class GroupChatMessageAppBar extends StatelessWidget with PreferredSizeWidget {
     return AppBar(
         automaticallyImplyLeading: false,
         titleSpacing: 0,
-        leading: Icon(Icons.arrow_back, color: appCtrl.appTheme.whiteColor,)
+        backgroundColor: appCtrl.appTheme.primary,
+        leading: Icon(Icons.arrow_back, color: appCtrl.appTheme.white,)
             .inkWell(onTap: () => Get.back()),
         actions: [
-          Icon(Icons.video_call, color: appCtrl.appTheme.whiteColor,size: Sizes.s20),
+          Icon(Icons.video_call, color: appCtrl.appTheme.white,size: Sizes.s20),
           const HSpace(Sizes.s15),
           Icon(
             Icons.call,
-            color: appCtrl.appTheme.whiteColor,size: Sizes.s20
+            color: appCtrl.appTheme.white,size: Sizes.s20
           ),
           const HSpace(Sizes.s10),
-          Icon(Icons.more_vert, color: appCtrl.appTheme.whiteColor,size: Sizes.s20).paddingSymmetric(horizontal: Insets.i5),
+          Icon(Icons.more_vert, color: appCtrl.appTheme.white,size: Sizes.s20).paddingSymmetric(horizontal: Insets.i5),
         ],
         title: Row(
           children: [
@@ -46,7 +47,7 @@ class GroupChatMessageAppBar extends StatelessWidget with PreferredSizeWidget {
                 errorWidget: (context, url, error) => Image.asset(
                       imageAssets.user,
                   height: Sizes.s15,
-                      color: appCtrl.appTheme.whiteColor,
+                      color: appCtrl.appTheme.white,
                     ).paddingAll(Insets.i15).decorated(
                         color: appCtrl.appTheme.grey.withOpacity(.4),
                         shape: BoxShape.circle)),
@@ -56,7 +57,7 @@ class GroupChatMessageAppBar extends StatelessWidget with PreferredSizeWidget {
                 name ?? "",
                 textAlign: TextAlign.center,
                 style: AppCss.poppinsblack14
-                    .textColor(appCtrl.appTheme.whiteColor),
+                    .textColor(appCtrl.appTheme.white),
               ),
               const VSpace(Sizes.s6),
               const GroupUserLastSeen()

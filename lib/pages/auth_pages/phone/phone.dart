@@ -60,9 +60,10 @@ class Phone extends StatelessWidget {
                                 data: ThemeData(
                                     dialogTheme: DialogTheme(
                                         backgroundColor:
-                                            appCtrl.appTheme.whiteColor)),
+                                            appCtrl.appTheme.white)),
                                 child: Expanded(
                                     child: InternationalPhoneNumberInput(
+                                      textStyle: AppCss.poppinsMedium16.textColor(appCtrl.appTheme.txt),
                                   onInputChanged: (PhoneNumber number) {
                                     phoneCtrl.dialCode = number.dialCode!;
                                     phoneCtrl.update();
@@ -87,7 +88,7 @@ class Phone extends StatelessWidget {
                                   ignoreBlank: false,
                                   autoValidateMode: AutovalidateMode.disabled,
                                   selectorTextStyle:
-                                      const TextStyle(color: Colors.black),
+                                       TextStyle(color: appCtrl.appTheme.txt ),
                                   initialValue: phoneCtrl.number,
                                   textFieldController: phoneCtrl.phone,
                                   scrollPadding: EdgeInsets.zero,
@@ -110,7 +111,7 @@ class Phone extends StatelessWidget {
                           ).paddingSymmetric(horizontal: Insets.i15).decorated(
                               border: Border(
                                   bottom: BorderSide(
-                                      color: appCtrl.appTheme.primary))),
+                                      color:appCtrl.isTheme ? appCtrl.appTheme.white : appCtrl.appTheme.primary))),
                           const VSpace(Sizes.s10),
                           if (phoneCtrl.mobileNumber)
                             AnimatedOpacity(
@@ -125,6 +126,7 @@ class Phone extends StatelessWidget {
                               title: fonts.requestOTP.tr,
                               radius: AppRadius.r50,
                               height: Sizes.s50,
+                              color: appCtrl.isTheme ? appCtrl.appTheme.white : appCtrl.appTheme.primary,
                               onTap: () => phoneCtrl.checkValidation(),
                               style: AppCss.poppinsMedium16
                                   .textColor(appCtrl.appTheme.whiteColor)),

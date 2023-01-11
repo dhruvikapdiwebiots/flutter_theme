@@ -22,7 +22,7 @@ class GroupAudioDoc extends StatelessWidget {
               margin: const EdgeInsets.symmetric(vertical: Insets.i10),
               padding: const EdgeInsets.symmetric(vertical: Insets.i10),
               decoration: BoxDecoration(
-                color: appCtrl.appTheme.primary,
+                color:appCtrl.isTheme ?appCtrl.appTheme.white :  appCtrl.appTheme.primary,
                 borderRadius: BorderRadius.circular(AppRadius.r15),
               ),
               width: Sizes.s250,
@@ -50,20 +50,20 @@ class GroupAudioDoc extends StatelessWidget {
                           style: TextStyle(
                               height: 1.4,
                               fontWeight: FontWeight.w700,
-                              color: appCtrl.appTheme.whiteColor),
+                              color: appCtrl.appTheme.white),
                         ),
                       ),
                     ),
 
                     Text(DateFormat('HH:mm a').format(
                         DateTime.fromMillisecondsSinceEpoch(
-                            int.parse(document!['timestamp']))),style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.whiteColor),).marginAll(Insets.i10)
+                            int.parse(document!['timestamp']))),style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.white),).marginAll(Insets.i10)
                   ],
                 ),
                 const VSpace(Sizes.s10),
                 Divider(
                   height: 7,
-                  color: appCtrl.appTheme.whiteColor.withOpacity(.2),
+                  color: appCtrl.appTheme.white.withOpacity(.2),
                 ),
                 // ignore: deprecated_member_use
                 TextButton(
@@ -79,7 +79,7 @@ class GroupAudioDoc extends StatelessWidget {
                     child: Text("DOWNLOAD",
                         style: TextStyle(
                             fontWeight: FontWeight.w700,
-                            color: appCtrl.appTheme.whiteColor)))
+                            color: appCtrl.appTheme.white)))
               ])),
         );
       }

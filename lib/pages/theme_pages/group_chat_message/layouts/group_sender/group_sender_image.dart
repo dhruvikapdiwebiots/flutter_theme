@@ -31,7 +31,7 @@ class GroupSenderImage extends StatelessWidget {
                     height: Sizes.s200,
                     padding: const EdgeInsets.all(70.0),
                     decoration: BoxDecoration(
-                      color: appCtrl.appTheme.accent,
+                      color: appCtrl.isTheme ?appCtrl.appTheme.white : appCtrl.appTheme.accent,
                       borderRadius: const BorderRadius.only(
                           topRight: Radius.circular(Insets.i20),
                           topLeft: Radius.circular(Insets.i20),

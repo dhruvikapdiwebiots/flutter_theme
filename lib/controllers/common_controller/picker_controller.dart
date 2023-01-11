@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter_theme/config.dart';
@@ -8,6 +9,7 @@ class PickerController extends GetxController {
   File? image;
   File? video;
   String? imageUrl;
+  String? audioUrl;
 
 // GET IMAGE FROM GALLERY
   Future getImage(source) async {
@@ -94,13 +96,23 @@ class PickerController extends GetxController {
   }
 
   Future<String> uploadAudio(File file, {String? fileNameText}) async {
+    log("message");
+    log("message ");
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     Reference reference =
         FirebaseStorage.instance.ref().child(fileNameText ?? fileName);
     UploadTask uploadTask = reference.putFile(file);
-    TaskSnapshot snap = await uploadTask;
-    String downloadUrl = await snap.ref.getDownloadURL();
-    imageUrl = downloadUrl;
-    return imageUrl!;
+  log("uploadTask : $uploadTask");
+    uploadTask.then((res) {
+      log("res : $res");
+      res.ref.getDownloadURL().then((downloadUrl) {
+        audioUrl = downloadUrl;
+        update();
+      }, onError: (err) {
+
+        Fluttertoast.showToast(msg: 'Image is Not Valid');
+      });
+    });
+    return audioUrl!;
   }
 }

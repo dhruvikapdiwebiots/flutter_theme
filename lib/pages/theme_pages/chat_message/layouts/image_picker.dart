@@ -19,12 +19,12 @@ class ImagePickerLayout extends StatelessWidget {
           children: [
             IconCreation(
                 icons: Icons.camera,
-                color: appCtrl.appTheme.primary,
+                color: appCtrl.isTheme ?appCtrl.appTheme.white :  appCtrl.appTheme.primary,
                 text: fonts.camera.tr,
                 onTap: cameraTap),
             IconCreation(
                 icons: Icons.image,
-                color: appCtrl.appTheme.primary,
+                color:appCtrl.isTheme ?appCtrl.appTheme.white :  appCtrl.appTheme.primary,
                 text: fonts.gallery.tr,
                 onTap:galleryTap),
 

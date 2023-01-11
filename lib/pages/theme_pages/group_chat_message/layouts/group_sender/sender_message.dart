@@ -109,7 +109,7 @@ class _GroupSenderMessageState extends State<GroupSenderMessage> {
                               horizontal: Insets.i10,
                               vertical: Insets.i15)
                               .decorated(
-                              color: appCtrl.appTheme.primary
+                              color:appCtrl.isTheme ?appCtrl.appTheme.white :  appCtrl.appTheme.primary
                                   .withOpacity(.9)),
                         ],
                       )

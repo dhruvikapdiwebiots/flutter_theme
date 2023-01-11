@@ -12,6 +12,7 @@ class GroupReceiverImage extends StatelessWidget {
     return TextButton(
         onPressed: onLongPress,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(document!['senderName'],
                 style: AppCss.poppinsMedium14

@@ -13,6 +13,7 @@ class GroupBottomSheet extends StatelessWidget {
       height: 278,
       width: MediaQuery.of(Get.context!).size.width,
       child: Card(
+        color: appCtrl.appTheme.whiteColor,
         margin: const EdgeInsets.all(18.0),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         child:const Padding(

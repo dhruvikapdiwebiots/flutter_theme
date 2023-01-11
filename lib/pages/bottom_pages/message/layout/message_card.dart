@@ -111,13 +111,13 @@ class MessageCard extends StatelessWidget {
                       style: AppCss.poppinsblack16
                           .textColor(appCtrl.appTheme.blackColor)),
                   subtitle: document!["lastMessage"] != null
-                      ? Padding(
+                      ?   document!["lastMessage"].contains(".gif") ?const Icon(Icons.gif_box) : Padding(
                           padding: const EdgeInsets.only(top: 6.0),
                           child: Row(children: [
                             if(currentUserId == document!["senderId"])
                             Icon(Icons.done_all,
                                 color: document!["isSeen"]
-                                    ? appCtrl.appTheme.primary
+                                    ? appCtrl.isTheme ?appCtrl.appTheme.white : appCtrl.appTheme.primary
                                     : appCtrl.appTheme.grey,
                                 size: Sizes.s16),
                             if(currentUserId == document!["senderId"])

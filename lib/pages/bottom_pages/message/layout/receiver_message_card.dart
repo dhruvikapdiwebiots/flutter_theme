@@ -124,12 +124,13 @@ class ReceiverMessageCard extends StatelessWidget {
                               children: [
                                 Icon(Icons.done_all,
                                     color: document!["isSeen"]
-                                        ? appCtrl.appTheme.primary
+                                        ? appCtrl.isTheme ?appCtrl.appTheme.white : appCtrl.appTheme.primary
                                         : appCtrl.appTheme.grey,
                                     size: Sizes.s16),
                                 const HSpace(Sizes.s10),
+                                document!["lastMessage"].contains(".gif") ?const Icon(Icons.gif_box) :
                                 Expanded(
-                                  child: Text(
+                                  child:  Text(
                                       document!["isBlock"] == true &&
                                               document!["isBlock"] == "true"
                                           ? document!["blockBy"] != blockBy

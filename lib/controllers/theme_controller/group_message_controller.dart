@@ -92,7 +92,7 @@ log("pData : ${pData["image"]}");
       }
     });
 
-    update();
+
     return status;
   }
 
@@ -241,7 +241,7 @@ log("pData : ${pData["image"]}");
             margin: const EdgeInsets.all(10),
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(10)),
+                color: appCtrl.appTheme.whiteColor, borderRadius: BorderRadius.circular(10)),
             child: AudioRecordingPlugin(type: type, index: index));
       },
     ).then((value) {

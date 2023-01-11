@@ -7,10 +7,11 @@ class BroadCastAppBar extends StatelessWidget with PreferredSizeWidget{
   @override
   Widget build(BuildContext context) {
     return  AppBar(
+      backgroundColor: appCtrl.appTheme.primary,
         automaticallyImplyLeading: false,
         leading: IconButton(
             icon: Icon(Icons.arrow_back,
-                color: appCtrl.appTheme.whiteColor),
+                color: appCtrl.appTheme.white),
             onPressed: () {
               Get.back();
 
@@ -21,10 +22,10 @@ class BroadCastAppBar extends StatelessWidget with PreferredSizeWidget{
               Text(
                 name ?? "",
                 textAlign: TextAlign.center,
-                style: AppCss.poppinsBold16.textColor(appCtrl.appTheme.whiteColor),
+                style: AppCss.poppinsBold16.textColor(appCtrl.appTheme.white),
               ),
               const VSpace(Sizes.s10),
-              Text(nameList!,style: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.whiteColor),)
+              Text(nameList!,style: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.white),)
             ]));
   }
 

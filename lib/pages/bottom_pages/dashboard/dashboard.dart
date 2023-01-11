@@ -63,7 +63,7 @@ class _DashboardState extends State<Dashboard>
                       actions: [
                         if (dashboardCtrl.selectedIndex == 0) const PopUpAction(),
                       ],
-                      title: Text(fonts.chatter.tr,style: AppCss.poppinsblack16.textColor(appCtrl.appTheme.whiteColor)),
+                      title: Text(fonts.chatter.tr,style: AppCss.poppinsblack16.textColor(appCtrl.appTheme.white)),
 
                       bottom: TabBar(
                         controller: dashboardCtrl.controller,

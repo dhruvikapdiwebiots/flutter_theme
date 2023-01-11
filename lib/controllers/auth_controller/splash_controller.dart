@@ -65,6 +65,18 @@ class SplashController extends GetxController {
       Get.updateLocale(locale);
       appCtrl.currVal = 3;
     }
+    //theme check
+    bool loadThemeFromStorage = storage.read(session.isDarkMode) ?? false;
+    if (loadThemeFromStorage) {
+      appCtrl.isTheme = true;
+    } else {
+      appCtrl.isTheme = false;
+    }
+
+    update();
+    await storage.write(session.isDarkMode, appCtrl.isTheme);
+    ThemeService().switchTheme(appCtrl.isTheme);
+
     appCtrl.update();
     Get.forceAppUpdate();
 

@@ -21,9 +21,9 @@ class GroupReceiverContent extends StatelessWidget {
 
             padding: const EdgeInsets.fromLTRB(Insets.i15, 10.0, Insets.i15, 10.0),
             width: 220.0,
-            decoration: const BoxDecoration(
-                color: Color(0xffF2F2F2),
-                borderRadius: BorderRadius.only(
+            decoration:  BoxDecoration(
+                color:appCtrl.isTheme ?appCtrl.appTheme.white :  const Color(0xffF2F2F2),
+                borderRadius: const BorderRadius.only(
                     topRight: Radius.circular(Insets.i20),
                     bottomLeft: Radius.circular(Insets.i20),
                     bottomRight: Radius.circular(Insets.i20))),

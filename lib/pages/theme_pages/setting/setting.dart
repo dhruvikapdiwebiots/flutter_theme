@@ -11,11 +11,12 @@ class Setting extends StatelessWidget {
 
       return Scaffold(
         appBar: AppBar(
+          backgroundColor: appCtrl.appTheme.primary,
           automaticallyImplyLeading: false,
-          leading: Icon(Icons.arrow_back,color: appCtrl.appTheme.whiteColor,).inkWell(onTap: ()=>Get.back()),
-          title: Text(fonts.setting.tr,style: AppCss.poppinsMedium16.textColor(appCtrl.appTheme.whiteColor),),
+          leading: Icon(Icons.arrow_back,color: appCtrl.appTheme.white).inkWell(onTap: ()=>Get.back()),
+          title: Text(fonts.setting.tr,style: AppCss.poppinsMedium16.textColor(appCtrl.appTheme.white),),
         ),
-        backgroundColor: appCtrl.appTheme.whiteColor,
+        backgroundColor: appCtrl.appTheme.primary,
         body: settingCtrl.user != null || settingCtrl.user != ""
             ? Column(children: [
                 Row(

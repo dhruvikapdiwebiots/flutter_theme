@@ -54,7 +54,7 @@ class GroupLocationLayout extends StatelessWidget {
               right: Insets.i6,
               bottom: Insets.i10)
           .decorated(
-              color: appCtrl.appTheme.primary,
+              color:appCtrl.isTheme ?appCtrl.appTheme.white :  appCtrl.appTheme.primary,
               borderRadius: BorderRadius.circular(AppRadius.r10))
           .paddingSymmetric(vertical: Insets.i10),
     );

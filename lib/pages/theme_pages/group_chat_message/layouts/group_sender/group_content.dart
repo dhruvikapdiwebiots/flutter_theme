@@ -19,7 +19,7 @@ class GroupContent extends StatelessWidget {
               horizontal: Insets.i15, vertical: Insets.i10),
           width: Sizes.s220,
           decoration: BoxDecoration(
-              color: appCtrl.appTheme.primary,
+              color: appCtrl.isTheme ?appCtrl.appTheme.white : appCtrl.appTheme.primary,
               borderRadius: const BorderRadius.only(
                   topRight: Radius.circular(Insets.i20),
                   topLeft: Radius.circular(Insets.i20),

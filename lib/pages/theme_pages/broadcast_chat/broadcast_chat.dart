@@ -39,7 +39,7 @@ class _BroadcastChatState extends State<BroadcastChat>
           child: Scaffold(
               appBar: BroadCastAppBar(
                   name: "${chatCtrl.totalUser} recipients",nameList: chatCtrl.nameList,),
-              backgroundColor: Colors.white,
+              backgroundColor: appCtrl.appTheme.whiteColor,
               body:  Stack(children: <Widget>[
                 Column(children: <Widget>[
                   // List of messages

@@ -16,7 +16,7 @@ final String? currentUserId;
         onLongPress: onLongPress,
         child: Container(
             decoration: BoxDecoration(
-              color: appCtrl.appTheme.primary,
+              color: appCtrl.isTheme ?appCtrl.appTheme.white : appCtrl.appTheme.primary,
               borderRadius: BorderRadius.circular(AppRadius.r15),
             ),
             width: Sizes.s280,

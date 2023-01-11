@@ -13,16 +13,18 @@ class OtherSetting extends StatelessWidget {
             backgroundColor: appCtrl.appTheme.primary,
             iconTheme: IconThemeData(color: appCtrl.appTheme.white),
             title: Text(fonts.chats.tr,
-                style: AppCss.poppinsblack18
-                    .textColor(appCtrl.appTheme.white))),
+                style:
+                    AppCss.poppinsblack18.textColor(appCtrl.appTheme.white))),
         body: Column(
           children: [
             ListTile(
-                onTap: () {
+                onTap: () async {
                   appCtrl.isTheme = !appCtrl.isTheme;
 
                   appCtrl.update();
                   ThemeService().switchTheme(appCtrl.isTheme);
+                  await appCtrl.storage
+                      .write(session.isDarkMode, appCtrl.isTheme);
                 },
                 minLeadingWidth: 0,
                 title: Text(fonts.theme.tr,

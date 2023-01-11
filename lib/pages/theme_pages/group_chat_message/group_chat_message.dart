@@ -52,8 +52,9 @@ class _GroupChatMessageState extends State<GroupChatMessage>
       return WillPopScope(
           onWillPop: chatCtrl.onBackPress,
           child: Scaffold(
+
               appBar: GroupChatMessageAppBar(name: chatCtrl.pName,image: chatCtrl.groupImage,),
-              backgroundColor: Colors.white,
+              backgroundColor: appCtrl.appTheme.whiteColor,
               body: Stack(children: <Widget>[
                 //body layout
                 const GroupChatBody(),

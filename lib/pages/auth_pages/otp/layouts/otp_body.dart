@@ -19,7 +19,7 @@ class OtpBody extends StatelessWidget {
           color: Color.fromRGBO(30, 60, 87, 1),
         ),
         decoration: BoxDecoration(
-          border: Border.all(color: appCtrl.appTheme.primary),
+          border: Border.all(color:appCtrl.isTheme ? appCtrl.appTheme.white : appCtrl.appTheme.primary),
         ),
       );
 
@@ -59,7 +59,7 @@ class OtpBody extends StatelessWidget {
             ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(19),
-              border: Border.all(color: appCtrl.appTheme.primary),
+              border: Border.all(color:appCtrl.isTheme ? appCtrl.appTheme.white : appCtrl.appTheme.primary),
             ),
           ),
 
@@ -82,7 +82,7 @@ class OtpBody extends StatelessWidget {
                 margin: const EdgeInsets.only(bottom: 9),
                 width: Sizes.s18,
                 height: 1,
-                color: appCtrl.appTheme.primary,
+                color: appCtrl.isTheme ? appCtrl.appTheme.white :appCtrl.appTheme.primary,
               ),
             ],
           ),
@@ -90,14 +90,14 @@ class OtpBody extends StatelessWidget {
           focusedPinTheme: defaultPinTheme.copyWith(
             decoration: defaultPinTheme.decoration!.copyWith(
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: appCtrl.appTheme.primary),
+              border: Border.all(color:appCtrl.isTheme ? appCtrl.appTheme.white : appCtrl.appTheme.primary),
             ),
           ),
           submittedPinTheme: defaultPinTheme.copyWith(
             decoration: defaultPinTheme.decoration!.copyWith(
-              color: appCtrl.appTheme.whiteColor,
+              color: appCtrl.appTheme.white,
               borderRadius: BorderRadius.circular(19),
-              border: Border.all(color: appCtrl.appTheme.primary),
+              border: Border.all(color:appCtrl.isTheme ? appCtrl.appTheme.white : appCtrl.appTheme.primary),
             ),
           ),
           errorPinTheme: defaultPinTheme.copyBorderWith(

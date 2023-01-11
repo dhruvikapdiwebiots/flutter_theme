@@ -147,13 +147,13 @@ class ChatController extends GetxController {
     pickerCtrl.dismissKeyboard();
     Get.back();
     FilePickerResult? result = await FilePicker.platform.pickFiles();
-
+log("rez : $result");
     if (result != null) {
       File file = File(result.files.single.path.toString());
       String fileName =
           "${file.name}-${DateTime.now().millisecondsSinceEpoch.toString()}";
-
-      imageUrl = await pickerCtrl.uploadImage(file, fileNameText: fileName);
+log("file : $file");
+      imageUrl = await pickerCtrl.uploadAudio(file, fileNameText: fileName);
 
       log("fileName : $fileName");
       onSendMessage(
@@ -182,7 +182,7 @@ class ChatController extends GetxController {
   //share media
   shareMedia(BuildContext context) {
     showModalBottomSheet(
-        backgroundColor: Colors.transparent,
+        backgroundColor: appCtrl.appTheme.transparentColor,
         context: context,
         shape: const RoundedRectangleBorder(
             borderRadius:
@@ -336,11 +336,12 @@ class ChatController extends GetxController {
       },
     ).then((value) async {
       File file = File(value);
+      log("file : $file");
       String fileName =
           "${file.name}-${DateTime.now().millisecondsSinceEpoch.toString()}";
 
       audioFile = await pickerCtrl.uploadAudio(file, fileNameText: fileName);
-
+      log("audioFile : $audioFile");
       onSendMessage(audioFile!, MessageType.audio);
     });
   }
@@ -357,8 +358,8 @@ class ChatController extends GetxController {
       chatId = newChatId;
       update();
       imageUrl = "";
-      videoUrl = "";
-      audioFile = "";
+     /* videoUrl = "";
+      audioFile = "";*/
       update();
       if(pData["pushToken"] != "" && pData["pushToken"] != null) {
         firebaseCtrl.sendNotification(title: pName,
