@@ -13,7 +13,7 @@ class CreateGroupController extends GetxController {
   File? image;
   XFile? imageFile;
   bool isLoading = false, isGroup = true;
-
+dynamic user;
   String imageUrl = "";
   TextEditingController txtGroupName = TextEditingController();
   final pickerCtrl = Get.isRegistered<PickerController>()
@@ -28,15 +28,18 @@ class CreateGroupController extends GetxController {
     isLoading = true;
     update();
     contacts = await permissionHandelCtrl.getContact();
+     user = appCtrl.storage.read(session.user) ?? "";
 
     update();
-    getFirebaseContact(contacts!);
+    if(user != "") {
+      getFirebaseContact(contacts!);
+    }
   }
 
   //get firebase register contact list
   getFirebaseContact(List<Contact> contacts) async {
 contactList = [];
-    var user = appCtrl.storage.read(session.user);
+
     contacts.asMap().entries.forEach((contact) {
       if (contact.value.phones.isNotEmpty) {
         if (user["phone"] !=
