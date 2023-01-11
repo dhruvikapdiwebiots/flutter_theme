@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_theme/config.dart';
-import 'package:flutter_theme/widgets/no_internet.dart';
+
 
 class SplashController extends GetxController {
   final firebaseCtrl = Get.isRegistered<FirebaseCommonController>()

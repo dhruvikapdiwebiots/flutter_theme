@@ -23,9 +23,8 @@ class CommonFileRowList extends StatelessWidget {
               color: Colors.pink,
               text: fonts.video.tr,
               onTap: ()async {
-                chatCtrl.pickerCtrl.dismissKeyboard();
+                chatCtrl.pickerCtrl.videoPickerOption(context,isSingleChat: true);
                 Get.back();
-                chatCtrl.videoSend();
               }),
           const HSpace(Sizes.s40),
           IconCreation(

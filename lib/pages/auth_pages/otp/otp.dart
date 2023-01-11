@@ -14,7 +14,8 @@ class Otp extends StatelessWidget {
           children: [
             Container(
               padding: const EdgeInsets.symmetric(
-                  horizontal: Insets.i20,),
+                horizontal: Insets.i20,
+              ),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -25,14 +26,16 @@ class Otp extends StatelessWidget {
                     Icon(
                       Icons.arrow_back,
                       color: appCtrl.appTheme.blackColor,
-                    ).inkWell(onTap: () => Get.back()).paddingOnly(top: Insets.i50),
+                    )
+                        .inkWell(onTap: () => Get.back())
+                        .paddingOnly(top: Insets.i50),
                     Image.asset(
                       imageAssets.otp,
                       fit: BoxFit.fitWidth,
                       width: MediaQuery.of(context).size.width,
                     ),
                     const VSpace(Sizes.s15),
-                   const OtpBody(),
+                    const OtpBody(),
                     const VSpace(Sizes.s15),
                   ],
                 ),

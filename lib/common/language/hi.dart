@@ -1,4 +1,3 @@
-
 final dynamic hi = {
   "title": "अधिक से अधिक",
   "subtitle": "उन लोगों के संपर्क में रहें जो सबसे ज्यादा मायने रखते हैं",
@@ -72,4 +71,32 @@ final dynamic hi = {
   "undo": "पूर्ववत",
   "create": "सृजन करना",
   "groupName": "समूह नाम",
+  "areYouSure": "क्या आप वाकई ऐप से बाहर निकलना चाहते हैं",
+  "alert": "चेतावनी!",
+  "close": "बंद करना",
+  "yes": "हाँ",
+  "invite": "आमंत्रित करना",
+  "cancel": "रद्द करना",
+  "unblock": "अनब्लॉक",
+  "block": "अवरोध पैदा करना",
+  "unblockUser": "संदेश भेजने के लिए @pName को अनब्लॉक करें?",
+  "setGroup": "समूह बनाना",
+  "requestOTP": "ओटीपी का अनुरोध करें",
+  "newBroadCast": "नया प्रसारण",
+  "yourPhone": "अपने फोन को!",
+  "enterYourMessage": "अपना संदेश दर्ज करें",
+  "noItemFound": "कोई वस्तु नहीं मिली",
+  "noMoreItemFound": "कोई और वस्तु नहीं मिली",
+  "noInternet": "इंटरनेट नहीं है",
+  "intro1": "कभी भी, कहीं भी चैट करें",
+  "intro2": "अपने दोस्त को कनेक्ट करें",
+  "intro3": "समूह चैट करें",
+  "introDesc1":
+      "किसी भी स्क्रीन पर किसी भी जानकारी को पास करना, किसी भी डिवाइस को तुरंत उसके सबटाइम पर सरल बना दिया जाता है।",
+  "introDesc2":
+      "आपके उपयोगकर्ताओं के बीच लैग-फ्री वीडियो चैट कनेक्शन आसान है और किसी भी डिवाइस पर हर जगह बहुत कुछ है।",
+  "introDesc3":
+      "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form",
+  "inviteUser": "चैटर का उपयोग करने के लिए उपयोगकर्ता को आमंत्रित करें",
+  "registerUser": "उपयोगकर्ता को पंजीकृत करें",
 };

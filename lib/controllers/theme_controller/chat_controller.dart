@@ -4,8 +4,6 @@ import 'dart:io';
 
 import 'package:dartx/dartx_io.dart';
 import 'package:flutter_theme/config.dart';
-import 'package:flutter_theme/models/contact_model.dart';
-import 'package:flutter_theme/pages/theme_pages/chat_message/chat_message_api.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ChatController extends GetxController {
@@ -21,7 +19,7 @@ class ChatController extends GetxController {
       videoUrl,
       blockBy;
   dynamic message;
-  dynamic pData,allData, userData;
+  dynamic pData, allData, userData;
   UserContactModel? userContactModel;
   bool positionStreamStarted = false;
   bool isUserAvailable = true;
@@ -71,24 +69,25 @@ class ChatController extends GetxController {
     log("chatId : $chatId");
     if (chatId != "0") {
       await FirebaseFirestore.instance
-          .collection("users").doc(userData["id"]).collection("chat").where("chatId",isEqualTo: chatId)
+          .collection("users")
+          .doc(userData["id"])
+          .collection("chat")
+          .where("chatId", isEqualTo: chatId)
           .get()
           .then((value) {
         log("allData : ${value.docs}");
-        /*allData = value.docs[0].data();
-        log("allData : $allData");*/
         update();
         seenMessage();
       });
     }
     await FirebaseFirestore.instance
-        .collection("users").doc(pId)
+        .collection("users")
+        .doc(pId)
         .get()
         .then((value) {
       pData = value.data();
       update();
     });
-
   }
 
   //update typing status
@@ -126,18 +125,37 @@ class ChatController extends GetxController {
       });
     }
 
-    FirebaseFirestore.instance.collection("users").doc(userData["id"]).collection("chats").where("chatId",isEqualTo: chatId).get().then((value){
-      if(value.docs.isNotEmpty){
-        FirebaseFirestore.instance.collection("users").doc(userData["id"]).collection("chats").doc(value.docs[0].id).update(
-            {"isSeen":true});
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(userData["id"])
+        .collection("chats")
+        .where("chatId", isEqualTo: chatId)
+        .get()
+        .then((value) {
+      if (value.docs.isNotEmpty) {
+        FirebaseFirestore.instance
+            .collection("users")
+            .doc(userData["id"])
+            .collection("chats")
+            .doc(value.docs[0].id)
+            .update({"isSeen": true});
       }
     });
 
-    FirebaseFirestore.instance.collection("users").doc(pId).collection("chats").where("chatId",isEqualTo: chatId).get().then((value){
-      if(value.docs.isNotEmpty){
-        FirebaseFirestore.instance.collection("users").doc(pId).collection("chats").doc(
-            value.docs[0].id).update(
-            {"isSeen":true});
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(pId)
+        .collection("chats")
+        .where("chatId", isEqualTo: chatId)
+        .get()
+        .then((value) {
+      if (value.docs.isNotEmpty) {
+        FirebaseFirestore.instance
+            .collection("users")
+            .doc(pId)
+            .collection("chats")
+            .doc(value.docs[0].id)
+            .update({"isSeen": true});
       }
     });
   }
@@ -147,12 +165,12 @@ class ChatController extends GetxController {
     pickerCtrl.dismissKeyboard();
     Get.back();
     FilePickerResult? result = await FilePicker.platform.pickFiles();
-log("rez : $result");
+    log("rez : $result");
     if (result != null) {
       File file = File(result.files.single.path.toString());
       String fileName =
           "${file.name}-${DateTime.now().millisecondsSinceEpoch.toString()}";
-log("file : $file");
+      log("file : $file");
       imageUrl = await pickerCtrl.uploadAudio(file, fileNameText: fileName);
 
       log("fileName : $fileName");
@@ -207,7 +225,6 @@ log("file : $file");
           .doc(newChatId)
           .collection("chat")
           .add({
-
         'sender': userData["id"],
         'receiver': pId,
         'content': "You unblock this contact",
@@ -219,7 +236,13 @@ log("file : $file");
         'messageType': "sender",
         'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
       });
-      await ChatMessageApi().saveMessageInUserCollection(userData["id"], pId, newChatId, "You unblock this contact",isBlock: true,userData["id"]);
+      await ChatMessageApi().saveMessageInUserCollection(
+          userData["id"],
+          pId,
+          newChatId,
+          "You unblock this contact",
+          isBlock: true,
+          userData["id"]);
     } else {
       FirebaseFirestore.instance
           .collection('messages')
@@ -238,7 +261,13 @@ log("file : $file");
         'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
       });
 
-      await ChatMessageApi().saveMessageInUserCollection(userData["id"], pData["id"], newChatId, "You block this contact",isBlock: true,userData["id"]);
+      await ChatMessageApi().saveMessageInUserCollection(
+          userData["id"],
+          pData["id"],
+          newChatId,
+          "You block this contact",
+          isBlock: true,
+          userData["id"]);
     }
   }
 
@@ -265,6 +294,8 @@ log("file : $file");
 
   //send video after recording or pick from media
   videoSend() async {
+    update();
+    videoFile = pickerCtrl.videoFile;
     update();
     log("videoFile : $videoFile");
     const Duration(seconds: 2);
@@ -302,14 +333,13 @@ log("file : $file");
         await permissionHandelCtrl.getContactPermission();
     if (permissionStatus == PermissionStatus.granted) {
       Get.toNamed(routeName.allContactList)!.then((value) async {
-        if(value !=null) {
+        if (value != null) {
           Contact contact = value;
           log("ccc : $contact");
           onSendMessage(
               '${contact.displayName}-BREAK-${contact.phones[0].number}-BREAK-${contact.photo}',
               MessageType.contact);
         }
-
       });
     } else {
       permissionHandelCtrl.handleInvalidPermissions(permissionStatus);
@@ -356,15 +386,12 @@ log("file : $file");
       chatId = newChatId;
       update();
       imageUrl = "";
-     /* videoUrl = "";
-      audioFile = "";*/
       update();
-      if(pData["pushToken"] != "" && pData["pushToken"] != null) {
-        firebaseCtrl.sendNotification(title: pName,
-            msg: content,
-            token: pData["pushToken"]);
+      if (pData["pushToken"] != "" && pData["pushToken"] != null) {
+        firebaseCtrl.sendNotification(
+            title: pName, msg: content, token: pData["pushToken"]);
       }
-      if(allData != null && allData != "") {
+      if (allData != null && allData != "") {
         if (allData["isBlock"] == true) {
           if (allData["blockUserId"] == pId) {
             ScaffoldMessenger.of(Get.context!).showSnackBar(
@@ -386,16 +413,13 @@ log("file : $file");
               "isBroadcast": false,
               "blockBy": "",
               "blockUserId": "",
-              'timestamp': DateTime
-                  .now()
-                  .millisecondsSinceEpoch
-                  .toString(),
+              'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
             }).then((snap) async {
               isLoading = false;
               update();
               Get.forceAppUpdate();
-              await ChatMessageApi().saveMessageInUserCollection(
-                  pData["id"], userData["id"], newChatId, content,userData["id"]);
+              await ChatMessageApi().saveMessageInUserCollection(pData["id"],
+                  userData["id"], newChatId, content, userData["id"]);
             }).then((value) {
               isLoading = false;
               update();
@@ -421,18 +445,15 @@ log("file : $file");
             "isBroadcast": false,
             "blockBy": "",
             "blockUserId": "",
-            'timestamp': DateTime
-                .now()
-                .millisecondsSinceEpoch
-                .toString(),
+            'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
           }).then((snap) async {
             isLoading = false;
             update();
             Get.forceAppUpdate();
             await ChatMessageApi().saveMessageInUserCollection(
-                userData["id"], pId, newChatId, content,userData["id"]);
+                userData["id"], pId, newChatId, content, userData["id"]);
             await ChatMessageApi().saveMessageInUserCollection(
-                pId, pId, newChatId, content,userData["id"]);
+                pId, pId, newChatId, content, userData["id"]);
           }).then((value) {
             isLoading = false;
             update();
@@ -442,7 +463,7 @@ log("file : $file");
         isLoading = false;
         update();
         Get.forceAppUpdate();
-      }else{
+      } else {
         log("message se");
         await FirebaseFirestore.instance
             .collection('messages')
@@ -460,20 +481,16 @@ log("file : $file");
           "isBroadcast": false,
           "blockBy": "",
           "blockUserId": "",
-          'timestamp': DateTime
-              .now()
-              .millisecondsSinceEpoch
-              .toString(),
+          'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
         }).then((snap) async {
           isLoading = false;
           update();
           Get.forceAppUpdate();
           log("check");
           await ChatMessageApi().saveMessageInUserCollection(
-              userData["id"], pId, newChatId, content,userData["id"]);
+              userData["id"], pId, newChatId, content, userData["id"]);
           await ChatMessageApi().saveMessageInUserCollection(
-              pId, pId, newChatId, content,userData["id"]);
-
+              pId, pId, newChatId, content, userData["id"]);
         }).then((value) {
           isLoading = false;
           update();

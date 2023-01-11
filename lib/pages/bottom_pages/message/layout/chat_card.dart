@@ -50,8 +50,8 @@ class _ChatCardState extends State<ChatCard> {
                 },
                 itemCount: message.length,
               );
-              return Container();
             }
+
           });
     });
   }

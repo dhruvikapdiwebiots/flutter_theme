@@ -35,20 +35,6 @@ class _ChatState extends State<Chat>
     }
   }
 
-  makeCall() async {
-    /*var user = appCtrl.storage.read(session.user);
-    await FirebaseFirestore.instance
-        .collection('call')
-        .doc(user["id"])
-        .set(user);
-    await FirebaseFirestore.instance
-        .collection('call')
-        .doc(receiverData["id"])
-        .set(receiverData);
-
-    Get.toNamed(routeName.callScreen,arguments:user );*/
-  }
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ChatController>(builder: (_) {
@@ -79,10 +65,7 @@ class _ChatState extends State<Chat>
                       const BuildLoader()
                     ])
                   : Center(
-                      child: CommonButton(
-                        title: fonts.invite.tr,
-                        onTap: () {},
-                      ),
+                      child: CommonButton(title: fonts.invite.tr, onTap: () {}),
                     )));
     });
   }

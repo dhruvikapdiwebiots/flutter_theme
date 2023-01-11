@@ -55,7 +55,6 @@ class GroupFirebaseApi {
       'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
     });
 
-    print("groupCtrl.selectedContact : ${groupCtrl.selectedContact}");
     await FirebaseFirestore.instance
         .collection("groups")
         .doc(id)

@@ -1,9 +1,5 @@
-import 'dart:developer';
-
-import 'package:dartx/dartx_io.dart';
 import 'package:flutter_theme/pages/bottom_pages/status/layouts/stat_video.dart';
 import 'package:intl/intl.dart';
-import 'package:video_player/video_player.dart';
 
 import '../../../../config.dart';
 
@@ -34,7 +30,7 @@ class _StatusListLayoutState extends State<StatusListLayout> {
                 return ListView.builder(
                   itemCount: status.length,
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
                     return Column(children: [
                       InkWell(

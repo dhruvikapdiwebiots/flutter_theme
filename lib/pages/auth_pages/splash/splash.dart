@@ -8,7 +8,6 @@ class Splash extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool typewriter(double width) => width > 15;
     return GetBuilder<SplashController>(
       builder: (_) {
         return Scaffold(
@@ -25,7 +24,7 @@ class Splash extends StatelessWidget {
                     const VSpace(Sizes.s15),
                     AnimatedTextKit(
                       animatedTexts: [
-                        TyperAnimatedText(fonts.chatter.tr.toUpperCase(),textStyle: AppCss.poppinsblack16.textColor(appCtrl.appTheme.txt))
+                        TyperAnimatedText(fonts.chatter.tr.toUpperCase(),textStyle: AppCss.poppinsblack24.textColor(appCtrl.appTheme.txt))
                       ],
                       onTap: () {
                       },

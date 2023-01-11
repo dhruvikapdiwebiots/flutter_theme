@@ -1,7 +1,7 @@
-import 'package:intl/intl.dart';
+
 
 import '../../../../config.dart';
-import '../../../../models/contact_model.dart';
+
 
 class MessageCard extends StatelessWidget {
   final DocumentSnapshot? document;
@@ -39,126 +39,20 @@ class MessageCard extends StatelessWidget {
                     Get.toNamed(routeName.chat, arguments: data);
                   },
                   contentPadding: EdgeInsets.zero,
-                  leading: StreamBuilder(
-                      stream: FirebaseFirestore.instance
-                          .collection('users')
-                          .where("id", isEqualTo: document!["senderId"])
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        if (snapshot.data != null) {
-                          if (!snapshot.data!.docs.isNotEmpty) {
-                            return Image.asset(
-                              imageAssets.user,
-                              color: appCtrl.appTheme.whiteColor,
-                            ).paddingAll(Insets.i15).decorated(
-                                color: appCtrl.appTheme.grey.withOpacity(.4),
-                                shape: BoxShape.circle);
-                          } else {
-                            return CachedNetworkImage(
-                                imageUrl: (snapshot.data!).docs[0]["image"],
-                                imageBuilder: (context, imageProvider) =>
-                                    CircleAvatar(
-                                      backgroundColor: const Color(0xffE6E6E6),
-                                      radius: 28,
-                                      backgroundImage: NetworkImage(
-                                          '${(snapshot.data!).docs[0]["image"]}'),
-                                    ),
-                                placeholder: (context, url) => Image.asset(
-                                      imageAssets.user,
-                                      color: appCtrl.appTheme.whiteColor,
-                                    ).paddingAll(Insets.i15).decorated(
-                                        color: appCtrl.appTheme.grey
-                                            .withOpacity(.4),
-                                        shape: BoxShape.circle),
-                                errorWidget: (context, url, error) =>
-                                    Image.asset(
-                                      imageAssets.user,
-                                      color: appCtrl.appTheme.whiteColor,
-                                    ).paddingAll(Insets.i15).decorated(
-                                        color: appCtrl.appTheme.grey
-                                            .withOpacity(.4),
-                                        shape: BoxShape.circle));
-                          }
-                        } else {
-                          return Image.asset(
-                            imageAssets.user,
-                            color: appCtrl.appTheme.whiteColor,
-                          ).paddingAll(Insets.i15).decorated(
-                              color: appCtrl.appTheme.grey.withOpacity(.4),
-                              shape: BoxShape.circle);
-                        }
-                      }),
-                  trailing: Column(
-                    children: [
-                      Text(
-                          DateFormat('HH:mm a').format(
-                              DateTime.fromMillisecondsSinceEpoch(
-                                  int.parse(document!['updateStamp']))),
-                          style: AppCss.poppinsMedium12
-                              .textColor(appCtrl.appTheme.grey)),
-                      if (currentUserId == document!["senderId"])
-                        CircleAvatar(
-                          backgroundColor: appCtrl.appTheme.redColor,
-                          radius: AppRadius.r10,
-                          child: Text("1",
-                                  textAlign: TextAlign.center,
-                                  style: AppCss.poppinsMedium12
-                                      .textColor(appCtrl.appTheme.whiteColor))
-                              .paddingSymmetric(vertical: Insets.i5),
-                        )
-                    ],
-                  ),
+                  leading: ImageLayout(id: document!["senderId"]),
+                  trailing: TrailingLayout(
+                      currentUserId: currentUserId, document: document),
                   title: Text(snapshot.data!["name"],
                       style: AppCss.poppinsblack16
                           .textColor(appCtrl.appTheme.blackColor)),
                   subtitle: document!["lastMessage"] != null
                       ? document!["lastMessage"].contains(".gif")
                           ? const Icon(Icons.gif_box)
-                          : Padding(
-                              padding: const EdgeInsets.only(top: 6.0),
-                              child: Row(children: [
-                                if (currentUserId == document!["senderId"])
-                                  Icon(Icons.done_all,
-                                      color: document!["isSeen"]
-                                          ? appCtrl.isTheme
-                                              ? appCtrl.appTheme.white
-                                              : appCtrl.appTheme.primary
-                                          : appCtrl.appTheme.grey,
-                                      size: Sizes.s16),
-                                if (currentUserId == document!["senderId"])
-                                  const HSpace(Sizes.s10),
-                                Expanded(
-                                  child: Text(
-                                      (document!["lastMessage"]
-                                              .contains("media"))
-                                          ? "${snapshot.data!["name"]} Media Share"
-                                          : document!["isBlock"] == true &&
-                                                  document!["isBlock"] == "true"
-                                              ? document!["blockBy"] != blockBy
-                                                  ? document![
-                                                      "blockUserMessage"]
-                                                  : document!["lastMessage"]
-                                                      .contains("http")
-                                              : (document!["lastMessage"]
-                                                          .contains(".pdf") ||
-                                                      document!["lastMessage"]
-                                                          .contains(".docx") ||
-                                                      document!["lastMessage"]
-                                                          .contains(".mp3") ||
-                                                      document!["lastMessage"]
-                                                          .contains(".mp4") ||
-                                                      document!["lastMessage"]
-                                                          .contains(".xlsx") ||
-                                                      document!["lastMessage"]
-                                                          .contains(".ods"))
-                                                  ? document!["lastMessage"]
-                                                      .split("-BREAK-")[0]
-                                                  : document!["lastMessage"],
-                                      style: AppCss.poppinsMedium14
-                                          .textColor(appCtrl.appTheme.grey),
-                                      overflow: TextOverflow.ellipsis),
-                                )
-                              ]),
+                          : MessageCardSubTitle(
+                              blockBy: blockBy,
+                              name: snapshot.data!["name"],
+                              document: document,
+                              currentUserId: currentUserId,
                             )
                       : Container()),
             );

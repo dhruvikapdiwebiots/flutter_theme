@@ -1,6 +1,5 @@
 import 'dart:io';
-import 'package:flutter_theme/models/contact_model.dart';
-import 'package:flutter_theme/pages/theme_pages/contact_list/layouts/register_user.dart';
+
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../../config.dart';
@@ -23,7 +22,7 @@ class ContactList extends StatelessWidget {
               title: Text(
                 fonts.contact.tr,
                 style: AppCss.poppinsMedium16
-                    .textColor(appCtrl.appTheme.whiteColor),
+                    .textColor(appCtrl.appTheme.whiteColor)
               ),
               automaticallyImplyLeading: false,
               actions: [
@@ -191,8 +190,7 @@ class ContactList extends StatelessWidget {
                                                                   : CircleAvatar(child: Text(item.userTitle![index].username!.length > 2 ? item.userTitle![index].username!.replaceAll(" ", "").substring(0, 2).toUpperCase() : item.userTitle![index].username![0], style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.whiteColor))),
                                                       title: Text(item
                                                               .userTitle![index]
-                                                              .username! ??
-                                                          ""),
+                                                              .username! ),
                                                       trailing: !item
                                                               .userTitle![index]
                                                               .isRegister!

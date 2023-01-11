@@ -1,5 +1,5 @@
 import '../../../config.dart';
-import 'dart:math' as math;
+
 
 class Intro extends StatefulWidget {
   const Intro({Key? key}) : super(key: key);

@@ -3,12 +3,9 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dartx/dartx_io.dart';
-import 'package:flutter_contacts/contact.dart';
 import 'package:flutter_theme/config.dart';
-import 'package:flutter_theme/pages/theme_pages/broadcast_chat/layouts/broadcast_delete_alert.dart';
-import 'package:flutter_theme/pages/theme_pages/broadcast_chat/layouts/broadcast_sender.dart';
-import 'package:flutter_theme/pages/theme_pages/chat_message/chat_message_api.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class BroadcastChatController extends GetxController {
   String? pId,
@@ -23,6 +20,7 @@ class BroadcastChatController extends GetxController {
       videoUrl,
       blockBy;
   dynamic message, userData, broadData;
+  final GlobalKey<SfPdfViewerState> pdfViewerKey = GlobalKey();
   List pData = [];
   List newpData = [];
   bool positionStreamStarted = false;
@@ -148,7 +146,7 @@ class BroadcastChatController extends GetxController {
 
   //send video after recording or pick from media
   videoSend() async {
-    await pickerCtrl.videoPickerOption(Get.context!,isGroup: false);
+
     videoFile = pickerCtrl.videoFile;
     update();
     const Duration(seconds: 2);

@@ -15,20 +15,18 @@ class InputBox extends StatelessWidget {
             color: Colors.white),
         child: Row(
           children: <Widget>[
-          const HSpace(Sizes.s15),
+            const HSpace(Sizes.s15),
             Flexible(
               child: TextFormField(
-                style:
-                    TextStyle(color: appCtrl.appTheme.txt, fontSize: 15.0),
+                style: TextStyle(color: appCtrl.appTheme.txt, fontSize: 15.0),
                 controller: chatCtrl.textEditingController,
                 decoration: InputDecoration.collapsed(
                   hintText: fonts.enterYourMessage.tr,
                   hintStyle: TextStyle(color: appCtrl.appTheme.gray),
                 ),
                 focusNode: chatCtrl.focusNode,
-                onChanged: (val){
-                  if(val.contains(".gif")){
-
+                onChanged: (val) {
+                  if (val.contains(".gif")) {
                     chatCtrl.onSendMessage(val, MessageType.gif);
                     chatCtrl.textEditingController.clear();
                   }
@@ -37,9 +35,7 @@ class InputBox extends StatelessWidget {
               ),
             ),
             IconButton(
-              icon: const Icon(
-                Icons.attachment_outlined
-              ),
+              icon: const Icon(Icons.attachment_outlined),
               padding: const EdgeInsets.all(0.0),
               onPressed: () {
                 chatCtrl.shareMedia(context);
@@ -47,17 +43,16 @@ class InputBox extends StatelessWidget {
               color: appCtrl.appTheme.primary,
             ),
             Material(
-              color: Colors.white,
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: IconButton(
-                  icon: const Icon(Icons.send),
-                  onPressed: () => chatCtrl.onSendMessage(
-                      chatCtrl.textEditingController.text, MessageType.text),
-                  color: appCtrl.appTheme.primary,
-                ),
-              ),
-            ),
+                color: Colors.white,
+                child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: IconButton(
+                      icon: const Icon(Icons.send),
+                      onPressed: () => chatCtrl.onSendMessage(
+                          chatCtrl.textEditingController.text,
+                          MessageType.text),
+                      color: appCtrl.appTheme.primary,
+                    )))
           ],
         ),
       );

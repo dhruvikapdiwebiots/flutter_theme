@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:flutter_theme/config.dart';
-import 'package:flutter_theme/models/contact_model.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class ContactListController extends GetxController {
@@ -25,13 +24,16 @@ class ContactListController extends GetxController {
   //fetch data
   Future<void> fetchPage(pageKey) async {
     log("fetchOage");
+    int counter =0;
     contactList = [];
     registerContactList = [];
     unRegisterContactList = [];
     storageContact = await permissionHandelCtrl.getContact();
+
+    log("contactList1 : ${contactList.length}");
     var user = appCtrl.storage.read("user");
     if (storageContact.isNotEmpty) {
-      log("storageContact : ${storageContact.length}");
+
       storageContact
           .where((c) => c.phones.isNotEmpty)
           .forEach((Contact p) async {
@@ -81,14 +83,15 @@ class ContactListController extends GetxController {
         }
       });
     }
-
+    contactList =[];
+counter++;
     ContactModel contactModel = ContactModel(
         title: fonts.registerUser.tr, userTitle: registerContactList);
     if(!contactList.contains(contactModel)) {
       contactList.add(contactModel);
     }
 
-    log("contactList : ${contactList[0].userTitle!.length}");
+
     ContactModel unRegisterContactModel = ContactModel(
         title: fonts.inviteUser.tr, userTitle: unRegisterContactList);
     if(!contactList.contains(unRegisterContactModel)) {
@@ -109,6 +112,7 @@ class ContactListController extends GetxController {
     } catch (error) {
       pagingController.error = error;
     }
+    log("counter : $counter");
     update();
   }
 

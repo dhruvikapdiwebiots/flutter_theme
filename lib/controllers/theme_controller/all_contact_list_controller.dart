@@ -1,7 +1,6 @@
-import 'dart:developer';
+
 
 import 'package:flutter_theme/config.dart';
-import 'package:flutter_theme/models/contact_model.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 

@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:dartx/dartx_io.dart';
 import 'package:flutter_theme/config.dart';
-import 'package:flutter_theme/pages/theme_pages/chat_message/chat_message_api.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class GroupChatMessageController extends GetxController {
@@ -18,7 +17,7 @@ class GroupChatMessageController extends GetxController {
       statusLastSeen,
       nameList,
       videoUrl;
-  dynamic message,pData;
+  dynamic message, pData;
   bool positionStreamStarted = false;
   XFile? imageFile;
   XFile? videoFile;
@@ -57,18 +56,17 @@ class GroupChatMessageController extends GetxController {
 
 //get group data
   getPeerStatus() {
-    nameList ="";
+    nameList = "";
     FirebaseFirestore.instance
         .collection('groups')
         .doc(pId)
         .get()
         .then((value) {
       if (value.exists) {
-
         List receiver = pData["users"];
         for (var i = 0; i < receiver.length; i++) {
           if (nameList != null && nameList != "") {
-            if(receiver[i]["name"] !=  user["name"]) {
+            if (receiver[i]["name"] != user["name"]) {
               nameList = "$nameList, ${receiver[i]["name"]}";
             }
           } else {
@@ -77,7 +75,7 @@ class GroupChatMessageController extends GetxController {
         }
       }
 
-log("pData : ${pData["image"]}");
+      log("pData : ${pData["image"]}");
       update();
     });
 
@@ -91,7 +89,6 @@ log("pData : ${pData["image"]}");
         documentId = value.docs[0].id;
       }
     });
-
 
     return status;
   }
@@ -158,7 +155,6 @@ log("pData : ${pData["image"]}");
         });
   }
 
-
 // UPLOAD SELECTED IMAGE TO FIREBASE
   Future uploadFile() async {
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
@@ -179,16 +175,13 @@ log("pData : ${pData["image"]}");
     });
   }
 
-  Future  videoSend() async {
+  Future videoSend() async {
     videoFile = pickerCtrl.videoFile;
     update();
-    if(videoFile != null) {
+    if (videoFile != null) {
       log("videoFile : $videoFile");
       const Duration(seconds: 2);
-      String fileName = DateTime
-          .now()
-          .millisecondsSinceEpoch
-          .toString();
+      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
       Reference reference = FirebaseStorage.instance.ref().child(fileName);
       var file = File(videoFile!.path);
       UploadTask uploadTask = reference.putFile(file);
@@ -227,11 +220,10 @@ log("pData : ${pData["image"]}");
         await permissionHandelCtrl.getContactPermission();
     if (permissionStatus == PermissionStatus.granted) {
       Get.toNamed(routeName.allContactList)!.then((value) async {
-        if(value !=null) {
+        if (value != null) {
           Contact contact = value;
           onSendMessage(
-              '${contact.displayName}-BREAK-${contact.phones[0]
-                  .number}-BREAK-${contact.photo}',
+              '${contact.displayName}-BREAK-${contact.phones[0].number}-BREAK-${contact.photo}',
               MessageType.contact);
         }
       });
@@ -251,7 +243,8 @@ log("pData : ${pData["image"]}");
             margin: const EdgeInsets.all(10),
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-                color: appCtrl.appTheme.whiteColor, borderRadius: BorderRadius.circular(10)),
+                color: appCtrl.appTheme.whiteColor,
+                borderRadius: BorderRadius.circular(10)),
             child: AudioRecordingPlugin(type: type, index: index));
       },
     ).then((value) {
@@ -296,18 +289,16 @@ log("pData : ${pData["image"]}");
         "groupId": pId,
         'type': type.name,
         'messageType': "sender",
-
         "status": "",
         'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
       });
-      await ChatMessageApi().saveGroupData(id, pId, content,pData);
+      await ChatMessageApi().saveGroupData(id, pId, content, pData);
       isLoading = false;
       videoFile = null;
-      videoUrl ="";
+      videoUrl = "";
       update();
       listScrollController.animateTo(0.0,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut);
+          duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
     }
   }
 

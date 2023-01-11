@@ -1,8 +1,5 @@
 import 'dart:io';
-import 'package:flutter/foundation.dart';
-import 'package:flutter_theme/widgets/pdf_viewer_layout.dart';
-import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
+import 'dart:developer';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -35,14 +32,9 @@ class _SenderMessageState extends State<SenderMessage> {
               Platform.isIOS ? Permission.storage : Permission.storage)
           .then((res) async {
         if (res) {
-          Reference reference = FirebaseStorage.instance.ref().child(fileName);
 
           final appDocDir = await getApplicationDocumentsDirectory();
-          final filePath = "${appDocDir.absolute}/images/";
-          final file = File(filePath);
 
-          final downloadTask = reference.writeToFile(file);
-        /*  Directory appDocDir = await getApplicationDocumentsDirectory();
           //Here you'll specify the file it should be saved as
           File downloadToFile = File('${appDocDir.path}/${DateTime.now().millisecondsSinceEpoch.toString()}');
           //Here you'll specify the file it should download from Cloud Storage
@@ -54,9 +46,10 @@ class _SenderMessageState extends State<SenderMessage> {
                 .ref(fileToDownload)
                 .writeToFile(downloadToFile);
           } on FirebaseException catch (e) {
+            log("e : $e");
             // e.g, e.code == 'canceled'
-            print('Download error: $e');
-          }*/
+
+          }
         }
       });
 
@@ -66,36 +59,11 @@ class _SenderMessageState extends State<SenderMessage> {
     }
   }
 
-  showDialogLayout() {
-    showGeneralDialog(
-      barrierColor: Colors.black.withOpacity(0.5),
-      transitionBuilder: (context, a1, a2, widget) {
-        return Transform.scale(
-          scale: a1.value,
-          child: Opacity(
-            opacity: a1.value,
-            child: AlertDialog(
-              shape:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(16.0)),
-              title: const CircularProgressIndicator().height(Sizes.s50),
-            ),
-          ),
-        );
-      },
-      transitionDuration: const Duration(milliseconds: 200),
-      barrierDismissible: true,
-      barrierLabel: '',
-      context: context,
-      pageBuilder: (BuildContext context, Animation<double> animation,
-          Animation<double> secondaryAnimation) {
-        return Column();
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ChatController>(builder: (chatCtrl) {
+      log("hdgfjhdsg : ${widget.document!["timestamp"]}");
       return Stack(
         children: [
           Container(
@@ -128,14 +96,16 @@ class _SenderMessageState extends State<SenderMessage> {
                           }),
                     if (widget.document!["type"] == MessageType.contact.name)
                       ContactLayout(
-                          onLongPress: () {
-                            showDialog(
-                              context: Get.context!,
-                              builder: (BuildContext context) => chatCtrl
-                                  .buildPopupDialog(context, widget.document!),
-                            );
-                          },
-                          document: widget.document).paddingSymmetric(vertical: Insets.i8),
+                              onLongPress: () {
+                                showDialog(
+                                  context: Get.context!,
+                                  builder: (BuildContext context) =>
+                                      chatCtrl.buildPopupDialog(
+                                          context, widget.document!),
+                                );
+                              },
+                              document: widget.document)
+                          .paddingSymmetric(vertical: Insets.i8),
                     if (widget.document!["type"] == MessageType.location.name)
                       LocationLayout(
                           document: widget.document,
@@ -163,162 +133,19 @@ class _SenderMessageState extends State<SenderMessage> {
                           }),
                     if (widget.document!["type"] == MessageType.doc.name)
                       (widget.document!["content"].contains(".pdf"))
-                          ? Stack(
-                        alignment: Alignment.bottomRight,
-                        children: [
-                          Stack(
-                            alignment: Alignment.bottomCenter,
-                            children: [
-                              SfPdfViewer.network(
-                                widget.document!['content']
-                                    .split("-BREAK-")[1],
-                                key: _pdfViewerKey,
-                              ).width(220).clipRRect(all: AppRadius.r8),
-                              Text(
-                                widget.document!['content']
-                                    .split("-BREAK-")[0],
-                                textAlign: TextAlign.center,
-                                style: AppCss.poppinsMedium12
-                                    .textColor(appCtrl.appTheme.whiteColor),
-                              )
-                                  .width(220)
-                                  .paddingSymmetric(
-                                  horizontal: Insets.i10,
-                                  vertical: Insets.i15)
-                                  .decorated(
-                                  color: appCtrl.appTheme.primary
-                                      .withOpacity(.9)),
-                            ],
-                          )
-                              .height(120)
-                              .width(220)
-                              .paddingOnly(
-                              left: Insets.i5,
-                              right: Insets.i5,
-                              top: Insets.i5,
-                              bottom: Insets.i35)
-                              .decorated(
-                              color: appCtrl.appTheme.primary,
-                              borderRadius:
-                              BorderRadius.circular(AppRadius.r10))
-                              .inkWell(
-                              onTap: () => Get.to(PdfViewerLayout(
-                                  url: widget.document!['content']
-                                      .split("-BREAK-")[1]))),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Icon(Icons.download_outlined,
-                                  color: appCtrl.appTheme.whiteColor)
-                                  .inkWell(
-                                  onTap: () => saveFile(
-                                      widget.document!['content']
-                                          .split("-BREAK-")[1],
-                                      widget.document!['content']
-                                          .split("-BREAK-")[0])),
-                              Text(
-                                DateFormat('HH:mm a').format(DateTime
-                                    .fromMillisecondsSinceEpoch(int.parse(
-                                    widget.document!['timestamp']))),
-                                style: AppCss.poppinsMedium12
-                                    .textColor(appCtrl.appTheme.whiteColor),
-                              ).marginAll(Insets.i10),
-                            ],
-                          )
-                        ],
-                      ).marginSymmetric(horizontal: Insets.i10,vertical: Insets.i5)
+                          ? PdfLayout(document: widget.document,pdfViewerKey: _pdfViewerKey,)
                           : (widget.document!["content"].contains(".docx"))
-                          ? Stack(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.symmetric(horizontal: Insets.i8),
-                            padding: const EdgeInsets.only(bottom: Insets.i15,),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                    AppRadius.r8),
-                                color: appCtrl.appTheme.primary),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Container(
-                                    margin: const EdgeInsets.symmetric(horizontal: Insets.i8,vertical: Insets.i5),
-                                    padding: const EdgeInsets.symmetric(horizontal: Insets.i15,vertical: Insets.i15),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(
-                                            AppRadius.r8),
-                                        color: appCtrl.appTheme.whiteColor
-                                            .withOpacity(.1)),
-                                    child: Text(
-                                      widget.document!['content']
-                                          .split("-BREAK-")[0],
-                                      textAlign: TextAlign.center,
-                                      style: AppCss.poppinsMedium12.textColor(
-                                          appCtrl.appTheme.whiteColor),
-                                    )),
-                                const VSpace(Sizes.s8),
-                                Text(
-                                  DateFormat('HH:mm a').format(DateTime
-                                      .fromMillisecondsSinceEpoch(int.parse(
-                                      widget.document!['timestamp']))),
-                                  style: AppCss.poppinsMedium12
-                                      .textColor(appCtrl.appTheme.whiteColor),
-                                ).marginSymmetric(horizontal: Insets.i10)
-                              ],
-                            ),
-                          )
-                        ],
-                      ).inkWell(onTap: (){
-
-                        launchUrl(Uri.parse(widget.document!['content']
-                            .split("-BREAK-")[1]));
-                      })
-                          : Container(),
-                    if(widget.document!["type"] == MessageType.gif.name)
-                      InkWell(onLongPress: () {
+                              ? DocxLayout(document: widget.document,)
+                              : Container(),
+                    if (widget.document!["type"] == MessageType.gif.name)
+                      GifLayout(onLongPress: () {
                         showDialog(
                             context: Get.context!,
-                            builder: (BuildContext context) => chatCtrl
-                                .buildPopupDialog(context, widget.document!));
-                      } ,child:  Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(widget.document!['senderName'],
-                                  style: AppCss.poppinsMedium12
-                                      .textColor(appCtrl.appTheme.txt))
-                                  .paddingOnly(
-                                  left: Insets.i8,
-                                  right: Insets.i8,
-                                  top: Insets.i5,
-                                  bottom: Insets.i2)
-                                  .decorated(
-                                  color: appCtrl.appTheme.grey.withOpacity(.3),
-                                  borderRadius:
-                                  BorderRadius.circular(AppRadius.r30)),
-                              const VSpace(Sizes.s2),
-                              Image.network(
-                                widget.document!["content"],
-                                height: Sizes.s100,
-                              ),
-                            ],
-                          ),
-                          Text(widget.document!['senderName'],
-                              style: AppCss.poppinsMedium12
-                                  .textColor(appCtrl.appTheme.txt))
-                              .paddingOnly(
-                              left: Insets.i8,
-                              right: Insets.i8,
-                              top: Insets.i5,
-                              bottom: Insets.i2)
-                              .decorated(
-                              color: appCtrl.appTheme.grey.withOpacity(.3),
-                              borderRadius: BorderRadius.circular(AppRadius.r30)),
-                        ],
-                      ).marginOnly(bottom: Insets.i8))
+                            builder: (BuildContext context) =>
+                                chatCtrl.buildPopupDialog(
+                                    context, widget.document!));
+                      },document: widget.document,)
                   ]),
-
                   if (widget.document!["type"] == MessageType.messageType.name)
                     Align(
                       alignment: Alignment.center,

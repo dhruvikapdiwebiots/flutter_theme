@@ -9,7 +9,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   log('Handling a background message ${message.messageId}');
   log("message.data : ${message.data}");
-  AndroidNotification? android = message.notification?.android;
+
 }
 
 /// Create a [AndroidNotificationChannel] for heads up notifications
@@ -61,7 +61,7 @@ class NotificationController extends GetxController{
     });
 
     var initialzationSettingsAndroid =
-    AndroidInitializationSettings('@mipmap/ic_launcher');
+    const AndroidInitializationSettings('@mipmap/ic_launcher');
     var initializationSettings = InitializationSettings(
         android: initialzationSettingsAndroid, );
 

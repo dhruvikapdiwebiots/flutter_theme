@@ -1,5 +1,3 @@
-
-
 final dynamic kr = {
   "title": "점점 더",
   "subtitle": "가장 중요한 사람들과 계속 연락하세요",
@@ -73,4 +71,32 @@ final dynamic kr = {
   "undo": "실행 취소",
   "create": "창조하다",
   "groupName": "그룹 이름",
+  "areYouSure": "앱을 종료하시겠습니까?",
+  "alert": "알리다!",
+  "close": "닫다",
+  "yes": "예",
+  "invite": "초대",
+  "cancel": "취소",
+  "unblock": "차단 해제",
+  "block": "차단하다",
+  "unblockUser": "메시지를 보내려면 @pName 을 차단 해제하시겠습니까?",
+  "setGroup": "그룹 만들기",
+  "requestOTP": "OTP 요청",
+  "newBroadCast": "새로운 방송",
+  "yourPhone": "너의 폰!",
+  "enterYourMessage": "메시지를 입력하세요",
+  "noItemFound": "항목을 찾을 수 없습니다",
+  "noMoreItemFound": "더 이상 항목을 찾을 수 없습니다",
+  "noInternet": "인터넷 없음",
+  "intro1": "언제 어디서나 채팅",
+  "intro2": "친구를 연결",
+  "intro3": "그룹 채팅 만들기",
+  "introDesc1":
+      "모든 화면, 모든 장치에 정보를 전달하면 즉시 단순해집니다.",
+  "introDesc2":
+      "사용자 간의 지연 없는 비디오 채팅 연결은 쉽고 어디서나 모든 장치에서 가능합니다.",
+  "introDesc3":
+      "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form",
+  "inviteUser": "Chatter를 사용하도록 사용자 초대",
+  "registerUser": "에 사용자 등록",
 };

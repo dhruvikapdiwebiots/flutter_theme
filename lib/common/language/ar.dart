@@ -1,4 +1,3 @@
-
 final dynamic ar = {
   "title": "المزيد والمزيد",
   "subtitle": "ابق على اتصال مع الأشخاص الأكثر أهمية",
@@ -73,4 +72,32 @@ final dynamic ar = {
   "undo": "الغاء التحميل",
   "create": "خلق",
   "groupName": "أسم المجموعة",
+  "areYouSure": "هل أنت متأكد أنك تريد الخروج من التطبيق",
+  "alert": "انذار!",
+  "close": "يغلق",
+  "yes": "نعم",
+  "invite": "يدعو",
+  "cancel": "يلغي",
+  "unblock": "رفع الحظر",
+  "block": "منع",
+  "unblockUser": "هل تريد إلغاء حظر  @pName لإرسال رسالة؟",
+  "setGroup": "إنشاء مجموعة",
+  "requestOTP": "طلب OTP",
+  "newBroadCast": "بث جديد",
+  "yourPhone": "هاتفك!",
+  "enterYourMessage": "أدخل رسالتك",
+  "noItemFound": "لم يتم العثور على عنصر",
+  "noMoreItemFound": "لم يتم العثور على المزيد من العناصر",
+  "noInternet": "لا انترنت",
+  "intro1": "الدردشة في أي وقت وفي أي مكان",
+  "intro2": "قم بتوصيل صديقك",
+  "intro3": "إجراء دردشة جماعية",
+  "introDesc1":
+      "تمرير أي معلومات على أي شاشة ، أصبح أي جهاز على الفور بسيطًا في رقيته.",
+  "introDesc2":
+      "يعد اتصال دردشة الفيديو بين المستخدمين أمرًا سهلاً وخاليًا من التأخير في كل مكان على أي جهاز.",
+  "introDesc3":
+      "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form",
+  "inviteUser": "دعوة المستخدم لاستخدام الدردشة",
+  "registerUser": "تسجيل المستخدم مع",
 };

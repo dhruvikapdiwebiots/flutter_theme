@@ -62,7 +62,7 @@ class PickerController extends GetxController {
   }
 
   //video picker option
-  videoPickerOption(BuildContext context, {isGroup = true}) {
+  videoPickerOption(BuildContext context, {isGroup = true,isSingleChat = false}) {
     showModalBottomSheet(
         context: context,
         shape: const RoundedRectangleBorder(
@@ -77,6 +77,12 @@ class PickerController extends GetxController {
               if(isGroup) {
                 final chatCtrl = Get.find<GroupChatMessageController>();
                 chatCtrl.videoSend();
+              }else if(isSingleChat){
+                final singleChatCtrl = Get.find<ChatController>();
+                singleChatCtrl.videoSend();
+              }else{
+                final broadcastCtrl = Get.find<BroadcastChatController>();
+                broadcastCtrl.videoSend();
               }
             });
             Get.back();
@@ -85,6 +91,12 @@ class PickerController extends GetxController {
               if(isGroup) {
                 final chatCtrl = Get.find<GroupChatMessageController>();
                 chatCtrl.videoSend();
+              }else if(isSingleChat){
+                final singleChatCtrl = Get.find<ChatController>();
+                singleChatCtrl.videoSend();
+              }else{
+                final broadcastCtrl = Get.find<BroadcastChatController>();
+                broadcastCtrl.videoSend();
               }
             });
             Get.back();

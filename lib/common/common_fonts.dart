@@ -83,5 +83,6 @@ class Fonts{
   final noInternet = "noInternet";
   final inviteUser = "inviteUser";
   final registerUser = "registerUser";
+  final recentUpdates = "recentUpdates";
   String unblockUser(val) => "unblockUser".trParams({'pName':val});
 }

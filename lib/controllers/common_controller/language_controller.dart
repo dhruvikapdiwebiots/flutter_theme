@@ -55,10 +55,4 @@ class LanguageController extends GetxController {
     Get.back();
   }
 
-  @override
-  void onReady() {
-    // TODO: implement onReady
-
-    super.onReady();
-  }
 }
