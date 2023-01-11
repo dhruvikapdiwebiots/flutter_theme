@@ -96,14 +96,15 @@ class MessageCard extends StatelessWidget {
                                   int.parse(document!['updateStamp']))),
                           style: AppCss.poppinsMedium12
                               .textColor(appCtrl.appTheme.grey)),
-                      if(currentUserId == document!["senderId"])
+                      if (currentUserId == document!["senderId"])
                         CircleAvatar(
                           backgroundColor: appCtrl.appTheme.redColor,
                           radius: AppRadius.r10,
-                          child:  Text("1",
-                              textAlign: TextAlign.center,
-                              style: AppCss.poppinsMedium12
-                                  .textColor(appCtrl.appTheme.whiteColor)).paddingSymmetric(vertical: Insets.i5),
+                          child: Text("1",
+                                  textAlign: TextAlign.center,
+                                  style: AppCss.poppinsMedium12
+                                      .textColor(appCtrl.appTheme.whiteColor))
+                              .paddingSymmetric(vertical: Insets.i5),
                         )
                     ],
                   ),
@@ -111,35 +112,54 @@ class MessageCard extends StatelessWidget {
                       style: AppCss.poppinsblack16
                           .textColor(appCtrl.appTheme.blackColor)),
                   subtitle: document!["lastMessage"] != null
-                      ?   document!["lastMessage"].contains(".gif") ?const Icon(Icons.gif_box) : Padding(
-                          padding: const EdgeInsets.only(top: 6.0),
-                          child: Row(children: [
-                            if(currentUserId == document!["senderId"])
-                            Icon(Icons.done_all,
-                                color: document!["isSeen"]
-                                    ? appCtrl.isTheme ?appCtrl.appTheme.white : appCtrl.appTheme.primary
-                                    : appCtrl.appTheme.grey,
-                                size: Sizes.s16),
-                            if(currentUserId == document!["senderId"])
-                            const HSpace(Sizes.s10),
-                            Expanded(
-                              child: Text(
-                                  document!["isBlock"] == true &&
-                                          document!["isBlock"] == "true"
-                                      ? document!["blockBy"] != blockBy
-                                          ? document!["blockUserMessage"]
-                                          : document!["lastMessage"]
-                                              .contains("http")
-                                      : document!["lastMessage"]
-                                              .contains("http")
-                                          ? "Media Share"
-                                          : document!["lastMessage"],
-                                  style: AppCss.poppinsMedium14
-                                      .textColor(appCtrl.appTheme.grey),
-                                  overflow: TextOverflow.ellipsis),
+                      ? document!["lastMessage"].contains(".gif")
+                          ? const Icon(Icons.gif_box)
+                          : Padding(
+                              padding: const EdgeInsets.only(top: 6.0),
+                              child: Row(children: [
+                                if (currentUserId == document!["senderId"])
+                                  Icon(Icons.done_all,
+                                      color: document!["isSeen"]
+                                          ? appCtrl.isTheme
+                                              ? appCtrl.appTheme.white
+                                              : appCtrl.appTheme.primary
+                                          : appCtrl.appTheme.grey,
+                                      size: Sizes.s16),
+                                if (currentUserId == document!["senderId"])
+                                  const HSpace(Sizes.s10),
+                                Expanded(
+                                  child: Text(
+                                      (document!["lastMessage"]
+                                              .contains("media"))
+                                          ? "${snapshot.data!["name"]} Media Share"
+                                          : document!["isBlock"] == true &&
+                                                  document!["isBlock"] == "true"
+                                              ? document!["blockBy"] != blockBy
+                                                  ? document![
+                                                      "blockUserMessage"]
+                                                  : document!["lastMessage"]
+                                                      .contains("http")
+                                              : (document!["lastMessage"]
+                                                          .contains(".pdf") ||
+                                                      document!["lastMessage"]
+                                                          .contains(".docx") ||
+                                                      document!["lastMessage"]
+                                                          .contains(".mp3") ||
+                                                      document!["lastMessage"]
+                                                          .contains(".mp4") ||
+                                                      document!["lastMessage"]
+                                                          .contains(".xlsx") ||
+                                                      document!["lastMessage"]
+                                                          .contains(".ods"))
+                                                  ? document!["lastMessage"]
+                                                      .split("-BREAK-")[0]
+                                                  : document!["lastMessage"],
+                                      style: AppCss.poppinsMedium14
+                                          .textColor(appCtrl.appTheme.grey),
+                                      overflow: TextOverflow.ellipsis),
+                                )
+                              ]),
                             )
-                          ]),
-                        )
                       : Container()),
             );
           }

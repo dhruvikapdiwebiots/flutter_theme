@@ -148,7 +148,7 @@ class MessageFirebaseApi {
           String phone =
               phoneNumberExtension(contact.phones[0].number.toString());
           if (phone == user.data()["phone"]) {
-            log("us : ${user.data()}");
+
             final storeUser = appCtrl.storage.read(session.user);
             if (user.data()["id"] != storeUser["id"]) {
               contactList.add(user.data());

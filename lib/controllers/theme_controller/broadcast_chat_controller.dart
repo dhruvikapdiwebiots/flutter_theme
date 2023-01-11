@@ -148,7 +148,7 @@ class BroadcastChatController extends GetxController {
 
   //send video after recording or pick from media
   videoSend() async {
-    await pickerCtrl.videoPickerOption(Get.context!);
+    await pickerCtrl.videoPickerOption(Get.context!,isGroup: false);
     videoFile = pickerCtrl.videoFile;
     update();
     const Duration(seconds: 2);

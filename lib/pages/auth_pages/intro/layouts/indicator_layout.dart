@@ -9,15 +9,14 @@ class IndicatorLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SmoothPageIndicator(
-        controller: controller!,
-        count: 3,
-        effect: WormEffect(
-            dotHeight: 12,
-            dotWidth: 12,
-            type: WormType.thin,
-            activeDotColor: appCtrl.appTheme.primary,
-            dotColor: appCtrl.appTheme.whiteColor
-          // strokeWidth: 5,
-        ));
+      controller:controller!,
+      count: 3,
+      axisDirection: Axis.horizontal,
+      effect: SlideEffect(
+          activeDotColor: appCtrl.appTheme.primary,
+          dotHeight: 6,
+          dotColor: appCtrl.appTheme.whiteColor,
+          dotWidth: Sizes.s15),
+    );
   }
 }

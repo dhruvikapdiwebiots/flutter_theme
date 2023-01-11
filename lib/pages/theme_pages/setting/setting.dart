@@ -16,7 +16,7 @@ class Setting extends StatelessWidget {
           leading: Icon(Icons.arrow_back,color: appCtrl.appTheme.white).inkWell(onTap: ()=>Get.back()),
           title: Text(fonts.setting.tr,style: AppCss.poppinsMedium16.textColor(appCtrl.appTheme.white),),
         ),
-        backgroundColor: appCtrl.appTheme.primary,
+        backgroundColor: appCtrl.appTheme.whiteColor,
         body: settingCtrl.user != null || settingCtrl.user != ""
             ? Column(children: [
                 Row(

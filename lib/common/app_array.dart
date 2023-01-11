@@ -23,6 +23,13 @@ class AppArray{
     {'title': "setting"},
   ];
 
+
+  //statusAction list
+  var statusAction = [
+
+    {'title': "setting"},
+  ];
+
   //setting list
   var settingList = [
     {'icon': Icons.message, 'title': "chats"},

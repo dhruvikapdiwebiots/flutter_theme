@@ -34,6 +34,7 @@ class UserContactModel {
   String? username;
   String? phoneNumber;
   String? image;
+  String? description;
   Uint8List? contactImage;
   bool? isRegister;
 
@@ -42,6 +43,7 @@ class UserContactModel {
         this.username,
         this.phoneNumber,
         this.image,
+        this.description,
         this.contactImage,
         this.isRegister});
 
@@ -50,6 +52,7 @@ class UserContactModel {
     username = json['username'];
     phoneNumber = json['phoneNumber'];
     image = json['image'];
+    description = json['description'];
     contactImage = json['contactImage'];
     isRegister = json['isRegister'];
   }
@@ -60,6 +63,7 @@ class UserContactModel {
     data['username'] = username;
     data['phoneNumber'] = phoneNumber;
     data['image'] = image;
+    data['description'] = description;
     data['contactImage'] = contactImage;
     data['isRegister'] = isRegister;
     return data;

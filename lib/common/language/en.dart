@@ -92,7 +92,9 @@ final dynamic en = {
   "intro1": "Chat anytime, anywhere",
   "intro2": "Connect your friend",
   "intro3": "Make Group Chat",
-  "introDesc1": "Chat anytime, Anywhere Passing of any information on any screen, any device instantly is made simple at its subime.",
+  "introDesc1": "Passing of any information on any screen, any device instantly is made simple at its subime.",
   "introDesc2": "A lag- free video chat connection between your users is easy and much everywhere on any device.",
   "introDesc3": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form",
+  "inviteUser": "Invite User for use Chatter",
+  "registerUser": "Register User with",
 };

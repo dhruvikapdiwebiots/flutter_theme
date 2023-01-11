@@ -13,6 +13,8 @@ void main() async {
   Get.put(AppController());
   Get.put(FirebaseCommonController());
   Get.put(NotificationController());
+  Get.put(ContactListController());
+  Get.put(CreateGroupController());
   runApp(const MyApp());
 }
 
@@ -33,7 +35,7 @@ class MyApp extends StatelessWidget {
       translations: Language(),
       locale: const Locale('en', 'US'),
       fallbackLocale: const Locale('en', 'US'), // tran
-      title: "Chatter",
+      title: fonts.chatter.tr,
       home:  Splash(),
       getPages: appRoute.getPages,
       theme: AppTheme.fromType(ThemeType.light).themeData,

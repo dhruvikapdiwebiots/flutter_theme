@@ -179,36 +179,46 @@ log("pData : ${pData["image"]}");
     });
   }
 
-  videoSend() async {
-    pickerCtrl.videoPickerOption(Get.context!);
+  Future  videoSend() async {
     videoFile = pickerCtrl.videoFile;
     update();
-    log("videoFile : $videoFile");
-    const Duration(seconds: 2);
-    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    Reference reference = FirebaseStorage.instance.ref().child(fileName);
-    var file = File(videoFile!.path);
-    UploadTask uploadTask = reference.putFile(file);
-    uploadTask.then((res) {
-      res.ref.getDownloadURL().then((downloadUrl) {
-        videoUrl = downloadUrl;
-        isLoading = false;
-        onSendMessage(videoUrl!, MessageType.image);
-        update();
-      }, onError: (err) {
-        isLoading = false;
-        update();
-        Fluttertoast.showToast(msg: 'Image is Not Valid');
-      });
-    }).then((value) {
-      videoFile = null;
-      pickerCtrl.videoFile = null;
+    if(videoFile != null) {
+      log("videoFile : $videoFile");
+      const Duration(seconds: 2);
+      String fileName = DateTime
+          .now()
+          .millisecondsSinceEpoch
+          .toString();
+      Reference reference = FirebaseStorage.instance.ref().child(fileName);
+      var file = File(videoFile!.path);
+      UploadTask uploadTask = reference.putFile(file);
+      uploadTask.then((res) {
+        res.ref.getDownloadURL().then((downloadUrl) {
+          videoUrl = downloadUrl;
+          isLoading = false;
 
-      pickerCtrl.video = null;
-      videoUrl = "";
-      update();
-      pickerCtrl.update();
-    });
+          pickerCtrl.videoFile = null;
+
+          pickerCtrl.video = null;
+          update();
+          pickerCtrl.update();
+          onSendMessage(videoUrl!, MessageType.video);
+          update();
+        }, onError: (err) {
+          isLoading = false;
+          update();
+          Fluttertoast.showToast(msg: 'Image is Not Valid');
+        });
+      }).then((value) {
+        videoFile = null;
+        pickerCtrl.videoFile = null;
+
+        pickerCtrl.video = null;
+        videoUrl = "";
+        update();
+        pickerCtrl.update();
+      });
+    }
   }
 
   //pick up contact and share
@@ -292,6 +302,8 @@ log("pData : ${pData["image"]}");
       });
       await ChatMessageApi().saveGroupData(id, pId, content,pData);
       isLoading = false;
+      videoFile = null;
+      videoUrl ="";
       update();
       listScrollController.animateTo(0.0,
           duration: const Duration(milliseconds: 300),

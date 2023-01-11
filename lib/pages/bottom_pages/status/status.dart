@@ -36,63 +36,69 @@ class _StatusListState extends State<StatusList>
   @override
   Widget build(BuildContext context) {
     return GetBuilder<StatusController>(builder: (_) {
-      return Scaffold(
-          backgroundColor: appCtrl.appTheme.whiteColor,
-          floatingActionButton: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                height: 43,
-                margin: const EdgeInsets.only(bottom: 18),
-                child: FloatingActionButton(
-                    backgroundColor: const Color(0xffebecee),
-                    child: Icon(Icons.edit,
-                        size: 23.0, color: Colors.blueGrey[700]),
-                    onPressed: () => Get.to(const TextStatus())!.then((value) {
-                          log("value : $value");
-                        })),
-              ),
-              FloatingActionButton(
-                  onPressed: () async {
-                    final List<AssetEntity>? result =
-                        await AssetPicker.pickAssets(
-                      context,
-                      pickerConfig: AssetPickerConfig(
-                        maxAssets: 1,
-                        specialPickerType: SpecialPickerType.wechatMoment,
-                      ),
-                    );
-                    File? videoFile = await result![0].file;
-                    statusCtrl.addStatus(
-                        videoFile!,
-                        result[0].title!.contains("mp4")
-                            ? StatusType.video
-                            : StatusType.image);
-                  },
-                  backgroundColor: appCtrl.appTheme.primary,
-                  child: Icon(Icons.add, color: appCtrl.appTheme.whiteColor))
-            ],
-          ),
-          body: SafeArea(
-              child: SingleChildScrollView(
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  CurrentUserStatus(
-                    statusCtrl: statusCtrl,
-                    currentUserId:
-                        statusCtrl.user != null ? statusCtrl.user["phone"] : "",
-                  ).marginSymmetric(vertical: Insets.i10),
-                  const Divider(),
-                  const VSpace(Sizes.s15),
-                  Text("Recent Updates",
-                      style: AppCss.poppinsblack14
-                          .textColor(appCtrl.appTheme.txt)),
-                  const VSpace(Sizes.s10),
-                  const StatusListLayout(),
-                ]).paddingAll(Insets.i10),
-          )));
+      return  NotificationListener<OverscrollIndicatorNotification>(
+        onNotification: (OverscrollIndicatorNotification overscroll) {
+          overscroll.disallowIndicator();
+          return false;
+        },
+        child: Scaffold(
+            backgroundColor: appCtrl.appTheme.whiteColor,
+            floatingActionButton: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  height: 43,
+                  margin: const EdgeInsets.only(bottom: 18),
+                  child: FloatingActionButton(
+                      backgroundColor: const Color(0xffebecee),
+                      child: Icon(Icons.edit,
+                          size: 23.0, color: Colors.blueGrey[700]),
+                      onPressed: () => Get.to(const TextStatus())!.then((value) {
+                            log("value : $value");
+                          })),
+                ),
+                FloatingActionButton(
+                    onPressed: () async {
+                      final List<AssetEntity>? result =
+                          await AssetPicker.pickAssets(
+                        context,
+                        pickerConfig: AssetPickerConfig(
+                          maxAssets: 1,
+                          specialPickerType: SpecialPickerType.wechatMoment,
+                        ),
+                      );
+                      File? videoFile = await result![0].file;
+                      statusCtrl.addStatus(
+                          videoFile!,
+                          result[0].title!.contains("mp4")
+                              ? StatusType.video
+                              : StatusType.image);
+                    },
+                    backgroundColor: appCtrl.appTheme.primary,
+                    child: Icon(Icons.add, color: appCtrl.appTheme.whiteColor))
+              ],
+            ),
+            body: SafeArea(
+                child: SingleChildScrollView(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    CurrentUserStatus(
+                      statusCtrl: statusCtrl,
+                      currentUserId:
+                          statusCtrl.user != null ? statusCtrl.user["phone"] : "",
+                    ).marginSymmetric(vertical: Insets.i10),
+                    const Divider(),
+                    const VSpace(Sizes.s15),
+                    Text("Recent Updates",
+                        style: AppCss.poppinsblack14
+                            .textColor(appCtrl.appTheme.txt)),
+                    const VSpace(Sizes.s10),
+                    const StatusListLayout(),
+                  ]).paddingAll(Insets.i10),
+            ))),
+      );
     });
   }
 }

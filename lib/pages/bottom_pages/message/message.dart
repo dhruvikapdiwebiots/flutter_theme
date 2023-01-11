@@ -33,15 +33,21 @@ class _MessageState extends State<Message>
   @override
   Widget build(BuildContext context) {
     return GetBuilder<MessageController>(builder: (_) {
-      return Scaffold(
-          key: messageCtrl.scaffoldKey,
-          backgroundColor: appCtrl.appTheme.whiteColor,
-          floatingActionButton: FloatingActionButton(
-            onPressed: () =>   Get.to(() => ContactList(),transition: Transition.downToUp,),
-            backgroundColor: appCtrl.appTheme.primary,
-            child:  Icon(Icons.message,color: appCtrl.appTheme.whiteColor),
-          ),
-          body:const ChatCard());
+      return  NotificationListener<OverscrollIndicatorNotification>(
+        onNotification: (OverscrollIndicatorNotification overscroll) {
+          overscroll.disallowIndicator();
+          return false;
+        },
+        child: Scaffold(
+            key: messageCtrl.scaffoldKey,
+            backgroundColor: appCtrl.appTheme.whiteColor,
+            floatingActionButton: FloatingActionButton(
+              onPressed: () =>   Get.to(() => ContactList(),transition: Transition.downToUp,),
+              backgroundColor: appCtrl.appTheme.primary,
+              child:  Icon(Icons.message,color: appCtrl.appTheme.whiteColor),
+            ),
+            body:const ChatCard()),
+      );
     });
   }
 }

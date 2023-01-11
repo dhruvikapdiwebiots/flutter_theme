@@ -63,10 +63,6 @@ class OtpBody extends StatelessWidget {
             ),
           ),
 
-          // onClipboardFound: (value) {
-          //   debugPrint('onClipboardFound: $value');
-          //   pinController.setText(value);
-          // },
           hapticFeedbackType: HapticFeedbackType.lightImpact,
           onCompleted: (pin) {
             otpCtrl.onFormSubmitted();
@@ -114,20 +110,20 @@ class OtpBody extends StatelessWidget {
             onTap: () => otpCtrl.onFormSubmitted(),
             style:
                 AppCss.poppinsMedium18.textColor(appCtrl.appTheme.whiteColor)),
-        const VSpace(Sizes.s10),
+        const VSpace(Sizes.s25),
             RichText(
 
                 textAlign: TextAlign.center,
                 text: TextSpan(
                    
-                    text: "Didn't Receive Code?",
+                    text: "Didn't Receive Code? ",
                     style: AppCss.poppinsMedium16
                         .textColor(appCtrl.appTheme.txt),
                     children: <TextSpan>[
                       TextSpan(
                           recognizer: TapGestureRecognizer()
                             ..onTap = () => otpCtrl.onVerifyCode(otpCtrl.mobileNumber, otpCtrl.dialCode),
-                          text: " Resend",
+                          text: "Resend",
                           style: AppCss.poppinsMedium16
                               .textColor(appCtrl.appTheme.txt).textDecoration(TextDecoration.underline))
                     ])).alignment(Alignment.center)

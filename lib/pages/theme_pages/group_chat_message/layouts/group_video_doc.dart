@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:intl/intl.dart';
 import 'package:video_player/video_player.dart';
 
@@ -20,6 +22,8 @@ class GroupVideoDocState extends State<GroupVideoDoc> {
   @override
   void initState() {
     // TODO: implement initState
+    log(widget.document!["content"]);
+    log(widget.document!["content"]);
     if (widget.document!["type"] == MessageType.video.name) {
       videoController = VideoPlayerController.network(
         widget.document!["content"],
@@ -54,16 +58,14 @@ class GroupVideoDocState extends State<GroupVideoDoc> {
                       DateTime.fromMillisecondsSinceEpoch(
                           int.parse(widget.document!['timestamp']))),style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.whiteColor),).marginAll(Insets.i10)
                 ],
-              ).inkWell(onTap: (){
+              ).marginSymmetric(vertical: Insets.i5,horizontal: Insets.i5).inkWell(onTap: (){
                 launchUrl(Uri.parse(widget.document!["content"].split("-BREAK-")[1]));
               }),
             );
           } else {
             // If the VideoPlayerController is still initializing, show a
             // loading spinner.
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return  Container();
           }
         },
       );

@@ -6,7 +6,8 @@ class GroupSenderImage extends StatelessWidget {
   final DocumentSnapshot? document;
   final VoidCallback? onPressed, onLongPress;
 
-  const GroupSenderImage({Key? key, this.document, this.onPressed, this.onLongPress})
+  const GroupSenderImage(
+      {Key? key, this.document, this.onPressed, this.onLongPress})
       : super(key: key);
 
   @override
@@ -31,7 +32,9 @@ class GroupSenderImage extends StatelessWidget {
                     height: Sizes.s200,
                     padding: const EdgeInsets.all(70.0),
                     decoration: BoxDecoration(
-                      color: appCtrl.isTheme ?appCtrl.appTheme.white : appCtrl.appTheme.accent,
+                      color: appCtrl.isTheme
+                          ? appCtrl.appTheme.white
+                          : appCtrl.appTheme.accent,
                       borderRadius: const BorderRadius.only(
                           topRight: Radius.circular(Insets.i20),
                           topLeft: Radius.circular(Insets.i20),
@@ -44,9 +47,13 @@ class GroupSenderImage extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
-            Text(DateFormat('HH:mm a').format(
-                DateTime.fromMillisecondsSinceEpoch(
-                    int.parse(document!['timestamp']))),style: AppCss.poppinsBold12.textColor(appCtrl.appTheme.whiteColor),).marginSymmetric(horizontal: Insets.i10,vertical: Insets.i10)
+            Text(
+              DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(
+                  int.parse(document!['timestamp']))),
+              style:
+                  AppCss.poppinsBold12.textColor(appCtrl.appTheme.whiteColor)
+            ).marginSymmetric(horizontal: Insets.i10, vertical: Insets.i10).boxShadow( blurRadius: 15.0,
+              color: appCtrl.appTheme.blackColor.withOpacity(.25),offset:const Offset(-2, 2))
           ],
         ),
       ),

@@ -60,8 +60,8 @@ class _DashboardState extends State<Dashboard>
                       backgroundColor: appCtrl.appTheme.primary,
                       automaticallyImplyLeading: false,
                       elevation: 0,
-                      actions: [
-                        if (dashboardCtrl.selectedIndex == 0) const PopUpAction(),
+                      actions:const[
+                         PopUpAction(),
                       ],
                       title: Text(fonts.chatter.tr,style: AppCss.poppinsblack16.textColor(appCtrl.appTheme.white)),
 

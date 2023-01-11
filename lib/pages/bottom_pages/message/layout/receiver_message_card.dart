@@ -131,15 +131,25 @@ class ReceiverMessageCard extends StatelessWidget {
                                 document!["lastMessage"].contains(".gif") ?const Icon(Icons.gif_box) :
                                 Expanded(
                                   child:  Text(
-                                      document!["isBlock"] == true &&
+                                      (document!["lastMessage"].contains("media")) ? "${snapshot.data!["name"]} Media Share" :   document!["isBlock"] == true &&
                                               document!["isBlock"] == "true"
                                           ? document!["blockBy"] != blockBy
                                               ? document!["blockUserMessage"]
                                               : document!["lastMessage"]
                                                   .contains("http")
-                                          : document!["lastMessage"]
-                                                  .contains("http")
-                                              ? "Media Share"
+                                          :  (document!["lastMessage"].contains(".pdf") ||
+                                          document!["lastMessage"]
+                                              .contains(".docx") ||
+                                          document!["lastMessage"]
+                                              .contains(".mp3") ||
+                                          document!["lastMessage"]
+                                              .contains(".mp4") ||
+                                          document!["lastMessage"]
+                                              .contains(".xlsx") ||
+                                          document!["lastMessage"]
+                                              .contains(".ods"))
+                                          ? document!["lastMessage"]
+                                          .split("-BREAK-")[0]
                                               : document!["lastMessage"],
                                       style: AppCss.poppinsMedium14
                                           .textColor(appCtrl.appTheme.grey),

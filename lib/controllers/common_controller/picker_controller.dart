@@ -22,6 +22,19 @@ class PickerController extends GetxController {
     Get.forceAppUpdate();
   }
 
+
+// GET VIDEO FROM GALLERY
+  Future getVideo(source) async {
+    final ImagePicker picker = ImagePicker();
+    videoFile = (await picker.pickVideo(source: source))!;
+    if (videoFile != null) {
+      video = File(videoFile!.path);
+      update();
+      log("getV : $video");
+    }
+    Get.forceAppUpdate();
+  }
+
 // FOR Dismiss KEYBOARD
   void dismissKeyboard() {
     FocusScope.of(Get.context!).requestFocus(FocusNode());
@@ -49,37 +62,32 @@ class PickerController extends GetxController {
   }
 
   //video picker option
-   videoPickerOption(BuildContext context) {
+  videoPickerOption(BuildContext context, {isGroup = true}) {
     showModalBottomSheet(
         context: context,
         shape: const RoundedRectangleBorder(
           borderRadius:
-              BorderRadius.vertical(top: Radius.circular(AppRadius.r25)),
+          BorderRadius.vertical(top: Radius.circular(AppRadius.r25)),
         ),
         builder: (BuildContext context) {
           // return your layout
           return ImagePickerLayout(cameraTap: () async {
             dismissKeyboard();
-            final ImagePicker picker = ImagePicker();
-            videoFile = (await picker.pickVideo(source: ImageSource.camera))!;
-            if (videoFile != null) {
-              video = File(videoFile!.path);
-
-              update();
-              Get.back(result: video);
-            }
-            update();
-            Get.forceAppUpdate();
+            await getVideo(ImageSource.camera).then((value) {
+              if(isGroup) {
+                final chatCtrl = Get.find<GroupChatMessageController>();
+                chatCtrl.videoSend();
+              }
+            });
+            Get.back();
           }, galleryTap: () async {
-            final ImagePicker picker = ImagePicker();
-            videoFile = (await picker.pickVideo(source: ImageSource.gallery))!;
-            if (videoFile != null) {
-              video = File(videoFile!.path);
-              update();
-              Get.back(result: video);
-            }
-            update();
-            Get.forceAppUpdate();
+            await getVideo(ImageSource.gallery).then((value){
+              if(isGroup) {
+                final chatCtrl = Get.find<GroupChatMessageController>();
+                chatCtrl.videoSend();
+              }
+            });
+            Get.back();
           });
         });
   }

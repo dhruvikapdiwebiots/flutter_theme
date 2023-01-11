@@ -1,5 +1,6 @@
 class ImageAssets{
-  final String splashIcon = 'assets/images/splash_icon.jpg';
+  final String splashIcon = 'assets/images/splash.png';
+  final String darkSplash = 'assets/images/darkSplash.png';
   final String logo = 'assets/images/chat.png';
   final String login1 = 'assets/images/login1.png';
   final String otp = 'assets/images/otp.png';

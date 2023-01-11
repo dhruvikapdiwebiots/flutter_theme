@@ -12,6 +12,7 @@ class AppTheme {
   bool isDark;
   Color txt;
   Color primary;
+  Color splashPrimary;
   Color secondary;
   Color accent;
   Color transparentColor;
@@ -34,6 +35,7 @@ class AppTheme {
     required this.isDark,
     required this.txt,
     required this.primary,
+    required this.splashPrimary,
     required this.secondary,
     required this.accent,
     //Extra
@@ -59,6 +61,7 @@ class AppTheme {
           isDark: false,
           txt: const Color(0xFF000E08),
           primary: const Color(0xFF3467B8),
+          splashPrimary: Colors.white,
           secondary: const Color(0xFF6EBAE7),
           accent: const Color(0xFF797C7B),
           grey: Colors.grey,
@@ -80,6 +83,7 @@ class AppTheme {
             isDark: true,
             txt: Colors.white,
             primary: Colors.black,
+            splashPrimary: const Color(0xFF3467B8),
             secondary: const Color(0xFF6EBAE7),
             accent: const Color(0xFF797C7B),
             grey: Colors.grey,

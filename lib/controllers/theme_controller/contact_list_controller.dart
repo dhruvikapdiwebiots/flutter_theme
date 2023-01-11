@@ -24,6 +24,7 @@ class ContactListController extends GetxController {
 
   //fetch data
   Future<void> fetchPage(pageKey) async {
+    log("fetchOage");
     contactList = [];
     registerContactList = [];
     unRegisterContactList = [];
@@ -35,6 +36,7 @@ class ContactListController extends GetxController {
           .where((c) => c.phones.isNotEmpty)
           .forEach((Contact p) async {
         if (p.phones.isNotEmpty) {
+          nameList = [];
           String phone = phoneNumberExtension(p.phones[0].number);
           await FirebaseFirestore.instance
               .collection("users")
@@ -42,20 +44,27 @@ class ContactListController extends GetxController {
               .get()
               .then((value) {
             if (value.docs.isNotEmpty) {
+              nameList = [];
               UserContactModel userContactModel = UserContactModel(
-                  isRegister: true,
-                  phoneNumber: phone,
-                  uid: value.docs[0].data()["id"],
-                  image: value.docs[0].data()["image"],
-                  username: value.docs[0].data()["name"]);
+                isRegister: true,
+                phoneNumber: phone,
+                uid: value.docs[0].data()["id"],
+                image: value.docs[0].data()["image"],
+                username: value.docs[0].data()["name"],
+                description: value.docs[0].data()["statusDesc"],
+              );
               if (phone != user["phone"]) {
                 if (!registerContactList!.contains(userContactModel)) {
-                  registerContactList!.add(userContactModel);
+                  if (value.docs[0].data()["isActive"] == true) {
+                    registerContactList!.add(userContactModel);
+                  }
                 }
               }
               update();
+
               nameList!.add(userContactModel);
             } else {
+
               UserContactModel userContactModel = UserContactModel(
                   isRegister: false,
                   phoneNumber: phone,
@@ -74,13 +83,19 @@ class ContactListController extends GetxController {
     }
 
     ContactModel contactModel = ContactModel(
-        title: "Register User with", userTitle: registerContactList);
-    contactList.add(contactModel);
+        title: fonts.registerUser.tr, userTitle: registerContactList);
+    if(!contactList.contains(contactModel)) {
+      contactList.add(contactModel);
+    }
 
     log("contactList : ${contactList[0].userTitle!.length}");
     ContactModel unRegisterContactModel = ContactModel(
-        title: "Invite User for use Chatter", userTitle: unRegisterContactList);
-    contactList.add(unRegisterContactModel);
+        title: fonts.inviteUser.tr, userTitle: unRegisterContactList);
+    if(!contactList.contains(unRegisterContactModel)) {
+      contactList.add(unRegisterContactModel);
+    }
+
+    pagingController.itemList = [];
     isLoading = false;
     try {
       final newItems = contactList;
@@ -94,6 +109,7 @@ class ContactListController extends GetxController {
     } catch (error) {
       pagingController.error = error;
     }
+    update();
   }
 
   searchList(pageKey, search) async {
@@ -108,15 +124,17 @@ class ContactListController extends GetxController {
 
           element.value.userTitle!.asMap().entries.forEach((contact) {
             if (contact.value.username!.toLowerCase().contains(search)) {
-              log("contact.value : ${contact.value.username}");
-              searchContactList!.add(contact.value);
-              update();
+              if (!searchContactList!.contains(contact.value)) {
+                searchContactList!.add(contact.value);
+                update();
+              }
               log("ddd : ${searchContactList!.length}");
             }
           });
 
           update();
         });
+        pagingController.itemList = [];
         ContactModel unRegisterContactModel = ContactModel(
             title: "Invite User for use Chatter", userTitle: searchContactList);
         filter.add(unRegisterContactModel);
@@ -138,19 +156,12 @@ class ContactListController extends GetxController {
   }
 
   @override
-  void onReady() async {
-    // TODO: implement onReady
-    update();
-
-    super.onReady();
-  }
-
-  @override
   void onInit() {
     // TODO: implement onInit
+    super.onInit();
     pagingController.addPageRequestListener((pageKey) {
+      log("pagekey");
       fetchPage(pageKey);
     });
-    super.onInit();
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import '../../../../../../config.dart';
 
 class GroupFileRowList extends StatelessWidget {
@@ -18,10 +20,10 @@ class GroupFileRowList extends StatelessWidget {
               icons: Icons.video_collection_sharp,
               color: Colors.pink,
               text: fonts.video.tr,
-              onTap: () async {
-                chatCtrl.pickerCtrl.dismissKeyboard();
+              onTap: ()  async{
                 Get.back();
-                chatCtrl.videoSend();
+                await chatCtrl.pickerCtrl.videoPickerOption(context);
+
               }),
           const HSpace(Sizes.s40),
           IconCreation(
@@ -30,6 +32,7 @@ class GroupFileRowList extends StatelessWidget {
                 chatCtrl.pickerCtrl.imagePickerOption(Get.context!);
                 chatCtrl.imageFile = chatCtrl.pickerCtrl.imageFile;
                 chatCtrl.update();
+
                 chatCtrl.uploadFile();
               },
               icons: Icons.insert_photo,

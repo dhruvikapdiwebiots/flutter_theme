@@ -27,7 +27,7 @@ class AllRegisteredContact extends StatelessWidget {
           imageUrl:   data["image"],
           imageBuilder: (context, imageProvider) => CircleAvatar(
             backgroundColor: const Color(0xffE6E6E6),
-            radius: 32,
+            radius: Sizes.s28,
             backgroundImage:
             NetworkImage(data["image"]),
           ),
@@ -41,7 +41,7 @@ class AllRegisteredContact extends StatelessWidget {
               color: appCtrl.appTheme.grey.withOpacity(.4),
               shape: BoxShape.circle)),
       title: Text(data["name"] ?? ""),
-      subtitle: Text(data["phone"] ?? ""),
+      subtitle: Text(data["statusDesc"] ?? ""),
     );
   }
 }

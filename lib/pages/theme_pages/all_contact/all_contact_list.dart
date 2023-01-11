@@ -91,8 +91,7 @@ class AllContactList extends StatelessWidget {
                                                           .appTheme
                                                           .whiteColor))),
                                       title: Text(item.displayName ?? ""),
-                                      subtitle: Text(phoneNumberExtension(
-                                          item.phones[0].number)),
+
                                     ).width(MediaQuery.of(context).size.width)),
                           )))
                 ])

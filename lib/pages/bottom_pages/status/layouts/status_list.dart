@@ -25,8 +25,6 @@ class _StatusListLayoutState extends State<StatusListLayout> {
             future: statusCtrl.getStatus(),
             builder: (context, snapshot) {
               List<Status> status = (snapshot.data) ?? [];
-
-              log("status : ${status.length}");
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               }
@@ -35,6 +33,8 @@ class _StatusListLayoutState extends State<StatusListLayout> {
               } else {
                 return ListView.builder(
                   itemCount: status.length,
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
                     return Column(children: [
                       InkWell(
@@ -69,12 +69,12 @@ class _StatusListLayoutState extends State<StatusListLayout> {
                                                   .textColor(
                                                       appCtrl.appTheme.grey)),
                                         Text(
-                                            DateFormat('HH:mm a').format(
+                                            "Yesterday, ${DateFormat('HH:mm a').format(
                                                 DateTime
                                                     .fromMillisecondsSinceEpoch(
-                                                        int.parse((snapshot
-                                                                .data!)[index]
-                                                            .createdAt))),
+                                                    int.parse((snapshot
+                                                        .data!)[index]
+                                                        .createdAt)))}",
                                             style: AppCss.poppinsMedium12
                                                 .textColor(
                                                     appCtrl.appTheme.grey)),

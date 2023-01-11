@@ -35,7 +35,7 @@ class CreateGroupController extends GetxController {
 
   //get firebase register contact list
   getFirebaseContact(List<Contact> contacts) async {
-
+contactList = [];
     var user = appCtrl.storage.read(session.user);
     contacts.asMap().entries.forEach((contact) {
       if (contact.value.phones.isNotEmpty) {
@@ -49,7 +49,11 @@ class CreateGroupController extends GetxController {
               .get()
               .then((value) {
             if (value.docs.isNotEmpty) {
-              contactList.add(value.docs[0].data());
+              if(value.docs[0].data()["isActive"] == true) {
+                if(!contactList.contains(value.docs[0].data())) {
+                  contactList.add(value.docs[0].data());
+                }
+              }
             }
             update();
             Get.forceAppUpdate();
@@ -166,6 +170,7 @@ class CreateGroupController extends GetxController {
     }
   }
 
+  //check chat available with contacts
   Future<List> checkChatAvailable() async {
     final user = appCtrl.storage.read(session.user);
     selectedContact.asMap().entries.forEach((e)async{
@@ -210,8 +215,7 @@ class CreateGroupController extends GetxController {
         }
         update();
       });
-      log("newContact : ${newContact[0]}");
-      log("newContact : ${newContact[1]}");
+
     });
 
 
@@ -241,9 +245,16 @@ class CreateGroupController extends GetxController {
   @override
   void onReady() {
 // TODO: implement onReady
-    isGroup = Get.arguments;
+    isGroup = Get.arguments ?? false;
     update();
     super.onReady();
+
+  }
+
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
     refreshContacts();
   }
 }

@@ -16,7 +16,10 @@ class DashboardController extends GetxController with GetSingleTickerProviderSta
   List bottomList = [];
   final statusCtrl = Get.isRegistered<StatusController>() ? Get.find<StatusController>() :Get.put(StatusController());
   final settingCtrl = Get.isRegistered<SettingController>() ? Get.find<SettingController>() :Get.put(SettingController());
+  final contactCtrl = Get.isRegistered<ContactListController>() ? Get.find<ContactListController>() :Get.put(ContactListController());
+  final createGroupCtrl = Get.isRegistered<CreateGroupController>() ? Get.find<CreateGroupController>() :Get.put(CreateGroupController());
   List actionList = [];
+  List statusAction = [];
   ConnectivityResult connectionStatus = ConnectivityResult.none;
   final Connectivity connectivity = Connectivity();
   late StreamSubscription<ConnectivityResult> connectivitySubscription;
@@ -69,12 +72,14 @@ class DashboardController extends GetxController with GetSingleTickerProviderSta
 
     bottomList = appArray.bottomList;
     actionList = appArray.actionList;
+    statusAction = appArray.statusAction;
     controller = TabController(length: bottomList.length, vsync: this);
     firebaseCtrl.setIsActive();
     controller!.addListener(() {
       selectedIndex = controller!.index;
       update();
     });
+
    // firebaseCtrl.statusDeleteAfter24Hours();
     update();
 
@@ -92,5 +97,14 @@ class DashboardController extends GetxController with GetSingleTickerProviderSta
     } else if (selectedPopTap == 2) {
       Get.toNamed(routeName.setting);
     }
+  }
+
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    log("dsfs ");
+    contactCtrl.onInit();
+    createGroupCtrl.onInit();
+    super.onInit();
   }
 }

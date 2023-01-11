@@ -265,8 +265,6 @@ log("file : $file");
 
   //send video after recording or pick from media
   videoSend() async {
-     pickerCtrl.videoPickerOption(Get.context!);
-    videoFile = pickerCtrl.videoFile;
     update();
     log("videoFile : $videoFile");
     const Duration(seconds: 2);

@@ -203,7 +203,44 @@ class _ReceiverMessageState extends State<ReceiverMessage> {
                           context: Get.context!,
                           builder: (BuildContext context) => chatCtrl
                               .buildPopupDialog(context, widget.document!));
-                    } ,child: Image.network(widget.document!["content"],height: Sizes.s100,))
+                    } ,child:  Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(widget.document!['senderName'],
+                                style: AppCss.poppinsMedium12
+                                    .textColor(appCtrl.appTheme.txt))
+                                .paddingOnly(
+                                left: Insets.i8,
+                                right: Insets.i8,
+                                top: Insets.i5,
+                                bottom: Insets.i2)
+                                .decorated(
+                                color: appCtrl.appTheme.grey.withOpacity(.3),
+                                borderRadius:
+                                BorderRadius.circular(AppRadius.r30)),
+                            const VSpace(Sizes.s2),
+                            Image.network(
+                              widget.document!["content"],
+                              height: Sizes.s100,
+                            ),
+                          ],
+                        ),
+                        Text(widget.document!['senderName'],
+                            style: AppCss.poppinsMedium12
+                                .textColor(appCtrl.appTheme.txt))
+                            .paddingOnly(
+                            left: Insets.i8,
+                            right: Insets.i8,
+                            top: Insets.i5,
+                            bottom: Insets.i2)
+                            .decorated(
+                            color: appCtrl.appTheme.grey.withOpacity(.3),
+                            borderRadius: BorderRadius.circular(AppRadius.r30)),
+                      ],
+                    ).marginOnly(bottom: Insets.i8))
 
                 ],
               ),

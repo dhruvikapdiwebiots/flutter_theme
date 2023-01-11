@@ -14,13 +14,16 @@ class SettingListCard extends StatelessWidget {
           } else if(index ==1){
             var user = appCtrl.storage.read(session.user);
             Get.offAllNamed(routeName.phone);
-            Get.offAllNamed(routeName.phone);
             await FirebaseFirestore.instance
                 .collection("users")
-                .doc(user["id"]).delete();
+                .doc(user["id"]).update({"isActive":false});
             FirebaseAuth.instance.signOut();
-            await appCtrl.storage.remove("user");
-            await appCtrl.storage.remove("id");
+            await appCtrl.storage.remove(session.user);
+            await appCtrl.storage.remove(session.id);
+            await appCtrl.storage.remove(session.isDarkMode);
+            await appCtrl.storage.remove(session.isRTL);
+            await appCtrl.storage.remove(session.languageCode);
+            await appCtrl.storage.remove(session.languageCode);
 
           }else if (index == 2) {
             var user = appCtrl.storage.read(session.user);
@@ -35,8 +38,12 @@ class SettingListCard extends StatelessWidget {
                   .toString()
             });
             FirebaseAuth.instance.signOut();
-            await appCtrl.storage.remove("user");
-            await appCtrl.storage.remove("id");
+            await appCtrl.storage.remove(session.user);
+            await appCtrl.storage.remove(session.id);
+            await appCtrl.storage.remove(session.isDarkMode);
+            await appCtrl.storage.remove(session.isRTL);
+            await appCtrl.storage.remove(session.languageCode);
+            await appCtrl.storage.remove(session.languageCode);
             Get.offAllNamed(routeName.phone);
           }
         },
@@ -44,6 +51,6 @@ class SettingListCard extends StatelessWidget {
         title: Text(trans(data["title"]),
             style: AppCss.poppinsMedium14
                 .textColor(appCtrl.appTheme.blackColor)),
-        leading: Icon(data["icon"]));
+        leading: Icon( data["icon"], color: data["title"] == "logout" ?  appCtrl.appTheme.redColor :appCtrl.appTheme.txt,));
   }
 }

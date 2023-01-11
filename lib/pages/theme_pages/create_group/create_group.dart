@@ -1,13 +1,15 @@
 import '../../../config.dart';
 
 class GroupChat extends StatelessWidget {
-  final groupChatCtrl = Get.put(CreateGroupController());
+  final groupChatCtrl = Get.find<CreateGroupController>();
 
   GroupChat({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<CreateGroupController>(builder: (_) {
+      groupChatCtrl.isGroup = Get.arguments;
+      groupChatCtrl.update();
       return WillPopScope(
         onWillPop: () async {
           groupChatCtrl.selectedContact = [];
@@ -19,6 +21,11 @@ class GroupChat extends StatelessWidget {
             appBar: AppBar(
                 centerTitle: false,
                 automaticallyImplyLeading: false,
+                actions: [ Icon(
+                  Icons.refresh,
+                  color: appCtrl.appTheme.white,
+                ).marginSymmetric(horizontal: Insets.i15).inkWell(
+                    onTap: () => groupChatCtrl.refreshContacts())],
                 leading: Icon(Icons.arrow_back,color: appCtrl.appTheme.whiteColor).inkWell(onTap: ()=> Get.back()),
                 backgroundColor: appCtrl.appTheme.primary,
                 title: Text(

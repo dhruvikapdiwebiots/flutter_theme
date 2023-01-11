@@ -36,7 +36,7 @@ class OtpController extends GetxController {
       await FirebaseFirestore.instance
           .collection('users')
           .doc(user["id"])
-          .update({'status': "Online", "pushToken": token});
+          .update({'status': "Online", "pushToken": token,"isActive":true});
       log('check : ${appCtrl.storage.read(session.isIntro)}');
       Get.toNamed(routeName.dashboard);
     });
@@ -64,13 +64,7 @@ class OtpController extends GetxController {
     update();
 
     verificationCompleted(PhoneAuthCredential phoneAuthCredential)async {
-     /* firebaseAuth
-          .signInWithCredential(phoneAuthCredential)
-          .then((UserCredential value) {
-       log("users : $value");
-      }).catchError((error) {
-        showToast("Try again in sometime", appCtrl.appTheme.redColor);
-      });*/
+
     }
 
     verificationFailed(FirebaseAuthException authException) {
@@ -81,12 +75,14 @@ class OtpController extends GetxController {
 
     codeSent(String verificationId, [int? forceResendingToken]) async {
       verificationCode = verificationId;
+      log("codeSent : $verificationCode");
      update();
     }
     codeAutoRetrievalTimeout(String verificationId) {
 
       verificationCode = verificationId;
       update();
+      log("codeAutoRetrievalTimeout : $verificationCode");
     }
 
     //   Change country code
@@ -108,9 +104,10 @@ class OtpController extends GetxController {
     isLoading = true;
     update();
 
+    log("verificationCode : $verificationCode");
     PhoneAuthCredential authCredential = PhoneAuthProvider.credential(
         verificationId: verificationCode!, smsCode: otp.text);
-    log("authCredential : ${authCredential.accessToken}");
+
     firebaseAuth
         .signInWithCredential(authCredential)
         .then((UserCredential value) async {

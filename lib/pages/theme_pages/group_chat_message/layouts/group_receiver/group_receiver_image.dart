@@ -5,7 +5,9 @@ import '../../../../../config.dart';
 class GroupReceiverImage extends StatelessWidget {
   final DocumentSnapshot? document;
   final GestureLongPressCallback? onLongPress;
-  const GroupReceiverImage({Key? key,this.document,this.onLongPress}) : super(key: key);
+
+  const GroupReceiverImage({Key? key, this.document, this.onLongPress})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,8 +17,8 @@ class GroupReceiverImage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(document!['senderName'],
-                style: AppCss.poppinsMedium14
-                    .textColor(appCtrl.appTheme.primary)),
+                style:
+                    AppCss.poppinsMedium14.textColor(appCtrl.appTheme.primary)),
             const VSpace(Sizes.s10),
             Stack(
               alignment: Alignment.bottomRight,
@@ -46,9 +48,14 @@ class GroupReceiverImage extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ),
-                Text(DateFormat('HH:mm a').format(
-                    DateTime.fromMillisecondsSinceEpoch(
-                        int.parse(document!['timestamp']))),style: AppCss.poppinsBold12.textColor(appCtrl.appTheme.whiteColor),).marginSymmetric(horizontal: Insets.i10,vertical: Insets.i10)
+                Text(
+                  DateFormat('HH:mm a').format(
+                      DateTime.fromMillisecondsSinceEpoch(
+                          int.parse(document!['timestamp']))),
+                  style: AppCss.poppinsBold12
+                      .textColor(appCtrl.appTheme.whiteColor),
+                ).marginSymmetric(horizontal: Insets.i10, vertical: Insets.i10).boxShadow( blurRadius: 15.0,
+                    color: appCtrl.appTheme.blackColor.withOpacity(.25),offset:const Offset(-2, 2))
               ],
             ),
           ],

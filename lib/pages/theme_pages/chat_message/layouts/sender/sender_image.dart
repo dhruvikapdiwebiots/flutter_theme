@@ -45,7 +45,8 @@ class SenderImage extends StatelessWidget {
               children: [
                 Text(DateFormat('HH:mm a').format(
                     DateTime.fromMillisecondsSinceEpoch(
-                        int.parse(document!['timestamp']))),style: AppCss.poppinsBold12.textColor(appCtrl.appTheme.whiteColor),),
+                        int.parse(document!['timestamp']))),style: AppCss.poppinsBold12.textColor(appCtrl.appTheme.whiteColor),).boxShadow( blurRadius: 15.0,
+                    color: appCtrl.appTheme.blackColor.withOpacity(.25),offset:const Offset(-2, 2)),
                 const HSpace(Sizes.s5),
                 Icon(Icons.done_all_outlined,
                     size: Sizes.s15,

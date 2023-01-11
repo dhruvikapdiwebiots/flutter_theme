@@ -60,7 +60,6 @@ class StatusController extends GetxController {
 
 //get status of user according to contact in firebase
   Future getStatus() async {
-    log("us : ${appCtrl.storage.read(session.user)}");
     List<Status> statusData = [];
     try {
       statusData = await getStatusList(contactList);
