@@ -19,20 +19,17 @@ class GroupFileRowList extends StatelessWidget {
               icons: Icons.video_collection_sharp,
               color: Colors.pink,
               text: fonts.video.tr,
-              onTap: ()  async{
+              onTap: ()  {
                 Get.back();
-                await chatCtrl.pickerCtrl.videoPickerOption(context);
+                chatCtrl.pickerCtrl.videoPickerOption(context,isGroup: true);
 
               }),
           const HSpace(Sizes.s40),
           IconCreation(
               onTap: () {
                 Get.back();
-                chatCtrl.pickerCtrl.imagePickerOption(Get.context!);
-                chatCtrl.imageFile = chatCtrl.pickerCtrl.imageFile;
-                chatCtrl.update();
+                chatCtrl.pickerCtrl.imagePickerOption(Get.context!,isGroup: true);
 
-                chatCtrl.uploadFile();
               },
               icons: Icons.insert_photo,
               color: Colors.purple,

@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter_theme/config.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 class PickerController extends GetxController {
   XFile? imageFile;
@@ -16,10 +17,31 @@ class PickerController extends GetxController {
     final ImagePicker picker = ImagePicker();
     imageFile = (await picker.pickImage(source: source))!;
     if (imageFile != null) {
-      image = File(imageFile!.path);
+      final croppedFile = await ImageCropper().cropImage(
+        sourcePath: imageFile!.path,
+        compressFormat: ImageCompressFormat.jpg,
+        compressQuality: 100,
+        uiSettings: [
+          AndroidUiSettings(
+              toolbarTitle: 'Cropper',
+              toolbarColor: appCtrl.appTheme.primary,
+              toolbarWidgetColor: appCtrl.appTheme.white,
+              initAspectRatio: CropAspectRatioPreset.original,
+              lockAspectRatio: false),
+          IOSUiSettings(
+            title: 'Cropper',
+          ),
+        ],
+      );
+      if (croppedFile != null) {
+        image = File(croppedFile.path);
+      }
+    
+
       update();
+      log("image : $image");
+      Get.forceAppUpdate();
     }
-    Get.forceAppUpdate();
   }
 
 
@@ -41,7 +63,7 @@ class PickerController extends GetxController {
   }
 
   //image picker option
-  imagePickerOption(BuildContext context) {
+  imagePickerOption(BuildContext context, {isGroup = false,isSingleChat = false,isCreateGroup =false}) {
     showModalBottomSheet(
         context: context,
         shape: const RoundedRectangleBorder(
@@ -52,17 +74,45 @@ class PickerController extends GetxController {
           // return your layout
           return ImagePickerLayout(cameraTap: () async {
             dismissKeyboard();
-            await getImage(ImageSource.camera);
+            await getImage(ImageSource.camera).then((value) {
+              if(isGroup) {
+                final chatCtrl = Get.find<GroupChatMessageController>();
+                chatCtrl.uploadFile();
+              }else if(isSingleChat){
+                final singleChatCtrl = Get.find<ChatController>();
+                singleChatCtrl.uploadFile();
+              } else if(isCreateGroup){
+                final singleChatCtrl = Get.find<CreateGroupController>();
+                singleChatCtrl.uploadFile();
+              } else{
+                final broadcastCtrl = Get.find<BroadcastChatController>();
+                broadcastCtrl.uploadFile();
+              }
+            });
             Get.back();
           }, galleryTap: () async {
-            await getImage(ImageSource.gallery);
+            await getImage(ImageSource.gallery).then((value) {
+              if(isGroup) {
+                final chatCtrl = Get.find<GroupChatMessageController>();
+                chatCtrl.uploadFile();
+              }else if(isSingleChat){
+                final singleChatCtrl = Get.find<ChatController>();
+                singleChatCtrl.uploadFile();
+              } else if(isCreateGroup){
+                final singleChatCtrl = Get.find<CreateGroupController>();
+                singleChatCtrl.uploadFile();
+              } else{
+                final broadcastCtrl = Get.find<BroadcastChatController>();
+                broadcastCtrl.uploadFile();
+              }
+            });
             Get.back();
           });
         });
   }
 
   //video picker option
-  videoPickerOption(BuildContext context, {isGroup = true,isSingleChat = false}) {
+  videoPickerOption(BuildContext context, {isGroup = false,isSingleChat = false}) {
     showModalBottomSheet(
         context: context,
         shape: const RoundedRectangleBorder(

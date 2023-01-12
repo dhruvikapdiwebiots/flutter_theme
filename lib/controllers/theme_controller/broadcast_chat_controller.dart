@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:dartx/dartx_io.dart';
 import 'package:flutter_theme/config.dart';
+import 'package:flutter_theme/pages/theme_pages/broadcast_chat/layouts/broadcast_file_list.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
@@ -120,7 +121,7 @@ class BroadcastChatController extends GetxController {
         builder: (BuildContext context) {
           // return your layout
 
-          return const FileBottomSheet();
+          return const BroadcastFileRowList();
         });
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter_theme/config.dart';
 
 class Fonts{
+  final gifAPI = "aJToxhjbwRwVxkxKfAk4xQVXygh8b2W6";
   final intro1 = "intro1";
   final intro2 = "intro2";
   final intro3 = "intro3";

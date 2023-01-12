@@ -26,6 +26,9 @@ class ChatController extends GetxController {
   XFile? imageFile;
   XFile? videoFile;
   String? audioFile;
+  String selectedImage = "";
+  final picker = ImagePicker();
+  File? selectedFile;
   File? image;
   File? video;
   bool isLoading = true;
@@ -273,6 +276,9 @@ class ChatController extends GetxController {
 
 // UPLOAD SELECTED IMAGE TO FIREBASE
   Future uploadFile() async {
+    imageFile = pickerCtrl.imageFile;
+    update();
+    log("chat_con : $imageFile");
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     Reference reference = FirebaseStorage.instance.ref().child(fileName);
     var file = File(imageFile!.path);
@@ -282,6 +288,7 @@ class ChatController extends GetxController {
         imageUrl = downloadUrl;
         imageFile = null;
         isLoading = false;
+        log("imageUrl : $imageUrl");
         onSendMessage(imageUrl!, MessageType.image);
         update();
       }, onError: (err) {

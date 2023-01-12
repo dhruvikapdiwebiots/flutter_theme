@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:giphy_get/giphy_get.dart';
+
 import '../../../../config.dart';
 
 class GroupInputBox extends StatelessWidget {
@@ -57,6 +59,28 @@ class GroupInputBox extends StatelessWidget {
             icon: const Icon(Icons.attachment_outlined),
             onPressed: () {
               chatCtrl.shareMedia(context);
+            },
+            color: appCtrl.appTheme.primary,
+          ),
+          IconButton(
+            icon: const Icon(Icons.gif_box_outlined),
+            padding: const EdgeInsets.all(0.0),
+            onPressed: () async{
+              GiphyGif? gif =
+              await GiphyGet.getGif(
+                tabColor: appCtrl.appTheme.primary,
+                context: context,
+
+                apiKey:
+                fonts.gifAPI, //YOUR API KEY HERE
+                lang:
+                GiphyLanguage.english,
+              );
+
+              if(gif != null) {
+                chatCtrl.onSendMessage(gif.images!.original!
+                    .url, MessageType.gif);
+              }
             },
             color: appCtrl.appTheme.primary,
           ),

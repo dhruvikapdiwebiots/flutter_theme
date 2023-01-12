@@ -1,3 +1,7 @@
+import 'dart:developer';
+
+import 'package:giphy_get/giphy_get.dart';
+
 import '../../../../config.dart';
 
 class InputBox extends StatelessWidget {
@@ -42,17 +46,33 @@ class InputBox extends StatelessWidget {
               },
               color: appCtrl.appTheme.primary,
             ),
+            IconButton(
+                icon: const Icon(Icons.gif_box_outlined),
+                padding: const EdgeInsets.all(0.0),
+                onPressed: () async {
+                  GiphyGif? gif = await GiphyGet.getGif(
+                    tabColor: appCtrl.appTheme.primary,
+                    context: context,
+
+                    apiKey: fonts.gifAPI, //YOUR API KEY HERE
+                    lang: GiphyLanguage.english,
+                  );
+                  if (gif != null) {
+                    chatCtrl.onSendMessage(
+                        gif.images!.original!.url, MessageType.gif);
+                  }
+                },
+                color: appCtrl.appTheme.primary),
             Material(
                 color: Colors.white,
                 child: Container(
                     margin: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: IconButton(
-                      icon: const Icon(Icons.send),
-                      onPressed: () => chatCtrl.onSendMessage(
-                          chatCtrl.textEditingController.text,
-                          MessageType.text),
-                      color: appCtrl.appTheme.primary,
-                    )))
+                        icon: const Icon(Icons.send),
+                        onPressed: () => chatCtrl.onSendMessage(
+                            chatCtrl.textEditingController.text,
+                            MessageType.text),
+                        color: appCtrl.appTheme.primary)))
           ],
         ),
       );

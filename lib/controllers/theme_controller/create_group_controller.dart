@@ -73,6 +73,9 @@ contactList = [];
 
 // UPLOAD SELECTED IMAGE TO FIREBASE
   Future uploadFile() async {
+    imageFile = pickerCtrl.imageFile;
+    update();
+    log("crate_group_con  $imageFile");
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     Reference reference = FirebaseStorage.instance.ref().child(fileName);
     var file = File(imageFile!.path);

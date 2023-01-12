@@ -15,6 +15,7 @@ class OtpCommon{
       color: Color.fromRGBO(30, 60, 87, 1),
     ),
     decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(AppRadius.r8),
       border: Border.all(color:appCtrl.isTheme ? appCtrl.appTheme.white : appCtrl.appTheme.primary),
     ),
   );

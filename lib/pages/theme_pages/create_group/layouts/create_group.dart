@@ -51,7 +51,7 @@ class CreateGroup extends StatelessWidget {
                                       .clipRRect(all: AppRadius.r50),
                                 ).inkWell(onTap: () {
                                   groupCtrl.pickerCtrl
-                                      .imagePickerOption(context);
+                                      .imagePickerOption(context,isCreateGroup: true);
                                 })
                               : Image.asset(
                                   imageAssets.user,
@@ -66,7 +66,7 @@ class CreateGroup extends StatelessWidget {
                                       shape: BoxShape.circle)
                                   .inkWell(
                                       onTap: () => groupCtrl.pickerCtrl
-                                          .imagePickerOption(context)),
+                                          .imagePickerOption(context,isCreateGroup: true)),
                           const HSpace(Sizes.s15),
                           Expanded(
                             child: CommonTextBox(

@@ -22,19 +22,17 @@ class CommonFileRowList extends StatelessWidget {
               icons: Icons.video_collection_sharp,
               color: Colors.pink,
               text: fonts.video.tr,
-              onTap: ()async {
-                chatCtrl.pickerCtrl.videoPickerOption(context,isSingleChat: true);
+              onTap: () {
                 Get.back();
+                chatCtrl.pickerCtrl.videoPickerOption(context,isSingleChat: true);
+
               }),
           const HSpace(Sizes.s40),
           IconCreation(
               onTap: () {
                 Get.back();
-                chatCtrl.pickerCtrl.imagePickerOption(Get.context!);
-                chatCtrl.imageFile = chatCtrl.pickerCtrl.imageFile;
-                chatCtrl.update();
-                log("image : ${chatCtrl.imageFile}");
-                chatCtrl.uploadFile();
+                chatCtrl.pickerCtrl.imagePickerOption(Get.context!,isSingleChat: true);
+
               },
               icons: Icons.insert_photo,
               color: Colors.purple,

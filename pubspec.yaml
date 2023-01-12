@@ -90,6 +90,9 @@ dependencies:
   connectivity_plus: ^3.0.2
   pinput: ^2.2.21
   animated_text_kit: ^4.2.2
+  image_cropper: ^3.0.1
+  giphy_get: ^3.2.0
+
 
 
 

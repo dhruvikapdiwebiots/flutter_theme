@@ -157,6 +157,9 @@ class GroupChatMessageController extends GetxController {
 
 // UPLOAD SELECTED IMAGE TO FIREBASE
   Future uploadFile() async {
+    imageFile = pickerCtrl.imageFile;
+    update();
+    log("uploadFile : $imageFile");
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     Reference reference = FirebaseStorage.instance.ref().child(fileName);
     var file = File(imageFile!.path);
@@ -179,7 +182,7 @@ class GroupChatMessageController extends GetxController {
     videoFile = pickerCtrl.videoFile;
     update();
     if (videoFile != null) {
-      log("videoFile : $videoFile");
+      log("videoSend : $videoFile");
       const Duration(seconds: 2);
       String fileName = DateTime.now().millisecondsSinceEpoch.toString();
       Reference reference = FirebaseStorage.instance.ref().child(fileName);
