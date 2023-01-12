@@ -20,7 +20,7 @@ class SubTitleLayout extends StatelessWidget {
           document!["lastMessage"].contains(".gif") ?const Icon(Icons.gif_box) :
           Expanded(
             child:  Text(
-                (document!["lastMessage"].contains("media")) ? "$name Media Share" :   document!["isBlock"] == true &&
+                (document!["lastMessage"].contains("media")) ? "You Share Media" :   document!["isBlock"] == true &&
                     document!["isBlock"] == "true"
                     ? document!["blockBy"] != blockBy
                     ? document!["blockUserMessage"]

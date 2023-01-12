@@ -1,4 +1,5 @@
 
+import 'dart:developer';
 import 'dart:io';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -71,11 +72,15 @@ class AudioDoc extends StatelessWidget {
                           Platform.isIOS ? Permission.storage : Permission.storage)
                           .then((res) async {
                         if(res){
-                          launchUrl(Uri.parse(document!["content"].split("-BREAK-")[1]));
+                          if(document!["content"].contains("-BREAK-")) {
+                            launchUrl(Uri.parse(
+                                document!["content"].split("-BREAK-")[1]));
+                          }else{launchUrl(Uri.parse(
+                              document!["content"]));}
                         }
                       });
                     },
-                    child: Text("DOWNLOAD",
+                    child: Text(fonts.download.tr,
                         style: TextStyle(
                             fontWeight: FontWeight.w700,
                             color: appCtrl.appTheme.whiteColor)))

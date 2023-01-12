@@ -36,14 +36,12 @@ class PickerController extends GetxController {
       if (croppedFile != null) {
         image = File(croppedFile.path);
       }
-    
 
       update();
       log("image : $image");
       Get.forceAppUpdate();
     }
   }
-
 
 // GET VIDEO FROM GALLERY
   Future getVideo(source) async {
@@ -63,7 +61,8 @@ class PickerController extends GetxController {
   }
 
   //image picker option
-  imagePickerOption(BuildContext context, {isGroup = false,isSingleChat = false,isCreateGroup =false}) {
+  imagePickerOption(BuildContext context,
+      {isGroup = false, isSingleChat = false, isCreateGroup = false}) {
     showModalBottomSheet(
         context: context,
         shape: const RoundedRectangleBorder(
@@ -75,16 +74,16 @@ class PickerController extends GetxController {
           return ImagePickerLayout(cameraTap: () async {
             dismissKeyboard();
             await getImage(ImageSource.camera).then((value) {
-              if(isGroup) {
+              if (isGroup) {
                 final chatCtrl = Get.find<GroupChatMessageController>();
                 chatCtrl.uploadFile();
-              }else if(isSingleChat){
+              } else if (isSingleChat) {
                 final singleChatCtrl = Get.find<ChatController>();
                 singleChatCtrl.uploadFile();
-              } else if(isCreateGroup){
+              } else if (isCreateGroup) {
                 final singleChatCtrl = Get.find<CreateGroupController>();
                 singleChatCtrl.uploadFile();
-              } else{
+              } else {
                 final broadcastCtrl = Get.find<BroadcastChatController>();
                 broadcastCtrl.uploadFile();
               }
@@ -92,16 +91,16 @@ class PickerController extends GetxController {
             Get.back();
           }, galleryTap: () async {
             await getImage(ImageSource.gallery).then((value) {
-              if(isGroup) {
+              if (isGroup) {
                 final chatCtrl = Get.find<GroupChatMessageController>();
                 chatCtrl.uploadFile();
-              }else if(isSingleChat){
+              } else if (isSingleChat) {
                 final singleChatCtrl = Get.find<ChatController>();
                 singleChatCtrl.uploadFile();
-              } else if(isCreateGroup){
+              } else if (isCreateGroup) {
                 final singleChatCtrl = Get.find<CreateGroupController>();
                 singleChatCtrl.uploadFile();
-              } else{
+              } else {
                 final broadcastCtrl = Get.find<BroadcastChatController>();
                 broadcastCtrl.uploadFile();
               }
@@ -112,39 +111,39 @@ class PickerController extends GetxController {
   }
 
   //video picker option
-  videoPickerOption(BuildContext context, {isGroup = false,isSingleChat = false}) {
+  videoPickerOption(BuildContext context,
+      {isGroup = false, isSingleChat = false}) {
     showModalBottomSheet(
         context: context,
         shape: const RoundedRectangleBorder(
-          borderRadius:
-          BorderRadius.vertical(top: Radius.circular(AppRadius.r25)),
-        ),
+            borderRadius:
+                BorderRadius.vertical(top: Radius.circular(AppRadius.r25))),
         builder: (BuildContext context) {
           // return your layout
           return ImagePickerLayout(cameraTap: () async {
             dismissKeyboard();
             await getVideo(ImageSource.camera).then((value) {
-              if(isGroup) {
+              if (isGroup) {
                 final chatCtrl = Get.find<GroupChatMessageController>();
                 chatCtrl.videoSend();
-              }else if(isSingleChat){
+              } else if (isSingleChat) {
                 final singleChatCtrl = Get.find<ChatController>();
                 singleChatCtrl.videoSend();
-              }else{
+              } else {
                 final broadcastCtrl = Get.find<BroadcastChatController>();
                 broadcastCtrl.videoSend();
               }
             });
             Get.back();
           }, galleryTap: () async {
-            await getVideo(ImageSource.gallery).then((value){
-              if(isGroup) {
+            await getVideo(ImageSource.gallery).then((value) {
+              if (isGroup) {
                 final chatCtrl = Get.find<GroupChatMessageController>();
                 chatCtrl.videoSend();
-              }else if(isSingleChat){
+              } else if (isSingleChat) {
                 final singleChatCtrl = Get.find<ChatController>();
                 singleChatCtrl.videoSend();
-              }else{
+              } else {
                 final broadcastCtrl = Get.find<BroadcastChatController>();
                 broadcastCtrl.videoSend();
               }
@@ -165,24 +164,17 @@ class PickerController extends GetxController {
     return imageUrl!;
   }
 
-  Future<String> uploadAudio(File file, {String? fileNameText}) async {
+   uploadAudio(File file, {String? fileNameText}) async {
     log("message");
     log("message ");
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     Reference reference =
         FirebaseStorage.instance.ref().child(fileNameText ?? fileName);
     UploadTask uploadTask = reference.putFile(file);
-  log("uploadTask : $uploadTask");
-    uploadTask.then((res) {
-      log("res : $res");
-      res.ref.getDownloadURL().then((downloadUrl) {
-        audioUrl = downloadUrl;
-        update();
-      }, onError: (err) {
-
-        Fluttertoast.showToast(msg: 'Image is Not Valid');
-      });
-    });
-    return audioUrl!;
+    TaskSnapshot snap = await uploadTask;
+    String downloadUrl = await snap.ref.getDownloadURL();
+    audioUrl = downloadUrl;
+    log("downloadUrl : $audioUrl");
+    update();
   }
 }

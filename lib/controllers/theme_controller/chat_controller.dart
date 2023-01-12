@@ -375,9 +375,10 @@ class ChatController extends GetxController {
       String fileName =
           "${file.name}-${DateTime.now().millisecondsSinceEpoch.toString()}";
 
-      audioFile = await pickerCtrl.uploadAudio(file, fileNameText: fileName);
-      log("audioFile : $audioFile");
-      onSendMessage(audioFile!, MessageType.audio);
+      await pickerCtrl.uploadAudio(file, fileNameText: fileName);
+      log("audioFile : ${pickerCtrl.audioUrl}");
+      onSendMessage(pickerCtrl.audioUrl!, MessageType.audio);
+      log("audioFile : ${pickerCtrl.audioUrl}");
     });
   }
 
@@ -385,6 +386,7 @@ class ChatController extends GetxController {
   void onSendMessage(String content, MessageType type) async {
     isLoading = true;
     update();
+    log("check for send ");
     if (content.trim() != '') {
       textEditingController.clear();
       final now = DateTime.now();

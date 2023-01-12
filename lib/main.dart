@@ -8,6 +8,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   GetStorage.init();
+
   // Set the background messaging handler early on, as a named top-level function
 
   Get.put(AppController());

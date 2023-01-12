@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'dart:developer';
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -27,29 +29,46 @@ class _SenderMessageState extends State<SenderMessage> {
   String progressString = 'File has not been downloaded yet.';
 
   Future<bool> saveFile(String url, String fileName) async {
+    log("djhfgd");
     try {
       PermissionHandlerController.checkAndRequestPermission(
               Platform.isIOS ? Permission.storage : Permission.storage)
           .then((res) async {
         if (res) {
 
+          final storageRef = FirebaseStorage.instance.refFromURL(url);
+
+          final islandRef = storageRef.child(storageRef.name);
+
+          log("islandRef : $islandRef");
+
           final appDocDir = await getApplicationDocumentsDirectory();
+          final filePath = "${appDocDir.path}/${DateTime.now().millisecondsSinceEpoch}";
+          final file = File(filePath);
 
-          //Here you'll specify the file it should be saved as
-          File downloadToFile = File('${appDocDir.path}/${DateTime.now().millisecondsSinceEpoch.toString()}');
-          //Here you'll specify the file it should download from Cloud Storage
-          String fileToDownload =url;
+          final downloadTask = FirebaseStorage.instance.ref().child(storageRef.fullPath).writeToFile(file);
 
-          //Now you can try to download the specified file, and write it to the downloadToFile.
-          try {
-            await FirebaseStorage.instance
-                .ref(fileToDownload)
-                .writeToFile(downloadToFile);
-          } on FirebaseException catch (e) {
-            log("e : $e");
-            // e.g, e.code == 'canceled'
+          log("downloadTask : $downloadTask");
 
-          }
+          downloadTask.snapshotEvents.listen((taskSnapshot) {
+            switch (taskSnapshot.state) {
+              case TaskState.running:
+              // TODO: Handle this case.
+                break;
+              case TaskState.paused:
+              // TODO: Handle this case.
+                break;
+              case TaskState.success:
+              // TODO: Handle this case.
+                break;
+              case TaskState.canceled:
+              // TODO: Handle this case.
+                break;
+              case TaskState.error:
+              // TODO: Handle this case.
+                break;
+            }
+          });
         }
       });
 
@@ -59,11 +78,9 @@ class _SenderMessageState extends State<SenderMessage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ChatController>(builder: (chatCtrl) {
-      log("hdgfjhdsg : ${widget.document!["timestamp"]}");
       return Stack(
         children: [
           Container(
@@ -86,14 +103,17 @@ class _SenderMessageState extends State<SenderMessage> {
                           document: widget.document),
                     if (widget.document!["type"] == MessageType.image.name)
                       SenderImage(
-                          document: widget.document,
-                          onLongPress: () {
-                            showDialog(
-                              context: Get.context!,
-                              builder: (BuildContext context) => chatCtrl
-                                  .buildPopupDialog(context, widget.document!),
-                            );
-                          }),
+                        document: widget.document,
+                        onLongPress: () {
+                          showDialog(
+                            context: Get.context!,
+                            builder: (BuildContext context) => chatCtrl
+                                .buildPopupDialog(context, widget.document!),
+                          );
+                        },
+                        onPressed: () =>
+                            saveFile(widget.document!["content"], "image"),
+                      ),
                     if (widget.document!["type"] == MessageType.contact.name)
                       ContactLayout(
                               onLongPress: () {
@@ -133,18 +153,25 @@ class _SenderMessageState extends State<SenderMessage> {
                           }),
                     if (widget.document!["type"] == MessageType.doc.name)
                       (widget.document!["content"].contains(".pdf"))
-                          ? PdfLayout(document: widget.document,pdfViewerKey: _pdfViewerKey,)
+                          ? PdfLayout(
+                              document: widget.document,
+                              pdfViewerKey: _pdfViewerKey,
+                            )
                           : (widget.document!["content"].contains(".docx"))
-                              ? DocxLayout(document: widget.document,)
+                              ? DocxLayout(
+                                  document: widget.document,
+                                )
                               : Container(),
                     if (widget.document!["type"] == MessageType.gif.name)
-                      GifLayout(onLongPress: () {
-                        showDialog(
-                            context: Get.context!,
-                            builder: (BuildContext context) =>
-                                chatCtrl.buildPopupDialog(
-                                    context, widget.document!));
-                      },document: widget.document,)
+                      GifLayout(
+                        onLongPress: () {
+                          showDialog(
+                              context: Get.context!,
+                              builder: (BuildContext context) => chatCtrl
+                                  .buildPopupDialog(context, widget.document!));
+                        },
+                        document: widget.document,
+                      )
                   ]),
                   if (widget.document!["type"] == MessageType.messageType.name)
                     Align(

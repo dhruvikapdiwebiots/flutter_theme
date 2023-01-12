@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -100,13 +101,11 @@ class AudioRecordingPluginState extends State<AudioRecordingPlugin> {
     setState(() {});
   }
 
-  startTimer(){
+  startTimer() {
     const oneSec = Duration(seconds: 1);
     _timer = Timer.periodic(oneSec, (timer) {
       recordingTime++;
-      setState(() {
-
-      });
+      setState(() {});
     });
   }
 
@@ -172,8 +171,6 @@ class AudioRecordingPluginState extends State<AudioRecordingPlugin> {
       recordedFile = File(mPath);
       setState(() {});
     });
-
-
   }
 
   @override
@@ -195,7 +192,7 @@ class AudioRecordingPluginState extends State<AudioRecordingPlugin> {
                 Get.back();
               },
               child: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5),
+                  padding: EdgeInsets.symmetric(horizontal: Insets.i5),
                   child: Icon(Icons.cancel)))
         ]),
         const SizedBox(height: 20),
@@ -209,53 +206,30 @@ class AudioRecordingPluginState extends State<AudioRecordingPlugin> {
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Container(
-                      height: Sizes.s50,
-                      width: Sizes.s50,
-                      decoration: BoxDecoration(
-                        color: appCtrl.isTheme ?appCtrl.appTheme.white : appCtrl.appTheme.primary,
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(100)),
-                      ),
-                      child: IconButton(
-                          onPressed: getRecorderFn(),
-                          icon: mRecorder != null
-                              ? mRecorder!.isRecording
-                                  ?  Icon(Icons.stop, color: appCtrl.appTheme.whiteColor)
-                                  :  Icon(Icons.settings_voice,
-                                      color: appCtrl.appTheme.whiteColor)
-                              :  Icon(Icons.settings_voice,
-                                  color: appCtrl.appTheme.whiteColor))),
-                  Text(recordingTime.toString(),style: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.whiteColor),),
-                  Container(
-                      height: 50,
-                      width: 50,
-                      decoration: BoxDecoration(
-                        color:appCtrl.isTheme ?appCtrl.appTheme.white :  appCtrl.appTheme.primary,
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(100)),
-                      ),
-                      child: IconButton(
-                          onPressed: getPlaybackFn(),
-                          color: Colors.black,
-                          icon: Icon(
-                            mPlayer != null
-                                ? mPlayer!.isPlaying
-                                    ? Icons.stop
-                                    : Icons.play_arrow
-                                : Icons.play_arrow,
-                            color:appCtrl.appTheme.whiteColor,
-                          ))),
-
+                  //audio start and stop icon
+                  VoiceStopIcons(
+                      onPressed: getRecorderFn(), mRecorder: mRecorder),
+                  Text(recordingTime.toString(),
+                      style: AppCss.poppinsMedium14
+                          .textColor(appCtrl.appTheme.txt)),
+                  StopArrowIcons(onPressed: getPlaybackFn(), mPlayer: mPlayer)
                 ])),
-        const SizedBox(height: 10),
-        CommonButton(title: fonts.done.tr,style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.whiteColor),onTap: (){
-          stopPlayer();
-          Get.back(result: mPath);
-        },color:appCtrl.isTheme ?appCtrl.appTheme.white : appCtrl.appTheme.primary,),
+        const VSpace(Sizes.s10),
+        CommonButton(
+            title: fonts.done.tr,
+            style:
+                AppCss.poppinsMedium12.textColor(appCtrl.appTheme.whiteColor),
+            onTap: () {
+              stopPlayer();
+              log("mPath : $mPath");
+              Get.back(result: mPath);
+            },
+            color: appCtrl.isTheme
+                ? appCtrl.appTheme.white
+                : appCtrl.appTheme.primary),
         if (isLoading)
           Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(Insets.i10),
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[

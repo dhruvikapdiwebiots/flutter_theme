@@ -104,6 +104,8 @@ export 'theme_pages/group_chat_message/layouts/group_user_status.dart';
 export 'theme_pages/broadcast_chat/layouts/broadcast_delete_alert.dart';
 export 'theme_pages/broadcast_chat/layouts/broadcast_sender.dart';
 export 'theme_pages/chat_message/chat_message_api.dart';
+export 'theme_pages/chat_message/layouts/audio_layout/stop_arrow_icons.dart';
+export 'theme_pages/chat_message/layouts/audio_layout/voice_stop_icons.dart';
 
 
 export '/utilities/type_list.dart';

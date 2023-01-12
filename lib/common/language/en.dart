@@ -101,4 +101,5 @@ final dynamic en = {
   "inviteUser": "Invite User for use Chatter",
   "registerUser": "Register User with",
   "recentUpdates": "Recent Updates",
+  "download": "DOWNLOAD",
 };

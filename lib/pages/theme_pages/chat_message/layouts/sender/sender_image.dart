@@ -5,7 +5,6 @@ import '../../../../../config.dart';
 class SenderImage extends StatelessWidget {
   final dynamic document;
   final VoidCallback? onPressed, onLongPress;
-
   const SenderImage({Key? key, this.document, this.onPressed, this.onLongPress})
       : super(key: key);
 
