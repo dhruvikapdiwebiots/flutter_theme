@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:developer';
 
@@ -6,18 +5,24 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_theme/config.dart';
 
-
-class DashboardController extends GetxController with GetSingleTickerProviderStateMixin {
+class DashboardController extends GetxController
+    with GetSingleTickerProviderStateMixin {
   int selectedIndex = 0;
   int selectedPopTap = 0;
   TabController? controller;
   late int iconCount = 0;
   List<Contact> contacts = [];
   List bottomList = [];
-  final statusCtrl = Get.isRegistered<StatusController>() ? Get.find<StatusController>() :Get.put(StatusController());
-  final settingCtrl = Get.isRegistered<SettingController>() ? Get.find<SettingController>() :Get.put(SettingController());
-  final contactCtrl = Get.isRegistered<ContactListController>() ? Get.find<ContactListController>() :Get.put(ContactListController());
-  final createGroupCtrl = Get.isRegistered<CreateGroupController>() ? Get.find<CreateGroupController>() :Get.put(CreateGroupController());
+
+  final settingCtrl = Get.isRegistered<SettingController>()
+      ? Get.find<SettingController>()
+      : Get.put(SettingController());
+  final contactCtrl = Get.isRegistered<ContactListController>()
+      ? Get.find<ContactListController>()
+      : Get.put(ContactListController());
+  final createGroupCtrl = Get.isRegistered<CreateGroupController>()
+      ? Get.find<CreateGroupController>()
+      : Get.put(CreateGroupController());
   List actionList = [];
   List statusAction = [];
   ConnectivityResult connectionStatus = ConnectivityResult.none;
@@ -51,24 +56,36 @@ class DashboardController extends GetxController with GetSingleTickerProviderSta
   Future<void> updateConnectionStatus(ConnectivityResult result) async {
     connectionStatus = result;
     update();
-
   }
 
   //on tap select
   onTapSelect(val) async {
+    final statusCtrl = Get.isRegistered<StatusController>()
+        ? Get.find<StatusController>()
+        : Get.put(StatusController());
     selectedIndex = val;
 
     update();
-    if(selectedIndex ==0){
+    if (selectedIndex == 1) {
+      statusCtrl.onReady();
       statusCtrl.getStatus();
     }
   }
 
+  onChange(val) async {
+    final statusCtrl = Get.isRegistered<StatusController>()
+        ? Get.find<StatusController>()
+        : Get.put(StatusController());
+    selectedIndex = val;
+    if (selectedIndex == 1) {
+      statusCtrl.onReady();
+      statusCtrl.getStatus();
+    }
+  }
 
   @override
-  void onReady() async{
+  void onReady() async {
     // TODO: implement onReady
-
 
     bottomList = appArray.bottomList;
     actionList = appArray.actionList;
@@ -80,20 +97,17 @@ class DashboardController extends GetxController with GetSingleTickerProviderSta
       update();
     });
 
-   // firebaseCtrl.statusDeleteAfter24Hours();
+    // firebaseCtrl.statusDeleteAfter24Hours();
     update();
-
 
     super.onReady();
   }
 
-
-  popupMenuTap(value){
-
+  popupMenuTap(value) {
     if (selectedPopTap == 0) {
-      Get.toNamed(routeName.groupChat,arguments: false);
+      Get.toNamed(routeName.groupChat, arguments: false);
     } else if (selectedPopTap == 1) {
-      Get.toNamed(routeName.groupChat,arguments: true);
+      Get.toNamed(routeName.groupChat, arguments: true);
     } else if (selectedPopTap == 2) {
       Get.toNamed(routeName.setting);
     }

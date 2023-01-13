@@ -29,7 +29,7 @@ class ContactListController extends GetxController {
     registerContactList = [];
     unRegisterContactList = [];
     storageContact = await permissionHandelCtrl.getContact();
-
+  update();
     log("contactList1 : ${contactList.length}");
     var user = appCtrl.storage.read("user");
     if (storageContact.isNotEmpty) {
@@ -37,7 +37,9 @@ class ContactListController extends GetxController {
       storageContact
           .where((c) => c.phones.isNotEmpty)
           .forEach((Contact p) async {
+
         if (p.phones.isNotEmpty) {
+
           nameList = [];
           String phone = phoneNumberExtension(p.phones[0].number);
           await FirebaseFirestore.instance
@@ -47,6 +49,9 @@ class ContactListController extends GetxController {
               .then((value) {
             if (value.docs.isNotEmpty) {
               nameList = [];
+
+            log("registerContactList1 : ${registerContactList!.length}");
+              update();
               UserContactModel userContactModel = UserContactModel(
                 isRegister: true,
                 phoneNumber: phone,
@@ -55,16 +60,18 @@ class ContactListController extends GetxController {
                 username: value.docs[0].data()["name"],
                 description: value.docs[0].data()["statusDesc"],
               );
+              log("trr");
+              registerContactList!.removeWhere((element) => element.phoneNumber == phone);
+              update();
               if (phone != user["phone"]) {
                 if (!registerContactList!.contains(userContactModel)) {
-                  if (value.docs[0].data()["isActive"] == true) {
-                    registerContactList!.add(userContactModel);
-                  }
+                  registerContactList!.add(userContactModel);
                 }
               }
               update();
 
               nameList!.add(userContactModel);
+
             } else {
 
               UserContactModel userContactModel = UserContactModel(
@@ -73,16 +80,21 @@ class ContactListController extends GetxController {
                   contactImage: p.photo,
                   uid: "0",
                   username: p.displayName);
+              unRegisterContactList!.removeWhere((element) => element.phoneNumber == phone);
               if (!unRegisterContactList!.contains(userContactModel)) {
                 unRegisterContactList!.add(userContactModel);
               }
               nameList!.add(userContactModel);
             }
           });
+
+          log("registerContactList2 : ${registerContactList!.length}");
           update();
         }
       });
     }
+    registerContactList = [];
+    log("registerContactList3 : ${registerContactList!.length}");
     contactList =[];
 counter++;
     ContactModel contactModel = ContactModel(

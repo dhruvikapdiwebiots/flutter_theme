@@ -23,7 +23,7 @@ class Call {
     this.timestamp,
     this.channelId,
     this.hasDialled,
-    this.isVideoCall,
+    this.isVideoCall, required int timeepoch, bool? isvideocall,
   });
 
   // to map

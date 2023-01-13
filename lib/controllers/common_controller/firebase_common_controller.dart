@@ -67,7 +67,7 @@ class FirebaseCommonController extends GetxController {
   }
 
   statusDeleteAfter24Hours() async {
-   /* var user = appCtrl.storage.read(session.user) ?? "";
+    var user = appCtrl.storage.read(session.user) ?? "";
     if(user != "") {
       FirebaseFirestore.instance
           .collection('status')
@@ -101,7 +101,7 @@ class FirebaseCommonController extends GetxController {
           });
         }
       });
-    }*/
+    }
   }
 
   Future<List<PhotoUrl>> getPhotoUrl(List<PhotoUrl> photoUrl) async {

@@ -14,7 +14,7 @@ void main() async {
   Get.put(AppController());
   Get.put(FirebaseCommonController());
   Get.put(NotificationController());
-  Get.put(ContactListController());
+  
 
   runApp(const MyApp());
 }
