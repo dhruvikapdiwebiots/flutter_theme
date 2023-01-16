@@ -23,6 +23,10 @@ class DashboardController extends GetxController
   final createGroupCtrl = Get.isRegistered<CreateGroupController>()
       ? Get.find<CreateGroupController>()
       : Get.put(CreateGroupController());
+
+  final messageCtrl = Get.isRegistered<MessageController>()
+      ? Get.find<MessageController>()
+      : Get.put(MessageController());
   List actionList = [];
   List statusAction = [];
   ConnectivityResult connectionStatus = ConnectivityResult.none;
@@ -119,6 +123,7 @@ class DashboardController extends GetxController
     log("dsfs ");
     contactCtrl.onInit();
     createGroupCtrl.onInit();
+    messageCtrl.onReady();
     super.onInit();
   }
 }

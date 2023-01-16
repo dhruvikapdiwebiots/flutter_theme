@@ -1,3 +1,5 @@
+
+
 import 'package:flutter_theme/config.dart';
 
 class Chat extends StatefulWidget {
@@ -48,7 +50,9 @@ class _ChatState extends State<Chat>
                           ? true
                           : false
                       : false,
-                  callTap: () {},
+                  callTap: () {
+
+                  },
                   moreTap: () => chatCtrl.blockUser()),
               backgroundColor: appCtrl.appTheme.whiteColor,
               body: chatCtrl.isUserAvailable

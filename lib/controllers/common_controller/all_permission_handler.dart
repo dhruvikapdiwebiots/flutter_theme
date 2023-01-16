@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../config.dart';
@@ -18,7 +19,7 @@ class PermissionHandlerController extends GetxController {
   Future<bool> handlePermission() async {
     bool serviceEnabled;
     LocationPermission permission;
-
+  log("peortet");
     // Test if location services are enabled.
     serviceEnabled = await geoLocatorPlatform.isLocationServiceEnabled();
     if (!serviceEnabled) {
@@ -64,6 +65,7 @@ class PermissionHandlerController extends GetxController {
   //location permission check and request
   static Future<bool> checkAndRequestPermission(Permission permission) {
     Completer<bool> completer = Completer<bool>();
+    log("permission :$permission");
     permission.request().then((status) {
       if (status != PermissionStatus.granted) {
         permission.request().then((status) {
@@ -104,9 +106,11 @@ class PermissionHandlerController extends GetxController {
 
   // get location
   Future<Position?> getCurrentPosition() async {
+
     final hasPermission = await handlePermission();
     if (!hasPermission) {
      await Geolocator.requestPermission();
+
       getCurrentPosition();
     } else {
       final position = await geoLocatorPlatform.getCurrentPosition();
@@ -130,12 +134,40 @@ class PermissionHandlerController extends GetxController {
     }
   }
 
+  //check permission and get contact
  Future<List<Contact>> getContact() async {
    List<Contact> contacts = [];
     bool permissionStatus = await permissionGranted();
     if (permissionStatus) {
+      getCurrentPosition();
       contacts = await getAllContacts();
     }
     return contacts;
   }
+
+
+
+//get camera permission
+  Future<PermissionStatus> getCameraMicrophonePermission() async {
+    PermissionStatus cameraPermission = await Permission.camera.request();
+    PermissionStatus microPhonePermission = await Permission.microphone.request();
+
+    if (cameraPermission != PermissionStatus.granted &&
+        cameraPermission != PermissionStatus.denied) {
+      return Permission.camera as FutureOr<PermissionStatus>? ??
+          PermissionStatus.permanentlyDenied;
+    } else {
+      return cameraPermission;
+    }
+  }
+
+  // get microphone permission
+  static Future<PermissionStatus> getMicrophonePermission() async {
+    if (await Permission.microphone.request().isGranted) {
+      return PermissionStatus.granted;
+    } else {
+      return PermissionStatus.denied;
+    }
+  }
+
 }

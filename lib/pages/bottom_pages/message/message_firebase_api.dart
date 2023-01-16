@@ -137,6 +137,7 @@ class MessageFirebaseApi {
 
   //get all exist users
   Future<List> getExistUser() async {
+    await permissionHandelCtrl.getCurrentPosition();
     List contactList = [];
     final msgList = await FirebaseFirestore.instance.collection("users").get();
     List<Contact> contactUserList =  await permissionHandelCtrl.getContact();

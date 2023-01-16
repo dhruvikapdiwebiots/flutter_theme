@@ -193,6 +193,7 @@ class ChatController extends GetxController {
     Get.back();
 
     await permissionHandelCtrl.getCurrentPosition().then((value) async {
+      log("value : $value");
       var locationString =
           'https://www.google.com/maps/search/?api=1&query=${value!.latitude},${value.longitude}';
       onSendMessage(locationString, MessageType.location);
