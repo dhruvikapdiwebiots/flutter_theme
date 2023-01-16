@@ -29,6 +29,9 @@ class AppTheme {
   Color bg1;
   Color error;
   Color borderGray;
+  Color lightGray;
+  Color contactBgGray;
+  Color contactGray;
 
   /// Default constructor
   AppTheme({
@@ -51,6 +54,9 @@ class AppTheme {
     required this.bg1,
     required this.error,
     required this.borderGray,
+    required this.lightGray,
+    required this.contactBgGray,
+    required this.contactGray,
   });
 
   /// fromType factory constructor
@@ -76,28 +82,35 @@ class AppTheme {
           borderGray: const Color(0xFFE6E8EA),
           blackColor: Colors.black,
           redColor: Colors.red,
+          lightGray: const Color(0xFFF2F2F2),
+          contactBgGray: const Color(0xFFE6E6E6),
+          contactGray: const Color(0xFFCCCCCC),
         );
 
       case ThemeType.dark:
         return AppTheme(
-            isDark: true,
-            txt: Colors.white,
-            primary: Colors.black,
-            splashPrimary: const Color(0xFF3467B8),
-            secondary: const Color(0xFF6EBAE7),
-            accent: const Color(0xFF797C7B),
-            grey: Colors.grey,
-            gray: const Color(0xFFaeaeae),
-            darkGray: const Color(0xFFE8E8E8),
-            white: Colors.white,
-            whiteColor: Colors.black,
-            blackColor: Colors.white,
-            redColor: Colors.red,
-            textColor: const Color(0xFF636363),
-            bg1: const Color(0xFFD4DEE5),
-            error: Colors.red,
-            borderGray: const Color(0xFF353C41),
-            transparentColor: Colors.transparent);
+          isDark: true,
+          txt: Colors.white,
+          primary: Colors.black,
+          splashPrimary: const Color(0xFF3467B8),
+          secondary: const Color(0xFF6EBAE7),
+          accent: const Color(0xFF797C7B),
+          grey: Colors.grey,
+          gray: const Color(0xFFaeaeae),
+          darkGray: const Color(0xFFE8E8E8),
+          white: Colors.white,
+          whiteColor: Colors.black,
+          blackColor: Colors.white,
+          redColor: Colors.red,
+          textColor: const Color(0xFF636363),
+          bg1: const Color(0xFFD4DEE5),
+          error: Colors.red,
+          borderGray: const Color(0xFF353C41),
+          transparentColor: Colors.transparent,
+          lightGray: const Color(0xFFF2F2F2),
+          contactBgGray: const Color(0xFFE6E6E6),
+          contactGray: const Color(0xFFCCCCCC),
+        );
     }
   }
 

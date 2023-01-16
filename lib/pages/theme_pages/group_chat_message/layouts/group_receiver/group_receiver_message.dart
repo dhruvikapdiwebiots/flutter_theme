@@ -44,6 +44,7 @@ class _GroupReceiverMessageState extends State<GroupReceiverMessage> {
 
               if (widget.document!["type"] == MessageType.contact.name)
                 GroupContactLayout(
+                  isReceiver: true,
                     currentUserId: chatCtrl.id,
                     onLongPress: () {
                       showDialog(
