@@ -1,124 +1,154 @@
+import 'dart:developer';
+
+import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter_theme/config.dart';
 
 
-class VideoCall extends StatelessWidget {
-  final videoCtrl = Get.put(VideoCallController());
-  VideoCall({Key? key}) : super(key: key);
+import 'dart:async';
+
+import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+const appId = "29f88f518e7841cab6eef7c4dcc4b66f";
+const token = "007eJxTYMi4t6KMs+bwpiPqK3tecc7auXVb88XGiL8aMlllwRkePAkKDEaWaRYWaaaGFqnmFiaGyYlJZqmpaebJJinJySZJZmZpxoePJTcEMjKsPjSNkZEBAkF8Hoa0nNKSktSikIzU3FQGBgDF1yRn";
+const channel = "flutterTheme";
+
+class VideoCall extends StatefulWidget {
+  const VideoCall({Key? key}) : super(key: key);
 
   @override
+  State<VideoCall> createState() => _VideoCallState();
+}
+
+class _VideoCallState extends State<VideoCall> {
+  int? _remoteUid;
+  bool _localUserJoined = false;
+  late RtcEngine _engine;
+final videoCallCtrl = Get.put(VideoCallController());
+
+  @override
+  void initState() {
+    super.initState();
+    var data = Get.arguments;
+    videoCallCtrl.channelName = data["channelName"];
+    videoCallCtrl.call = data["call"];
+    setState(() {
+
+    });
+    log("videoCallCtrl.channelName : ${videoCallCtrl.call!.channelId}");
+    initAgora();
+  }
+
+  Future<void> initAgora() async {
+    // retrieve permissions
+    await [Permission.microphone, Permission.camera].request();
+  log("permis :");
+    //create the engine
+    _engine = createAgoraRtcEngine();
+    await _engine.initialize(const RtcEngineContext(
+      appId: appId,
+      channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
+    ));
+    log("_engine : $_engine");
+
+    _engine.registerEventHandler(
+      RtcEngineEventHandler(
+        onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
+          debugPrint("local user ${connection.localUid} joined");
+          setState(() {
+            _localUserJoined = true;
+          });
+        },
+        onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
+          debugPrint("remote user $remoteUid joined");
+          setState(() {
+            _remoteUid = remoteUid;
+          });
+        },
+        onUserOffline: (RtcConnection connection, int remoteUid, UserOfflineReasonType reason) {
+          debugPrint("remote user $remoteUid left channel");
+          setState(() {
+            _remoteUid = null;
+          });
+        },
+        onTokenPrivilegeWillExpire: (RtcConnection connection, String token) {
+          debugPrint('[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
+        },
+      ),
+    );
+
+    log("_engine1 : ${_engine}");
+
+    await _engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
+    await _engine.enableVideo();
+    await _engine.startPreview();
+
+    await _engine.joinChannel(
+      token: token,
+      channelId: channel,
+      uid: 0,
+      options: const ChannelMediaOptions(),
+    );
+    setState(() {
+
+    });
+  }
+
+  // Create UI with local view and remote view
+  @override
   Widget build(BuildContext context) {
-    var screenHeight = MediaQuery.of(context).size.height;
-    var screenWidth = MediaQuery.of(context).size.width;
     return GetBuilder<VideoCallController>(
       builder: (_) {
-        return WillPopScope(
-          onWillPop: videoCtrl.onWillPopNEw,
-          child: Scaffold(
-            // appBar: AppBar(
-            //   title: Text('Flutter Video Call Demo'),
-            //   centerTitle: true,
-            // ),
-              backgroundColor: Colors.black,
-              body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                stream: videoCtrl.stream as Stream<DocumentSnapshot<Map<String, dynamic>>>?,
-                builder: (BuildContext context, snapshot) {
-                  if (snapshot.hasData) {
-                    if (snapshot.data!.data() == null || snapshot.data == null) {
-                      return Center(
-                        child: Stack(
-                          children: <Widget>[
-                            // _viewRows(),
-                            videoCtrl.onetooneview(
-                                screenHeight, screenWidth, false, videoCtrl.isuserenlarged),
-
-                            videoCtrl.toolbar(false, 'calling'),
-                            videoCtrl.panel(
-                                status: 'calling',
-                                ispeermuted: false,
-                                context: context),
-                          ],
-                        ),
-                      );
-                    } else {
-                      return Center(
-                        child: Stack(
-                          children: <Widget>[
-                            // _viewRows(),
-                            videoCtrl.onetooneview(
-                                screenHeight,
-                                screenWidth,
-                                snapshot.data!.data()!["STATUS"] == 'ended'
-                                    ? true
-                                    : false,
-                                videoCtrl.isuserenlarged),
-
-                            videoCtrl.toolbar(
-                                snapshot.data!.data()!["STATUS"] == 'pickedup'
-                                    ? true
-                                    : false,
-                                snapshot.data!.data()!["STATUS"]),
-
-                            snapshot.data!.data()!["STATUS"] == 'pickedup' &&
-                                videoCtrl.getRenderViews().length > 1
-                                ? Positioned(
-                              bottom: screenWidth > screenHeight ? 40 : 120,
-                              right: screenWidth > screenHeight ? 20 : 10,
-                              child: Container(
-                                height: screenWidth > screenHeight
-                                    ? screenWidth / 4.7
-                                    : screenHeight / 4.7,
-                                width: screenWidth > screenHeight
-                                    ? (screenWidth / 4.7) / 1.7
-                                    : (screenHeight / 4.7) / 1.7,
-                                child: videoCtrl.getRenderViews()[
-                                videoCtrl.isuserenlarged == true ? 1 : 0],
-                              ),
-                            )
-                                : SizedBox(),
-                            videoCtrl.panel(
-                                context: context,
-                                status: snapshot.data!.data()!["STATUS"],
-                                ispeermuted: snapshot.data!.data()!["ISMUTED"]),
-                          ],
-                        ),
-                      );
-                    }
-                  } else if (!snapshot.hasData) {
-                    return Center(
-                      child: Stack(
-                        children: <Widget>[
-                          // _viewRows(),
-                          videoCtrl.onetooneview(
-                              screenHeight, screenWidth, false, videoCtrl.isuserenlarged),
-
-                          videoCtrl.toolbar(false, 'nonetwork'),
-                          videoCtrl.panel(
-                              context: context,
-                              status: 'nonetwork',
-                              ispeermuted: false),
-                        ],
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Agora Video Call'),
+          ),
+          body: Stack(
+            children: [
+              Center(
+                child: _remoteVideo(),
+              ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: SizedBox(
+                  width: 100,
+                  height: 150,
+                  child: Center(
+                    child: _localUserJoined
+                        ? AgoraVideoView(
+                      controller: VideoViewController(
+                        rtcEngine: _engine,
+                        canvas: const VideoCanvas(uid: 0),
                       ),
-                    );
-                  }
-                  return Center(
-                    child: Stack(
-                      children: <Widget>[
-                        // _viewRows(),
-                        videoCtrl.onetooneview(
-                            screenHeight, screenWidth, false, videoCtrl.isuserenlarged),
-
-                        videoCtrl.toolbar(false, 'calling'),
-                        videoCtrl.panel(
-                            context: context,
-                            status: 'calling',
-                            ispeermuted: false),
-                      ],
-                    ),
-                  );
-                },
-              )),
+                    )
+                        : const CircularProgressIndicator(),
+                  ),
+                ),
+              ),
+            ],
+          ),
         );
       }
     );
   }
+
+  // Display remote user's video
+  Widget _remoteVideo() {
+    if (_remoteUid != null) {
+      return AgoraVideoView(
+        controller: VideoViewController.remote(
+          rtcEngine: _engine,
+          canvas: VideoCanvas(uid: _remoteUid),
+          connection: const RtcConnection(channelId: channel),
+        ),
+      );
+    } else {
+      return const Text(
+        'Please wait for remote user to join',
+        textAlign: TextAlign.center,
+      );
+    }
+  }
 }
+

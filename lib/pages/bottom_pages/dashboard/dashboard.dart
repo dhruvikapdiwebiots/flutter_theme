@@ -146,7 +146,7 @@ class _DashboardState extends State<Dashboard>
     //ANDROID & iOS  OnMessage callback
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       // ignore: unnecessary_null_comparison
-      flutterLocalNotificationsPlugin!.cancelAll();
+      flutterLocalNotificationsPlugin.cancelAll();
 
       if (message.data['title'] != 'Call Ended' &&
           message.data['title'] != 'Missed Call' &&
@@ -203,7 +203,7 @@ class _DashboardState extends State<Dashboard>
             await _showNotificationWithDefaultSound(
                 title, body, titleMultilang, bodyMultilang);
           } else if (message.data['title'] == 'You have new message(s)') {
-           /* if (currentpeer.peerid != message.data['peerid']) {
+            if (dashboardCtrl.user["id"] != message.data['peerid']) {
               // FlutterRingtonePlayer.playNotification();
               showOverlayNotification((context) {
                 return Card(
@@ -229,7 +229,7 @@ class _DashboardState extends State<Dashboard>
                   ),
                 );
               }, duration: Duration(milliseconds: 2000));
-            }*/
+            }
 
           } else {
             showOverlayNotification((context) {

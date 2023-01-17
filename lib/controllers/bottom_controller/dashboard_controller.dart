@@ -13,6 +13,7 @@ class DashboardController extends GetxController
   late int iconCount = 0;
   List<Contact> contacts = [];
   List bottomList = [];
+  dynamic user;
 
   final settingCtrl = Get.isRegistered<SettingController>()
       ? Get.find<SettingController>()
@@ -100,7 +101,7 @@ class DashboardController extends GetxController
       selectedIndex = controller!.index;
       update();
     });
-
+user = appCtrl.storage.read(session.user);
     // firebaseCtrl.statusDeleteAfter24Hours();
     update();
 

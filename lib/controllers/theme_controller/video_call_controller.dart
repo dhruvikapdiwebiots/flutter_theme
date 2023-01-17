@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:audioplayers/audioplayers.dart' as audioPlayers;
@@ -13,6 +14,7 @@ class VideoCallController extends GetxController {
   late RtcEngine engine;
   final _infoStrings = <String>[];
   Stream<int>? timerStream;
+  int? remoteUId;
 
   // ignore: cancel_subscriptions
   StreamSubscription<int>? timerSubscription;
@@ -96,7 +98,12 @@ class VideoCallController extends GetxController {
   }
 
   onetooneview(double h, double w, bool iscallended, bool userenlarged) {
-    final views = getRenderViews();
+    final views = AgoraVideoView(
+        controller: VideoViewController.remote(
+          rtcEngine: engine,
+          canvas:  VideoCanvas(uid: remoteUId),
+          connection: RtcConnection(channelId: call!.channelId!),
+        ));
 
     if (iscallended == true) {
       return Container(
@@ -110,44 +117,6 @@ class VideoCallController extends GetxController {
           color: appCtrl.appTheme.blackColor.withOpacity(0.38),
         )),
       );
-    } else if (userenlarged == false) {
-      switch (views.length) {
-        case 1:
-          return Container(
-              child: Column(
-            children: <Widget>[_videoView(views[0])],
-          ));
-
-        case 2:
-          return Container(
-              child: Column(
-            children: <Widget>[_videoView(views[1])],
-          ));
-
-        default:
-          return Container(
-            child: const Center(child: Text('Max 2. participants allowed')),
-          );
-      }
-    } else if (userenlarged == true) {
-      switch (views.length) {
-        case 1:
-          return Container(
-              child: Column(
-            children: <Widget>[_videoView(views[0])],
-          ));
-
-        case 2:
-          return Container(
-              child: Column(
-            children: <Widget>[_videoView(views[0])],
-          ));
-
-        default:
-          return Container(
-            child: const Center(child: Text('Max 2. participants allowed')),
-          );
-      }
     }
   }
 
@@ -157,16 +126,13 @@ class VideoCallController extends GetxController {
 
   List<Widget> getRenderViews() {
     final List<StatefulWidget> list = [];
-    if (role == ClientRoleType.clientRoleBroadcaster) {
-      list.add(AgoraVideoView(
+    AgoraVideoView(
         controller: VideoViewController.remote(
           rtcEngine: engine,
-          canvas: const VideoCanvas(uid: 0),
+          canvas:  VideoCanvas(uid: remoteUId),
           connection: RtcConnection(channelId: call!.channelId!),
-        ),
-      ));
-      //list.add(AndroidViewSurface());
-    }
+        ));
+
     return list;
   }
 
@@ -528,8 +494,8 @@ class VideoCallController extends GetxController {
     await engine.setVideoEncoderConfiguration(configuration);
     await engine.joinChannel(
       token:
-          "007eJxTYIiM973/Le7a5+3FHkJLzrDa5IRXibRP/Xqj7WT/io2X2y8pMBhZpllYpJkaWqSaW5gYJicmmaWmppknm6QkJ5skmZmlvVQ9mNwQyMgw/eZqRkYGCATxeRiSMxJLSlKLSjJSc1MZGABSAiZ+",
-      channelId: call!.channelId!,
+          "007eJxTYMi4t6KMs+bwpiPqK3tecc7auXVb88XGiL8aMlllwRkePAkKDEaWaRYWaaaGFqnmFiaGyYlJZqmpaebJJinJySZJZmZpxoePJTcEMjKsPjSNkZEBAkF8Hoa0nNKSktSikIzU3FQGBgDF1yRn",
+      channelId: "flutterTheme",
       uid: userData["id"],
       options: const ChannelMediaOptions(),
     );
@@ -542,11 +508,6 @@ class VideoCallController extends GetxController {
       channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
     ));
 
-    await engine.enableVideo();
-    await engine.setEnableSpeakerphone(isspeaker);
-    await engine
-        .setChannelProfile(ChannelProfileType.channelProfileLiveBroadcasting);
-    await engine.setClientRole(role: role!);
   }
 
   Future<Null> _playCallingTone() async {
@@ -646,8 +607,10 @@ class VideoCallController extends GetxController {
       Wakelock.disable();
     }, onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
       final info = 'userJoined: $remoteUid';
+      remoteUId =remoteUid;
       _infoStrings.add(info);
       _users.add(remoteUid);
+      log("onUserJoined : $info");
       update();
       if (userData['id'] == call!.callerId) {
         _stopCallingSound();

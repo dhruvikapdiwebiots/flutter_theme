@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter_theme/pages/theme_pages/video_call/video_call.dart';
 
@@ -14,10 +16,11 @@ class PickupLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     // ignore: unnecessary_null_comparison
     var user = appCtrl.storage.read(session.user);
+    log("user : ${user["id"]}");
     return StreamBuilder<DocumentSnapshot>(
       stream: FirebaseFirestore.instance
           .collection("calls")
-          .doc(user["phone"])
+          .doc(user["id"])
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasData && snapshot.data!.data() != null) {
@@ -220,24 +223,17 @@ class PickupLayout extends StatelessWidget {
                             SizedBox(width: 45),
                             RawMaterialButton(
                               onPressed: () async {
-                                final permission = Get.isRegistered<PermissionHandlerController>() ? Get.find<PermissionHandlerController>() :Get.put(PermissionHandlerController());
-                                flutterLocalNotificationsPlugin!.cancelAll();
-                                await
-                                permission.getCameraMicrophonePermissions()
-                                    .then((isgranted) async {
-                                  if (isgranted == true) {
-                                   if(call.isVideoCall! ){
-                                     var data = {
-                                       "channelName":call.channelId,
-                                       "call":call,
-                                       "role": ClientRoleType.clientRoleBroadcaster
-                                     };
-                                     Get.toNamed(routeName.videoCall,arguments: data);
-                                   }
-                                  }
-                                }).catchError((onError) {
+                                log("message");
 
-                                });
+                                log("message1");
+                                if(call.isVideoCall! ){
+                                  var data = {
+                                    "channelName":call.channelId,
+                                    "call":call,
+                                    "role": ClientRoleType.clientRoleBroadcaster
+                                  };
+                                  Get.toNamed(routeName.videoCall,arguments: data);
+                                }
                               },
                               child: Icon(
                                 Icons.call,
@@ -255,6 +251,8 @@ class PickupLayout extends StatelessWidget {
                     ],
                   ),
                 ));
+          }else{
+
           }
         }
         return scaffold;
