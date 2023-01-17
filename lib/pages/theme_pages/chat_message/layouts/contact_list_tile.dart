@@ -10,7 +10,7 @@ class ContactListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-        isThreeLine: false,
+
         leading: CachedNetworkImage(
             imageUrl: document!['content'].split('-BREAK-')[2],
             imageBuilder: (context, imageProvider) => CircleAvatar(
@@ -33,17 +33,6 @@ class ContactListTile extends StatelessWidget {
             maxLines: 1,
             style: AppCss.poppinsblack14.textColor(isReceiver
                 ? appCtrl.appTheme.primary
-                : appCtrl.appTheme.whiteColor)),
-        subtitle: Padding(
-            padding: const EdgeInsets.only(top: 3),
-            child: Text(
-              document!['content'].split('-BREAK-')[1],
-              style: TextStyle(
-                  height: 1.4,
-                  fontWeight: FontWeight.w500,
-                  color: isReceiver
-                      ? appCtrl.appTheme.primary
-                      : appCtrl.appTheme.whiteColor),
-            )));
+                : appCtrl.appTheme.whiteColor)));
   }
 }

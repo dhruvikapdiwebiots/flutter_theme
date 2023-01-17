@@ -1,4 +1,4 @@
-
+import 'dart:developer';
 
 import 'package:flutter_theme/config.dart';
 
@@ -31,7 +31,6 @@ class _ChatState extends State<Chat>
     if (state == AppLifecycleState.resumed) {
       firebaseCtrl.setIsActive();
       chatCtrl.setTyping();
-      chatCtrl.setTyping();
     } else {
       firebaseCtrl.setLastSeen();
     }
@@ -50,11 +49,21 @@ class _ChatState extends State<Chat>
                           ? true
                           : false
                       : false,
-                  callTap: () {
-
+                  callTap: () async{
+                    await chatCtrl.permissionHandelCtrl.getCameraMicrophonePermissions().then((value) {
+                      if(value == true){}
+                    });
+                  },
+                  videoTap: ()async{
+                    await chatCtrl.permissionHandelCtrl.getCameraMicrophonePermissions().then((value) {
+                      log("value : $value");
+                      if(value == true){
+                        chatCtrl.audioVideoCallTap(true);
+                      }
+                    });
                   },
                   moreTap: () => chatCtrl.blockUser()),
-              backgroundColor: appCtrl.appTheme.whiteColor,
+              backgroundColor: Color(0xFFECF1F4),
               body: chatCtrl.isUserAvailable
                   ? Stack(children: <Widget>[
                       Column(children: <Widget>[

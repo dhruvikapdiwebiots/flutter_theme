@@ -93,6 +93,12 @@ class ChatController extends GetxController {
     });
   }
 
+  //audio and video call tap
+  audioVideoCallTap(isVideoCall) async {
+    ChatMessageApi()
+        .audioAndVideoCallApi(toData: pData, isVideoCall: isVideoCall);
+  }
+
   //update typing status
   setTyping() async {
     textEditingController.addListener(() {

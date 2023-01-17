@@ -1,4 +1,8 @@
-import 'dart:developer';
+
+import 'dart:math';
+
+import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../../config.dart';
 
@@ -16,7 +20,6 @@ class ChatMessageApi {
         .where("chatId", isEqualTo: newChatId)
         .get()
         .then((value) async {
-      log("ess : ${value.docs.isNotEmpty}");
       if (value.docs.isNotEmpty) {
         await FirebaseFirestore.instance
             .collection('users')
@@ -74,7 +77,6 @@ class ChatMessageApi {
   saveGroupData(id, groupId, content, pData) async {
     var user = appCtrl.storage.read(session.user);
     List receiver = pData["users"];
-    log("receiver : ${receiver.length}");
     receiver.asMap().entries.forEach((element) async {
       await FirebaseFirestore.instance
           .collection("users")
@@ -83,7 +85,7 @@ class ChatMessageApi {
           .where("groupId", isEqualTo: groupId)
           .get()
           .then((value) {
-        log("value.docs : ${value.docs}");
+
         if (value.docs.isNotEmpty) {
           FirebaseFirestore.instance
               .collection("users")
@@ -98,5 +100,90 @@ class ChatMessageApi {
         }
       });
     });
+  }
+
+  //audio and video call api
+  audioAndVideoCallApi({toData, isVideoCall})async{
+    var userData = appCtrl.storage.read(session.user);
+    int timestamp = DateTime.now().millisecondsSinceEpoch;
+    Call call = Call(
+        timestamp: timestamp,
+        callerId: userData["id"],
+        callerName: userData["name"],
+        callerPic: userData["image"],
+        receiverId: toData["id"],
+        receiverName: toData["name"],
+        receiverPic: toData["image"],
+        channelId: Random().nextInt(1000).toString(),
+        isVideoCall: isVideoCall);
+    ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
+    bool callMade = await audioVideoCallSave(
+        call: call, isVideoCall: isVideoCall, timestamp: timestamp);
+
+    call.hasDialled = true;
+    if (isVideoCall == false) {
+      if (callMade) {
+      /*  await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AudioCall(
+              currentuseruid: currentuseruid,
+              call: call,
+              channelName: call.channelId,
+              role: _role,
+            ),
+          ),
+        );*/
+      }
+    } else {
+      if (callMade) {
+        var data = {
+          "channelName":call.channelId,
+          "call":call,
+          "role": role
+        };
+        Get.toNamed(routeName.videoCall,arguments: data);
+       /* await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VideoCall(
+              currentuseruid: currentuseruid,
+              call: call,
+              channelName: call.channelId,
+              role: _role,
+            ),
+          ),
+        );*/
+      }
+    }
+  }
+
+  Future<bool> audioVideoCallSave(
+      {required Call call,
+        required bool? isVideoCall,
+        required int timestamp}) async {
+    try {
+      call.hasDialled = true;
+      Map<String, dynamic> hasDialledMap = call.toMap(call);
+
+      call.hasDialled = false;
+      Map<String, dynamic> hasNotDialledMap = call.toMap(call);
+
+      await FirebaseFirestore.instance
+          .collection("calls")
+          .doc(call.callerId)
+          .set(hasDialledMap, SetOptions(merge: true));
+
+      await FirebaseFirestore.instance
+          .collection("calls")
+          .doc(call.receiverId)
+          .set(hasNotDialledMap, SetOptions(merge: true));
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      return false;
+    }
   }
 }

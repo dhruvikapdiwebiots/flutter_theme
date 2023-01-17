@@ -116,4 +116,5 @@ export '/models/bottom_nav_bar_model.dart';
 export '../widgets/email_text_box.dart';
 export '../widgets/password_text_box.dart';
 export '../widgets/social_layout.dart';
+export '../widgets/custom_shape.dart';
 export '../widgets/common_widget.dart';

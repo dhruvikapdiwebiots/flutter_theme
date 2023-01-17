@@ -24,10 +24,7 @@ class GroupReceiverImage extends StatelessWidget {
               alignment: Alignment.bottomRight,
               children: [
                 Material(
-                  borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(Insets.i20),
-                      bottomLeft: Radius.circular(Insets.i20),
-                      bottomRight: Radius.circular(Insets.i20)),
+                  borderRadius: BorderRadius.circular(AppRadius.r8),
                   clipBehavior: Clip.hardEdge,
                   child: CachedNetworkImage(
                     placeholder: (context, url) => Container(

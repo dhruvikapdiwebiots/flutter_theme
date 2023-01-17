@@ -92,6 +92,13 @@ dependencies:
   animated_text_kit: ^4.2.2
   image_cropper: ^3.0.1
   giphy_get: ^3.2.0
+  agora_rtc_engine: ^6.1.0
+  wakelock: ^0.6.2
+  bubble: ^1.2.1
+  overlay_support: ^2.1.0
+
+
+
 
 
 
@@ -127,6 +134,7 @@ flutter:
     - assets/images/
     - assets/gif/
     - assets/svg/
+    - assets/sounds/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

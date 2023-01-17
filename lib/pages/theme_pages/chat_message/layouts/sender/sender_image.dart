@@ -13,12 +13,11 @@ class SenderImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppRadius.r10),
-        color: appCtrl.appTheme.primary,
+        borderRadius: BorderRadius.circular(AppRadius.r10)
       ),
       margin: const EdgeInsets.symmetric(
-          horizontal: Insets.i10, vertical: Insets.i5),
-      padding: const EdgeInsets.all(Insets.i5),
+          horizontal: Insets.i10, vertical: Insets.i8),
+
       child: InkWell(
         onLongPress: onLongPress,
         onTap: onPressed,

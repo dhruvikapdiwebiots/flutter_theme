@@ -15,6 +15,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
+  agora_rtc_engine:
+    dependency: "direct main"
+    description:
+      name: agora_rtc_engine
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.1.0"
   animated_text_kit:
     dependency: "direct main"
     description:
@@ -99,6 +106,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
+  bubble:
+    dependency: "direct main"
+    description:
+      name: bubble
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.1"
   cached_network_image:
     dependency: "direct main"
     description:
@@ -749,6 +763,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.7.1"
+  iris_event:
+    dependency: transitive
+    description:
+      name: iris_event
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   js:
     dependency: transitive
     description:
@@ -756,6 +777,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.4"
+  json_annotation:
+    dependency: transitive
+    description:
+      name: json_annotation
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.7.0"
   just_audio:
     dependency: "direct main"
     description:
@@ -903,6 +931,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2"
+  overlay_support:
+    dependency: "direct main"
+    description:
+      name: overlay_support
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.0"
   path:
     dependency: "direct main"
     description:
@@ -1441,7 +1476,7 @@ packages:
     source: hosted
     version: "2.0.12"
   wakelock:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: wakelock
       url: "https://pub.dartlang.org"

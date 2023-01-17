@@ -5,8 +5,9 @@
 
 
 import 'package:flutter_theme/pages/theme_pages/all_contact/all_contact_list.dart';
-
+import '../pages/bottom_pages/dashboard/dashboard.dart';
 import '../config.dart';
+import '../pages/theme_pages/video_call/video_call.dart';
 import 'route_name.dart';
 
 RouteName _routeName = RouteName();
@@ -31,5 +32,6 @@ class AppRoute {
     GetPage(name: _routeName.statusView, page: () =>const StatusScreenView()),
     GetPage(name: _routeName.otherSetting, page: () =>const OtherSetting()),
     GetPage(name: _routeName.broadcastChat, page: () =>const BroadcastChat()),
+    GetPage(name: _routeName.videoCall, page: () => VideoCall()),
   ];
 }

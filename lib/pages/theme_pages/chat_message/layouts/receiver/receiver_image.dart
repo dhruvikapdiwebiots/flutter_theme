@@ -14,10 +14,8 @@ class ReceiverImage extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppRadius.r10),
-        color: appCtrl.appTheme.primary,
+
       ),
-      padding: const EdgeInsets.symmetric(
-          horizontal: Insets.i5, vertical: Insets.i5),
       child: InkWell(
           onLongPress: onLongPress,
           child: Stack(

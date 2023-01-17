@@ -2,9 +2,9 @@ import '../../../../config.dart';
 
 class ChatMessageAppBar extends StatelessWidget with PreferredSizeWidget{
   final String? name;
-  final GestureTapCallback? callTap,moreTap;
+  final VoidCallback? callTap,moreTap,videoTap;
   final bool isBlock;
-  const ChatMessageAppBar({Key? key,this.name,this.callTap,this.moreTap,this.isBlock = false}) : super(key: key);
+  const ChatMessageAppBar({Key? key,this.name,this.callTap,this.moreTap,this.isBlock = false,this.videoTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ automaticallyImplyLeading: false,
         leading: Icon(Icons.arrow_back,color: appCtrl.appTheme.white,).inkWell(onTap: ()=>Get.back()),
         actions: [
           IconButton(
-            onPressed: (){},
+            onPressed: videoTap,
             icon:  Icon(Icons.video_call,color: appCtrl.appTheme.white),
           ),
           IconButton(

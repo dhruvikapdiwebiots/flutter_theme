@@ -12,6 +12,12 @@
 @import advance_pdf_viewer;
 #endif
 
+#if __has_include(<agora_rtc_engine/AgoraRtcNgPlugin.h>)
+#import <agora_rtc_engine/AgoraRtcNgPlugin.h>
+#else
+@import agora_rtc_engine;
+#endif
+
 #if __has_include(<audio_session/AudioSessionPlugin.h>)
 #import <audio_session/AudioSessionPlugin.h>
 #else
@@ -126,6 +132,12 @@
 @import image_picker_ios;
 #endif
 
+#if __has_include(<iris_event/IrisEventPlugin.h>)
+#import <iris_event/IrisEventPlugin.h>
+#else
+@import iris_event;
+#endif
+
 #if __has_include(<just_audio/JustAudioPlugin.h>)
 #import <just_audio/JustAudioPlugin.h>
 #else
@@ -226,6 +238,7 @@
 
 + (void)registerWithRegistry:(NSObject<FlutterPluginRegistry>*)registry {
   [FlutterPluginPdfViewerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterPluginPdfViewerPlugin"]];
+  [AgoraRtcNgPlugin registerWithRegistrar:[registry registrarForPlugin:@"AgoraRtcNgPlugin"]];
   [AudioSessionPlugin registerWithRegistrar:[registry registrarForPlugin:@"AudioSessionPlugin"]];
   [AudioplayersDarwinPlugin registerWithRegistrar:[registry registrarForPlugin:@"AudioplayersDarwinPlugin"]];
   [FLTFirebaseFirestorePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseFirestorePlugin"]];
@@ -245,6 +258,7 @@
   [FLTGoogleSignInPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTGoogleSignInPlugin"]];
   [FLTImageCropperPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTImageCropperPlugin"]];
   [FLTImagePickerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTImagePickerPlugin"]];
+  [IrisEventPlugin registerWithRegistrar:[registry registrarForPlugin:@"IrisEventPlugin"]];
   [JustAudioPlugin registerWithRegistrar:[registry registrarForPlugin:@"JustAudioPlugin"]];
   [LibphonenumberPlugin registerWithRegistrar:[registry registrarForPlugin:@"LibphonenumberPlugin"]];
   [FLTLibphonenumberPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTLibphonenumberPlugin"]];

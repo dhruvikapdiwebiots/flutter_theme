@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../config.dart';
@@ -148,10 +149,8 @@ class PermissionHandlerController extends GetxController {
 
 
 //get camera permission
-  Future<PermissionStatus> getCameraMicrophonePermission() async {
+  static Future<PermissionStatus> getCameraPermission() async {
     PermissionStatus cameraPermission = await Permission.camera.request();
-    PermissionStatus microPhonePermission = await Permission.microphone.request();
-
     if (cameraPermission != PermissionStatus.granted &&
         cameraPermission != PermissionStatus.denied) {
       return Permission.camera as FutureOr<PermissionStatus>? ??
@@ -167,6 +166,41 @@ class PermissionHandlerController extends GetxController {
       return PermissionStatus.granted;
     } else {
       return PermissionStatus.denied;
+    }
+  }
+
+
+  Future<bool> getCameraMicrophonePermissions() async {
+    PermissionStatus cameraPermissionStatus = await getCameraPermission();
+    PermissionStatus microphonePermissionStatus =
+    await getMicrophonePermission();
+
+    if (cameraPermissionStatus == PermissionStatus.granted &&
+        microphonePermissionStatus == PermissionStatus.granted) {
+      return true;
+    } else {
+      _handleInvalidPermissions(
+          cameraPermissionStatus, microphonePermissionStatus);
+      return false;
+    }
+  }
+
+  static void _handleInvalidPermissions(
+      PermissionStatus cameraPermissionStatus,
+      PermissionStatus microphonePermissionStatus,
+      ) {
+    if (cameraPermissionStatus == PermissionStatus.denied &&
+        microphonePermissionStatus == PermissionStatus.denied) {
+      throw PlatformException(
+          code: "PERMISSION_DENIED",
+          message: "Access to camera and microphone denied",
+          details: null);
+    } else if (cameraPermissionStatus == PermissionStatus.denied &&
+        microphonePermissionStatus == PermissionStatus.denied) {
+      throw PlatformException(
+          code: "PERMISSION_DISABLED",
+          message: "Location data is not available on device",
+          details: null);
     }
   }
 
