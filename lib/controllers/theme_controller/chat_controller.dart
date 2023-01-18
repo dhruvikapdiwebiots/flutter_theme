@@ -405,7 +405,7 @@ class ChatController extends GetxController {
       update();
       if (pData["pushToken"] != "" && pData["pushToken"] != null) {
         firebaseCtrl.sendNotification(
-            title: pName, msg: content, token: pData["pushToken"]);
+            title: pName, msg: content, token: pData["pushToken"],image: userData["image"]);
       }
       if (allData != null && allData != "") {
         if (allData["isBlock"] == true) {

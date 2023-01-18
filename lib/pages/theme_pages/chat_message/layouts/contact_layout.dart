@@ -1,4 +1,6 @@
+import 'dart:developer';
 
+import 'package:intl/intl.dart';
 
 import '../../../../config.dart';
 
@@ -19,40 +21,7 @@ class ContactLayout extends StatelessWidget {
         child: Stack(
           alignment: isReceiver ? Alignment.topLeft : Alignment.topRight,
           children: [
-            Column(
-              children: [
-                Row(
-                  children: [
-                    CachedNetworkImage(
-                        imageUrl: document!['content'].split('-BREAK-')[2],
-                        imageBuilder: (context, imageProvider) => CircleAvatar(
-                          backgroundColor: appCtrl.appTheme.contactBgGray,
-                          radius: AppRadius.r20,
-                          backgroundImage: NetworkImage(
-                              '${document!['content'].split('-BREAK-')[2]}'),
-                        ),
-                        placeholder: (context, url) => CircleAvatar(
-                            backgroundColor: appCtrl.appTheme.contactBgGray,
-                            radius: AppRadius.r20,
-                            child: Icon(Icons.people, color: appCtrl.appTheme.contactGray)),
-                        errorWidget: (context, url, error) => CircleAvatar(
-                            backgroundColor: appCtrl.appTheme.contactBgGray,
-                            radius: AppRadius.r20,
-                            child:
-                            Icon(Icons.people, color: appCtrl.appTheme.contactGray))),
-                    const HSpace(Sizes.s10),
-                    Text(document!['content'].split('-BREAK-')[0],
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: AppCss.poppinsblack14.textColor(isReceiver
-                            ? appCtrl.appTheme.primary
-                            : appCtrl.appTheme.whiteColor))
-                  ]
-                )
-              ],
-            ),
-            /*Container(
-                padding: const EdgeInsets.symmetric(vertical: Insets.i5),
+            Container(
                 decoration: BoxDecoration(
                     color: isReceiver
                         ? appCtrl.appTheme.white
@@ -65,25 +34,21 @@ class ContactLayout extends StatelessWidget {
                             : const Radius.circular(AppRadius.r8),
                         topRight: isReceiver
                             ? const Radius.circular(AppRadius.r8)
-                            : const Radius.circular(0)),
-                    boxShadow: [
-                      BoxShadow(
-                          blurRadius: 15.0,
-                          color: appCtrl.appTheme.blackColor.withOpacity(.25),
-                          offset: const Offset(-2, 2))
-                    ]),
-                width: Sizes.s280,
-                height: Sizes.s100,
+                            : const Radius.circular(0))),
+                width: Sizes.s250,
+                height: Sizes.s120,
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Row(
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Expanded(
-                              child: ContactListTile(
+                          ContactListTile(
                             document: document,
-                          )),
+                            isReceiver: isReceiver,
+                          ).marginOnly(top: Insets.i5),
                           Text(
                             DateFormat('HH:mm a').format(
                                 DateTime.fromMillisecondsSinceEpoch(
@@ -94,27 +59,82 @@ class ContactLayout extends StatelessWidget {
                           ).marginSymmetric(horizontal: Insets.i10)
                         ],
                       ),
-                      Divider(height: 7, color: appCtrl.appTheme.whiteColor),
-                      // ignore: deprecated_member_use
-                      *//*TextButton(
-                          onPressed: () async {
-                            final uri = Uri(
-                              scheme: "sms",
-                              path: document!['content'].split('-BREAK-')[1],
-                              queryParameters: <String, String>{
-                                'body': Uri.encodeComponent(
-                                    'Download the ChatBox App'),
+                      const VSpace(Sizes.s8),
+                      Divider(
+                          thickness: 1.5,
+                          color: isReceiver
+                              ? const Color(0xFF263238).withOpacity(.2)
+                              : appCtrl.appTheme.whiteColor,
+                          height: 1),
+                      IntrinsicHeight(
+                          child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                            Expanded(
+                                child: InkWell(
+                              onTap: () {
+                                UserContactModel user = UserContactModel(
+                                    uid: " 0",
+                                    isRegister: false,
+                                    image: document!['content']
+                                        .split('-BREAK-')[2],
+                                    username: document!['content']
+                                        .split('-BREAK-')[0],
+                                    phoneNumber: phoneNumberExtension(document!['content']
+                                        .split('-BREAK-')[1]),
+                                    description: "");
+                                log("con : ${user.phoneNumber}");
+                                MessageFirebaseApi()
+                                    .saveContact(user, true);
                               },
-                            );
-                            await launchUrl(uri);
-                          },
-                          child: Text("Message",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  color: appCtrl.appTheme.whiteColor)))*//*
-                    ])),*/
-            CustomPaint(painter: CustomShape(appCtrl.appTheme.primary)),
+                              child: Text("Message",
+                                      textAlign: TextAlign.center,
+                                      style: AppCss.poppinsExtraBold12
+                                          .textColor(isReceiver
+                                              ? const Color(0xFF586780)
+                                              : appCtrl.appTheme.whiteColor))
+                                  .marginSymmetric(vertical: Insets.i15),
+                            )),
+                            VerticalDivider(
+                              endIndent: 10,
+                              indent: 10,
+                              thickness: 1.5,
+                              color: isReceiver
+                                  ? const Color(0xFF263238).withOpacity(.2)
+                                  : appCtrl.appTheme.whiteColor,
+                            ),
+                            Expanded(
+                                child: InkWell(
+                              onTap: () {},
+                              child: Text("Add Contact",
+                                  textAlign: TextAlign.center,
+                                  style: AppCss.poppinsExtraBold12.textColor(
+                                      isReceiver
+                                          ? const Color(0xFF586780)
+                                          : appCtrl.appTheme.whiteColor)),
+                            ))
+                          ]))
+                    ])),
+            CustomPaint(
+                painter: CustomShape(isReceiver
+                    ? appCtrl.appTheme.whiteColor
+                    : appCtrl.appTheme.primary)),
           ],
-        ).marginSymmetric(horizontal: Insets.i8,vertical: Insets.i10));
+        )
+            .decorated(
+                color: isReceiver
+                    ? appCtrl.appTheme.whiteColor
+                    : appCtrl.appTheme.primary,
+                borderRadius: BorderRadius.only(
+                    bottomRight: const Radius.circular(Insets.i8),
+                    topRight: isReceiver
+                        ? const Radius.circular(Insets.i8)
+                        : const Radius.circular(0),
+                    topLeft: isReceiver
+                        ? const Radius.circular(0)
+                        : const Radius.circular(Insets.i8),
+                    bottomLeft: const Radius.circular(Insets.i8)))
+            .marginSymmetric(horizontal: Insets.i10, vertical: Insets.i10));
   }
 }

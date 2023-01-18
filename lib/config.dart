@@ -1,3 +1,5 @@
+import 'package:camera/camera.dart';
+
 import 'config.dart';
 export 'package:get_storage/get_storage.dart';
 
@@ -37,3 +39,4 @@ final firebaseCtrl = Get.isRegistered<FirebaseCommonController>()
     ? Get.find<FirebaseCommonController>()
     : Get.put(FirebaseCommonController());
 
+List<CameraDescription> cameras = <CameraDescription>[];

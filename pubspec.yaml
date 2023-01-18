@@ -96,6 +96,8 @@ dependencies:
   wakelock: ^0.6.2
   bubble: ^1.2.1
   overlay_support: ^2.1.0
+  camera: ^0.10.2
+
 
 
 

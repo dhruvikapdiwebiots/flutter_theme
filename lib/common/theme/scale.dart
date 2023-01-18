@@ -142,6 +142,7 @@ class Sizes {
   static const double s110 = 110 * scale;
   static const double s115 = 115 * scale;
   static const double s120 = 120 * scale;
+  static const double s128 = 128 * scale;
   static const double s130 = 130 * scale;
   static const double s140 = 140 * scale;
   static const double s145 = 145 * scale;

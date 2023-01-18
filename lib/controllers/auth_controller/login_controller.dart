@@ -50,7 +50,7 @@ class LoginController extends GetxController {
     var users = storage.read(session.user) ?? '';
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
-    log("user : $users");
+
     if (users == "") {
       log("null");
     } else {

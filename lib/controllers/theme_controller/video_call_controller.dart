@@ -4,12 +4,14 @@ import 'dart:developer';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:audioplayers/audioplayers.dart' as audioPlayers;
 import 'package:audioplayers/audioplayers.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:wakelock/wakelock.dart';
 import '../../config.dart';
 
 class VideoCallController extends GetxController {
   String? channelName;
   Call? call;
+  bool localUserJoined = false;
   bool isspeaker = true, switchCamera = false;
   late RtcEngine engine;
   final _infoStrings = <String>[];
@@ -27,7 +29,7 @@ class VideoCallController extends GetxController {
   Stream<DocumentSnapshot>? stream;
   audioPlayers.AudioPlayer? player;
   AudioCache audioCache = AudioCache();
-
+  int? remoteUidValue;
   // ignore: close_sinks
   StreamController<int>? streamController;
   String hoursStr = '00';
@@ -79,7 +81,7 @@ class VideoCallController extends GetxController {
     role = data["role"];
     userData = appCtrl.storage.read(session.user);
     update();
-    initialize();
+
     userData = appCtrl.storage.read(session.user);
     stream = FirebaseFirestore.instance
         .collection("calls")
@@ -87,14 +89,229 @@ class VideoCallController extends GetxController {
             ? call!.receiverId
             : call!.callerId)
         .collection("collectioncallhistory")
-        .doc(call!.timestamp.toString())
+        .doc("callData")
         .snapshots();
     startTimerNow();
+    update();
     super.onReady();
+
   }
 
   Future<bool> onWillPopNEw() {
     return Future.value(false);
+  }
+
+
+  Future<void> initAgora() async {
+    // retrieve permissions
+    await [Permission.microphone, Permission.camera].request();
+    log("permis :");
+    //create the engine
+    engine = createAgoraRtcEngine();
+    await engine.initialize( RtcEngineContext(
+      appId: fonts.appId,
+      channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
+    ));
+    log("engine : $engine");
+
+    engine.registerEventHandler(
+      RtcEngineEventHandler(
+        onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
+          debugPrint("local user ${connection.localUid} joined");
+          localUserJoined = true;
+
+          if (call!.callerId == userData["id"]) {
+            playCallingTone();
+
+            update();
+            FirebaseFirestore.instance
+                .collection("calls")
+                .doc(call!.callerId)
+                .collection("collectioncallhistory")
+                .doc("callData")
+                .set({
+              'TYPE': 'OUTGOING',
+              'ISVIDEOCALL': call!.isVideoCall,
+              'PEER': call!.receiverId,
+              'TIME': call!.timestamp,
+              'DP': call!.receiverPic,
+              'ISMUTED': false,
+              'TARGET': call!.receiverId,
+              'ISJOINEDEVER': false,
+              'STATUS': 'calling',
+              'STARTED': null,
+              'ENDED': null,
+              'CALLERNAME': call!.callerName,
+            }, SetOptions(merge: true));
+            FirebaseFirestore.instance
+                .collection("calls")
+                .doc(call!.receiverId)
+                .collection("collectioncallhistory")
+                .doc("callData")
+                .set({
+              'TYPE': 'INCOMING',
+              'ISVIDEOCALL': call!.isVideoCall,
+              'PEER': call!.callerId,
+              'TIME': call!.timestamp,
+              'DP': call!.callerPic,
+              'ISMUTED': false,
+              'TARGET': call!.receiverId,
+              'ISJOINEDEVER': true,
+              'STATUS': 'missedcall',
+              'STARTED': null,
+              'ENDED': null,
+              'CALLERNAME': call!.callerName,
+            }, SetOptions(merge: true));
+          }
+          Wakelock.enable();
+          //flutterLocalNotificationsPlugin!.cancelAll();
+          update();
+          Get.forceAppUpdate();
+        },
+        onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
+
+          remoteUidValue = remoteUid;
+          update();
+          debugPrint("remote user $remoteUidValue joined");
+          final info = 'userJoined: $remoteUidValue';
+          if (userData["id"] == call!.callerId) {
+            _stopCallingSound();
+            FirebaseFirestore.instance
+                .collection("calls")
+                .doc(call!.callerId)
+                .collection("collectioncallhistory")
+                .doc("callData")
+                .set({
+              'STARTED': DateTime.now(),
+              'STATUS': 'pickedup',
+              'ISJOINEDEVER': true,
+            }, SetOptions(merge: true));
+            FirebaseFirestore.instance
+                .collection("calls")
+                .doc(call!.receiverId)
+                .collection("collectioncallhistory")
+                .doc("callData")
+                .set({
+              'STARTED': DateTime.now(),
+              'STATUS': 'pickedup',
+            }, SetOptions(merge: true));
+            FirebaseFirestore.instance
+                .collection("calls")
+                .doc(call!.callerId)
+                .set({
+              "videoCallMade": FieldValue.increment(1),
+            }, SetOptions(merge: true));
+            FirebaseFirestore.instance
+                .collection("calls")
+                .doc(call!.receiverId)
+                .set({
+              "videoCallRecieved": FieldValue.increment(1),
+            }, SetOptions(merge: true));
+
+          }
+          Wakelock.enable();
+          update();
+          Get.forceAppUpdate();
+        },
+        onUserOffline: (RtcConnection connection, int remoteUid, UserOfflineReasonType reason) {
+          debugPrint("remote user $remoteUid left channel");
+          remoteUid = 0;
+
+          final info = 'userOffline: $remoteUid';
+          _infoStrings.add(info);
+          _users.remove(remoteUid);
+          update();
+          _stopCallingSound();
+          if (isalreadyendedcall == false) {
+            FirebaseFirestore.instance
+                .collection("calls")
+                .doc(call!.callerId)
+                .collection("collectioncallhistory")
+                .doc("callData")
+                .set({
+              'STATUS': 'ended',
+              'ENDED': DateTime.now(),
+            }, SetOptions(merge: true));
+            FirebaseFirestore.instance
+                .collection("calls")
+                .doc(call!.receiverId)
+                .collection("collectioncallhistory")
+                .doc("callData")
+                .set({
+              'STATUS': 'ended',
+              'ENDED': DateTime.now(),
+            }, SetOptions(merge: true));
+            //----------
+            FirebaseFirestore.instance
+                .collection("calls")
+                .doc(call!.receiverId)
+                .collection('recent')
+                .doc('callended')
+                .set({
+              'id': call!.receiverId,
+              'ENDED': DateTime.now().millisecondsSinceEpoch,
+              'CALLERNAME': call!.callerName,
+            }, SetOptions(merge: true));
+          }
+        },
+        onTokenPrivilegeWillExpire: (RtcConnection connection, String token) {
+          debugPrint('[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
+        },
+        onLeaveChannel: (connection, stats) {
+          _stopCallingSound();
+          _infoStrings.add('onLeaveChannel');
+          _users.clear();
+          update();
+          if (isalreadyendedcall == false) {
+            FirebaseFirestore.instance
+                .collection("calls")
+                .doc(call!.callerId)
+                .collection("collectioncallhistory")
+                .doc("callData")
+                .set({
+              'STATUS': 'ended',
+              'ENDED': DateTime.now(),
+            }, SetOptions(merge: true));
+            FirebaseFirestore.instance
+                .collection("calls")
+                .doc(call!.receiverId)
+                .collection("collectioncallhistory")
+                .doc("callData")
+                .set({
+              'STATUS': 'ended',
+              'ENDED': DateTime.now(),
+            }, SetOptions(merge: true));
+            //----------
+            FirebaseFirestore.instance
+                .collection("calls")
+                .doc(call!.receiverId)
+                .collection('recent')
+                .doc('callended')
+                .set({
+              'id': call!.receiverId,
+              'ENDED': DateTime.now().millisecondsSinceEpoch,
+              'CALLERNAME': call!.callerName,
+            }, SetOptions(merge: true));
+          }
+          Wakelock.disable();
+        },
+      ),
+    );
+
+    log("engine1 : ${engine}");
+
+    await engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
+    await engine.enableVideo();
+    await engine.startPreview();
+
+    await engine.joinChannel(
+      token: fonts.token,
+      channelId: fonts.channel,
+
+      uid: 0,
+      options: const ChannelMediaOptions(),
+    );
+   update();
   }
 
   onetooneview(double h, double w, bool iscallended, bool userenlarged) {
@@ -175,6 +392,10 @@ class VideoCallController extends GetxController {
                   width: 65.67,
                   child: RawMaterialButton(
                     onPressed: _onToggleSpeaker,
+                    shape: const CircleBorder(),
+                    elevation: 2.0,
+                    fillColor: isspeaker ? Colors.blueAccent : Colors.white,
+                    padding: const EdgeInsets.all(12.0),
                     child: Icon(
                       isspeaker
                           ? Icons.volume_mute_rounded
@@ -182,10 +403,6 @@ class VideoCallController extends GetxController {
                       color: isspeaker ? Colors.white : Colors.blueAccent,
                       size: 22.0,
                     ),
-                    shape: const CircleBorder(),
-                    elevation: 2.0,
-                    fillColor: isspeaker ? Colors.blueAccent : Colors.white,
-                    padding: const EdgeInsets.all(12.0),
                   ))
               : const SizedBox(height: 0, width: 65.67),
           status != 'ended' && status != 'rejected'
@@ -193,15 +410,15 @@ class VideoCallController extends GetxController {
                   width: 65.67,
                   child: RawMaterialButton(
                     onPressed: _onToggleMute,
+                    shape: const CircleBorder(),
+                    elevation: 2.0,
+                    fillColor: muted ? Colors.blueAccent : Colors.white,
+                    padding: const EdgeInsets.all(12.0),
                     child: Icon(
                       muted ? Icons.mic_off : Icons.mic,
                       color: muted ? Colors.white : Colors.blueAccent,
                       size: 22.0,
                     ),
-                    shape: const CircleBorder(),
-                    elevation: 2.0,
-                    fillColor: muted ? Colors.blueAccent : Colors.white,
-                    padding: const EdgeInsets.all(12.0),
                   ))
               : const SizedBox(height: 42, width: 65.67),
           SizedBox(
@@ -213,6 +430,12 @@ class VideoCallController extends GetxController {
                 update();
                 _onCallEnd(Get.context!);
               },
+              shape: const CircleBorder(),
+              elevation: 2.0,
+              fillColor: status == 'ended' || status == 'rejected'
+                  ? Colors.black
+                  : Colors.redAccent,
+              padding: const EdgeInsets.all(15.0),
               child: Icon(
                 status == 'ended' || status == 'rejected'
                     ? Icons.close
@@ -220,12 +443,6 @@ class VideoCallController extends GetxController {
                 color: Colors.white,
                 size: 35.0,
               ),
-              shape: const CircleBorder(),
-              elevation: 2.0,
-              fillColor: status == 'ended' || status == 'rejected'
-                  ? Colors.black
-                  : Colors.redAccent,
-              padding: const EdgeInsets.all(15.0),
             ),
           ),
           status == 'ended' || status == 'rejected'
@@ -236,15 +453,15 @@ class VideoCallController extends GetxController {
                   width: 65.67,
                   child: RawMaterialButton(
                     onPressed: _onSwitchCamera,
+                    shape: const CircleBorder(),
+                    elevation: 2.0,
+                    fillColor: Colors.white,
+                    padding: const EdgeInsets.all(12.0),
                     child: const Icon(
                       Icons.switch_camera,
                       color: Colors.blueAccent,
                       size: 20.0,
                     ),
-                    shape: const CircleBorder(),
-                    elevation: 2.0,
-                    fillColor: Colors.white,
-                    padding: const EdgeInsets.all(12.0),
                   ),
                 ),
           status == 'pickedup'
@@ -255,15 +472,15 @@ class VideoCallController extends GetxController {
                       isuserenlarged = !isuserenlarged;
                       update();
                     },
+                    shape: const CircleBorder(),
+                    elevation: 2.0,
+                    fillColor: Colors.white,
+                    padding: const EdgeInsets.all(12.0),
                     child: const Icon(
                       Icons.open_in_full_outlined,
                       color: Colors.black87,
                       size: 15.0,
                     ),
-                    shape: const CircleBorder(),
-                    elevation: 2.0,
-                    fillColor: Colors.white,
-                    padding: const EdgeInsets.all(12.0),
                   ),
                 )
               : const SizedBox(
@@ -276,7 +493,7 @@ class VideoCallController extends GetxController {
 
   Future<void> _onSwitchCamera() async {
     engine.switchCamera();
-    switchCamera = !switchCamera;
+
     update();
   }
 
@@ -308,13 +525,13 @@ class VideoCallController extends GetxController {
           .collection("calls")
           .doc(call!.callerId)
           .collection("collectioncallhistory")
-          .doc(call!.timestamp.toString())
+          .doc("callData")
           .set({'STATUS': 'ended', 'ENDED': now}, SetOptions(merge: true));
       await FirebaseFirestore.instance
           .collection("calls")
           .doc(call!.receiverId)
           .collection("collectioncallhistory")
-          .doc(call!.timestamp.toString())
+          .doc("callData")
           .set({'STATUS': 'ended', 'ENDED': now}, SetOptions(merge: true));
       //----------
       await FirebaseFirestore.instance
@@ -332,7 +549,7 @@ class VideoCallController extends GetxController {
     Get.back();
   }
 
-  Widget panel({BuildContext? context, bool? ispeermuted, String? status}) {
+  Widget panel({bool? ispeermuted, String? status}) {
     if (status == 'rejected') {
       _stopCallingSound();
     }
@@ -461,8 +678,8 @@ class VideoCallController extends GetxController {
                   )
                 : const SizedBox(
                     height: 0,
-                    width: 0,
-                  ),
+                    width: 0
+                  )
           ],
         ),
       ),
@@ -483,7 +700,6 @@ class VideoCallController extends GetxController {
 
   Future<void> initialize() async {
     await _initAgoraRtcEngine();
-    _addAgoraEventHandlers();
 
     VideoEncoderConfiguration configuration = const VideoEncoderConfiguration();
     const VideoEncoderConfiguration(
@@ -510,183 +726,9 @@ class VideoCallController extends GetxController {
 
   }
 
-  Future<Null> _playCallingTone() async {
-    player = (await audioCache.load('sounds/callingtone.mp3'))
+  Future<void> playCallingTone() async {
+    player = (await audioCache.load('assets/sounds/callingtone.mp3'))
         as audioPlayers.AudioPlayer;
     update();
-  }
-
-  _addAgoraEventHandlers() {
-    engine.registerEventHandler(RtcEngineEventHandler(onError: (err, msg) {
-      final info = 'onError: $msg';
-      _infoStrings.add(info);
-      update();
-    }, onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
-      if (call!.callerId == userData["id"]) {
-        _playCallingTone();
-        final info = 'onJoinChannel: $channel';
-        _infoStrings.add(info);
-        update();
-        FirebaseFirestore.instance
-            .collection("calls")
-            .doc(call!.callerId)
-            .collection("collectioncallhistory")
-            .doc(call!.timestamp.toString())
-            .set({
-          'TYPE': 'OUTGOING',
-          'ISVIDEOCALL': call!.isVideoCall,
-          'PEER': call!.receiverId,
-          'TIME': call!.timestamp,
-          'DP': call!.receiverPic,
-          'ISMUTED': false,
-          'TARGET': call!.receiverId,
-          'ISJOINEDEVER': false,
-          'STATUS': 'calling',
-          'STARTED': null,
-          'ENDED': null,
-          'CALLERNAME': call!.callerName,
-        }, SetOptions(merge: true));
-        FirebaseFirestore.instance
-            .collection("calls")
-            .doc(call!.receiverId)
-            .collection("collectioncallhistory")
-            .doc(call!.timestamp.toString())
-            .set({
-          'TYPE': 'INCOMING',
-          'ISVIDEOCALL': call!.isVideoCall,
-          'PEER': call!.callerId,
-          'TIME': call!.timestamp,
-          'DP': call!.callerPic,
-          'ISMUTED': false,
-          'TARGET': call!.receiverId,
-          'ISJOINEDEVER': true,
-          'STATUS': 'missedcall',
-          'STARTED': null,
-          'ENDED': null,
-          'CALLERNAME': call!.callerName,
-        }, SetOptions(merge: true));
-      }
-      Wakelock.enable();
-      flutterLocalNotificationsPlugin!.cancelAll();
-    }, onLeaveChannel: (connection, stats) {
-      _stopCallingSound();
-      _infoStrings.add('onLeaveChannel');
-      _users.clear();
-      update();
-      if (isalreadyendedcall == false) {
-        FirebaseFirestore.instance
-            .collection("calls")
-            .doc(call!.callerId)
-            .collection("collectioncallhistory")
-            .doc(call!.timestamp.toString())
-            .set({
-          'STATUS': 'ended',
-          'ENDED': DateTime.now(),
-        }, SetOptions(merge: true));
-        FirebaseFirestore.instance
-            .collection("calls")
-            .doc(call!.receiverId)
-            .collection("collectioncallhistory")
-            .doc(call!.timestamp.toString())
-            .set({
-          'STATUS': 'ended',
-          'ENDED': DateTime.now(),
-        }, SetOptions(merge: true));
-        //----------
-        FirebaseFirestore.instance
-            .collection("calls")
-            .doc(call!.receiverId)
-            .collection('recent')
-            .doc('callended')
-            .set({
-          'id': call!.receiverId,
-          'ENDED': DateTime.now().millisecondsSinceEpoch,
-          'CALLERNAME': call!.callerName,
-        }, SetOptions(merge: true));
-      }
-      Wakelock.disable();
-    }, onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
-      final info = 'userJoined: $remoteUid';
-      remoteUId =remoteUid;
-      _infoStrings.add(info);
-      _users.add(remoteUid);
-      log("onUserJoined : $info");
-      update();
-      if (userData['id'] == call!.callerId) {
-        _stopCallingSound();
-        FirebaseFirestore.instance
-            .collection("calls")
-            .doc(call!.callerId)
-            .collection("collectioncallhistory")
-            .doc(call!.timestamp.toString())
-            .set({
-          'STARTED': DateTime.now(),
-          'STATUS': 'pickedup',
-          'ISJOINEDEVER': true,
-        }, SetOptions(merge: true));
-        FirebaseFirestore.instance
-            .collection("calls")
-            .doc(call!.receiverId)
-            .collection("collectioncallhistory")
-            .doc(call!.timestamp.toString())
-            .set({
-          'STARTED': DateTime.now(),
-          'STATUS': 'pickedup',
-        }, SetOptions(merge: true));
-        FirebaseFirestore.instance.collection("calls").doc(call!.callerId).set({
-          "videoCallMade": FieldValue.increment(1),
-        }, SetOptions(merge: true));
-        FirebaseFirestore.instance
-            .collection("calls")
-            .doc(call!.receiverId)
-            .set({
-          "videoCallRecieved": FieldValue.increment(1),
-        }, SetOptions(merge: true));
-      }
-      Wakelock.enable();
-    }, onUserOffline: (RtcConnection connection, int remoteUid,
-        UserOfflineReasonType reason) {
-      final info = 'userOffline: $remoteUid';
-      _infoStrings.add(info);
-      _users.remove(remoteUid);
-      update();
-      _stopCallingSound();
-      if (isalreadyendedcall == false) {
-        FirebaseFirestore.instance
-            .collection("calls")
-            .doc(call!.callerId)
-            .collection("collectioncallhistory")
-            .doc(call!.timestamp.toString())
-            .set({
-          'STATUS': 'ended',
-          'ENDED': DateTime.now(),
-        }, SetOptions(merge: true));
-        FirebaseFirestore.instance
-            .collection("calls")
-            .doc(call!.receiverId)
-            .collection("collectioncallhistory")
-            .doc(call!.timestamp.toString())
-            .set({
-          'STATUS': 'ended',
-          'ENDED': DateTime.now(),
-        }, SetOptions(merge: true));
-        //----------
-        FirebaseFirestore.instance
-            .collection("calls")
-            .doc(call!.receiverId)
-            .collection('recent')
-            .doc('callended')
-            .set({
-          'id': call!.receiverId,
-          'ENDED': DateTime.now().millisecondsSinceEpoch,
-          'CALLERNAME': call!.callerName,
-        }, SetOptions(merge: true));
-      }
-    }, onFirstRemoteVideoFrame:
-        (connection, remoteUid, width, height, elapsed) {
-      final info = 'firstRemoteVideo: $remoteUid ${width}x $height';
-      _infoStrings.add(info);
-      update();
-    }));
   }
 }

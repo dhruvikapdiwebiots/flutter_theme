@@ -27,7 +27,8 @@ class UserLastSeen extends StatelessWidget {
                               appCtrl.appTheme.primary)));
                 } else {
                   chatCtrl.message = (snapshot.data!).docs;
-                  return Text(
+
+                  return chatCtrl.chatId ==  "0" ? Container(): Text(
                     snapshot.data!.docs[0]["status"] == "Offline"
                         ? DateFormat('HH:mm a').format(
                         DateTime.fromMillisecondsSinceEpoch(

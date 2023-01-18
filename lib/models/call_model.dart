@@ -10,6 +10,8 @@ class Call {
   int? timestamp;
   bool? hasDialled;
   bool? isVideoCall;
+  String? callerToken;
+  String? receiverToken;
 
   Call({
     this.callerId,
@@ -22,6 +24,8 @@ class Call {
     this.channelId,
     this.hasDialled,
     this.isVideoCall,
+    this.callerToken,
+    this.receiverToken,
   });
 
   // to map
@@ -37,6 +41,8 @@ class Call {
     callMap["hasDialled"] = call.hasDialled;
     callMap["isVideoCall"] = call.isVideoCall;
     callMap["timestamp"] = call.timestamp;
+    callMap["callerToken"] = call.callerToken;
+    callMap["receiverToken"] = call.receiverToken;
     return callMap;
   }
 
@@ -51,5 +57,7 @@ class Call {
     hasDialled = callMap["hasDialled"];
     isVideoCall = callMap["isVideoCall"];
     timestamp = callMap["timestamp"];
+    callerToken = callMap["callerToken"];
+    receiverToken = callMap["receiverToken"];
   }
 }

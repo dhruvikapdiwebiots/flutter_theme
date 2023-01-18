@@ -123,7 +123,7 @@ class FirebaseCommonController extends GetxController {
   }
 
   //send notification
-  Future<void> sendNotification({title, msg,token}) async {
+  Future<void> sendNotification({title, msg,token,image,dataTitle}) async {
 
     log('token : $token');
 
@@ -131,11 +131,13 @@ class FirebaseCommonController extends GetxController {
       "notification": {
         "body": msg,
         "title": title,
+        "imageUrl":image
       },
       "priority": "high",
       "data": {
         "click_action": "FLUTTER_NOTIFICATION_CLICK",
-        "alertMessage": 'true'
+        "alertMessage": 'true',
+        "title":dataTitle
       },
       "to": "$token"
     };

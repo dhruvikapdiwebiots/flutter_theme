@@ -114,6 +114,8 @@ class ChatMessageApi {
         receiverId: toData["id"],
         receiverName: toData["name"],
         receiverPic: toData["image"],
+        callerToken: userData["pushToken"],
+        receiverToken: toData["pushToken"],
         channelId: Random().nextInt(1000).toString(),
         isVideoCall: isVideoCall);
     ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
@@ -143,6 +145,9 @@ class ChatMessageApi {
           "role": role
         };
         Get.toNamed(routeName.videoCall,arguments: data);
+
+        firebaseCtrl.sendNotification(
+            title: "Incoming Video Call...", msg: "${call.callerName} video call", token: call.receiverToken,image: userData["image"]);
        /* await Navigator.push(
           context,
           MaterialPageRoute(

@@ -12,13 +12,10 @@ import 'package:overlay_support/overlay_support.dart';
 Future<dynamic> myBackgroundMessageHandlerAndroid(RemoteMessage message) async {
   if (message.data['title'] == 'Call Ended' ||
       message.data['title'] == 'Missed Call') {
-    flutterLocalNotificationsPlugin..cancelAll();
-    final data = message.data;
-    final titleMultilang = data['titleMultilang'];
-    final bodyMultilang = data['bodyMultilang'];
+    flutterLocalNotificationsPlugin.cancelAll();
 
     await _showNotificationWithDefaultSound(
-        'Missed Call', 'You have Missed a Call', titleMultilang, bodyMultilang);
+        'Missed Call', 'You have Missed a Call', );
   } else {
     if (message.data['title'] == 'You have new message(s)' ||
         message.data['title'] == 'New message in Group') {
@@ -29,11 +26,9 @@ Future<dynamic> myBackgroundMessageHandlerAndroid(RemoteMessage message) async {
       final data = message.data;
       final title = data['title'];
       final body = data['body'];
-      final titleMultilang = data['titleMultilang'];
-      final bodyMultilang = data['bodyMultilang'];
 
       await _showNotificationWithDefaultSound(
-          title, body, titleMultilang, bodyMultilang);
+          title, body,);
     }
   }
 
@@ -70,29 +65,29 @@ Future<dynamic> myBackgroundMessageHandlerAndroid(RemoteMessage message) async {
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 FlutterLocalNotificationsPlugin();
-Future _showNotificationWithDefaultSound(String? title, String? message,
-    String? titleMultilang, String? bodyMultilang) async {
+Future _showNotificationWithDefaultSound(String? title, String? message,) async {
   if (Platform.isAndroid) {
     flutterLocalNotificationsPlugin.cancelAll();
   }
 
   var initializationSettingsAndroid =
-  new AndroidInitializationSettings('@mipmap/ic_launcher');
+  const AndroidInitializationSettings('@mipmap/ic_launcher');
   var initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid, );
   flutterLocalNotificationsPlugin.initialize(initializationSettings);
   var androidPlatformChannelSpecifics =
   title == 'Missed Call' || title == 'Call Ended'
-      ? AndroidNotificationDetails(
+      ? const AndroidNotificationDetails(
       'channel_id', 'channel_name', channelDescription: "channel_description",
       importance: Importance.max,
       priority: Priority.high,
       sound: RawResourceAndroidNotificationSound('whistle2'),
       playSound: true,
       ongoing: true,
+
       visibility: NotificationVisibility.public,
       timeoutAfter: 28000)
-      : AndroidNotificationDetails(
+      : const AndroidNotificationDetails(
       'channel_id', 'channel_name', channelDescription: "channel_description",
       sound: RawResourceAndroidNotificationSound('ringtone'),
       playSound: true,
@@ -108,8 +103,8 @@ Future _showNotificationWithDefaultSound(String? title, String? message,
   await flutterLocalNotificationsPlugin
       .show(
     0,
-    '$titleMultilang',
-    '$bodyMultilang',
+    '$title',
+    '$message',
     platformChannelSpecifics,
     payload: 'payload',
   )
@@ -198,10 +193,8 @@ class _DashboardState extends State<Dashboard>
             final data = message.data;
             final title = data['title'];
             final body = data['body'];
-            final titleMultilang = data['titleMultilang'];
-            final bodyMultilang = data['bodyMultilang'];
             await _showNotificationWithDefaultSound(
-                title, body, titleMultilang, bodyMultilang);
+                title, body,);
           } else if (message.data['title'] == 'You have new message(s)') {
             if (dashboardCtrl.user["id"] != message.data['peerid']) {
               // FlutterRingtonePlayer.playNotification();
@@ -221,14 +214,14 @@ class _DashboardState extends State<Dashboard>
                         overflow: TextOverflow.ellipsis,
                       ),
                       trailing: IconButton(
-                          icon: Icon(Icons.close),
+                          icon: const Icon(Icons.close),
                           onPressed: () {
                             OverlaySupportEntry.of(context)!.dismiss();
                           }),
                     ),
                   ),
                 );
-              }, duration: Duration(milliseconds: 2000));
+              }, duration: const Duration(milliseconds: 2000));
             }
 
           } else {
@@ -254,14 +247,14 @@ class _DashboardState extends State<Dashboard>
                       overflow: TextOverflow.ellipsis,
                     ),
                     trailing: IconButton(
-                        icon: Icon(Icons.close),
+                        icon: const Icon(Icons.close),
                         onPressed: () {
                           OverlaySupportEntry.of(context)!.dismiss();
                         }),
                   ),
                 ),
               );
-            }, duration: Duration(milliseconds: 2000));
+            }, duration: const Duration(milliseconds: 2000));
           }
         }
       }

@@ -81,7 +81,6 @@ class SplashController extends GetxController {
     Get.forceAppUpdate();
 
     var user = storage.read(session.user);
-    log("user : $user");
     bool isIntro = storage.read(session.isIntro) ?? false;
     log("isIntro : $isIntro");
     if (user == "" && user == null) {

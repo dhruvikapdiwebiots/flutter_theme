@@ -106,6 +106,7 @@ export 'theme_pages/broadcast_chat/layouts/broadcast_sender.dart';
 export 'theme_pages/chat_message/chat_message_api.dart';
 export 'theme_pages/chat_message/layouts/audio_layout/stop_arrow_icons.dart';
 export 'theme_pages/chat_message/layouts/audio_layout/voice_stop_icons.dart';
+export 'theme_pages/pick_up_call/pick_up_call.dart';
 
 
 export '/utilities/type_list.dart';

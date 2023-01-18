@@ -39,47 +39,49 @@ class _ChatState extends State<Chat>
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ChatController>(builder: (_) {
-      return WillPopScope(
-          onWillPop: chatCtrl.onBackPress,
-          child: Scaffold(
-              appBar: ChatMessageAppBar(
-                  name: chatCtrl.pName,
-                  isBlock: chatCtrl.isBlock
-                      ? chatCtrl.blockBy == chatCtrl.userData["id"]
-                          ? true
-                          : false
-                      : false,
-                  callTap: () async{
-                    await chatCtrl.permissionHandelCtrl.getCameraMicrophonePermissions().then((value) {
-                      if(value == true){}
-                    });
-                  },
-                  videoTap: ()async{
-                    await chatCtrl.permissionHandelCtrl.getCameraMicrophonePermissions().then((value) {
-                      log("value : $value");
-                      if(value == true){
-                        chatCtrl.audioVideoCallTap(true);
-                      }
-                    });
-                  },
-                  moreTap: () => chatCtrl.blockUser()),
-              backgroundColor: Color(0xFFECF1F4),
-              body: chatCtrl.isUserAvailable
-                  ? Stack(children: <Widget>[
-                      Column(children: <Widget>[
-                        // List of messages
-                        const MessageBox(),
-                        // Sticker
-                        Container(),
-                        // Input content
-                        const InputBox()
-                      ]),
-                      // Loading
-                      const BuildLoader()
-                    ])
-                  : Center(
-                      child: CommonButton(title: fonts.invite.tr, onTap: () {}),
-                    )));
+      return PickupLayout(
+        scaffold: WillPopScope(
+            onWillPop: chatCtrl.onBackPress,
+            child: Scaffold(
+                appBar: ChatMessageAppBar(
+                    name: chatCtrl.pName,
+                    isBlock: chatCtrl.isBlock
+                        ? chatCtrl.blockBy == chatCtrl.userData["id"]
+                            ? true
+                            : false
+                        : false,
+                    callTap: () async{
+                      await chatCtrl.permissionHandelCtrl.getCameraMicrophonePermissions().then((value) {
+                        if(value == true){}
+                      });
+                    },
+                    videoTap: ()async{
+                      await chatCtrl.permissionHandelCtrl.getCameraMicrophonePermissions().then((value) {
+                        log("value : $value");
+                        if(value == true){
+                          chatCtrl.audioVideoCallTap(true);
+                        }
+                      });
+                    },
+                    moreTap: () => chatCtrl.blockUser()),
+                backgroundColor: Color(0xFFECF1F4),
+                body: chatCtrl.isUserAvailable
+                    ? Stack(children: <Widget>[
+                        Column(children: <Widget>[
+                          // List of messages
+                          const MessageBox(),
+                          // Sticker
+                          Container(),
+                          // Input content
+                          const InputBox()
+                        ]),
+                        // Loading
+                        const BuildLoader()
+                      ])
+                    : Center(
+                        child: CommonButton(title: fonts.invite.tr, onTap: () {}),
+                      ))),
+      );
     });
   }
 }

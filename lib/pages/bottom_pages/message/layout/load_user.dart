@@ -39,7 +39,8 @@ class LoadUser extends StatelessWidget {
               document: document,
               currentUserId: currentUserId,
             )
-          : Container();
+          :  MessageCard(
+          document: document, currentUserId: currentUserId, blockBy: blockBy);
     } else{
       return Container();
     }

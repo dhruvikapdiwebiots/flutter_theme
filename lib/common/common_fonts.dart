@@ -2,6 +2,9 @@ import 'package:flutter_theme/config.dart';
 
 class Fonts{
   final gifAPI = "aJToxhjbwRwVxkxKfAk4xQVXygh8b2W6";
+  final appId = "29f88f518e7841cab6eef7c4dcc4b66f";
+  final token = "007eJxTYMi4t6KMs+bwpiPqK3tecc7auXVb88XGiL8aMlllwRkePAkKDEaWaRYWaaaGFqnmFiaGyYlJZqmpaebJJinJySZJZmZpxoePJTcEMjKsPjSNkZEBAkF8Hoa0nNKSktSikIzU3FQGBgDF1yRn";
+  final channel = "flutterTheme";
   final intro1 = "intro1";
   final intro2 = "intro2";
   final intro3 = "intro3";

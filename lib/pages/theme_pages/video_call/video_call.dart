@@ -3,17 +3,6 @@ import 'dart:developer';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter_theme/config.dart';
 
-
-import 'dart:async';
-
-import 'package:agora_rtc_engine/agora_rtc_engine.dart';
-import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
-
-const appId = "29f88f518e7841cab6eef7c4dcc4b66f";
-const token = "007eJxTYMi4t6KMs+bwpiPqK3tecc7auXVb88XGiL8aMlllwRkePAkKDEaWaRYWaaaGFqnmFiaGyYlJZqmpaebJJinJySZJZmZpxoePJTcEMjKsPjSNkZEBAkF8Hoa0nNKSktSikIzU3FQGBgDF1yRn";
-const channel = "flutterTheme";
-
 class VideoCall extends StatefulWidget {
   const VideoCall({Key? key}) : super(key: key);
 
@@ -22,10 +11,7 @@ class VideoCall extends StatefulWidget {
 }
 
 class _VideoCallState extends State<VideoCall> {
-  int? _remoteUid;
-  bool _localUserJoined = false;
-  late RtcEngine _engine;
-final videoCallCtrl = Get.put(VideoCallController());
+  final videoCallCtrl = Get.put(VideoCallController());
 
   @override
   void initState() {
@@ -33,122 +19,76 @@ final videoCallCtrl = Get.put(VideoCallController());
     var data = Get.arguments;
     videoCallCtrl.channelName = data["channelName"];
     videoCallCtrl.call = data["call"];
-    setState(() {
-
-    });
+    setState(() {});
     log("videoCallCtrl.channelName : ${videoCallCtrl.call!.channelId}");
-    initAgora();
-  }
-
-  Future<void> initAgora() async {
-    // retrieve permissions
-    await [Permission.microphone, Permission.camera].request();
-  log("permis :");
-    //create the engine
-    _engine = createAgoraRtcEngine();
-    await _engine.initialize(const RtcEngineContext(
-      appId: appId,
-      channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
-    ));
-    log("_engine : $_engine");
-
-    _engine.registerEventHandler(
-      RtcEngineEventHandler(
-        onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
-          debugPrint("local user ${connection.localUid} joined");
-          setState(() {
-            _localUserJoined = true;
-          });
-        },
-        onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
-          debugPrint("remote user $remoteUid joined");
-          setState(() {
-            _remoteUid = remoteUid;
-          });
-        },
-        onUserOffline: (RtcConnection connection, int remoteUid, UserOfflineReasonType reason) {
-          debugPrint("remote user $remoteUid left channel");
-          setState(() {
-            _remoteUid = null;
-          });
-        },
-        onTokenPrivilegeWillExpire: (RtcConnection connection, String token) {
-          debugPrint('[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
-        },
-      ),
-    );
-
-    log("_engine1 : ${_engine}");
-
-    await _engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
-    await _engine.enableVideo();
-    await _engine.startPreview();
-
-    await _engine.joinChannel(
-      token: token,
-      channelId: channel,
-      uid: 0,
-      options: const ChannelMediaOptions(),
-    );
-    setState(() {
-
-    });
+    videoCallCtrl.initAgora();
   }
 
   // Create UI with local view and remote view
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<VideoCallController>(
-      builder: (_) {
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('Agora Video Call'),
-          ),
-          body: Stack(
-            children: [
-              Center(
-                child: _remoteVideo(),
-              ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: SizedBox(
-                  width: 100,
-                  height: 150,
-                  child: Center(
-                    child: _localUserJoined
-                        ? AgoraVideoView(
-                      controller: VideoViewController(
-                        rtcEngine: _engine,
-                        canvas: const VideoCanvas(uid: 0),
-                      ),
-                    )
-                        : const CircularProgressIndicator(),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      }
-    );
-  }
+    return GetBuilder<VideoCallController>(builder: (_) {
+      log("idddd : ${videoCallCtrl.remoteUidValue}");
+      log("idddd : ${videoCallCtrl.call!.callerId}");
+      log("idddd : ${videoCallCtrl.call!.receiverId}");
+      log("idddd : ${videoCallCtrl.call!.timestamp}");
 
-  // Display remote user's video
-  Widget _remoteVideo() {
-    if (_remoteUid != null) {
-      return AgoraVideoView(
-        controller: VideoViewController.remote(
-          rtcEngine: _engine,
-          canvas: VideoCanvas(uid: _remoteUid),
-          connection: const RtcConnection(channelId: channel),
-        ),
+      return Scaffold(
+
+        body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+            stream: FirebaseFirestore.instance
+                .collection("calls")
+                .doc(videoCallCtrl.userData["id"])
+                .collection("collectioncallhistory")
+                .doc("callData")
+                .snapshots(),
+            builder: (BuildContext context, snapshot) {
+              log("snap : ${snapshot.data!.data()}");
+
+              return Stack(
+                children: [
+                  Center(
+                    child: videoCallCtrl.remoteUidValue != null
+                        ? AgoraVideoView(
+                            controller: VideoViewController.remote(
+                              rtcEngine: videoCallCtrl.engine,
+                              canvas: VideoCanvas(
+                                  uid: videoCallCtrl.remoteUidValue),
+                              connection:
+                                  RtcConnection(channelId: fonts.channel),
+                            ),
+                          )
+                        : const Text(
+                            'Please wait for remote user to join',
+                            textAlign: TextAlign.center,
+                          ),
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: SizedBox(
+                      width: 100,
+                      height: 150,
+                      child: Center(
+                        child: videoCallCtrl.localUserJoined
+                            ? AgoraVideoView(
+                                controller: VideoViewController(
+                                  rtcEngine: videoCallCtrl.engine,
+                                  canvas: const VideoCanvas(uid: 0),
+                                ),
+                              )
+                            : const CircularProgressIndicator(),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: videoCallCtrl.toolbar(
+                        false, snapshot.data!.data()!["STATUS"]),
+                  )
+                ],
+              );
+            }),
       );
-    } else {
-      return const Text(
-        'Please wait for remote user to join',
-        textAlign: TextAlign.center,
-      );
-    }
+    });
   }
 }
-

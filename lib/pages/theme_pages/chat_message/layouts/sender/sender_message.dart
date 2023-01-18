@@ -35,7 +35,6 @@ class _SenderMessageState extends State<SenderMessage> {
               Platform.isIOS ? Permission.storage : Permission.storage)
           .then((res) async {
         if (res) {
-
           final storageRef = FirebaseStorage.instance.refFromURL(url);
 
           final islandRef = storageRef.child(storageRef.name);
@@ -43,29 +42,33 @@ class _SenderMessageState extends State<SenderMessage> {
           log("islandRef : $islandRef");
 
           final appDocDir = await getApplicationDocumentsDirectory();
-          final filePath = "${appDocDir.path}/${DateTime.now().millisecondsSinceEpoch}";
+          final filePath =
+              "${appDocDir.path}/${DateTime.now().millisecondsSinceEpoch}";
           final file = File(filePath);
 
-          final downloadTask = FirebaseStorage.instance.ref().child(storageRef.fullPath).writeToFile(file);
+          final downloadTask = FirebaseStorage.instance
+              .ref()
+              .child(storageRef.fullPath)
+              .writeToFile(file);
 
           log("downloadTask : $downloadTask");
 
           downloadTask.snapshotEvents.listen((taskSnapshot) {
             switch (taskSnapshot.state) {
               case TaskState.running:
-              // TODO: Handle this case.
+                // TODO: Handle this case.
                 break;
               case TaskState.paused:
-              // TODO: Handle this case.
+                // TODO: Handle this case.
                 break;
               case TaskState.success:
-              // TODO: Handle this case.
+                // TODO: Handle this case.
                 break;
               case TaskState.canceled:
-              // TODO: Handle this case.
+                // TODO: Handle this case.
                 break;
               case TaskState.error:
-              // TODO: Handle this case.
+                // TODO: Handle this case.
                 break;
             }
           });
@@ -155,12 +158,26 @@ class _SenderMessageState extends State<SenderMessage> {
                       (widget.document!["content"].contains(".pdf"))
                           ? PdfLayout(
                               document: widget.document,
+
+                              onLongPress: () {
+                                showDialog(
+                                    context: Get.context!,
+                                    builder: (BuildContext context) =>
+                                        chatCtrl.buildPopupDialog(
+                                            context, widget.document!));
+                              },
                               pdfViewerKey: _pdfViewerKey,
                             )
                           : (widget.document!["content"].contains(".docx"))
                               ? DocxLayout(
                                   document: widget.document,
-                                )
+                                  onLongPress: () {
+                                    showDialog(
+                                        context: Get.context!,
+                                        builder: (BuildContext context) =>
+                                            chatCtrl.buildPopupDialog(
+                                                context, widget.document!));
+                                  })
                               : Container(),
                     if (widget.document!["type"] == MessageType.gif.name)
                       GifLayout(

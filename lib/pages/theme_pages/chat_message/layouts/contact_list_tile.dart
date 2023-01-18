@@ -10,24 +10,27 @@ class ContactListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+minVerticalPadding: 0,
 
-        leading: CachedNetworkImage(
-            imageUrl: document!['content'].split('-BREAK-')[2],
-            imageBuilder: (context, imageProvider) => CircleAvatar(
+        dense:true,
+        contentPadding: EdgeInsets.symmetric(horizontal: Insets.i15),
+          leading: CachedNetworkImage(
+              imageUrl: document!['content'].split('-BREAK-')[2],
+              imageBuilder: (context, imageProvider) => CircleAvatar(
+                    backgroundColor: appCtrl.appTheme.contactBgGray,
+                    radius: AppRadius.r22,
+                    backgroundImage: NetworkImage(
+                        '${document!['content'].split('-BREAK-')[2]}'),
+                  ),
+              placeholder: (context, url) => CircleAvatar(
                   backgroundColor: appCtrl.appTheme.contactBgGray,
-                  radius: AppRadius.r20,
-                  backgroundImage: NetworkImage(
-                      '${document!['content'].split('-BREAK-')[2]}'),
-                ),
-            placeholder: (context, url) => CircleAvatar(
-                backgroundColor: appCtrl.appTheme.contactBgGray,
-                radius: AppRadius.r20,
-                child: Icon(Icons.people, color: appCtrl.appTheme.contactGray)),
-            errorWidget: (context, url, error) => CircleAvatar(
-                backgroundColor: appCtrl.appTheme.contactBgGray,
-                radius: AppRadius.r20,
-                child:
-                    Icon(Icons.people, color: appCtrl.appTheme.contactGray))),
+                  radius: AppRadius.r22,
+                  child: Icon(Icons.people, color: appCtrl.appTheme.contactGray)),
+              errorWidget: (context, url, error) => CircleAvatar(
+                  backgroundColor: appCtrl.appTheme.contactBgGray,
+                  radius: AppRadius.r22,
+                  child:
+                      Icon(Icons.people, color: appCtrl.appTheme.contactGray))),
         title: Text(document!['content'].split('-BREAK-')[0],
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
