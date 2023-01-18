@@ -69,18 +69,19 @@ class _PickupLayoutState extends State<PickupLayout>
   Widget build(BuildContext context) {
     // ignore: unnecessary_null_comparison
     var user = appCtrl.storage.read(session.user);
+    log("message : ${user["id"]}");
     return StreamBuilder<DocumentSnapshot>(
       stream: FirebaseFirestore.instance
           .collection("calls")
           .doc(user["id"])
           .snapshots(),
       builder: (context, snapshot) {
+        log("dtadq : ${snapshot.data!.exists}");
         if (snapshot.hasData && snapshot.data!.data() != null) {
           Call call =
               Call.fromMap(snapshot.data!.data() as Map<dynamic, dynamic>);
-          var w = MediaQuery.of(context).size.width;
-          var h = MediaQuery.of(context).size.height;
 
+  log("call.hasDialled : ${call.hasDialled}");
           if (!call.hasDialled!) {
             return Scaffold(
               backgroundColor: appCtrl.appTheme.primary,
@@ -144,31 +145,22 @@ class _PickupLayoutState extends State<PickupLayout>
                             FirebaseFirestore.instance
                                 .collection("calls")
                                 .doc(call.callerId)
-                                .collection("collectioncallhistory")
-                                .doc(call.timestamp.toString())
+                                .collection("collectionCallHistory")
+                                .doc("callData")
                                 .set({
-                              'STATUS': 'rejected',
-                              'ENDED': DateTime.now(),
+                              'status': 'rejected',
+                              'ended': DateTime.now(),
                             }, SetOptions(merge: true));
                             FirebaseFirestore.instance
                                 .collection("calls")
                                 .doc(call.receiverId)
-                                .collection("collectioncallhistory")
-                                .doc(call.timestamp.toString())
+                                .collection("collectionCallHistory")
+                                .doc("callData")
                                 .set({
-                              'STATUS': 'rejected',
-                              'ENDED': DateTime.now(),
+                              'status': 'rejected',
+                              'ended': DateTime.now(),
                             }, SetOptions(merge: true));
-                            //----------
-                            await FirebaseFirestore.instance
-                                .collection("calls")
-                                .doc(call.receiverId)
-                                .collection('recent')
-                                .doc('callended')
-                                .set({
-                              'id': call.receiverId,
-                              'ENDED': DateTime.now().millisecondsSinceEpoch
-                            }, SetOptions(merge: true));
+
                           },
                           child: const Icon(
                             Icons.call_end,

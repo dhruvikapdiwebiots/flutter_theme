@@ -28,10 +28,6 @@ class _VideoCallState extends State<VideoCall> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<VideoCallController>(builder: (_) {
-      log("idddd : ${videoCallCtrl.remoteUidValue}");
-      log("idddd : ${videoCallCtrl.call!.callerId}");
-      log("idddd : ${videoCallCtrl.call!.receiverId}");
-      log("idddd : ${videoCallCtrl.call!.timestamp}");
 
       return Scaffold(
 
@@ -39,11 +35,10 @@ class _VideoCallState extends State<VideoCall> {
             stream: FirebaseFirestore.instance
                 .collection("calls")
                 .doc(videoCallCtrl.userData["id"])
-                .collection("collectioncallhistory")
+                .collection("collectionCallHistory")
                 .doc("callData")
                 .snapshots(),
             builder: (BuildContext context, snapshot) {
-              log("snap : ${snapshot.data!.data()}");
 
               return Stack(
                 children: [
