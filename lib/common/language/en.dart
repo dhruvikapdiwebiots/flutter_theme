@@ -102,4 +102,6 @@ final dynamic en = {
   "registerUser": "Register User with",
   "recentUpdates": "Recent Updates",
   "download": "DOWNLOAD",
+  "message": "Message",
+  "addContact": "Add Contact",
 };

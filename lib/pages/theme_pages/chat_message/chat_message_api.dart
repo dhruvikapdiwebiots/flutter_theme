@@ -123,7 +123,7 @@ class ChatMessageApi {
     ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
 
     print("ddssdf");
-    await FirebaseFirestore.instance
+    FirebaseFirestore.instance
         .collection("calls")
         .doc(call.channelId)
         .set({

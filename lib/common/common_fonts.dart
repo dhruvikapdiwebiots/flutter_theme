@@ -89,5 +89,7 @@ class Fonts{
   final registerUser = "registerUser";
   final recentUpdates = "recentUpdates";
   final download = "download";
+  final message = "message";
+  final addContact = "addContact";
   String unblockUser(val) => "unblockUser".trParams({'pName':val});
 }

@@ -63,7 +63,7 @@ class ContactLayout extends StatelessWidget {
                       Divider(
                           thickness: 1.5,
                           color: isReceiver
-                              ? const Color(0xFF263238).withOpacity(.2)
+                              ? appCtrl.appTheme.lightDividerColor.withOpacity(.2)
                               : appCtrl.appTheme.whiteColor,
                           height: 1),
                       IntrinsicHeight(
@@ -81,18 +81,18 @@ class ContactLayout extends StatelessWidget {
                                         .split('-BREAK-')[2],
                                     username: document!['content']
                                         .split('-BREAK-')[0],
-                                    phoneNumber: phoneNumberExtension(document!['content']
-                                        .split('-BREAK-')[1]),
+                                    phoneNumber: phoneNumberExtension(
+                                        document!['content']
+                                            .split('-BREAK-')[1]),
                                     description: "");
                                 log("con : ${user.phoneNumber}");
-                                MessageFirebaseApi()
-                                    .saveContact(user, true);
+                                MessageFirebaseApi().saveContact(user, true);
                               },
-                              child: Text("Message",
+                              child: Text(fonts.message.tr,
                                       textAlign: TextAlign.center,
                                       style: AppCss.poppinsExtraBold12
                                           .textColor(isReceiver
-                                              ? const Color(0xFF586780)
+                                              ? appCtrl.appTheme.lightBlackColor
                                               : appCtrl.appTheme.whiteColor))
                                   .marginSymmetric(vertical: Insets.i15),
                             )),
@@ -101,17 +101,17 @@ class ContactLayout extends StatelessWidget {
                               indent: 10,
                               thickness: 1.5,
                               color: isReceiver
-                                  ? const Color(0xFF263238).withOpacity(.2)
+                                  ? appCtrl.appTheme.lightDividerColor.withOpacity(.2)
                                   : appCtrl.appTheme.whiteColor,
                             ),
                             Expanded(
                                 child: InkWell(
                               onTap: () {},
-                              child: Text("Add Contact",
+                              child: Text(fonts.name.tr,
                                   textAlign: TextAlign.center,
                                   style: AppCss.poppinsExtraBold12.textColor(
                                       isReceiver
-                                          ? const Color(0xFF586780)
+                                          ? appCtrl.appTheme.lightBlackColor
                                           : appCtrl.appTheme.whiteColor)),
                             ))
                           ]))

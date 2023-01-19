@@ -9,7 +9,7 @@ class OtpController extends GetxController {
   TextEditingController otp = TextEditingController();
   double val = 0;
   bool isCodeSent = false, isLoading = false;
-  String? verificationCode, mobileNumber,dialCode;
+  String? verificationCode, mobileNumber,dialCodeVal;
   bool isValid = false;
 
   @override
@@ -57,7 +57,7 @@ class OtpController extends GetxController {
   //on verify code
   void onVerifyCode(phone,dialCode) {
     mobileNumber = phone;
-    dialCode = dialCode;
+    dialCodeVal = dialCode;
     log("phone : $phone");
     log("phone : $dialCode");
     isCodeSent = true;

@@ -46,7 +46,7 @@ class OtpBody extends StatelessWidget {
                       TextSpan(
                           recognizer: TapGestureRecognizer()
                             ..onTap = () => otpCtrl.onVerifyCode(
-                                otpCtrl.mobileNumber, otpCtrl.dialCode),
+                                otpCtrl.mobileNumber, otpCtrl.dialCodeVal),
                           text: "Resend",
                           style: AppCss.poppinsMedium16
                               .textColor(appCtrl.appTheme.txt)

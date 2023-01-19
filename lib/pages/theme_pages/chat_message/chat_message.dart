@@ -65,7 +65,7 @@ class _ChatState extends State<Chat>
                       });
                     },
                     moreTap: () => chatCtrl.blockUser()),
-                backgroundColor: Color(0xFFECF1F4),
+                backgroundColor: appCtrl.appTheme.chatBgColor,
                 body: chatCtrl.isUserAvailable
                     ? Stack(children: <Widget>[
                         Column(children: <Widget>[

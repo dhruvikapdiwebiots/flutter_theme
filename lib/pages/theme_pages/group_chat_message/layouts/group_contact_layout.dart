@@ -63,7 +63,7 @@ class GroupContactLayout extends StatelessWidget {
                       Divider(
                         thickness: 1.5,
                           color: isReceiver
-                              ? const Color(0xFF263238).withOpacity(.2)
+                              ? appCtrl.appTheme.lightDividerColor.withOpacity(.2)
                               : appCtrl.appTheme.whiteColor,
                           height: 1),
 
@@ -75,11 +75,11 @@ class GroupContactLayout extends StatelessWidget {
                                 Expanded(
                                     child: InkWell(
                                       onTap: () {},
-                                      child: Text("Message",
+                                      child: Text(fonts.message.tr,
                                           textAlign: TextAlign.center,
                                           style: AppCss.poppinsExtraBold12
                                               .textColor(isReceiver
-                                              ? const Color(0xFF586780)
+                                              ? appCtrl.appTheme.lightBlackColor
                                               : appCtrl.appTheme.whiteColor))
                                           .marginSymmetric(vertical: Insets.i15),
                                     )),
@@ -88,17 +88,17 @@ class GroupContactLayout extends StatelessWidget {
                                   indent: 10,
                                   thickness: 1.5,
                                   color: isReceiver
-                                      ? const Color(0xFF263238).withOpacity(.2)
+                                      ? appCtrl.appTheme.lightDividerColor.withOpacity(.2)
                                       : appCtrl.appTheme.whiteColor,
                                 ),
                                 Expanded(
                                     child: InkWell(
                                       onTap: () {},
-                                      child: Text("Add Contact",
+                                      child: Text(fonts.addContact.tr,
                                           textAlign: TextAlign.center,
                                           style: AppCss.poppinsExtraBold12.textColor(
                                               isReceiver
-                                                  ? const Color(0xFF586780)
+                                                  ? appCtrl.appTheme.lightBlackColor
                                                   : appCtrl.appTheme.whiteColor)),
                                     ))
                               ]))
