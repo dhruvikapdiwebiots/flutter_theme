@@ -95,7 +95,8 @@ class ChatController extends GetxController {
 
   //audio and video call tap
   audioVideoCallTap(isVideoCall) async {
-    ChatMessageApi()
+    log("is :$pData");
+ await   ChatMessageApi()
         .audioAndVideoCallApi(toData: pData, isVideoCall: isVideoCall);
   }
 
@@ -405,7 +406,10 @@ class ChatController extends GetxController {
       update();
       if (pData["pushToken"] != "" && pData["pushToken"] != null) {
         firebaseCtrl.sendNotification(
-            title: pName, msg: content, token: pData["pushToken"],image: userData["image"]);
+            title: pName,
+            msg: content,
+            token: pData["pushToken"],
+            image: userData["image"]);
       }
       if (allData != null && allData != "") {
         if (allData["isBlock"] == true) {

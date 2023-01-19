@@ -19,6 +19,7 @@ class _VideoCallState extends State<VideoCall> {
     var data = Get.arguments;
     videoCallCtrl.channelName = data["channelName"];
     videoCallCtrl.call = data["call"];
+    videoCallCtrl.  userData = appCtrl.storage.read(session.user);
     setState(() {});
     log("videoCallCtrl.channelName : ${videoCallCtrl.call!.channelId}");
     videoCallCtrl.initAgora();
@@ -28,9 +29,7 @@ class _VideoCallState extends State<VideoCall> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<VideoCallController>(builder: (_) {
-
       return Scaffold(
-
         body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
             stream: FirebaseFirestore.instance
                 .collection("calls")
@@ -39,19 +38,17 @@ class _VideoCallState extends State<VideoCall> {
                 .doc("callData")
                 .snapshots(),
             builder: (BuildContext context, snapshot) {
-
               return Stack(
                 children: [
                   Center(
                     child: videoCallCtrl.remoteUidValue != null
                         ? AgoraVideoView(
                             controller: VideoViewController.remote(
-                              rtcEngine: videoCallCtrl.engine,
-                              canvas: VideoCanvas(
-                                  uid: videoCallCtrl.remoteUidValue),
-                              connection:
-                                  RtcConnection(channelId: fonts.channel),
-                            ),
+                                rtcEngine: videoCallCtrl.engine,
+                                canvas: VideoCanvas(
+                                    uid: videoCallCtrl.remoteUidValue),
+                                connection:
+                                    RtcConnection(channelId: fonts.channel)),
                           )
                         : const Text(
                             'Please wait for remote user to join',
@@ -75,11 +72,13 @@ class _VideoCallState extends State<VideoCall> {
                       ),
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: videoCallCtrl.toolbar(
-                        false, snapshot.data!.data()!["STATUS"]),
-                  )
+                  if (snapshot.hasData)
+                    if (snapshot.data!.exists)
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: videoCallCtrl.toolbar(
+                            false, snapshot.data!.data()!["status"]),
+                      )
                 ],
               );
             }),

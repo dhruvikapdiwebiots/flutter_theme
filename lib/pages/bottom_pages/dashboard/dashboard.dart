@@ -307,9 +307,6 @@ class _DashboardState extends State<Dashboard>
       firebaseCtrl.setLastSeen();
     }
     firebaseCtrl.statusDeleteAfter24Hours();
-
-    log("cccccc");
-    log("index : ${dashboardCtrl.controller!.index}");
     dashboardCtrl.connectivitySubscription =
         dashboardCtrl.connectivity.onConnectivityChanged.listen((event) {
       dashboardCtrl.updateConnectionStatus(event);
@@ -320,8 +317,10 @@ class _DashboardState extends State<Dashboard>
   @override
   Widget build(BuildContext context) {
     return GetBuilder<DashboardController>(builder: (_) {
-      dashboardCtrl.onChange(dashboardCtrl.controller!.index);
-      log("index : ${dashboardCtrl.selectedIndex}");
+      if(dashboardCtrl.controller != null) {
+        dashboardCtrl.onChange(dashboardCtrl.controller!.index);
+      }
+
       return PickupLayout(
         scaffold: StreamBuilder(
             stream: Connectivity().onConnectivityChanged,

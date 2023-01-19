@@ -16,9 +16,6 @@ class StatusController extends GetxController {
   List selectedContact = [];
   Stream<QuerySnapshot>? stream;
   DateTime date = DateTime.now();
-  final notificationCtrl = Get.isRegistered<NotificationController>()
-      ? Get.find<NotificationController>()
-      : Get.put(NotificationController());
   final pickerCtrl = Get.isRegistered<PickerController>()
       ? Get.find<PickerController>()
       : Get.put(PickerController());

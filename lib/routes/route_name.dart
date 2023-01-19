@@ -19,4 +19,5 @@ class RouteName {
   final String otherSetting = '/otherSetting';
   final String broadcastChat = '/broadcastChat';
   final String videoCall = '/videoCall';
+  final String audioCall = '/audioCall';
 }

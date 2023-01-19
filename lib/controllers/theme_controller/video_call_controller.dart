@@ -83,12 +83,9 @@ class VideoCallController extends GetxController {
     userData = appCtrl.storage.read(session.user);
     update();
 
-    userData = appCtrl.storage.read(session.user);
     stream = FirebaseFirestore.instance
         .collection("calls")
-        .doc(userData["id"] == call!.callerId
-            ? call!.receiverId
-            : call!.callerId)
+        .doc(userData["id"])
         .collection("collectionCallHistory")
         .doc("callData")
         .snapshots();

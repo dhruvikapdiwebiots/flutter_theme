@@ -23,14 +23,14 @@ class ContactListController extends GetxController {
 
   //fetch data
   Future<void> fetchPage(pageKey) async {
-    log("fetchOage");
+
     int counter =0;
     contactList = [];
     registerContactList = [];
     unRegisterContactList = [];
     storageContact = await permissionHandelCtrl.getContact();
   update();
-    log("contactList1 : ${contactList.length}");
+
     var user = appCtrl.storage.read("user");
     if (storageContact.isNotEmpty) {
 
@@ -49,8 +49,6 @@ class ContactListController extends GetxController {
               .then((value) {
             if (value.docs.isNotEmpty) {
               nameList = [];
-
-            log("registerContactList1 : ${registerContactList!.length}");
               update();
               UserContactModel userContactModel = UserContactModel(
                 isRegister: true,
@@ -60,7 +58,7 @@ class ContactListController extends GetxController {
                 username: value.docs[0].data()["name"],
                 description: value.docs[0].data()["statusDesc"],
               );
-              log("trr");
+
               registerContactList!.removeWhere((element) => element.phoneNumber == phone);
               update();
               if (phone != user["phone"]) {
@@ -87,14 +85,12 @@ class ContactListController extends GetxController {
               nameList!.add(userContactModel);
             }
           });
-
-          log("registerContactList2 : ${registerContactList!.length}");
           update();
         }
       });
     }
     registerContactList = [];
-    log("registerContactList3 : ${registerContactList!.length}");
+
     contactList =[];
 counter++;
     ContactModel contactModel = ContactModel(

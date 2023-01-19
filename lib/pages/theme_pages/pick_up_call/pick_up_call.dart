@@ -58,7 +58,6 @@ class _PickupLayoutState extends State<PickupLayout>
     });
   }
 
-
   @override
   void dispose() {
     controller!.dispose();
@@ -69,28 +68,30 @@ class _PickupLayoutState extends State<PickupLayout>
   Widget build(BuildContext context) {
     // ignore: unnecessary_null_comparison
     var user = appCtrl.storage.read(session.user);
-    log("message : ${user["id"]}");
+
     return StreamBuilder<DocumentSnapshot>(
       stream: FirebaseFirestore.instance
           .collection("calls")
           .doc(user["id"])
           .snapshots(),
       builder: (context, snapshot) {
-        log("dtadq : ${snapshot.data!.exists}");
         if (snapshot.hasData && snapshot.data!.data() != null) {
           Call call =
               Call.fromMap(snapshot.data!.data() as Map<dynamic, dynamic>);
-
-  log("call.hasDialled : ${call.hasDialled}");
           if (!call.hasDialled!) {
             return Scaffold(
               backgroundColor: appCtrl.appTheme.primary,
               body: Stack(
                 children: [
-                  call.isVideoCall == true?  CameraPreview(cameraController)
-                      .height(MediaQuery.of(context).size.height) : Container(color: appCtrl.appTheme.primary,height: MediaQuery.of(context).size.height,width: MediaQuery.of(context).size.width,),
+                  call.isVideoCall == true
+                      ? CameraPreview(cameraController)
+                          .height(MediaQuery.of(context).size.height)
+                      : Container(
+                          color: appCtrl.appTheme.primary,
+                          height: MediaQuery.of(context).size.height,
+                          width: MediaQuery.of(context).size.width,
+                        ),
                   Column(
-
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -102,13 +103,11 @@ class _PickupLayoutState extends State<PickupLayout>
                             size: 40,
                             color: appCtrl.appTheme.whiteColor,
                           ),
-                          const SizedBox(
-                            width: 7,
-                          ),
+                          const SizedBox(width: 7),
                           Text(
                             call.isVideoCall == true
-                                ? 'incomingvideo'
-                                : 'incomingaudio',
+                                ? 'inComingVideo'
+                                : 'inComingAudio',
                             style: TextStyle(
                                 fontSize: 18.0,
                                 color: appCtrl.appTheme.whiteColor,
@@ -127,7 +126,7 @@ class _PickupLayoutState extends State<PickupLayout>
                                   fontSize: 27,
                                   color: appCtrl.appTheme.whiteColor))),
                     ],
-                  ).paddingOnly(top: MediaQuery.of(context).size.height /5.5),
+                  ).paddingOnly(top: MediaQuery.of(context).size.height / 5.5),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Row(
@@ -138,9 +137,9 @@ class _PickupLayoutState extends State<PickupLayout>
                           onTap: () async {
                             flutterLocalNotificationsPlugin!.cancelAll();
                             final videoCtrl =
-                            Get.isRegistered<VideoCallController>()
-                                ? Get.find<VideoCallController>()
-                                : Get.put(VideoCallController());
+                                Get.isRegistered<VideoCallController>()
+                                    ? Get.find<VideoCallController>()
+                                    : Get.put(VideoCallController());
                             await videoCtrl.endCall(call: call);
                             FirebaseFirestore.instance
                                 .collection("calls")
@@ -160,16 +159,16 @@ class _PickupLayoutState extends State<PickupLayout>
                               'status': 'rejected',
                               'ended': DateTime.now(),
                             }, SetOptions(merge: true));
-
                           },
                           child: const Icon(
                             Icons.call_end,
                             color: Colors.white,
                             size: 35.0,
-                          ).paddingAll(Insets.i15).decorated(color: appCtrl.appTheme.redColor,shape: BoxShape.circle),
+                          ).paddingAll(Insets.i15).decorated(
+                              color: appCtrl.appTheme.redColor,
+                              shape: BoxShape.circle),
                         ),
                         const HSpace(Sizes.s30),
-
                         InkWell(
                             onTap: () async {
                               log("message");
@@ -183,14 +182,22 @@ class _PickupLayoutState extends State<PickupLayout>
                                 };
                                 Get.toNamed(routeName.videoCall,
                                     arguments: data);
+                              } else {
+                                var data = {
+                                  "channelName": call.channelId,
+                                  "call": call,
+                                  "role": ClientRoleType.clientRoleBroadcaster
+                                };
+                                Get.toNamed(routeName.audioCall,
+                                    arguments: data);
                               }
                             },
                             child: const Icon(
                               Icons.call,
                               color: Colors.white,
                               size: 35.0,
-                            ).paddingAll(Insets.i15).decorated(color:Colors.green,shape: BoxShape.circle)
-                        ),
+                            ).paddingAll(Insets.i15).decorated(
+                                color: Colors.green, shape: BoxShape.circle)),
                       ],
                     ).marginSymmetric(vertical: Insets.i25),
                   ),

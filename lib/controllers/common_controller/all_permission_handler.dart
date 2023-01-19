@@ -20,7 +20,6 @@ class PermissionHandlerController extends GetxController {
   Future<bool> handlePermission() async {
     bool serviceEnabled;
     LocationPermission permission;
-  log("peortet");
     // Test if location services are enabled.
     serviceEnabled = await geoLocatorPlatform.isLocationServiceEnabled();
     if (!serviceEnabled) {

@@ -59,6 +59,7 @@ class _ChatState extends State<Chat>
                       await chatCtrl.permissionHandelCtrl.getCameraMicrophonePermissions().then((value) {
                         log("value : $value");
                         if(value == true){
+                          log("message");
                           chatCtrl.audioVideoCallTap(true);
                         }
                       });
