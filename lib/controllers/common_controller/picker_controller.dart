@@ -164,17 +164,4 @@ class PickerController extends GetxController {
     return imageUrl!;
   }
 
-   uploadAudio(File file, {String? fileNameText}) async {
-    log("message");
-    log("message ");
-    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    Reference reference =
-        FirebaseStorage.instance.ref().child(fileNameText ?? fileName);
-    UploadTask uploadTask = reference.putFile(file);
-    TaskSnapshot snap = await uploadTask;
-    String downloadUrl = await snap.ref.getDownloadURL();
-    audioUrl = downloadUrl;
-    log("downloadUrl : $audioUrl");
-    update();
-  }
 }

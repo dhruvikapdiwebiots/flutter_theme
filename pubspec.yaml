@@ -98,6 +98,8 @@ dependencies:
   overlay_support: ^2.1.0
   camera: ^0.10.2
   awesome_notifications: ^0.7.4+1
+  audio_video_progress_bar: ^0.11.0
+  open_filex: ^4.3.2
 
 
 

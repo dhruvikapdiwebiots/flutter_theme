@@ -52,7 +52,7 @@ class ReceiverImage extends StatelessWidget {
                       color: appCtrl.appTheme.blackColor.withOpacity(.25),
                       offset: const Offset(-2, 2))
             ],
-          )),
+          ).paddingAll(Insets.i5).decorated(color: appCtrl.appTheme.whiteColor,borderRadius: BorderRadius.circular(AppRadius.r8)).marginSymmetric(vertical: Insets.i10)),
     );
   }
 }

@@ -38,6 +38,7 @@
     <application
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher_foreground"
+
         android:label="Flutter Theme">
         <activity
             android:name=".MainActivity"

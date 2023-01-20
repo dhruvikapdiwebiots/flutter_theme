@@ -143,7 +143,7 @@ class CustomNotificationController extends GetxController{
   void onReady() {
     // TODO: implement onReady
     initNotification();
-    startListeningNotificationEvents();
+   // initializeLocalNotifications();
     super.onReady();
   }
 

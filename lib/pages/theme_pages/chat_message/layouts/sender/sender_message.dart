@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_theme/pages/theme_pages/broadcast_chat/layouts/excel_layout.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -84,6 +85,7 @@ class _SenderMessageState extends State<SenderMessage> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ChatController>(builder: (chatCtrl) {
+      log("con : ${widget.document!["content"].contains(".xlsx")}");
       return Stack(
         children: [
           Container(
@@ -158,7 +160,6 @@ class _SenderMessageState extends State<SenderMessage> {
                       (widget.document!["content"].contains(".pdf"))
                           ? PdfLayout(
                               document: widget.document,
-
                               onLongPress: () {
                                 showDialog(
                                     context: Get.context!,
@@ -178,7 +179,18 @@ class _SenderMessageState extends State<SenderMessage> {
                                             chatCtrl.buildPopupDialog(
                                                 context, widget.document!));
                                   })
-                              : Container(),
+                              : (widget.document!["content"].contains(".xlsx"))
+                                  ? ExcelLayout(
+                                      onLongPress: () {
+                                        showDialog(
+                                            context: Get.context!,
+                                            builder: (BuildContext context) =>
+                                                chatCtrl.buildPopupDialog(
+                                                    context, widget.document!));
+                                      },
+                                      document: widget.document,
+                                    )
+                                  : Container(),
                     if (widget.document!["type"] == MessageType.gif.name)
                       GifLayout(
                         onLongPress: () {

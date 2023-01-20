@@ -1,3 +1,4 @@
+import 'package:flutter_theme/pages/theme_pages/broadcast_chat/layouts/excel_layout.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 import '../../../../../config.dart';
@@ -53,6 +54,7 @@ class _ReceiverMessageState extends State<ReceiverMessage> {
 
               if (widget.document!["type"] == MessageType.contact.name)
                 ContactLayout(
+                    isReceiver: true,
                     onLongPress: () {
                       showDialog(
                           context: Get.context!,
@@ -62,6 +64,7 @@ class _ReceiverMessageState extends State<ReceiverMessage> {
                     document: widget.document),
               if (widget.document!["type"] == MessageType.location.name)
                 LocationLayout(
+                    isReceiver: true,
                     document: widget.document,
                     onLongPress: () {
                       showDialog(
@@ -76,6 +79,7 @@ class _ReceiverMessageState extends State<ReceiverMessage> {
                 VideoDoc(document: widget.document),
               if (widget.document!["type"] == MessageType.audio.name)
                 AudioDoc(
+                    isReceiver: true,
                     document: widget.document,
                     onLongPress: () {
                       showDialog(
@@ -86,6 +90,7 @@ class _ReceiverMessageState extends State<ReceiverMessage> {
               if (widget.document!["type"] == MessageType.doc.name)
                 (widget.document!["content"].contains(".pdf"))
                     ? PdfLayout(
+                        isReceiver: true,
                         document: widget.document,
                         pdfViewerKey: _pdfViewerKey,
                         onLongPress: () {
@@ -104,7 +109,19 @@ class _ReceiverMessageState extends State<ReceiverMessage> {
                                       chatCtrl.buildPopupDialog(
                                           context, widget.document!));
                             })
-                        : Container(),
+                        : (widget.document!["content"].contains(".xlsx"))
+                            ? ExcelLayout(
+                                isReceiver: true,
+                                onLongPress: () {
+                                  showDialog(
+                                      context: Get.context!,
+                                      builder: (BuildContext context) =>
+                                          chatCtrl.buildPopupDialog(
+                                              context, widget.document!));
+                                },
+                                document: widget.document,
+                              )
+                            : Container(),
               if (widget.document!["type"] == MessageType.gif.name)
                 GifLayout(
                     document: widget.document,

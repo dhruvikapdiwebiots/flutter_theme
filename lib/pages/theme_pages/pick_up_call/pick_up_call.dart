@@ -68,16 +68,17 @@ class _PickupLayoutState extends State<PickupLayout>
   Widget build(BuildContext context) {
     // ignore: unnecessary_null_comparison
     var user = appCtrl.storage.read(session.user);
-
-    return StreamBuilder<DocumentSnapshot>(
-      stream: FirebaseFirestore.instance
+    return user != null &&  user != ""? StreamBuilder(
+      stream:  FirebaseFirestore.instance
           .collection("calls")
           .doc(user["id"])
+          .collection("calling")
+          .limit(1)
           .snapshots(),
       builder: (context, snapshot) {
-        if (snapshot.hasData && snapshot.data!.data() != null) {
+        if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
           Call call =
-              Call.fromMap(snapshot.data!.data() as Map<dynamic, dynamic>);
+              Call.fromMap(snapshot.data!.docs as Map<dynamic, dynamic>);
           if (!call.hasDialled!) {
             return Scaffold(
               backgroundColor: appCtrl.appTheme.primary,
@@ -208,6 +209,6 @@ class _PickupLayoutState extends State<PickupLayout>
         }
         return widget.scaffold;
       },
-    );
+    ):widget.scaffold;
   }
 }

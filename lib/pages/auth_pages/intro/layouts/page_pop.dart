@@ -21,7 +21,7 @@ final int? index,selectedIndex;
                       imageData.assetsImage,
                       height: Sizes.s400,
                       fit: BoxFit.fill,
-                    ).paddingSymmetric(vertical: Insets.i10),
+                    ).paddingSymmetric(vertical: Insets.i5),
                     const VSpace(Sizes.s25),
                     Image.asset(imageAssets.line),
                     const VSpace(Sizes.s15),

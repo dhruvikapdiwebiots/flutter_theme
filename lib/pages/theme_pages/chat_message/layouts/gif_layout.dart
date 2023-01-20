@@ -34,6 +34,6 @@ class GifLayout extends StatelessWidget {
                 borderRadius:
                 BorderRadius.circular(AppRadius.r30)),
           ],
-        ).marginSymmetric(vertical: Insets.i8));
+        ).marginSymmetric(vertical: Insets.i8,horizontal: Insets.i10));
   }
 }

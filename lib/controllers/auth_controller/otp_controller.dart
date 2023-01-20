@@ -9,7 +9,7 @@ class OtpController extends GetxController {
   TextEditingController otp = TextEditingController();
   double val = 0;
   bool isCodeSent = false, isLoading = false;
-  String? verificationCode, mobileNumber,dialCodeVal;
+  String? verificationCode, mobileNumber, dialCodeVal;
   bool isValid = false;
 
   @override
@@ -31,12 +31,13 @@ class OtpController extends GetxController {
     appCtrl.storage.write(session.id, user["id"]);
     await appCtrl.storage.write(session.user, user);
     await appCtrl.storage.write(session.isIntro, true);
+    Get.forceAppUpdate();
     final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
     firebaseMessaging.getToken().then((token) async {
       await FirebaseFirestore.instance
           .collection('users')
           .doc(user["id"])
-          .update({'status': "Online", "pushToken": token,"isActive":true});
+          .update({'status': "Online", "pushToken": token, "isActive": true});
       log('check : ${appCtrl.storage.read(session.isIntro)}');
       Get.toNamed(routeName.dashboard);
       Get.put(CreateGroupController());
@@ -55,7 +56,7 @@ class OtpController extends GetxController {
   }
 
   //on verify code
-  void onVerifyCode(phone,dialCode) {
+  void onVerifyCode(phone, dialCode) {
     mobileNumber = phone;
     dialCodeVal = dialCode;
     log("phone : $phone");
@@ -64,9 +65,7 @@ class OtpController extends GetxController {
     isLoading = true;
     update();
 
-    verificationCompleted(PhoneAuthCredential phoneAuthCredential)async {
-
-    }
+    verificationCompleted(PhoneAuthCredential phoneAuthCredential) async {}
 
     verificationFailed(FirebaseAuthException authException) {
       showToast(authException.message, appCtrl.appTheme.redColor);
@@ -77,10 +76,10 @@ class OtpController extends GetxController {
     codeSent(String verificationId, [int? forceResendingToken]) async {
       verificationCode = verificationId;
       log("codeSent : $verificationCode");
-     update();
+      update();
     }
-    codeAutoRetrievalTimeout(String verificationId) {
 
+    codeAutoRetrievalTimeout(String verificationId) {
       verificationCode = verificationId;
       update();
       log("codeAutoRetrievalTimeout : $verificationCode");
@@ -112,39 +111,50 @@ class OtpController extends GetxController {
     firebaseAuth
         .signInWithCredential(authCredential)
         .then((UserCredential value) async {
-  log("value : $value");
+      log("value : ${value.user}");
       if (value.user != null) {
         User user = value.user!;
-        FirebaseFirestore.instance
-            .collection("users")
-            .where("phone", isEqualTo: mobileNumber)
-            .get()
-            .then((value) async {
-          if (value.docs.isNotEmpty) {
-            if (value.docs[0].data()["name"] == "") {
-              Get.toNamed(routeName.editProfile, arguments: {
-                "resultData": value.docs[0].data(),
-                "isPhoneLogin": true
-              });
+        try {
+          FirebaseFirestore.instance
+              .collection("users")
+              .where("phone", isEqualTo: mobileNumber).limit(1)
+              .get()
+              .then((value) async {
+                log("check : ${value.docs.isEmpty}");
+            if (value.docs.isNotEmpty) {
+              log("check : ${value.docs[0].data()}");
+              if (value.docs[0].data()["name"] == "") {
+                Get.toNamed(routeName.editProfile, arguments: {
+                  "resultData": value.docs[0].data(),
+                  "isPhoneLogin": true
+                });
+              } else {
+                await appCtrl.storage.write(session.user, value.docs[0].data());
+                homeNavigation(value.docs[0].data());
+              }
             } else {
-              await appCtrl.storage.write(session.user, value.docs[0].data());
-              homeNavigation(value.docs[0].data());
+              log("check1 : ${value.docs.isEmpty}");
+              await userRegister(user);
+              dynamic resultData = await getUserData(user);
+              if (resultData["name"] == "") {
+                Get.toNamed(routeName.editProfile, arguments: {
+                  "resultData": resultData,
+                  "isPhoneLogin": true
+                });
+                await appCtrl.storage.write(session.user, value.docs[0].data());
+              } else {
+                await appCtrl.storage.write(session.user, resultData);
+                homeNavigation(resultData);
+              }
             }
-          } else {
-            await userRegister(user);
-            dynamic resultData = await getUserData(user);
-            if (resultData["name"] == "") {
-              Get.toNamed(routeName.editProfile,
-                  arguments: {"resultData": resultData, "isPhoneLogin": true});
-              await appCtrl.storage.write(session.user, value.docs[0].data());
-            } else {
-              await appCtrl.storage.write(session.user, resultData);
-              homeNavigation(resultData);
-            }
-          }
-          isLoading = false;
-          update();
-        });
+            isLoading = false;
+            update();
+          }).catchError((err) {
+            log("get : $err");
+          });
+        } on FirebaseAuthException catch (e) {
+          log("getfirebase : $e");
+        }
       } else {
         isLoading = false;
         update();
@@ -175,22 +185,29 @@ class OtpController extends GetxController {
 
   //user register
   userRegister(User user) async {
-    final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-    firebaseMessaging.getToken().then((token) async {
-      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-        'chattingWith': null,
-        'id': user.uid,
-        'image': user.photoURL ?? "",
-        'name': user.displayName ?? "",
-        'pushToken': token,
-        'status': "Offline",
-        "typeStatus": "Offline",
-        "phone": mobileNumber,
-        "email": user.email,
-        "deviceName": appCtrl.deviceName,
-        "device": appCtrl.device,
-        "statusDesc": "Hello, I am using Chatter"
+    log(" : $user");
+    try {
+      final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+      firebaseMessaging.getToken().then((token) async {
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+          'chattingWith': null,
+          'id': user.uid,
+          'image': user.photoURL ?? "",
+          'name': user.displayName ?? "",
+          'pushToken': token,
+          'status': "Offline",
+          "typeStatus": "Offline",
+          "phone": mobileNumber,
+          "email": user.email,
+          "deviceName": appCtrl.deviceName,
+          "device": appCtrl.device,
+          "statusDesc": "Hello, I am using Chatter"
+        }).catchError((err) {
+          log("fir : $err");
+        });
       });
-    });
+    } on FirebaseAuthException catch (e) {
+      log("firebase : $e");
+    }
   }
 }

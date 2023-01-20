@@ -37,11 +37,11 @@ class LocationLayout extends StatelessWidget {
                     DateTime.fromMillisecondsSinceEpoch(
                         int.parse(document!['timestamp']))),
                 style: AppCss.poppinsMedium12
-                    .textColor(appCtrl.appTheme.whiteColor),
+                    .textColor(isReceiver ? appCtrl.appTheme.lightBlackColor: appCtrl.appTheme.whiteColor),
               )
             ],
           ).paddingAll( Insets.i5),
-          CustomPaint(painter: CustomShape(appCtrl.appTheme.primary)),
+          CustomPaint(painter: CustomShape(isReceiver ? appCtrl.appTheme.whiteColor:appCtrl.appTheme.primary)),
         ],
       )
           .decorated(

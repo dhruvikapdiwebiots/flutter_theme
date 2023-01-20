@@ -31,7 +31,7 @@ class ChatController extends GetxController {
   File? selectedFile;
   File? image;
   File? video;
-  bool isLoading = true;
+  bool isLoading = false;
   bool typing = false, isBlock = false;
   final pickerCtrl = Get.isRegistered<PickerController>()
       ? Get.find<PickerController>()
@@ -181,11 +181,15 @@ class ChatController extends GetxController {
       String fileName =
           "${file.name}-${DateTime.now().millisecondsSinceEpoch.toString()}";
       log("file : $file");
-      imageUrl = await pickerCtrl.uploadAudio(file, fileNameText: fileName);
+      Reference reference =
+      FirebaseStorage.instance.ref().child(fileName);
+      UploadTask uploadTask = reference.putFile(file);
+      TaskSnapshot snap = await uploadTask;
+      String downloadUrl = await snap.ref.getDownloadURL();
 
-      log("fileName : $fileName");
+      log("fileName : $downloadUrl");
       onSendMessage(
-          "${result.files.single.name}-BREAK-$imageUrl",
+          "${result.files.single.name}-BREAK-$downloadUrl",
           result.files.single.path.toString().contains(".mp4")
               ? MessageType.video
               : result.files.single.path.toString().contains(".mp3")
@@ -382,11 +386,14 @@ class ChatController extends GetxController {
       log("file : $file");
       String fileName =
           "${file.name}-${DateTime.now().millisecondsSinceEpoch.toString()}";
-
-      await pickerCtrl.uploadAudio(file, fileNameText: fileName);
-      log("audioFile : ${pickerCtrl.audioUrl}");
-      onSendMessage(pickerCtrl.audioUrl!, MessageType.audio);
-      log("audioFile : ${pickerCtrl.audioUrl}");
+      Reference reference =
+      FirebaseStorage.instance.ref().child(fileName);
+      UploadTask uploadTask = reference.putFile(file);
+      TaskSnapshot snap = await uploadTask;
+      String downloadUrl = await snap.ref.getDownloadURL();
+      log("audioFile : $downloadUrl");
+      onSendMessage(downloadUrl, MessageType.audio);
+      log("audioFile : $downloadUrl");
     });
   }
 
@@ -394,6 +401,7 @@ class ChatController extends GetxController {
   void onSendMessage(String content, MessageType type) async {
     isLoading = true;
     update();
+    Get.forceAppUpdate();
     log("check for send ");
     if (content.trim() != '') {
       textEditingController.clear();
@@ -485,6 +493,9 @@ class ChatController extends GetxController {
         Get.forceAppUpdate();
       } else {
         log("message se");
+        isLoading = false;
+        update();
+
         await FirebaseFirestore.instance
             .collection('messages')
             .doc(newChatId)

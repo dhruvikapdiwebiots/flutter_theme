@@ -116,25 +116,6 @@ class MessageFirebaseApi {
     }
   }
 
-  //get all users
-  Future<List> getUser() async {
-    List contactList = [];
-    final contactLists =
-        await FirebaseFirestore.instance.collection("users").get();
-    for (int i = 0; i < contactLists.docs.length; i++) {
-      if (contactLists.docs[i].id != currentUserId) {
-        final msgList = await FirebaseFirestore.instance
-            .collection("messages")
-            .doc("$currentUserId-${contactLists.docs[i]["id"]}")
-            .get();
-        if (msgList.exists) {
-          contactList.add(contactLists.docs[i]);
-        }
-      }
-    }
-    return contactList;
-  }
-
   //get all exist users
   Future<List> getExistUser() async {
     await permissionHandelCtrl.getCurrentPosition();

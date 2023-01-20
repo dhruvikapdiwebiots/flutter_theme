@@ -125,8 +125,8 @@ class ChatMessageApi {
     print("ddssdf");
     FirebaseFirestore.instance
         .collection("calls")
-        .doc(call.channelId)
-        .set({
+        .doc(call.channelId).collection("calling")
+        .add({
       "timestamp": timestamp,
       "callerId": userData["id"],
       "callerName": userData["name"],
@@ -142,8 +142,8 @@ class ChatMessageApi {
     }).then((value) async {
       await FirebaseFirestore.instance
           .collection("calls")
-          .doc(call.receiverId)
-          .set({
+          .doc(call.receiverId).collection("calling")
+          .add({
         "timestamp": timestamp,
         "callerId": userData["id"],
         "callerName": userData["name"],

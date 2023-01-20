@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import '../../../../config.dart';
 
 class AllContactListCard extends StatelessWidget {
@@ -7,6 +9,7 @@ class AllContactListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log("di : ${item!.displayName}");
     return  ListTile(
       onTap: () {
         Get.back(result: item);
@@ -17,8 +20,9 @@ class AllContactListCard extends StatelessWidget {
           MemoryImage(item!.photo!))
           : CircleAvatar(
           child: Text(
-              item!.displayName.isNotEmpty?    item!.displayName
-                  .length >
+              item!.displayName.isNotEmpty?  item!.displayName
+                  .length ==1  ? item!.displayName[0] :  item!.displayName
+                  .length >=
                   2
                   ? item!.displayName
                   .replaceAll(" ", "")

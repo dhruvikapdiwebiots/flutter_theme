@@ -16,11 +16,11 @@ class PdfLayout extends StatelessWidget {
     return InkWell(
       onLongPress: onLongPress,
       child: Stack(
-        alignment: Alignment.topRight,
+        alignment:isReceiver ? Alignment.topLeft: Alignment.topRight,
         children: [
           Stack(alignment: Alignment.bottomRight, children: [
             Stack(
-              alignment: Alignment.bottomCenter,
+              alignment:  Alignment.bottomCenter,
               children: [
                 SfPdfViewer.network(
                   document!['content'].split("-BREAK-")[1],
@@ -34,7 +34,7 @@ class PdfLayout extends StatelessWidget {
                       document!['content'].split("-BREAK-")[0],
                       textAlign: TextAlign.center,
                       style:
-                          AppCss.poppinsMedium12.textColor(appCtrl.appTheme.whiteColor),
+                          AppCss.poppinsMedium12.textColor( isReceiver ?appCtrl.appTheme.lightBlackColor : appCtrl.appTheme.whiteColor),
                     )
                     ,
                   ],
@@ -74,11 +74,11 @@ class PdfLayout extends StatelessWidget {
               Text(
                 DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(
                     int.parse(document!['timestamp']))),
-                style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.whiteColor),
+                style: AppCss.poppinsMedium12.textColor(isReceiver ? appCtrl.appTheme.lightBlackColor :appCtrl.appTheme.whiteColor),
               ).marginAll(Insets.i10)
             ])
           ]),
-          CustomPaint(painter: CustomShape(appCtrl.appTheme.primary)),
+          CustomPaint(painter: CustomShape( isReceiver ? appCtrl.appTheme.whiteColor : appCtrl.appTheme.primary)),
         ],
       ).marginSymmetric(horizontal: Insets.i10, vertical: Insets.i5),
     );

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import '../../../../config.dart';
 
 class ChatCard extends StatefulWidget {
@@ -13,6 +15,7 @@ class _ChatCardState extends State<ChatCard> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<MessageController>(builder: (messageCtrl) {
+      log("dfd : ${messageCtrl.storageUser["id"]}");
       return StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection("users")
@@ -24,34 +27,34 @@ class _ChatCardState extends State<ChatCard> {
             if (!snapshot.hasData) {
               return Center(
                   child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                        appCtrl.appTheme.primary),
-                  )).height(MediaQuery.of(context).size.height);
+                valueColor:
+                    AlwaysStoppedAnimation<Color>(appCtrl.appTheme.primary),
+              )).height(MediaQuery.of(context).size.height);
             } else {
-              List message =
-              MessageFirebaseApi().chatListWidget(snapshot);
+              List message = MessageFirebaseApi().chatListWidget(snapshot);
+              log("message : ${message.length}");
               return !snapshot.hasData
                   ? Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                        appCtrl.appTheme.primary),
-                  ))
-                  .height(MediaQuery.of(context).size.height)
-                  .expanded()
-                  : ListView.builder(
-                shrinkWrap: true,
-
-                padding: const EdgeInsets.all(10.0),
-                itemBuilder: (context, index) {
-                  return LoadUser(
-                      document: message[index],
-                      blockBy: messageCtrl.storageUser["id"],
-                      currentUserId: messageCtrl.storageUser["id"]);
-                },
-                itemCount: message.length,
-              );
+                      child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          appCtrl.appTheme.primary),
+                    )).height(MediaQuery.of(context).size.height).expanded()
+                  : message.isNotEmpty
+                      ? ListView.builder(
+                          shrinkWrap: true,
+                          padding: const EdgeInsets.all(10.0),
+                          itemBuilder: (context, index) {
+                            return LoadUser(
+                                document: message[index],
+                                blockBy: messageCtrl.storageUser["id"],
+                                currentUserId: messageCtrl.storageUser["id"]);
+                          },
+                          itemCount: message.length,
+                        )
+                      : Center(
+                          child: Image.asset(imageAssets.noChat,
+                              height: Sizes.s250));
             }
-
           });
     });
   }

@@ -41,32 +41,28 @@ alignment: Alignment.bottomLeft,
                 const IntroPageLayout(),
 
                 //start button
-                Padding(
-                    padding: const EdgeInsets.only(
-                      top: Insets.i10
-                    ),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          //indicator layout
-                          IndicatorLayout(controller: introCtrl.pageController)
-                              .paddingSymmetric(
-                                  horizontal: Insets.i15, vertical: Insets.i70),
+                Align(
+                  alignment: Alignment.center,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      //indicator layout
+                      IndicatorLayout(controller: introCtrl.pageController)
+                          .paddingSymmetric(
+                              horizontal: Insets.i15, vertical: Insets.i70),
 
-                          Icon(introCtrl.currentShowIndex == 2 ?Icons.check : Icons.arrow_forward,
-                                  color: appCtrl.appTheme.whiteColor)
-                              .paddingAll(Insets.i10)
-                              .decorated(
-                                  color: appCtrl.appTheme.primary,
-                                  borderRadius:
-                                      BorderRadius.circular(AppRadius.r50))
-                              .paddingSymmetric(horizontal: Insets.i15)
-                              .inkWell(onTap: () => introCtrl.navigateToLogin())
-                        ],
-                      ),
-                    ))
+                      Icon(introCtrl.currentShowIndex == 2 ?Icons.check : Icons.arrow_forward,
+                              color: appCtrl.appTheme.whiteColor)
+                          .paddingAll(Insets.i10)
+                          .decorated(
+                              color: appCtrl.appTheme.primary,
+                              borderRadius:
+                                  BorderRadius.circular(AppRadius.r50))
+                          .paddingSymmetric(horizontal: Insets.i15)
+                          .inkWell(onTap: () => introCtrl.navigateToLogin())
+                    ],
+                  ),
+                )
               ]),
             ],
           ));
