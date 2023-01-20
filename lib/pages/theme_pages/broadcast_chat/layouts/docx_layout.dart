@@ -1,55 +1,85 @@
+import 'dart:developer';
+
+import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../../../config.dart';
 
 class DocxLayout extends StatelessWidget {
   final dynamic document;
   final GestureLongPressCallback? onLongPress;
-  const DocxLayout({Key? key, this.document,this.onLongPress}) : super(key: key);
+  final bool isReceiver;
+  const DocxLayout({Key? key, this.document,this.onLongPress,this.isReceiver =false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onLongPress:onLongPress ,
-      child: Stack(
+      onLongPress: onLongPress,
+      onTap: () async {
+        var openResult = 'Unknown';
+
+        /*final _url = Uri.parse(document!['content'].split("-BREAK-")[1]);
+        if (!await launchUrl(_url, mode: LaunchMode.externalApplication)) {
+          // <--
+          throw Exception('Could not launch $_url');
+        }*/
+        var dio = Dio();
+        var tempDir = await getExternalStorageDirectory();
+
+        var filePath = tempDir!.path + document!['content'].split("-BREAK-")[0];
+        final response = await dio.download(document!['content'].split("-BREAK-")[1],filePath);
+        log("response : ${response.statusCode}");
+
+        final result = await OpenFilex.open(filePath);
+
+        openResult = "type=${result.type}  message=${result.message}";
+        log("openResult : $openResult");
+        OpenFilex.open(filePath);
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Container(
-              margin: const EdgeInsets.symmetric(horizontal: Insets.i8),
-              padding: const EdgeInsets.only(
-                bottom: Insets.i15,
+          Row(
+            children: [
+              Image.asset(imageAssets.docx, height: Sizes.s20),
+              const HSpace(Sizes.s10),
+              Expanded(
+                child: Text(
+                  document!['content'].split("-BREAK-")[0],
+                  textAlign: TextAlign.start,
+
+                  style: AppCss.poppinsMedium12.textColor(isReceiver
+                      ? appCtrl.appTheme.lightBlackColor
+                      : appCtrl.appTheme.whiteColor),
+                ),
               ),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(AppRadius.r8),
-                  color: appCtrl.appTheme.primary),
-              child:
-                  Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                Container(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: Insets.i8, vertical: Insets.i5),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: Insets.i15, vertical: Insets.i15),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(AppRadius.r8),
-                        color: appCtrl.appTheme.whiteColor.withOpacity(.1)),
-                    child: Text(
-                      document!['content'].split("-BREAK-")[0],
-                      textAlign: TextAlign.center,
-                      style: AppCss.poppinsMedium12
-                          .textColor(appCtrl.appTheme.whiteColor),
-                    )),
-                const VSpace(Sizes.s8),
-                Text(
-                  DateFormat('HH:mm a').format(
-                      DateTime.fromMillisecondsSinceEpoch(
-                          int.parse(document!['timestamp']))),
-                  style: AppCss.poppinsMedium12
-                      .textColor(appCtrl.appTheme.whiteColor),
-                ).marginSymmetric(horizontal: Insets.i10)
-              ]))
+            ],
+          )
+              .width(220)
+              .paddingSymmetric(horizontal: Insets.i10, vertical: Insets.i15)
+              .decorated(
+              color: isReceiver
+                  ? appCtrl.appTheme.lightGrey1Color
+                  : appCtrl.appTheme.lightPrimary,
+              borderRadius: BorderRadius.circular(AppRadius.r8)),
+          const VSpace(Sizes.s10),
+          Text(
+              DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(
+                  int.parse(document!['timestamp']))),
+              style: AppCss.poppinsMedium12.textColor(isReceiver
+                  ? appCtrl.appTheme.lightBlackColor
+                  : appCtrl.appTheme.whiteColor))
         ],
-      ).inkWell(onTap: () {
-        launchUrl(Uri.parse(document!['content'].split("-BREAK-")[1]));
-      }),
+      )
+          .paddingAll(Insets.i8)
+          .decorated(
+          color: isReceiver
+              ? appCtrl.appTheme.whiteColor
+              : appCtrl.appTheme.primary,
+          borderRadius: BorderRadius.circular(AppRadius.r8))
+          .marginSymmetric(horizontal: Insets.i10, vertical: Insets.i5),
     );
   }
 }

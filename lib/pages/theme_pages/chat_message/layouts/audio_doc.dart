@@ -33,10 +33,6 @@ class _AudioDocState extends State<AudioDoc> with WidgetsBindingObserver {
   late AudioPlayer _audioPlayer;
   int value = 2;
 
-  PageManager() {
-    _init();
-  }
-
   void _init() async {
     // initialize the song
 
@@ -158,15 +154,15 @@ class _AudioDocState extends State<AudioDoc> with WidgetsBindingObserver {
                           ? SvgPicture.asset(svgAssets.headPhone)
                               .paddingAll(Insets.i10)
                               .decorated(
-                                  color: Color(0xFFFF4E59),
+                                  color: appCtrl.appTheme.darkRedColor,
                                   shape: BoxShape.circle)
                           : Stack(
-                        alignment: Alignment.bottomRight,
-                            children: [
-                              Image.asset(imageAssets.user1),
-                              SvgPicture.asset(svgAssets.speaker)
-                            ],
-                          ),
+                              alignment: Alignment.bottomRight,
+                              children: [
+                                Image.asset(imageAssets.user1),
+                                SvgPicture.asset(svgAssets.speaker)
+                              ],
+                            ),
                       const HSpace(Sizes.s10),
                     ],
                   ),
@@ -210,61 +206,56 @@ class _AudioDocState extends State<AudioDoc> with WidgetsBindingObserver {
                 const HSpace(Sizes.s10),
 
                 Container(
-                  //'tipo' == 3; esto para los que son audio mensaje
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: Insets.i10, vertical: Insets.i6),
-                  width: Sizes.s140,
-                  //'tipo' == 3; esto para los que son audio mensaje
-                  child: ValueListenableBuilder<ProgressBarState>(
-                    valueListenable: progressNotifier,
-                    builder: (_, value, __) {
-                      return ProgressBar(
-                        timeLabelPadding: Insets.i8,
-                        progress: value.current,
-                        buffered: value.buffered,
-                        total: value.total,
-                        progressBarColor: appCtrl.appTheme.whiteColor,
-                        baseBarColor:
-                         widget.isReceiver ? appCtrl.appTheme.primary.withOpacity(.2) :   appCtrl.appTheme.whiteColor.withOpacity(.2),
-                        thumbColor: const Color(0xFFF4A022),
-                        timeLabelTextStyle: AppCss.poppinsMedium12.textColor(
-                            widget.isReceiver
-                                ? appCtrl.appTheme.primary
-                                : appCtrl.appTheme.whiteColor),
-                        onSeek: seek,
-                        onDragUpdate: ((details) {
-                          log("details : $details");
-                        }),
-                      );
-                    },
-                  ),
-                  /*       decoration: BoxDecoration(
-                      color: Color(Constants.COLOR_PRIMARY),
-                      borderRadius: BorderRadius.circular(8.0)),
-                  margin: EdgeInsets.only(
-                      bottom: isLastMessageRight(index) ? 20.0 : 10.0,
-                      right: 10.0), */
-                ),
+                    //'tipo' == 3; esto para los que son audio mensaje
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: Insets.i10, vertical: Insets.i6),
+                    width: Sizes.s140,
+                    //'tipo' == 3; esto para los que son audio mensaje
+                    child: ValueListenableBuilder<ProgressBarState>(
+                        valueListenable: progressNotifier,
+                        builder: (_, value, __) {
+                          return ProgressBar(
+                            timeLabelPadding: Insets.i8,
+                            progress: value.current,
+                            buffered: value.buffered,
+                            total: value.total,
+                            progressBarColor: appCtrl.appTheme.whiteColor,
+                            baseBarColor: widget.isReceiver
+                                ? appCtrl.appTheme.primary.withOpacity(.2)
+                                : appCtrl.appTheme.whiteColor.withOpacity(.2),
+                            thumbColor: const Color(0xFFF4A022),
+                            timeLabelTextStyle: AppCss.poppinsMedium12
+                                .textColor(widget.isReceiver
+                                    ? appCtrl.appTheme.primary
+                                    : appCtrl.appTheme.whiteColor),
+                            onSeek: seek,
+                            onDragUpdate: ((details) {
+                              log("details : $details");
+                            }),
+                          );
+                        })),
                 if (widget.isReceiver)
                   Row(
                     children: [
                       const HSpace(Sizes.s10),
                       widget.document!["content"].contains("-BREAK-")
                           ? SvgPicture.asset(svgAssets.headPhone)
-                          .paddingAll(Insets.i10)
-                          .decorated(
-                          color: Color(0xFFFF4E59),
-                          shape: BoxShape.circle)
-                          : Stack(
-                        alignment: Alignment.bottomRight,
-                        children: [
-                          Image.asset(imageAssets.user) .paddingAll(Insets.i10)
+                              .paddingAll(Insets.i10)
                               .decorated(
-                              color: appCtrl.appTheme.primary.withOpacity(.5),
-                              shape: BoxShape.circle),
-                          SvgPicture.asset(svgAssets.speaker1)
-                        ],
-                      ),
+                                  color: appCtrl.appTheme.darkRedColor,
+                                  shape: BoxShape.circle)
+                          : Stack(
+                              alignment: Alignment.bottomRight,
+                              children: [
+                                Image.asset(imageAssets.user)
+                                    .paddingAll(Insets.i10)
+                                    .decorated(
+                                        color: appCtrl.appTheme.primary
+                                            .withOpacity(.5),
+                                        shape: BoxShape.circle),
+                                SvgPicture.asset(svgAssets.speaker1)
+                              ],
+                            ),
                     ],
                   ),
               ],

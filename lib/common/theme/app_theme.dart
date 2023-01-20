@@ -17,6 +17,8 @@ class AppTheme {
   Color accent;
   Color transparentColor;
   Color chatBgColor;
+  Color darkRedColor;
+  Color lightPrimary;
 
   //Extra Colors
   Color grey;
@@ -35,6 +37,8 @@ class AppTheme {
   Color contactBgGray;
   Color contactGray;
   Color lightDividerColor;
+  Color lightGreyColor;
+  Color lightGrey1Color;
 
   /// Default constructor
   AppTheme({
@@ -44,6 +48,8 @@ class AppTheme {
     required this.splashPrimary,
     required this.secondary,
     required this.accent,
+    required this.darkRedColor,
+    required this.lightPrimary,
     //Extra
     required this.grey,
     required this.gray,
@@ -63,6 +69,8 @@ class AppTheme {
     required this.contactBgGray,
     required this.contactGray,
     required this.lightDividerColor,
+    required this.lightGreyColor,
+    required this.lightGrey1Color,
   });
 
   /// fromType factory constructor
@@ -73,12 +81,14 @@ class AppTheme {
           isDark: false,
           txt: const Color(0xFF000E08),
           primary: const Color(0xFF3467B8),
+          lightPrimary: const Color(0xFF2958A3),
           splashPrimary: Colors.white,
           secondary: const Color(0xFF6EBAE7),
           accent: const Color(0xFF797C7B),
           grey: Colors.grey,
           gray: const Color(0xFFaeaeae),
           darkGray: const Color(0xFFE8E8E8),
+          darkRedColor: const Color(0xFFFF4E59),
           white: Colors.white,
           whiteColor: Colors.white,
           textColor: Colors.white,
@@ -94,6 +104,8 @@ class AppTheme {
           contactBgGray: const Color(0xFFE6E6E6),
           contactGray: const Color(0xFFCCCCCC),
           lightDividerColor: const Color(0xFF263238),
+          lightGreyColor: const Color(0xFFF5F7FB),
+          lightGrey1Color: const Color(0xFFEBF0F8),
         );
 
       case ThemeType.dark:
@@ -101,12 +113,14 @@ class AppTheme {
           isDark: true,
           txt: Colors.white,
           primary: Colors.black,
+          lightPrimary: Colors.black12,
           splashPrimary: const Color(0xFF3467B8),
           secondary: const Color(0xFF6EBAE7),
           accent: const Color(0xFF797C7B),
           grey: Colors.grey,
           gray: const Color(0xFFaeaeae),
           darkGray: const Color(0xFFE8E8E8),
+          darkRedColor: const Color(0xFFFF4E59),
           white: Colors.white,
           whiteColor: Colors.black,
           blackColor: Colors.white,
@@ -122,6 +136,8 @@ class AppTheme {
           contactBgGray: const Color(0xFFE6E6E6),
           contactGray: const Color(0xFFCCCCCC),
           lightDividerColor: const Color(0xFF263238),
+          lightGreyColor: const Color(0xFFF5F7FB),
+          lightGrey1Color: const Color(0xFFEBF0F8),
         );
     }
   }

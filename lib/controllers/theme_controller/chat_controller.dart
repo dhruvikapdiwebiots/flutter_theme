@@ -399,6 +399,7 @@ class ChatController extends GetxController {
 
   // SEND MESSAGE CLICK
   void onSendMessage(String content, MessageType type) async {
+    log("allData : $allData");
     isLoading = true;
     update();
     Get.forceAppUpdate();
@@ -411,6 +412,7 @@ class ChatController extends GetxController {
       chatId = newChatId;
       update();
       imageUrl = "";
+      log("chatId : $chatId");
       update();
       if (pData["pushToken"] != "" && pData["pushToken"] != null) {
         firebaseCtrl.sendNotification(

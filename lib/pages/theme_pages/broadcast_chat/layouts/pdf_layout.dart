@@ -9,18 +9,25 @@ class PdfLayout extends StatelessWidget {
   final GlobalKey<SfPdfViewerState>? pdfViewerKey;
   final GestureLongPressCallback? onLongPress;
   final bool isReceiver;
-  const PdfLayout({Key? key,this.document,this.pdfViewerKey,this.onLongPress,this.isReceiver = false}) : super(key: key);
+
+  const PdfLayout(
+      {Key? key,
+      this.document,
+      this.pdfViewerKey,
+      this.onLongPress,
+      this.isReceiver = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onLongPress: onLongPress,
       child: Stack(
-        alignment:isReceiver ? Alignment.topLeft: Alignment.topRight,
+        alignment: isReceiver ? Alignment.topLeft : Alignment.topRight,
         children: [
           Stack(alignment: Alignment.bottomRight, children: [
             Stack(
-              alignment:  Alignment.bottomCenter,
+              alignment: Alignment.bottomCenter,
               children: [
                 SfPdfViewer.network(
                   document!['content'].split("-BREAK-")[1],
@@ -28,57 +35,69 @@ class PdfLayout extends StatelessWidget {
                 ).width(220).clipRRect(all: AppRadius.r8),
                 Row(
                   children: [
-                    Image.asset(imageAssets.pdf,height: Sizes.s20),
+                    Image.asset(imageAssets.pdf, height: Sizes.s20),
                     const HSpace(Sizes.s10),
-                    Text(
-                      document!['content'].split("-BREAK-")[0],
-                      textAlign: TextAlign.center,
-                      style:
-                          AppCss.poppinsMedium12.textColor( isReceiver ?appCtrl.appTheme.lightBlackColor : appCtrl.appTheme.whiteColor),
-                    )
-                    ,
+                    Expanded(
+                      child: Text(
+                        document!['content'].split("-BREAK-")[0],
+                        textAlign: TextAlign.start,
+                        style: AppCss.poppinsMedium12.textColor(isReceiver
+                            ? appCtrl.appTheme.lightBlackColor
+                            : appCtrl.appTheme.whiteColor).textHeight(1.2),
+                      ),
+                    ),
                   ],
-                ).width(220)
-                    .paddingSymmetric(horizontal: Insets.i10, vertical: Insets.i15)
-                    .decorated(color: isReceiver ?Color(0xFFF5F7FB) :  appCtrl.appTheme.primary.withOpacity(.9))
+                )
+                    .width(220)
+                    .paddingSymmetric(
+                        horizontal: Insets.i10, vertical: Insets.i15)
+                    .decorated(
+                        color: isReceiver
+                            ? appCtrl.appTheme.lightGreyColor
+                            : appCtrl.appTheme.primary.withOpacity(.9))
               ],
             )
-                .height(120)
-                .width(220)
+                .height(Sizes.s120)
+                .width(Sizes.s220)
                 .paddingOnly(
                     left: Insets.i5,
                     right: Insets.i5,
                     top: Insets.i5,
                     bottom: Insets.i35)
                 .decorated(
-                    color: isReceiver ?appCtrl.appTheme.whiteColor : appCtrl.appTheme.primary,
-                borderRadius: BorderRadius.only(
-                    bottomRight: const Radius.circular(Insets.i8),
-                    topRight: isReceiver
-                        ? const Radius.circular(Insets.i8)
-                        : const Radius.circular(0),
-                    topLeft: isReceiver
-                        ? const Radius.circular(0)
-                        : const Radius.circular(Insets.i8),
-                    bottomLeft: const Radius.circular(Insets.i8)))
-                .inkWell(
-                    onTap: () {
-                      print("obje : ${document!['content'].split("-BREAK-")[1]}");
-                      Get.to( () =>PdfViewerLayout(
-                          url: document!['content'].split("-BREAK-")[1]));
-                    }),
-
+                    color: isReceiver
+                        ? appCtrl.appTheme.whiteColor
+                        : appCtrl.appTheme.primary,
+                    borderRadius: BorderRadius.only(
+                        bottomRight: const Radius.circular(Insets.i8),
+                        topRight: isReceiver
+                            ? const Radius.circular(Insets.i8)
+                            : const Radius.circular(0),
+                        topLeft: isReceiver
+                            ? const Radius.circular(0)
+                            : const Radius.circular(Insets.i8),
+                        bottomLeft: const Radius.circular(Insets.i8)))
+                .inkWell(onTap: () {
+              Get.to(() => PdfViewerLayout(
+                  url: document!['content'].split("-BREAK-")[1]));
+            }),
             Row(mainAxisAlignment: MainAxisAlignment.end, children: [
               Icon(Icons.download_outlined, color: appCtrl.appTheme.whiteColor)
                   .inkWell(onTap: () {}),
               Text(
-                DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(
-                    int.parse(document!['timestamp']))),
-                style: AppCss.poppinsMedium12.textColor(isReceiver ? appCtrl.appTheme.lightBlackColor :appCtrl.appTheme.whiteColor),
+                DateFormat('HH:mm a').format(
+                    DateTime.fromMillisecondsSinceEpoch(
+                        int.parse(document!['timestamp']))),
+                style: AppCss.poppinsMedium12.textColor(isReceiver
+                    ? appCtrl.appTheme.lightBlackColor
+                    : appCtrl.appTheme.whiteColor),
               ).marginAll(Insets.i10)
             ])
           ]),
-          CustomPaint(painter: CustomShape( isReceiver ? appCtrl.appTheme.whiteColor : appCtrl.appTheme.primary)),
+          CustomPaint(
+              painter: CustomShape(isReceiver
+                  ? appCtrl.appTheme.whiteColor
+                  : appCtrl.appTheme.primary)),
         ],
       ).marginSymmetric(horizontal: Insets.i10, vertical: Insets.i5),
     );

@@ -19,6 +19,7 @@ class ImageAssets{
   final String user1 = 'assets/images/user1.png';
   final String pdf = 'assets/images/pdf.png';
   final String xlsx = 'assets/images/xlsx.png';
+  final String docx = 'assets/images/docx.png';
   final String map = 'assets/images/mapview.png';
   final String bg = 'assets/images/bg.png';
   final String noChat = 'assets/images/noChat.png';

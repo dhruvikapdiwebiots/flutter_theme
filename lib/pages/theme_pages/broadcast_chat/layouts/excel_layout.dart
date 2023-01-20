@@ -1,6 +1,9 @@
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../../../config.dart';
 
@@ -17,9 +20,26 @@ class ExcelLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onLongPress: onLongPress,
-      onTap: () {
-        log("url : ${document!['content'].split("-BREAK-")[1]}");
-        launchUrl(Uri.parse(document!['content'].split("-BREAK-")[1]));
+      onTap: () async {
+        var openResult = 'Unknown';
+
+        /*final _url = Uri.parse(document!['content'].split("-BREAK-")[1]);
+        if (!await launchUrl(_url, mode: LaunchMode.externalApplication)) {
+          // <--
+          throw Exception('Could not launch $_url');
+        }*/
+        var dio = Dio();
+        var tempDir = await getExternalStorageDirectory();
+
+        var filePath = tempDir!.path + document!['content'].split("-BREAK-")[0];
+        final response = await dio.download(document!['content'].split("-BREAK-")[1],filePath);
+        log("response : ${response.statusCode}");
+
+        final result = await OpenFilex.open(filePath);
+
+        openResult = "type=${result.type}  message=${result.message}";
+        log("openResult : $openResult");
+        OpenFilex.open(filePath);
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -28,19 +48,24 @@ class ExcelLayout extends StatelessWidget {
             children: [
               Image.asset(imageAssets.xlsx, height: Sizes.s20),
               const HSpace(Sizes.s10),
-              Text(
-                document!['content'].split("-BREAK-")[0],
-                textAlign: TextAlign.center,
-                style: AppCss.poppinsMedium12.textColor(isReceiver
-                    ? appCtrl.appTheme.lightBlackColor
-                    : appCtrl.appTheme.whiteColor),
+              Expanded(
+                child: Text(
+                  document!['content'].split("-BREAK-")[0],
+                  textAlign: TextAlign.start,
+
+                  style: AppCss.poppinsMedium12.textColor(isReceiver
+                      ? appCtrl.appTheme.lightBlackColor
+                      : appCtrl.appTheme.whiteColor),
+                ),
               ),
             ],
           )
               .width(220)
               .paddingSymmetric(horizontal: Insets.i10, vertical: Insets.i15)
               .decorated(
-                  color: isReceiver ? Color(0xFFEBF0F8) : Color(0xFF2958A3),
+                  color: isReceiver
+                      ? appCtrl.appTheme.lightGrey1Color
+                      : appCtrl.appTheme.lightPrimary,
                   borderRadius: BorderRadius.circular(AppRadius.r8)),
           const VSpace(Sizes.s10),
           Text(
