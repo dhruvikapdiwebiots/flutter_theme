@@ -78,8 +78,9 @@ class _PickupLayoutState extends State<PickupLayout>
       builder: (context, snapshot) {
         if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
           Call call =
-              Call.fromMap(snapshot.data!.docs as Map<dynamic, dynamic>);
+              Call.fromMap(snapshot.data!.docs[0].data() as Map<dynamic, dynamic>);
           if (!call.hasDialled!) {
+
             return Scaffold(
               backgroundColor: appCtrl.appTheme.primary,
               body: Stack(
@@ -136,7 +137,8 @@ class _PickupLayoutState extends State<PickupLayout>
                       children: <Widget>[
                         InkWell(
                           onTap: () async {
-                            flutterLocalNotificationsPlugin!.cancelAll();
+                            log("cancel");
+                            //flutterLocalNotificationsPlugin!.cancelAll();
                             final videoCtrl =
                                 Get.isRegistered<VideoCallController>()
                                     ? Get.find<VideoCallController>()
@@ -160,6 +162,7 @@ class _PickupLayoutState extends State<PickupLayout>
                               'status': 'rejected',
                               'ended': DateTime.now(),
                             }, SetOptions(merge: true));
+
                           },
                           child: const Icon(
                             Icons.call_end,

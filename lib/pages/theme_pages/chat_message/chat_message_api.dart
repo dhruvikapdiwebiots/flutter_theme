@@ -102,46 +102,30 @@ class ChatMessageApi {
 
   //audio and video call api
   audioAndVideoCallApi({toData, isVideoCall}) async {
-    var userData = appCtrl.storage.read(session.user);
+    try {
+      var userData = appCtrl.storage.read(session.user);
 
-    String channelId = Random().nextInt(1000).toString();
-    int timestamp = DateTime.now().millisecondsSinceEpoch;
-    Call call = Call(
-        timestamp: timestamp,
-        callerId: userData["id"],
-        callerName: userData["name"],
-        callerPic: userData["image"],
-        receiverId: toData["id"],
-        receiverName: toData["name"],
-        receiverPic: toData["image"],
-        callerToken: userData["pushToken"],
-        receiverToken: toData["pushToken"],
-        channelId: channelId,
-        isVideoCall: isVideoCall);
-    ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
+      String channelId = Random().nextInt(1000).toString();
+      int timestamp = DateTime.now().millisecondsSinceEpoch;
+      Call call = Call(
+          timestamp: timestamp,
+          callerId: userData["id"],
+          callerName: userData["name"],
+          callerPic: userData["image"],
+          receiverId: toData["id"],
+          receiverName: toData["name"],
+          receiverPic: toData["image"],
+          callerToken: userData["pushToken"],
+          receiverToken: toData["pushToken"],
+          channelId: channelId,
+          isVideoCall: isVideoCall);
+      ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
+      print("role : $call");
 
-
-    FirebaseFirestore.instance
-        .collection("calls")
-        .doc(call.callerId).collection("calling")
-        .add({
-      "timestamp": timestamp,
-      "callerId": userData["id"],
-      "callerName": userData["name"],
-      "callerPic": userData["image"],
-      "receiverId": toData["id"],
-      "receiverName": toData["name"],
-      "receiverPic": toData["image"],
-      "callerToken": userData["pushToken"],
-      "receiverToken": toData["pushToken"],
-      "hasDialled": true,
-      "channelId": channelId,
-      "isVideoCall": isVideoCall,
-    }).then((value) async {
-      print("ddssdf1");
       await FirebaseFirestore.instance
           .collection("calls")
-          .doc(call.receiverId).collection("calling")
+          .doc(call.callerId)
+          .collection("calling")
           .add({
         "timestamp": timestamp,
         "callerId": userData["id"],
@@ -152,21 +136,40 @@ class ChatMessageApi {
         "receiverPic": toData["image"],
         "callerToken": userData["pushToken"],
         "receiverToken": toData["pushToken"],
-        "hasDialled": false,
+        "hasDialled": true,
         "channelId": channelId,
-        "isVideoCall": isVideoCall
-      }).then((value) {
-        print("ddssdf");
-        call.hasDialled = true;
-        if (isVideoCall == false) {
-          var data = {
-            "channelName": call.channelId,
-            "call": call,
-            "role": role
-          };
-          Get.toNamed(routeName.audioCall, arguments: data);
+        "isVideoCall": isVideoCall,
+      }).then((value) async {
+        print("ddssdf1");
+        await FirebaseFirestore.instance
+            .collection("calls")
+            .doc(call.receiverId)
+            .collection("calling")
+            .add({
+          "timestamp": timestamp,
+          "callerId": userData["id"],
+          "callerName": userData["name"],
+          "callerPic": userData["image"],
+          "receiverId": toData["id"],
+          "receiverName": toData["name"],
+          "receiverPic": toData["image"],
+          "callerToken": userData["pushToken"],
+          "receiverToken": toData["pushToken"],
+          "hasDialled": false,
+          "channelId": channelId,
+          "isVideoCall": isVideoCall
+        }).then((value) {
+          print("ddssdf");
+          call.hasDialled = true;
+          if (isVideoCall == false) {
+            var data = {
+              "channelName": call.channelId,
+              "call": call,
+              "role": role
+            };
+            Get.toNamed(routeName.audioCall, arguments: data);
 
-          /*  await Navigator.push(
+            /*  await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => AudioCall(
@@ -177,21 +180,21 @@ class ChatMessageApi {
             ),
           ),
         );*/
-        } else {
-          var data = {
-            "channelName": call.channelId,
-            "call": call,
-            "role": role
-          };
-          print("object : $data");
-          Get.toNamed(routeName.videoCall, arguments: data);
+          } else {
+            var data = {
+              "channelName": call.channelId,
+              "call": call,
+              "role": role
+            };
+            print("object : $data");
+            Get.toNamed(routeName.videoCall, arguments: data);
 
-          /*  firebaseCtrl.sendNotification(
+            /*  firebaseCtrl.sendNotification(
           title: "Incoming Video Call...",
           msg: "${call.callerName} video call",
           token: call.receiverToken,
           image: userData["image"]);*/
-          /* await Navigator.push(
+            /* await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => VideoCall(
@@ -202,9 +205,13 @@ class ChatMessageApi {
             ),
           ),
         );*/
-        }
+          }
+        });
       });
-    });
+    } on FirebaseException catch (e) {
+      // Caught an exception from Firebase.
+      print("Failed with error '${e.code}': ${e.message}");
+    }
   }
 
   Future<bool> audioVideoCallSave(
@@ -221,11 +228,11 @@ class ChatMessageApi {
 
       await FirebaseFirestore.instance
           .collection("calls")
-          .doc(call.channelId)
+          .doc(call.callerId)
           .set(hasDialledMap)
-          .then((value) {
+          .then((value) async {
         print("ddssdf");
-        FirebaseFirestore.instance
+        await FirebaseFirestore.instance
             .collection("calls")
             .doc(call.receiverId)
             .set(hasNotDialledMap)
