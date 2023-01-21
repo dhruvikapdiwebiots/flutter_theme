@@ -102,10 +102,8 @@ class ChatMessageApi {
 
   //audio and video call api
   audioAndVideoCallApi({toData, isVideoCall}) async {
-    print("toData : ${appCtrl.storage.read(session.user)}");
     var userData = appCtrl.storage.read(session.user);
-    print("user : $userData");
-    print("user : $toData");
+
     String channelId = Random().nextInt(1000).toString();
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     Call call = Call(
@@ -122,10 +120,10 @@ class ChatMessageApi {
         isVideoCall: isVideoCall);
     ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
 
-    print("ddssdf");
+
     FirebaseFirestore.instance
         .collection("calls")
-        .doc(call.channelId).collection("calling")
+        .doc(call.callerId).collection("calling")
         .add({
       "timestamp": timestamp,
       "callerId": userData["id"],
@@ -140,6 +138,7 @@ class ChatMessageApi {
       "channelId": channelId,
       "isVideoCall": isVideoCall,
     }).then((value) async {
+      print("ddssdf1");
       await FirebaseFirestore.instance
           .collection("calls")
           .doc(call.receiverId).collection("calling")
@@ -157,6 +156,7 @@ class ChatMessageApi {
         "channelId": channelId,
         "isVideoCall": isVideoCall
       }).then((value) {
+        print("ddssdf");
         call.hasDialled = true;
         if (isVideoCall == false) {
           var data = {

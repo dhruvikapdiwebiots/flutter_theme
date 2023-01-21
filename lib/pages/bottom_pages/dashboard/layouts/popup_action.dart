@@ -28,7 +28,7 @@ class PopUpAction extends StatelessWidget {
               ];
             },
             onSelected: (value) =>
-                dashboardCtrl.popupMenuTap(value)) : PopupMenuButton(
+                dashboardCtrl.popupMenuTap(value)) : dashboardCtrl.selectedIndex == 1 ? PopupMenuButton(
             color: appCtrl.appTheme.whiteColor,
             icon: Icon(Icons.more_vert, color: appCtrl.appTheme.white),
             itemBuilder: (context) {
@@ -49,7 +49,28 @@ class PopUpAction extends StatelessWidget {
               ];
             },
             onSelected: (value) =>
-                dashboardCtrl.popupMenuTap(value));
+                dashboardCtrl.popupMenuTap(value)): PopupMenuButton(
+            color: appCtrl.appTheme.whiteColor,
+            icon: Icon(Icons.more_vert, color: appCtrl.appTheme.white),
+            itemBuilder: (context) {
+              return [
+
+                ...dashboardCtrl.callsAction
+                    .asMap()
+                    .entries
+                    .map((e) => PopupMenuItem<int>(
+                  value: 0,
+                  onTap: (){
+                    dashboardCtrl.selectedPopTap = e.key;
+                    dashboardCtrl.update();
+                  },
+                  child: Text(trans(e.value["title"]),style: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.blackColor),),
+                ))
+                    .toList(),
+              ];
+            },
+            onSelected: (value) =>
+                dashboardCtrl.popupMenuTap(value)) ;
       }
     );
   }

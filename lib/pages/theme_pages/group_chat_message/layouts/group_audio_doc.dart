@@ -10,7 +10,9 @@ class GroupAudioDoc extends StatelessWidget {
   final VoidCallback? onLongPress;
   final DocumentSnapshot? document;
 
-  const GroupAudioDoc({Key? key, this.onLongPress, this.document}) : super(key: key);
+  final bool isReceiver;
+  final String? currentUserId;
+  const GroupAudioDoc({Key? key, this.onLongPress, this.document,this.isReceiver = false, this.currentUserId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +31,15 @@ class GroupAudioDoc extends StatelessWidget {
               height: Sizes.s130,
               child:
                   Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+
+                    if (isReceiver)
+                      if (document!["sender"] != currentUserId)
+                        Column(children: [
+                          Text(document!['senderName'],
+                              style: AppCss.poppinsMedium12
+                                  .textColor(appCtrl.appTheme.primary)),
+                          const VSpace(Sizes.s8)
+                        ]),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [

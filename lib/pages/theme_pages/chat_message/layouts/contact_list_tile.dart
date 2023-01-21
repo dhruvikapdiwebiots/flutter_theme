@@ -13,7 +13,7 @@ class ContactListTile extends StatelessWidget {
 minVerticalPadding: 0,
 
         dense:true,
-        contentPadding: EdgeInsets.symmetric(horizontal: Insets.i15),
+        contentPadding: const EdgeInsets.symmetric(horizontal: Insets.i15),
           leading: CachedNetworkImage(
               imageUrl: document!['content'].split('-BREAK-')[2],
               imageBuilder: (context, imageProvider) => CircleAvatar(

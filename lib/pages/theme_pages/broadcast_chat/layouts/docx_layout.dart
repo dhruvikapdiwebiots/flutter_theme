@@ -10,8 +10,9 @@ import '../../../../config.dart';
 class DocxLayout extends StatelessWidget {
   final dynamic document;
   final GestureLongPressCallback? onLongPress;
-  final bool isReceiver;
-  const DocxLayout({Key? key, this.document,this.onLongPress,this.isReceiver =false}) : super(key: key);
+  final bool isReceiver, isGroup;
+  final String? currentUserId;
+  const DocxLayout({Key? key, this.document,this.onLongPress,this.isReceiver =false,this.isGroup =false,this.currentUserId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +42,17 @@ class DocxLayout extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
+          if (isGroup)
+            if (isReceiver)
+              if (document!["sender"] != currentUserId)
+                Align(
+                    alignment: Alignment.topLeft,
+                    child: Column(children: [
+                      Text(document!['senderName'],
+                          style: AppCss.poppinsMedium12
+                              .textColor(appCtrl.appTheme.primary)),
+                      const VSpace(Sizes.s8)
+                    ])),
           Row(
             children: [
               Image.asset(imageAssets.docx, height: Sizes.s20),

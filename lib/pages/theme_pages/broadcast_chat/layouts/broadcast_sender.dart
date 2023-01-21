@@ -89,7 +89,28 @@ class BroadcastSender extends StatelessWidget {
                                     builder: (BuildContext context) => chatCtrl
                                         .buildPopupDialog(context, document!));
                               })
-                          : Container(),
+                          : (document!["content"].contains(".xlsx"))
+                              ? ExcelLayout(
+                                  onLongPress: () {
+                                    showDialog(
+                                        context: Get.context!,
+                                        builder: (BuildContext context) =>
+                                            chatCtrl.buildPopupDialog(
+                                                context, document!));
+                                  },
+                                  document: document,
+                                )
+                              : Container(),
+                if (document!["type"] == MessageType.gif.name)
+                  GifLayout(
+                    onLongPress: () {
+                      showDialog(
+                          context: Get.context!,
+                          builder: (BuildContext context) =>
+                              chatCtrl.buildPopupDialog(context, document!));
+                    },
+                    document: document,
+                  )
               ]),
               if (document!["type"] == MessageType.messageType.name)
                 Align(

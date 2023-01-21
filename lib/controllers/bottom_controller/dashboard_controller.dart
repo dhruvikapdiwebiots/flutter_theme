@@ -30,6 +30,7 @@ class DashboardController extends GetxController
       : Get.put(MessageController());
   List actionList = [];
   List statusAction = [];
+  List callsAction = [];
   ConnectivityResult connectionStatus = ConnectivityResult.none;
   final Connectivity connectivity = Connectivity();
   late StreamSubscription<ConnectivityResult> connectivitySubscription;
@@ -38,6 +39,7 @@ class DashboardController extends GetxController
   List<Widget> widgetOptions = <Widget>[
     const Message(),
     const StatusList(),
+    CallList()
   ];
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -95,6 +97,7 @@ class DashboardController extends GetxController
     bottomList = appArray.bottomList;
     actionList = appArray.actionList;
     statusAction = appArray.statusAction;
+    callsAction = appArray.callsAction;
     controller = TabController(length: bottomList.length, vsync: this);
     firebaseCtrl.setIsActive();
     controller!.addListener(() {

@@ -1,4 +1,3 @@
-
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 import '../../../../../config.dart';
@@ -75,6 +74,7 @@ class _GroupSenderMessageState extends State<GroupSenderMessage> {
                       }),
                 if (widget.document!["type"] == MessageType.video.name)
                   GroupVideoDoc(
+                      currentUserId: widget.currentUserId,
                       document: widget.document,
                       onLongPress: () {
                         showDialog(
@@ -85,6 +85,7 @@ class _GroupSenderMessageState extends State<GroupSenderMessage> {
                       }),
                 if (widget.document!["type"] == MessageType.audio.name)
                   GroupAudioDoc(
+                      currentUserId: widget.currentUserId,
                       document: widget.document,
                       onLongPress: () {
                         showDialog(
@@ -95,6 +96,7 @@ class _GroupSenderMessageState extends State<GroupSenderMessage> {
                 if (widget.document!["type"] == MessageType.doc.name)
                   (widget.document!["content"].contains(".pdf"))
                       ? PdfLayout(
+                          isGroup: true,
                           document: widget.document,
                           pdfViewerKey: _pdfViewerKey,
                           onLongPress: () {
@@ -106,7 +108,9 @@ class _GroupSenderMessageState extends State<GroupSenderMessage> {
                           })
                       : (widget.document!["content"].contains(".docx"))
                           ? DocxLayout(
+                              currentUserId: widget.currentUserId,
                               document: widget.document,
+                              isGroup: true,
                               onLongPress: () {
                                 showDialog(
                                     context: Get.context!,
@@ -114,9 +118,24 @@ class _GroupSenderMessageState extends State<GroupSenderMessage> {
                                         chatCtrl.buildPopupDialog(
                                             context, widget.document!));
                               })
-                          : Container(),
+                          : (widget.document!["content"].contains(".xlsx"))
+                              ? ExcelLayout(
+                                  currentUserId: widget.currentUserId,
+                                  isGroup: true,
+                                  onLongPress: () {
+                                    showDialog(
+                                        context: Get.context!,
+                                        builder: (BuildContext context) =>
+                                            chatCtrl.buildPopupDialog(
+                                                context, widget.document!));
+                                  },
+                                  document: widget.document,
+                                )
+                              : Container(),
                 if (widget.document!["type"] == MessageType.gif.name)
                   GifLayout(
+                      currentUserId: widget.currentUserId,
+                      isGroup: true,
                       document: widget.document,
                       onLongPress: () {
                         showDialog(

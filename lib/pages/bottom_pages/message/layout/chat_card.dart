@@ -15,7 +15,6 @@ class _ChatCardState extends State<ChatCard> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<MessageController>(builder: (messageCtrl) {
-      log("dfd : ${messageCtrl.storageUser["id"]}");
       return StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection("users")
@@ -24,6 +23,7 @@ class _ChatCardState extends State<ChatCard> {
               .orderBy("updateStamp", descending: true)
               .snapshots(),
           builder: (context, snapshot) {
+            log("has : ${snapshot.hasData}");
             if (!snapshot.hasData) {
               return Center(
                   child: CircularProgressIndicator(

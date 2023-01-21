@@ -14,6 +14,7 @@ class AppArray{
   var bottomList = [
     {'icon': Icons.message, 'title': "chats"},
     {'icon': Icons.image, 'title': "status"},
+    {'icon': Icons.image, 'title': "calls"},
   ];
 
   //action list
@@ -28,6 +29,13 @@ class AppArray{
   var statusAction = [
 
     {'title': "setting"},
+  ];
+
+  //callAction list
+  var callsAction = [
+
+    {'title': "clearLogs"},
+    {'title': "setting"}
   ];
 
   //setting list

@@ -8,7 +8,9 @@ import '../../../../config.dart';
 class GroupVideoDoc extends StatefulWidget {
   final DocumentSnapshot? document;
 final VoidCallback? onLongPress;
-  const GroupVideoDoc({Key? key, this.document,this.onLongPress}) : super(key: key);
+final bool isReceiver;
+final String? currentUserId;
+  const GroupVideoDoc({Key? key, this.document,this.onLongPress,this.isReceiver = false, this.currentUserId}) : super(key: key);
 
   @override
   State<GroupVideoDoc> createState() => GroupVideoDocState();
@@ -49,11 +51,23 @@ class GroupVideoDocState extends State<GroupVideoDoc> {
               child: Stack(
                 alignment: Alignment.bottomRight,
                 children: [
-                  AspectRatio(
-                    aspectRatio: videoController!.value.aspectRatio,
-                    // Use the VideoPlayer widget to display the video.
-                    child: VideoPlayer(videoController!),
-                  ).height(Sizes.s250),
+                  Column(
+                    children: [
+                      if (widget.isReceiver)
+                        if (widget.document!["sender"] != widget.currentUserId)
+                          Column(children: [
+                            Text(widget.document!['senderName'],
+                                style: AppCss.poppinsMedium12
+                                    .textColor(appCtrl.appTheme.primary)),
+                            const VSpace(Sizes.s8)
+                          ]),
+                      AspectRatio(
+                        aspectRatio: videoController!.value.aspectRatio,
+                        // Use the VideoPlayer widget to display the video.
+                        child: VideoPlayer(videoController!),
+                      ).height(Sizes.s250),
+                    ],
+                  ),
                   Text(DateFormat('HH:mm a').format(
                       DateTime.fromMillisecondsSinceEpoch(
                           int.parse(widget.document!['timestamp']))),style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.whiteColor),).marginAll(Insets.i10)

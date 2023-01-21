@@ -33,12 +33,9 @@ class MessageController extends GetxController {
       storageUser = data;
     }
     update();
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final User user = auth.currentUser!;
-    currentUser = appCtrl.storage.read(session.user);
-    update();
     contactExistList = await MessageFirebaseApi().getExistUser();
     update();
+    Get.forceAppUpdate();
     super.onReady();
   }
 

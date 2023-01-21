@@ -11,7 +11,7 @@ class DashboardBody extends StatelessWidget {
     return GetBuilder<DashboardController>(
       builder: (dashboardCtrl) {
         return DefaultTabController(
-            length: 2,
+            length: 3,
             child: snapshot!.data == ConnectivityResult.none
                 ? NoInternet(
                 connectionStatus: dashboardCtrl.connectionStatus)

@@ -8,14 +8,17 @@ class PdfLayout extends StatelessWidget {
   final dynamic document;
   final GlobalKey<SfPdfViewerState>? pdfViewerKey;
   final GestureLongPressCallback? onLongPress;
-  final bool isReceiver;
+  final bool isReceiver, isGroup;
+  final String? currentUserId;
 
   const PdfLayout(
       {Key? key,
       this.document,
       this.pdfViewerKey,
       this.onLongPress,
-      this.isReceiver = false})
+      this.isReceiver = false,
+      this.isGroup = false,
+      this.currentUserId})
       : super(key: key);
 
   @override
@@ -26,6 +29,18 @@ class PdfLayout extends StatelessWidget {
         alignment: isReceiver ? Alignment.topLeft : Alignment.topRight,
         children: [
           Stack(alignment: Alignment.bottomRight, children: [
+            if (isGroup)
+              if (isReceiver)
+                if (currentUserId != null)
+                  if (document!["sender"] != currentUserId)
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Column(children: [
+                          Text(document!['senderName'],
+                              style: AppCss.poppinsMedium12
+                                  .textColor(appCtrl.appTheme.primary)),
+                          const VSpace(Sizes.s8)
+                        ])),
             Stack(
               alignment: Alignment.bottomCenter,
               children: [
@@ -41,9 +56,11 @@ class PdfLayout extends StatelessWidget {
                       child: Text(
                         document!['content'].split("-BREAK-")[0],
                         textAlign: TextAlign.start,
-                        style: AppCss.poppinsMedium12.textColor(isReceiver
-                            ? appCtrl.appTheme.lightBlackColor
-                            : appCtrl.appTheme.whiteColor).textHeight(1.2),
+                        style: AppCss.poppinsMedium12
+                            .textColor(isReceiver
+                                ? appCtrl.appTheme.lightBlackColor
+                                : appCtrl.appTheme.whiteColor)
+                            .textHeight(1.2),
                       ),
                     ),
                   ],

@@ -5,7 +5,9 @@ import '../../../../config.dart';
 class GifLayout extends StatelessWidget {
   final dynamic document;
   final GestureLongPressCallback? onLongPress;
-  const GifLayout({Key? key,this.document,this.onLongPress}) : super(key: key);
+  final bool isReceiver,isGroup;
+  final String? currentUserId;
+  const GifLayout({Key? key,this.document,this.onLongPress, this.isReceiver = false, this.isGroup = false,this.currentUserId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -414,13 +414,7 @@ class ChatController extends GetxController {
       imageUrl = "";
       log("chatId : $chatId");
       update();
-      if (pData["pushToken"] != "" && pData["pushToken"] != null) {
-        firebaseCtrl.sendNotification(
-            title: pName,
-            msg: content,
-            token: pData["pushToken"],
-            image: userData["image"]);
-      }
+
       if (allData != null && allData != "") {
         if (allData["isBlock"] == true) {
           if (allData["blockUserId"] == pId) {
@@ -531,6 +525,13 @@ class ChatController extends GetxController {
           getChatData();
         });
       }
+    }
+    if (pData["pushToken"] != "" && pData["pushToken"] != null) {
+      firebaseCtrl.sendNotification(
+          title: pName,
+          msg: content,
+          token: pData["pushToken"],
+          image: userData["image"]);
     }
     isLoading = false;
     update();

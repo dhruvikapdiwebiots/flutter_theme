@@ -104,4 +104,5 @@ final dynamic en = {
   "download": "DOWNLOAD",
   "message": "Message",
   "addContact": "Add Contact",
+  "clearLogs": "Clear All Logs",
 };

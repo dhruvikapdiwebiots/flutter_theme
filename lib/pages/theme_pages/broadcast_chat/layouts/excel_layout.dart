@@ -10,10 +10,10 @@ import '../../../../config.dart';
 class ExcelLayout extends StatelessWidget {
   final dynamic document;
   final GestureLongPressCallback? onLongPress;
-  final bool isReceiver;
-
+  final bool isReceiver,isGroup;
+final String? currentUserId;
   const ExcelLayout(
-      {Key? key, this.document, this.onLongPress, this.isReceiver = false})
+      {Key? key, this.document, this.onLongPress, this.isReceiver = false, this.isGroup = false,this.currentUserId})
       : super(key: key);
 
   @override
@@ -22,12 +22,6 @@ class ExcelLayout extends StatelessWidget {
       onLongPress: onLongPress,
       onTap: () async {
         var openResult = 'Unknown';
-
-        /*final _url = Uri.parse(document!['content'].split("-BREAK-")[1]);
-        if (!await launchUrl(_url, mode: LaunchMode.externalApplication)) {
-          // <--
-          throw Exception('Could not launch $_url');
-        }*/
         var dio = Dio();
         var tempDir = await getExternalStorageDirectory();
 
@@ -44,6 +38,17 @@ class ExcelLayout extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
+          if (isGroup)
+            if (isReceiver)
+              if (document!["sender"] != currentUserId)
+                Align(
+                    alignment: Alignment.topLeft,
+                    child: Column(children: [
+                      Text(document!['senderName'],
+                          style: AppCss.poppinsMedium12
+                              .textColor(appCtrl.appTheme.primary)),
+                      const VSpace(Sizes.s8)
+                    ])),
           Row(
             children: [
               Image.asset(imageAssets.xlsx, height: Sizes.s20),
