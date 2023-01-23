@@ -23,23 +23,19 @@ class ContactListController extends GetxController {
 
   //fetch data
   Future<void> fetchPage(pageKey) async {
-
-    int counter =0;
+    int counter = 0;
     contactList = [];
     registerContactList = [];
     unRegisterContactList = [];
     storageContact = await permissionHandelCtrl.getContact();
-  update();
+    update();
 
     var user = appCtrl.storage.read("user");
     if (storageContact.isNotEmpty) {
-
       storageContact
           .where((c) => c.phones.isNotEmpty)
           .forEach((Contact p) async {
-
         if (p.phones.isNotEmpty) {
-
           nameList = [];
           String phone = phoneNumberExtension(p.phones[0].number);
           await FirebaseFirestore.instance
@@ -59,7 +55,8 @@ class ContactListController extends GetxController {
                 description: value.docs[0].data()["statusDesc"],
               );
 
-              registerContactList!.removeWhere((element) => element.phoneNumber == phone);
+              registerContactList!
+                  .removeWhere((element) => element.phoneNumber == phone);
               update();
               if (phone != user["phone"]) {
                 if (!registerContactList!.contains(userContactModel)) {
@@ -69,16 +66,15 @@ class ContactListController extends GetxController {
               update();
 
               nameList!.add(userContactModel);
-
             } else {
-
               UserContactModel userContactModel = UserContactModel(
                   isRegister: false,
                   phoneNumber: phone,
                   contactImage: p.photo,
                   uid: "0",
                   username: p.displayName);
-              unRegisterContactList!.removeWhere((element) => element.phoneNumber == phone);
+              unRegisterContactList!
+                  .removeWhere((element) => element.phoneNumber == phone);
               if (!unRegisterContactList!.contains(userContactModel)) {
                 unRegisterContactList!.add(userContactModel);
               }
@@ -91,18 +87,17 @@ class ContactListController extends GetxController {
     }
     registerContactList = [];
 
-    contactList =[];
-counter++;
+    contactList = [];
+    counter++;
     ContactModel contactModel = ContactModel(
         title: fonts.registerUser.tr, userTitle: registerContactList);
-    if(!contactList.contains(contactModel)) {
+    if (!contactList.contains(contactModel)) {
       contactList.add(contactModel);
     }
 
-
     ContactModel unRegisterContactModel = ContactModel(
         title: fonts.inviteUser.tr, userTitle: unRegisterContactList);
-    if(!contactList.contains(unRegisterContactModel)) {
+    if (!contactList.contains(unRegisterContactModel)) {
       contactList.add(unRegisterContactModel);
     }
 
@@ -124,6 +119,8 @@ counter++;
     update();
   }
 
+
+  //search contact list
   searchList(pageKey, search) async {
     if (search != "" && search != null) {
       try {
@@ -172,7 +169,6 @@ counter++;
     // TODO: implement onInit
     super.onInit();
     pagingController.addPageRequestListener((pageKey) {
-      log("pagekey");
       fetchPage(pageKey);
     });
   }

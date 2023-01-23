@@ -98,7 +98,7 @@ final dynamic en = {
       "A lag- free video chat connection between your users is easy and much everywhere on any device.",
   "introDesc3":
       "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form",
-  "inviteUser": "ادعُ المستخدم لاستخدام شاتيفاي",
+  "inviteUser": "Invite user to use Chat",
   "registerUser": "Register User with",
   "recentUpdates": "Recent Updates",
   "download": "DOWNLOAD",

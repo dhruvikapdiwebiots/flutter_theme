@@ -109,7 +109,7 @@ export 'theme_pages/chat_message/layouts/audio_layout/stop_arrow_icons.dart';
 export 'theme_pages/chat_message/layouts/audio_layout/voice_stop_icons.dart';
 export 'theme_pages/pick_up_call/pick_up_call.dart';
 export 'theme_pages/broadcast_chat/layouts/excel_layout.dart';
-
+export 'theme_pages/group_chat_message/layouts/doc_image.dart';
 
 export '/utilities/type_list.dart';
 export '/models/contact_model.dart';

@@ -64,13 +64,16 @@ class GroupChatMessageController extends GetxController {
         .then((value) {
       if (value.exists) {
         List receiver = pData["users"];
+        nameList =null;
         for (var i = 0; i < receiver.length; i++) {
           if (nameList != null && nameList != "") {
             if (receiver[i]["name"] != user["name"]) {
               nameList = "$nameList, ${receiver[i]["name"]}";
             }
           } else {
-            nameList = receiver[i]["name"];
+            if (receiver[i]["name"] != user["name"]) {
+              nameList = receiver[i]["name"];
+            }
           }
         }
       }
@@ -105,9 +108,11 @@ class GroupChatMessageController extends GetxController {
           "${file.name}-${DateTime.now().millisecondsSinceEpoch.toString()}";
       Reference reference = FirebaseStorage.instance.ref().child(fileName);
       UploadTask uploadTask = reference.putFile(file);
+      log("uploadTask : $uploadTask");
       uploadTask.then((res) {
         res.ref.getDownloadURL().then((downloadUrl) {
           imageUrl = downloadUrl;
+          log("image : $imageUrl");
           isLoading = false;
           onSendMessage(
               "${result.files.single.name}-BREAK-$imageUrl",

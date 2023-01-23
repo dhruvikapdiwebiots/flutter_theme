@@ -40,7 +40,7 @@ class OtpController extends GetxController {
           .update({'status': "Online", "pushToken": token, "isActive": true});
       log('check : ${appCtrl.storage.read(session.isIntro)}');
       Get.toNamed(routeName.dashboard);
-      Get.put(CreateGroupController());
+
     });
   }
 

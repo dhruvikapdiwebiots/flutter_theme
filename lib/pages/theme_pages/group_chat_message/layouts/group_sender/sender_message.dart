@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 import '../../../../../config.dart';
@@ -21,6 +24,7 @@ class _GroupSenderMessageState extends State<GroupSenderMessage> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<GroupChatMessageController>(builder: (chatCtrl) {
+      log("tyep : ${widget.document!["content"]}");
       return Container(
           margin: const EdgeInsets.only(bottom: 2.0),
           child: Column(
@@ -131,18 +135,36 @@ class _GroupSenderMessageState extends State<GroupSenderMessage> {
                                   },
                                   document: widget.document,
                                 )
-                              : Container(),
+                              : (widget.document!["content"].contains(".jpg") ||
+                                      widget.document!["content"]
+                                          .contains(".png") ||
+                                      widget.document!["content"]
+                                          .contains(".heic") ||
+                                      widget.document!["content"]
+                                          .contains(".jpeg"))
+                                  ? DocImageLayout(
+                                      currentUserId: widget.currentUserId,
+                                      isGroup: true,
+                                      document: widget.document,
+                                      onLongPress: () {
+                                        showDialog(
+                                            context: Get.context!,
+                                            builder: (BuildContext context) =>
+                                                chatCtrl.buildPopupDialog(
+                                                    context, widget.document!));
+                                      })
+                                  : Container(),
                 if (widget.document!["type"] == MessageType.gif.name)
-                  GifLayout(
-                      currentUserId: widget.currentUserId,
-                      isGroup: true,
-                      document: widget.document,
-                      onLongPress: () {
-                        showDialog(
-                            context: Get.context!,
-                            builder: (BuildContext context) => chatCtrl
-                                .buildPopupDialog(context, widget.document!));
-                      })
+                    GifLayout(
+                        currentUserId: widget.currentUserId,
+                        isGroup: true,
+                        document: widget.document,
+                        onLongPress: () {
+                          showDialog(
+                              context: Get.context!,
+                              builder: (BuildContext context) => chatCtrl
+                                  .buildPopupDialog(context, widget.document!));
+                        })
               ]),
               if (widget.document!["type"] == MessageType.messageType.name)
                 Align(

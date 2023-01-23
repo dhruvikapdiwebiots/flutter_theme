@@ -1,4 +1,3 @@
-
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 import '../../../../../config.dart';
@@ -49,7 +48,7 @@ class _ReceiverMessageState extends State<ReceiverMessage> {
                       builder: (BuildContext context) =>
                           chatCtrl.buildPopupDialog(context, widget.document!),
                     );
-                  },
+                  }
                 ),
 
               if (widget.document!["type"] == MessageType.contact.name)
@@ -112,7 +111,6 @@ class _ReceiverMessageState extends State<ReceiverMessage> {
                         : (widget.document!["content"].contains(".xlsx"))
                             ? ExcelLayout(
                                 isReceiver: true,
-
                                 onLongPress: () {
                                   showDialog(
                                       context: Get.context!,
@@ -122,7 +120,24 @@ class _ReceiverMessageState extends State<ReceiverMessage> {
                                 },
                                 document: widget.document,
                               )
-                            : Container(),
+                            : (widget.document!["content"].contains(".jpg") ||
+                                    widget.document!["content"]
+                                        .contains(".png") ||
+                                    widget.document!["content"]
+                                        .contains(".heic") ||
+                                    widget.document!["content"]
+                                        .contains(".jpeg"))
+                                ? DocImageLayout(
+                                    isReceiver: true,
+                                    document: widget.document,
+                                    onLongPress: () {
+                                      showDialog(
+                                          context: Get.context!,
+                                          builder: (BuildContext context) =>
+                                              chatCtrl.buildPopupDialog(
+                                                  context, widget.document!));
+                                    })
+                                : Container(),
               if (widget.document!["type"] == MessageType.gif.name)
                 GifLayout(
                     document: widget.document,

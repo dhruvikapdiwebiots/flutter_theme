@@ -188,7 +188,26 @@ class _SenderMessageState extends State<SenderMessage> {
                                       },
                                       document: widget.document,
                                     )
-                                  : Container(),
+                                  : (widget.document!["content"]
+                                              .contains(".jpg") ||
+                                          widget.document!["content"]
+                                              .contains(".png") ||
+                                          widget.document!["content"]
+                                              .contains(".heic") ||
+                                          widget.document!["content"]
+                                              .contains(".jpeg"))
+                                      ? DocImageLayout(
+                                          document: widget.document,
+                                          onLongPress: () {
+                                            showDialog(
+                                                context: Get.context!,
+                                                builder: (BuildContext
+                                                        context) =>
+                                                    chatCtrl.buildPopupDialog(
+                                                        context,
+                                                        widget.document!));
+                                          })
+                                      : Container(),
                     if (widget.document!["type"] == MessageType.gif.name)
                       GifLayout(
                         onLongPress: () {
