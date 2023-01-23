@@ -17,10 +17,11 @@ class CallList extends StatelessWidget {
             stream: FirebaseFirestore.instance
                 .collection("calls")
                 .doc(callListCtrl.user["id"])
-                .collection("calling")
+                .collection("collectionCallHistory")
                 .orderBy("timestamp", descending: true)
                 .snapshots(),
             builder: (context, snapshot) {
+              log("dsds : ${snapshot.hasData}");
               if (!snapshot.hasData) {
                 log("snapshot.hasData : ${snapshot.hasData}");
                 return Container(
@@ -35,53 +36,61 @@ class CallList extends StatelessWidget {
                       children: [
                         ListTile(
                           dense: true,
-                          contentPadding: EdgeInsets.symmetric(horizontal: Insets.i15,vertical: Insets.i4),
-                          leading: CachedNetworkImage(
-                              imageUrl:
-                                  "https://firebasestorage.googleapis.com/v0/b/chatter-e3d94.appspot.com/o/1674202399738?alt=media&token=8d63cac9-2096-4048-a3bd-7413664a61c8",
-                              imageBuilder: (context, imageProvider) =>
-                                  CircleAvatar(
-                                    backgroundColor: appCtrl.appTheme.contactBgGray,
-                                    radius: Sizes.s22,
-                                    backgroundImage: NetworkImage(
-                                        'https://firebasestorage.googleapis.com/v0/b/chatter-e3d94.appspot.com/o/1674202399738?alt=media&token=8d63cac9-2096-4048-a3bd-7413664a61c8'),
-                                  ),
-                              placeholder: (context, url) => Image.asset(
-                                    imageAssets.user,
-                                    color: appCtrl.appTheme.whiteColor,
-                                  ).paddingAll(Insets.i15).decorated(
-                                      color: appCtrl.appTheme.grey.withOpacity(.4),
-                                      shape: BoxShape.circle),
-                              errorWidget: (context, url, error) => Image.asset(
-                                    imageAssets.user,
-                                    color: appCtrl.appTheme.whiteColor,
-                                  ).paddingAll(Insets.i15).decorated(
-                                      color: appCtrl.appTheme.grey.withOpacity(.4),
-                                      shape: BoxShape.circle)),
-                          title: Text("Dhruvi",
-                              style: AppCss.poppinsblack14
-                                  .textColor(appCtrl.appTheme.blackColor)),
+                          contentPadding:const EdgeInsets.symmetric(horizontal: Insets.i15,vertical: Insets.i4),
+                          leading: ImageLayout(id: snapshot.data!.docs[index].data()["id"] == callListCtrl.user["id"] ? snapshot.data!.docs[index].data()["receiverId"]: snapshot.data!.docs[index].data()["id"]),
+                          title: StreamBuilder(
+                              stream: FirebaseFirestore.instance
+                                  .collection('users')
+                                  .where("id", isEqualTo:snapshot.data!.docs[index].data()["id"] == callListCtrl.user["id"] ? snapshot.data!.docs[index].data()["receiverId"]: snapshot.data!.docs[index].data()["id"]  )
+                                  .snapshots(),
+                              builder: (context, userSnapshot) {
+                                if(userSnapshot.hasData){
+                                  if (snapshot.data != null) {
+                                    return Text(userSnapshot.data!.docs[0].data()["name"],style: AppCss.poppinsSemiBold14.textColor(appCtrl.appTheme.blackColor),);
+                                  } else {
+                                    return Container();
+                                  }
+                                }else{
+                                  return Container();
+                                }
+                              }),
 
                           subtitle: Row(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.call_received,size: Sizes.s15,color: appCtrl.appTheme.redColor,),
+                              Icon(
+                                 snapshot.data!.docs[index].data()['type'] == 'inComing'
+                                    ? ( snapshot.data!.docs[index].data()['started'] == null
+                                    ? Icons.call_missed
+                                    : Icons.call_received)
+                                    : ( snapshot.data!.docs[index].data()['started'] == null
+                                    ? Icons.call_made_rounded
+                                    : Icons.call_made_rounded),
+                                size: 15,
+                                color:  snapshot.data!.docs[index].data()['type'] == 'inComing'
+                                    ? ( snapshot.data!.docs[index].data()['started'] == null
+                                    ? Colors.redAccent
+                                    : appCtrl.appTheme.greenColor)
+                                    : ( snapshot.data!.docs[index].data()['started'] == null
+                                    ? Colors.redAccent
+                                    : appCtrl.appTheme.greenColor),
+                              ),
                               const HSpace(Sizes.s5),
                               Text(
                                   DateFormat('MMMM dd, HH:mm a').format(
                                       DateTime.fromMillisecondsSinceEpoch(
-                                          int.parse("1674220689935"))),
+                                          int.parse(snapshot.data!.docs[index].data()["timestamp"].toString()))),
                                   style: AppCss.poppinsMedium12
                                       .textColor(appCtrl.appTheme.accent))
                             ]
                           ),
-                          trailing: Icon(Icons.call,color: appCtrl.appTheme.primary),
+                          trailing: Icon(snapshot.data!.docs[index].data()["isVideoCall"] ?Icons.video_camera_back : Icons.call,color: appCtrl.appTheme.primary),
                         ),
                       ],
                     );
                   },
-                  itemCount: 10,
+                  itemCount: snapshot.data!.docs.length,
                 );
               }
             }),

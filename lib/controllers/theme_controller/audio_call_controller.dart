@@ -89,15 +89,27 @@ class AudioCallController extends GetxController {
             ? call!.receiverId
             : call!.callerId)
         .collection("collectionCallHistory")
-        .doc("callData")
+        .doc(call!.timestamp.toString())
         .snapshots();
     update();
-
+    initAgora();
     super.onReady();
   }
 
   Future<bool> onWillPopNEw() {
     return Future.value(false);
+  }
+
+  startTimerNow() {
+    timerStream = stopWatchStream();
+    timerSubscription = timerStream!.listen((int newTick) {
+      hoursStr =
+          ((newTick / (60 * 60)) % 60).floor().toString().padLeft(2, '0');
+      minutesStr = ((newTick / 60) % 60).floor().toString().padLeft(2, '0');
+      secondsStr = (newTick % 60).floor().toString().padLeft(2, '0');
+      update();
+      flutterLocalNotificationsPlugin!.cancelAll();
+    });
   }
 
   Future<void> initAgora() async {
@@ -126,7 +138,7 @@ class AudioCallController extends GetxController {
                 .collection("calls")
                 .doc(call!.callerId)
                 .collection("collectionCallHistory")
-                .doc("callData")
+                .doc(call!.timestamp.toString())
                 .set({
               'type': 'OUTGOING',
               'isVideoCall': call!.isVideoCall,
@@ -145,7 +157,7 @@ class AudioCallController extends GetxController {
                 .collection("calls")
                 .doc(call!.receiverId)
                 .collection("collectionCallHistory")
-                .doc("callData")
+                .doc(call!.timestamp.toString())
                 .set({
               'type': 'INCOMING',
               'isVideoCall': call!.isVideoCall,
@@ -168,16 +180,16 @@ class AudioCallController extends GetxController {
         },
         onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
           remoteUidValue = remoteUid;
+          startTimerNow();
           update();
           debugPrint("remote user $remoteUidValue joined");
-          final info = 'userJoined: $remoteUidValue';
           if (userData["id"] == call!.callerId) {
             _stopCallingSound();
             FirebaseFirestore.instance
                 .collection("calls")
                 .doc(call!.callerId)
                 .collection("collectionCallHistory")
-                .doc("callData")
+                .doc(call!.timestamp.toString())
                 .set({
               'started': DateTime.now(),
               'status': 'pickedUp',
@@ -187,7 +199,7 @@ class AudioCallController extends GetxController {
                 .collection("calls")
                 .doc(call!.receiverId)
                 .collection("collectionCallHistory")
-                .doc("callData")
+                .doc(call!.timestamp.toString())
                 .set({
               'started': DateTime.now(),
               'status': 'pickedUp',
@@ -224,7 +236,7 @@ class AudioCallController extends GetxController {
                 .collection("calls")
                 .doc(call!.callerId)
                 .collection("collectionCallHistory")
-                .doc("callData")
+                .doc(call!.timestamp.toString())
                 .set({
               'status': 'ended',
               'ended': DateTime.now(),
@@ -233,7 +245,7 @@ class AudioCallController extends GetxController {
                 .collection("calls")
                 .doc(call!.receiverId)
                 .collection("collectionCallHistory")
-                .doc("callData")
+                .doc(call!.timestamp.toString())
                 .set({
               'status': 'ended',
               'ended': DateTime.now(),
@@ -254,7 +266,7 @@ class AudioCallController extends GetxController {
                 .collection("calls")
                 .doc(call!.callerId)
                 .collection("collectionCallHistory")
-                .doc("callData")
+                .doc(call!.timestamp.toString())
                 .set({
               'status': 'ended',
               'ended': DateTime.now(),
@@ -263,7 +275,7 @@ class AudioCallController extends GetxController {
                 .collection("calls")
                 .doc(call!.receiverId)
                 .collection("collectionCallHistory")
-                .doc("callData")
+                .doc(call!.timestamp.toString())
                 .set({
               'status': 'ended',
               'ended': DateTime.now(),
@@ -300,8 +312,6 @@ class AudioCallController extends GetxController {
     player!.stop();
   }
 
-
-
   void _onToggleMute() {
     muted = !muted;
     update();
@@ -324,72 +334,49 @@ class AudioCallController extends GetxController {
       alignment: Alignment.bottomCenter,
       padding: const EdgeInsets.symmetric(vertical: Insets.i35),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          SizedBox(
-              width: 65.67,
-              child: RawMaterialButton(
-                onPressed: _onToggleSpeaker,
-                shape: const CircleBorder(),
-                elevation: 2.0,
-                fillColor: isSpeaker
-                    ? appCtrl.appTheme.primary
-                    : appCtrl.appTheme.whiteColor,
-                padding: const EdgeInsets.all(12.0),
-                child: Icon(
-                  isSpeaker
-                      ? Icons.volume_mute_rounded
-                      : Icons.volume_off_sharp,
-                  color: isSpeaker
-                      ? appCtrl.appTheme.whiteColor
-                      : appCtrl.appTheme.primary,
-                  size: 22.0,
-                ),
-              )),
-          status != 'ended' && status != 'rejected'
-              ? SizedBox(
-                  width: 65.67,
-                  child: RawMaterialButton(
-                    onPressed: _onToggleMute,
-                    shape: const CircleBorder(),
-                    elevation: 2.0,
-                    fillColor: muted
-                        ? appCtrl.appTheme.primary
-                        : appCtrl.appTheme.whiteColor,
-                    padding: const EdgeInsets.all(12.0),
-                    child: Icon(
-                      muted ? Icons.mic_off : Icons.mic,
-                      color: muted
-                          ? appCtrl.appTheme.whiteColor
-                          : appCtrl.appTheme.primary,
-                      size: 22.0,
-                    ),
-                  ))
-              : const SizedBox(height: 42, width: 65.67),
-          SizedBox(
-            width: 65.67,
-            child: RawMaterialButton(
-              onPressed: () async {
-                isAlreadyEnded =
-                    status == 'ended' || status == 'rejected' ? true : false;
-                update();
-                _onCallEnd(Get.context!);
-              },
-              shape: const CircleBorder(),
-              elevation: 2.0,
-              fillColor: status == 'ended' || status == 'rejected'
-                  ? appCtrl.appTheme.blackColor
-                  : Colors.redAccent,
-              padding: const EdgeInsets.all(15.0),
-              child: Icon(
-                status == 'ended' || status == 'rejected'
-                    ? Icons.close
-                    : Icons.call,
-                color: appCtrl.appTheme.whiteColor,
-                size: 35.0,
-              ),
-            ),
+          Icon(
+            isSpeaker ? Icons.volume_mute_rounded : Icons.volume_off_sharp,
+            color: isSpeaker
+                ? appCtrl.appTheme.whiteColor
+                : appCtrl.appTheme.primary,
+            size: Sizes.s22,
           )
+              .paddingAll(Insets.i10)
+              .decorated(
+                  color: isSpeaker
+                      ? appCtrl.appTheme.primary
+                      : appCtrl.appTheme.whiteColor,
+                  shape: BoxShape.circle)
+              .inkWell(onTap: _onToggleSpeaker),
+          Icon(
+            status == 'ended' || status == 'rejected'
+                ? Icons.close
+                : Icons.call,
+            color: appCtrl.appTheme.whiteColor,
+            size: Sizes.s35,
+          )
+              .paddingAll(Insets.i15)
+              .decorated(
+                  color: appCtrl.appTheme.redColor, shape: BoxShape.circle)
+              .inkWell(onTap: () async {
+            isAlreadyEnded =
+                status == 'ended' || status == 'rejected' ? true : false;
+            update();
+            _onCallEnd(Get.context!);
+          }),
+          status != 'ended' && status != 'rejected'
+              ? Icon(
+                  muted ? Icons.mic_off : Icons.mic,
+                  color: appCtrl.appTheme.whiteColor,
+                  size: 22.0,
+                )
+                  .paddingAll(Insets.i10)
+                  .decorated(
+                      color: appCtrl.appTheme.primary, shape: BoxShape.circle)
+                  .inkWell(onTap: _onToggleMute)
+              : const SizedBox(height: 42, width: 65.67),
         ],
       ),
     );
@@ -397,16 +384,40 @@ class AudioCallController extends GetxController {
 
   Future<bool> endCall({required Call call}) async {
     try {
-      log("endCallDelete");
-
-      FirebaseFirestore.instance
+      await FirebaseFirestore.instance
           .collection("calls")
           .doc(call.callerId)
-          .delete();
-      FirebaseFirestore.instance
+          .collection("calling")
+          .where("callerId", isEqualTo: call.callerId)
+          .limit(1)
+          .get()
+          .then((value) {
+        if (value.docs.isNotEmpty) {
+          FirebaseFirestore.instance
+              .collection("calls")
+              .doc(call.callerId)
+              .collection("calling")
+              .doc(value.docs[0].id)
+              .delete();
+        }
+      });
+      await FirebaseFirestore.instance
           .collection("calls")
           .doc(call.receiverId)
-          .delete();
+          .collection("calling")
+          .where("receiverId", isEqualTo: call.receiverId)
+          .limit(1)
+          .get()
+          .then((value) {
+        if (value.docs.isNotEmpty) {
+          FirebaseFirestore.instance
+              .collection("calls")
+              .doc(call.receiverId)
+              .collection("calling")
+              .doc(value.docs[0].id)
+              .delete();
+        }
+      });
       return true;
     } catch (e) {
       log("error : $e");
@@ -419,54 +430,66 @@ class AudioCallController extends GetxController {
     Provider.of<FirestoreDataProviderCALLHISTORY>(context, listen: false);*/
     _stopCallingSound();
     log("endCall1");
-    await endCall(call: call!).then((value) async {
-      log("value : $value");
-      DateTime now = DateTime.now();
-      FirebaseFirestore.instance
+    DateTime now = DateTime.now();
+    if (remoteUId != null) {
+      await FirebaseFirestore.instance
           .collection("calls")
           .doc(call!.callerId)
           .collection("collectionCallHistory")
-          .doc("callData")
+          .doc(call!.timestamp.toString())
           .set({'status': 'ended', 'ended': now}, SetOptions(merge: true));
-      FirebaseFirestore.instance
+      await FirebaseFirestore.instance
           .collection("calls")
           .doc(call!.receiverId)
           .collection("collectionCallHistory")
-          .doc("callData")
+          .doc(call!.timestamp.toString())
           .set({'status': 'ended', 'ended': now}, SetOptions(merge: true));
-    });
-
+    } else {
+      await endCall(call: call!).then((value) async {
+        FirebaseFirestore.instance
+            .collection("calls")
+            .doc(call!.callerId)
+            .collection("collectionCallHistory")
+            .doc(call!.timestamp.toString())
+            .set({
+          'type': 'outGoing',
+          'isVideoCall': call!.isVideoCall,
+          'id': call!.receiverId,
+          'timestamp': call!.timestamp,
+          'dp': call!.receiverPic,
+          'isMuted': false,
+          'receiverId': call!.receiverId,
+          'isJoin': false,
+          'started': null,
+          'callerName': call!.callerName,
+          'status': 'ended',
+          'ended': DateTime.now(),
+        }, SetOptions(merge: true));
+        FirebaseFirestore.instance
+            .collection("calls")
+            .doc(call!.receiverId)
+            .collection("collectionCallHistory")
+            .doc(call!.timestamp.toString())
+            .set({
+          'type': 'inComing',
+          'isVideoCall': call!.isVideoCall,
+          'id': call!.callerId,
+          'timestamp': call!.timestamp,
+          'dp': call!.callerPic,
+          'isMuted': false,
+          'receiverId': call!.receiverId,
+          'isJoin': true,
+          'started': null,
+          'callerName': call!.callerName,
+          'status': 'ended',
+          'ended': now
+        }, SetOptions(merge: true));
+      });
+    }
     update();
     log("endCall");
     Wakelock.disable();
     Get.back();
-  }
-
-  Future<void> initialize() async {
-    await _initAgoraRtcEngine();
-
-    VideoEncoderConfiguration configuration = const VideoEncoderConfiguration();
-    const VideoEncoderConfiguration(
-      dimensions: VideoDimensions(width: 640, height: 360),
-      frameRate: 15,
-      bitrate: 0,
-    );
-    await engine.setVideoEncoderConfiguration(configuration);
-    await engine.joinChannel(
-      token:
-          "007eJxTYMi4t6KMs+bwpiPqK3tecc7auXVb88XGiL8aMlllwRkePAkKDEaWaRYWaaaGFqnmFiaGyYlJZqmpaebJJinJySZJZmZpxoePJTcEMjKsPjSNkZEBAkF8Hoa0nNKSktSikIzU3FQGBgDF1yRn",
-      channelId: "flutterTheme",
-      uid: userData["id"],
-      options: const ChannelMediaOptions(),
-    );
-  }
-
-  Future<void> _initAgoraRtcEngine() async {
-    engine = createAgoraRtcEngine();
-    await engine.initialize(const RtcEngineContext(
-      appId: "29f88f518e7841cab6eef7c4dcc4b66f",
-      channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
-    ));
   }
 
   Future<void> playCallingTone() async {
@@ -488,288 +511,83 @@ class AudioCallController extends GetxController {
     return Container(
       alignment: Alignment.center,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            alignment: Alignment.center,
-            margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-            color:appCtrl.appTheme.primary,
-            height: h / 4,
-            width: w,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-
-                // SizedBox(height: h / 35),
-                SizedBox(
-                  height: h / 9,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 7),
-                      SizedBox(
-                        width: w / 1.1,
-                        child: Text(
-                          call!.callerId == userData["id"]
-                              ? call!.receiverName!
-                              : call!.callerName!,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            color: appCtrl.appTheme.whiteColor,
-                            fontSize: 27,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 7),
-                      Text(
-                        call!.callerId == userData["id"]
-                            ? call!.receiverId!
-                            : call!.callerId!,
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          color: appCtrl.appTheme.whiteColor.withOpacity(0.34),
-                          fontSize: 15,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                // SizedBox(height: h / 25),
-                status == 'pickedup'
-                    ? Text(
-                  "$hoursStr:$minutesStr:$secondsStr",
-                  style: TextStyle(
-                      fontSize: 20.0,
-                      color:  Colors.green[300],
-                      fontWeight: FontWeight.w600),
-                )
-                    : Text(
-                  status == 'pickedUp'
-                      ? 'picked'
-                      : status == 'noNetwork'
-                      ? 'connecting'
-                      : status == 'ringing' || status == 'missedCall'
-                      ? 'calling'
-                      : status == 'calling'
-                      ?call!.receiverId ==
-                      userData["id"]
-                      ? 'connecting'
-                      : 'calling'
-                      : status == 'pickedUp'
-                      ?  'onCall'
-                      : status == 'ended'
-                      ? 'callEnded'
-                      : status == 'rejected'
-                      ? 'callRejected'
-                      : 'plsWait',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: status == 'pickedUp'
-                        ? Colors.green
-                        :  appCtrl.appTheme.whiteColor,
-                    fontSize: 18,
-                  ),
-                ),
-                const SizedBox(height: 16),
-              ],
-            ),
-          ),
-          Stack(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              call!.callerId == userData['id']
-                  ? call!.receiverPic == null ||
-                  call!.receiverPic == '' ||
-                  status == 'ended' ||
-                  status == 'rejected'
-                  ? Container(
-                height: w + (w / 11),
-                width: w,
-                color: Colors.white12,
-                child: Icon(
-                  status == 'ended'
-                      ? Icons.person_off
-                      : status == 'rejected'
-                      ? Icons.call_end_rounded
-                      : Icons.person,
-                  size: 140,
-                  color: Colors.green,
-                ),
-              )
-                  : Stack(
-                children: [
-                  Container(
-                      height: w + (w / 11),
-                      width: w,
-                      color: Colors.white12,
-                      child: CachedNetworkImage(
-                        imageUrl: call!.callerId ==
-                            userData["id"]
-                            ? call!.receiverPic!
-                            : call!.callerPic!,
-                        fit: BoxFit.cover,
-                        height: w + (w / 11),
-                        width: w,
-                        placeholder: (context, url) => Center(
-                            child: Container(
-                              height: w + (w / 11),
-                              width: w,
-                              color: Colors.white12,
-                              child: Icon(
-                                status == 'ended'
-                                    ? Icons.person_off
-                                    : status == 'rejected'
-                                    ? Icons.call_end_rounded
-                                    : Icons.person,
-                                size: 140,
-                                color: Colors.green,
-                              ),
-                            )),
-                        errorWidget: (context, url, error) =>
-                            Container(
-                              height: w + (w / 11),
-                              width: w,
-                              color: Colors.white12,
-                              child: Icon(
-                                status == 'ended'
-                                    ? Icons.person_off
-                                    : status == 'rejected'
-                                    ? Icons.call_end_rounded
-                                    : Icons.person,
-                                size: 140,
-                                color: Colors.green,
-                              ),
-                            ),
-                      )),
-                  Container(
-                    height: w + (w / 11),
-                    width: w,
-                    color: Colors.black.withOpacity(0.18),
-                  ),
-                ],
-              )
-                  : call!.callerPic == null ||
-                  call!.callerPic == '' ||
-                  status == 'ended' ||
-                  status == 'rejected'
-                  ? Container(
-                height: w + (w / 11),
-                width: w,
-                color: Colors.white12,
-                child: Icon(
-                  status == 'ended'
-                      ? Icons.person_off
-                      : status == 'rejected'
-                      ? Icons.call_end_rounded
-                      : Icons.person,
-                  size: 140,
-                  color: Colors.green,
-                ),
-              )
-                  : Stack(
-                children: [
-                  Container(
-                      height: w + (w / 11),
-                      width: w,
-
-                      child: CachedNetworkImage(
-                        imageUrl: call!.callerId ==
-                            userData["id"]
-                            ? call!.receiverPic!
-                            : call!.callerPic!,
-                        fit: BoxFit.cover,
-                        height: w + (w / 11),
-                        width: w,
-                        placeholder: (context, url) => Center(
-                            child: Container(
-                              height: w + (w / 11),
-                              width: w,
-                              color: Colors.white12,
-                              child: Icon(
-                                status == 'ended'
-                                    ? Icons.person_off
-                                    : status == 'rejected'
-                                    ? Icons.call_end_rounded
-                                    : Icons.person,
-                                size: 140,
-                                color: Colors.green,
-                              ),
-                            )),
-                        errorWidget: (context, url, error) =>
-                            Container(
-                              height: w + (w / 11),
-                              width: w,
-                              color: Colors.white12,
-                              child: Icon(
-                                status == 'ended'
-                                    ? Icons.person_off
-                                    : status == 'rejected'
-                                    ? Icons.call_end_rounded
-                                    : Icons.person,
-                                size: 140,
-                                color: Colors.green,
-                              ),
-                            ),
-                      )),
-                  Container(
-                    height: w + (w / 11),
-                    width: w,
-                    color: Colors.black.withOpacity(0.18),
-                  ),
-                ],
-              ),
-              // call!.callerId == curr!entuseruid
-              //     ? call!.receiverPic == null ||
-              //             call!.receiverPic == '' ||
-              //             status == 'ended' ||
-              //             status == 'rejected'
-              //         ? SizedBox()
-              //         : Container(
-              //             height: w + (w / 11),
-              //             width: w,
-              //             color: Colors.black.withOpacity(0.3),
-              //           )
-              //     : call!.callerPic == null ||
-              //             call!.callerPic == '' ||
-              //             status == 'ended' ||
-              //             status == 'rejected'
-              //         ? SizedBox()
-              //         : Container(
-              //             height: w + (w / 11),
-              //             width: w,
-              //             color: Colors.black.withOpacity(0.3),
-              //           ),
-              Positioned(
-                  bottom: 20,
-                  child: Container(
-                    width: w,
-                    height: 20,
-                    child: Center(
-                      child: status == 'pickedUp'
-                          ? isPeerMuted == true
-                          ? Text(
-                        'muted',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color: Colors.yellow,
-                          fontSize: 16,
+              // SizedBox(height: h / 35),
+              SizedBox(
+                height: Sizes.s150,
+                child: CachedNetworkImage(
+                    imageUrl: call!.receiverPic!,
+                    imageBuilder: (context, imageProvider) => CircleAvatar(
+                          backgroundColor: const Color(0xffE6E6E6),
+                          radius: Sizes.s50,
+                          backgroundImage: NetworkImage(call!.receiverPic!),
                         ),
-                      )
-                          : const SizedBox(
-                        height: 0,
-                      )
-                          : const SizedBox(
-                        height: 0,
-                      ),
-                    ),
-                  )),
+                    placeholder: (context, url) => Image.asset(
+                          imageAssets.user,
+                          color: appCtrl.appTheme.whiteColor,
+                        ).paddingAll(Insets.i15).decorated(
+                            color: appCtrl.appTheme.grey.withOpacity(.4),
+                            shape: BoxShape.circle),
+                    errorWidget: (context, url, error) => Image.asset(
+                          imageAssets.user,
+                          color: appCtrl.appTheme.whiteColor,
+                        ).paddingAll(Insets.i15).decorated(
+                            color: appCtrl.appTheme.grey.withOpacity(.4),
+                            shape: BoxShape.circle)),
+              ),
+
+              Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                const SizedBox(height: 7),
+                SizedBox(
+                    width: w / 1.1,
+                    child: Text(
+                        call!.callerId == userData["id"]
+                            ? call!.receiverName!
+                            : call!.callerName!,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: AppCss.poppinsblack28
+                            .textColor(appCtrl.appTheme.blackColor)))
+              ]),
+              // SizedBox(height: h / 25),
+              const VSpace(Sizes.s20),
+              status == 'pickedUp'
+                  ? Text(
+                      "$hoursStr:$minutesStr:$secondsStr",
+                      style: TextStyle(
+                          fontSize: 20.0,
+                          color: appCtrl.appTheme.greenColor.withOpacity(.3),
+                          fontWeight: FontWeight.w600),
+                    )
+                  : Text(
+                      status == 'pickedUp'
+                          ? fonts.picked.tr
+                          : status == 'noNetwork'
+                              ? fonts.connecting.tr
+                              : status == 'ringing' || status == 'missedCall'
+                                  ? fonts.calling.tr
+                                  : status == 'calling'
+                                      ? call!.receiverId == userData["id"]
+                                          ? fonts.connecting.tr
+                                          : fonts.calling.tr
+                                      : status == 'pickedUp'
+                                          ? fonts.onCall.tr
+                                          : status == 'ended'
+                                              ? fonts.callEnded.tr
+                                              : status == 'rejected'
+                                                  ? fonts.callRejected.tr
+                                                  : fonts.plsWait.tr,
+                      style: AppCss.poppinsMedium14
+                          .textColor(appCtrl.appTheme.blackColor)),
+              const SizedBox(height: 16),
             ],
-          ),
-          SizedBox(height: h / 6),
+          ).marginSymmetric(vertical: Insets.i15),
         ],
       ),
     );

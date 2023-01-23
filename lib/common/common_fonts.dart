@@ -3,12 +3,12 @@ import 'package:flutter_theme/config.dart';
 class Fonts{
   final gifAPI = "aJToxhjbwRwVxkxKfAk4xQVXygh8b2W6";
   final appId = "29f88f518e7841cab6eef7c4dcc4b66f";
-  final token = "007eJxTYMi4t6KMs+bwpiPqK3tecc7auXVb88XGiL8aMlllwRkePAkKDEaWaRYWaaaGFqnmFiaGyYlJZqmpaebJJinJySZJZmZpxoePJTcEMjKsPjSNkZEBAkF8Hoa0nNKSktSikIzU3FQGBgDF1yRn";
+  final token = "007eJxTYPjmJ5Meern0UlIGO0tL9Pojfqv2nelVZVyTrHtMOLD7zysFBiPLNAuLNFNDi1RzCxPD5MQks9TUNPNkk5TkZJMkM7O0aJlzyQ2BjAyZK16xMjJAIIjPw5CWU1pSkloUkpGam8rAAABkriNp";
   final channel = "flutterTheme";
   final intro1 = "intro1";
   final intro2 = "intro2";
   final intro3 = "intro3";
-  final chatter = "chatter";
+  final chatify = "Chatify";
   final introDesc1 = "introDesc1";
   final introDesc2 = "introDesc2";
   final introDesc3 = "introDesc3";
@@ -91,5 +91,14 @@ class Fonts{
   final download = "download";
   final message = "message";
   final addContact = "addContact";
+  final inComingVideo = "inComingVideo";
+  final inComingAudio = "inComingAudio";
+  final picked = "picked";
+  final connecting = "connecting";
+  final calling = "calling";
+  final onCall = "onCall";
+  final callEnded = "callEnded";
+  final callRejected = "callRejected";
+  final plsWait = "plsWait";
   String unblockUser(val) => "unblockUser".trParams({'pName':val});
 }

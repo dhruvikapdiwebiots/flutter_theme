@@ -52,7 +52,9 @@ class _ChatState extends State<Chat>
                         : false,
                     callTap: () async{
                       await chatCtrl.permissionHandelCtrl.getCameraMicrophonePermissions().then((value) {
-                        if(value == true){}
+                        if(value == true){
+                          chatCtrl.audioVideoCallTap(false);
+                        }
                       });
                     },
                     videoTap: ()async{

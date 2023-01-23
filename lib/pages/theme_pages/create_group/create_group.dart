@@ -1,15 +1,15 @@
 import '../../../config.dart';
 
 class GroupChat extends StatelessWidget {
-  final groupChatCtrl = Get.find<CreateGroupController>();
+  final groupChatCtrl = Get.isRegistered<CreateGroupController>()? Get.find<CreateGroupController>() : Get.put(CreateGroupController());
 
   GroupChat({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<CreateGroupController>(builder: (_) {
-      groupChatCtrl.isGroup = Get.arguments;
-      groupChatCtrl.update();
+      groupChatCtrl.isGroup = Get.arguments ?? false;
+
       return  PickupLayout(
         scaffold: WillPopScope(
           onWillPop: () async {

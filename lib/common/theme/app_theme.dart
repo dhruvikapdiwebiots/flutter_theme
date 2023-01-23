@@ -19,6 +19,7 @@ class AppTheme {
   Color chatBgColor;
   Color darkRedColor;
   Color lightPrimary;
+  Color greenColor;
 
   //Extra Colors
   Color grey;
@@ -50,6 +51,7 @@ class AppTheme {
     required this.accent,
     required this.darkRedColor,
     required this.lightPrimary,
+    required this.greenColor,
     //Extra
     required this.grey,
     required this.gray,
@@ -106,6 +108,7 @@ class AppTheme {
           lightDividerColor: const Color(0xFF263238),
           lightGreyColor: const Color(0xFFF5F7FB),
           lightGrey1Color: const Color(0xFFEBF0F8),
+          greenColor: Colors.green,
         );
 
       case ThemeType.dark:
@@ -138,6 +141,7 @@ class AppTheme {
           lightDividerColor: const Color(0xFF263238),
           lightGreyColor: const Color(0xFFF5F7FB),
           lightGrey1Color: const Color(0xFFEBF0F8),
+          greenColor: Colors.green,
         );
     }
   }

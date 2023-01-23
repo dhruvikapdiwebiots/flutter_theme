@@ -4,16 +4,36 @@
 
 import '../../../config.dart';
 
-class AudioCall extends StatelessWidget {
+class AudioCall extends StatefulWidget {
+
+   const AudioCall({Key? key}) : super(key: key);
+
+  @override
+  State<AudioCall> createState() => _AudioCallState();
+}
+
+class _AudioCallState extends State<AudioCall> {
   final audioCallCtrl = Get.put(AudioCallController());
-   AudioCall({Key? key}) : super(key: key);
+
+
+  @override
+  void initState() {
+    super.initState();
+    var data = Get.arguments;
+    audioCallCtrl.channelName = data["channelName"];
+    audioCallCtrl.call = data["call"];
+    audioCallCtrl.userData = appCtrl.storage.read(session.user);
+    setState(() {});
+
+    audioCallCtrl.initAgora();
+  }
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AudioCallController>(
       builder: (context) {
         return Scaffold(
-            backgroundColor:appCtrl.appTheme.primary,
+            backgroundColor:appCtrl.appTheme.whiteColor,
             body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
               stream:
               audioCallCtrl.stream as Stream<DocumentSnapshot<Map<String, dynamic>>>?,
@@ -42,14 +62,14 @@ class AudioCall extends StatelessWidget {
                           // _viewRows(),
                           audioCallCtrl.audioScreenForPORTRAIT(
                               context: context,
-                              status: snapshot.data!.data()!["STATUS"],
-                              isPeerMuted: snapshot.data!.data()!["ISMUTED"]),
+                              status: snapshot.data!.data()!["status"],
+                              isPeerMuted: snapshot.data!.data()!["isMuted"]),
 
                           audioCallCtrl.toolbar(
-                              snapshot.data!.data()!["STATUS"] == 'pickedup'
+                              snapshot.data!.data()!["status"] == 'pickedUp'
                                   ? true
                                   : false,
-                              snapshot.data!.data()!["STATUS"]),
+                              snapshot.data!.data()!["status"]),
                         ],
                       ),
                     );

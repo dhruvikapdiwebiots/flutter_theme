@@ -120,8 +120,6 @@ class ChatMessageApi {
           channelId: channelId,
           isVideoCall: isVideoCall);
       ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
-      print("role : $call");
-
       await FirebaseFirestore.instance
           .collection("calls")
           .doc(call.callerId)
@@ -140,7 +138,7 @@ class ChatMessageApi {
         "channelId": channelId,
         "isVideoCall": isVideoCall,
       }).then((value) async {
-        print("ddssdf1");
+
         await FirebaseFirestore.instance
             .collection("calls")
             .doc(call.receiverId)

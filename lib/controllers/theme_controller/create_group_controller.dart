@@ -29,7 +29,7 @@ dynamic user;
     update();
     contacts = await permissionHandelCtrl.getContact();
      user = appCtrl.storage.read(session.user) ?? "";
-
+    log("contacts : ${contacts!.length}");
     update();
     if(user != "") {
       getFirebaseContact(contacts!);

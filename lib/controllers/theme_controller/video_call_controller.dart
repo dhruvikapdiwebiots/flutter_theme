@@ -11,7 +11,7 @@ import '../../config.dart';
 class VideoCallController extends GetxController {
   String? channelName;
   Call? call;
-  bool localUserJoined = false;
+  bool localUserJoined = false,isFullScreen = false;
   bool isSpeaker = true, switchCamera = false;
   late RtcEngine engine;
   final _infoStrings = <String>[];
@@ -87,10 +87,10 @@ class VideoCallController extends GetxController {
         .collection("calls")
         .doc(userData["id"])
         .collection("collectionCallHistory")
-        .doc("callData")
+        .doc(call!.timestamp.toString())
         .snapshots();
     update();
-
+    log("stream : $stream");
     super.onReady();
   }
 
@@ -124,9 +124,9 @@ class VideoCallController extends GetxController {
                 .collection("calls")
                 .doc(call!.callerId)
                 .collection("collectionCallHistory")
-                .doc("callData")
+                .doc(call!.timestamp.toString())
                 .set({
-              'type': 'OUTGOING',
+              'type': 'outGoing',
               'isVideoCall': call!.isVideoCall,
               'id': call!.receiverId,
               'timestamp': call!.timestamp,
@@ -143,9 +143,9 @@ class VideoCallController extends GetxController {
                 .collection("calls")
                 .doc(call!.receiverId)
                 .collection("collectionCallHistory")
-                .doc("callData")
+                .doc(call!.timestamp.toString())
                 .set({
-              'type': 'INCOMING',
+              'type': 'inComing',
               'isVideoCall': call!.isVideoCall,
               'id': call!.callerId,
               'timestamp': call!.timestamp,
@@ -166,6 +166,7 @@ class VideoCallController extends GetxController {
         },
         onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
           remoteUidValue = remoteUid;
+          log("remoteUidValue : $remoteUidValue");
           update();
           debugPrint("remote user $remoteUidValue joined");
           final info = 'userJoined: $remoteUidValue';
@@ -175,7 +176,7 @@ class VideoCallController extends GetxController {
                 .collection("calls")
                 .doc(call!.callerId)
                 .collection("collectionCallHistory")
-                .doc("callData")
+                .doc(call!.timestamp.toString())
                 .set({
               'started': DateTime.now(),
               'status': 'pickedUp',
@@ -185,10 +186,10 @@ class VideoCallController extends GetxController {
                 .collection("calls")
                 .doc(call!.receiverId)
                 .collection("collectionCallHistory")
-                .doc("callData")
+                .doc(call!.timestamp.toString())
                 .set({
               'started': DateTime.now(),
-              'status': 'pickedup',
+              'status': 'pickedUp',
             }, SetOptions(merge: true));
             FirebaseFirestore.instance
                 .collection("calls")
@@ -211,9 +212,6 @@ class VideoCallController extends GetxController {
             UserOfflineReasonType reason) {
           debugPrint("remote user $remoteUid left channel");
           remoteUid = 0;
-
-          final info = 'userOffline: $remoteUid';
-          _infoStrings.add(info);
           _users.remove(remoteUid);
           update();
           _stopCallingSound();
@@ -222,7 +220,7 @@ class VideoCallController extends GetxController {
                 .collection("calls")
                 .doc(call!.callerId)
                 .collection("collectionCallHistory")
-                .doc("callData")
+                .doc(call!.timestamp.toString())
                 .set({
               'status': 'ended',
               'ended': DateTime.now(),
@@ -231,7 +229,7 @@ class VideoCallController extends GetxController {
                 .collection("calls")
                 .doc(call!.receiverId)
                 .collection("collectionCallHistory")
-                .doc("callData")
+                .doc(call!.timestamp.toString())
                 .set({
               'status': 'ended',
               'ended': DateTime.now(),
@@ -244,15 +242,20 @@ class VideoCallController extends GetxController {
         },
         onLeaveChannel: (connection, stats) {
           _stopCallingSound();
-          _infoStrings.add('onLeaveChannel');
+          remoteUId = null;
           _users.clear();
+          _dispose();
           update();
           if (isalreadyendedcall == false) {
             FirebaseFirestore.instance
                 .collection("calls")
                 .doc(call!.callerId)
+                .collection("collectionCallHistory").add({});
+            FirebaseFirestore.instance
+                .collection("calls")
+                .doc(call!.callerId)
                 .collection("collectionCallHistory")
-                .doc("callData")
+                .doc(call!.timestamp.toString())
                 .set({
               'status': 'ended',
               'ended': DateTime.now(),
@@ -261,7 +264,7 @@ class VideoCallController extends GetxController {
                 .collection("calls")
                 .doc(call!.receiverId)
                 .collection("collectionCallHistory")
-                .doc("callData")
+                .doc(call!.timestamp.toString())
                 .set({
               'status': 'ended',
               'ended': DateTime.now(),
@@ -311,6 +314,19 @@ class VideoCallController extends GetxController {
         .doc(call!.timestamp.toString())
         .set({'isMuted': muted}, SetOptions(merge: true));
   }
+
+
+  @override
+  void dispose() {
+    super.dispose();
+    _dispose();
+  }
+
+  Future<void> _dispose() async {
+    await engine.leaveChannel();
+    await engine.release();
+  }
+
 
   Widget toolbar(
     bool isShowSpeaker,
@@ -421,14 +437,40 @@ class VideoCallController extends GetxController {
     try {
       log("endCallDelete");
 
-      FirebaseFirestore.instance
+      await FirebaseFirestore.instance
           .collection("calls")
           .doc(call.callerId)
-          .delete();
-      FirebaseFirestore.instance
+          .collection("calling")
+          .where("callerId", isEqualTo: call.callerId)
+          .limit(1)
+          .get()
+          .then((value) {
+        if (value.docs.isNotEmpty) {
+          FirebaseFirestore.instance
+              .collection("calls")
+              .doc(call.callerId)
+              .collection("calling")
+              .doc(value.docs[0].id)
+              .delete();
+        }
+      });
+      await FirebaseFirestore.instance
           .collection("calls")
           .doc(call.receiverId)
-          .delete();
+          .collection("calling")
+          .where("receiverId", isEqualTo: call.receiverId)
+          .limit(1)
+          .get()
+          .then((value) {
+        if (value.docs.isNotEmpty) {
+          FirebaseFirestore.instance
+              .collection("calls")
+              .doc(call.receiverId)
+              .collection("calling")
+              .doc(value.docs[0].id)
+              .delete();
+        }
+      });
       return true;
     } catch (e) {
       log("error : $e");
@@ -437,10 +479,7 @@ class VideoCallController extends GetxController {
   }
 
   void _onCallEnd(BuildContext context) async {
-    /*  final FirestoreDataProviderCALLHISTORY firestoreDataProviderCALLHISTORY =
-    Provider.of<FirestoreDataProviderCALLHISTORY>(context, listen: false);*/
-    _stopCallingSound();
-    log("endCall1");
+
     await endCall(call: call!).then((value) async {
       log("value : $value");
       DateTime now = DateTime.now();
@@ -448,45 +487,34 @@ class VideoCallController extends GetxController {
           .collection("calls")
           .doc(call!.callerId)
           .collection("collectionCallHistory")
-          .doc("callData")
+          .doc(call!.timestamp.toString())
           .set({'status': 'ended', 'ended': now}, SetOptions(merge: true));
       FirebaseFirestore.instance
           .collection("calls")
           .doc(call!.receiverId)
           .collection("collectionCallHistory")
-          .doc("callData")
-          .set({'status': 'ended', 'ended': now}, SetOptions(merge: true));
+          .doc(call!.timestamp.toString())
+          .set({'status': 'ended', 'ended': now}, SetOptions(merge: true)).then((value) {
+            remoteUId =null;
+            channelName="";
+            role = null;
+            update();
+      });
     });
 
     update();
+    _dispose();
+
     log("endCall");
     Wakelock.disable();
     Get.back();
-  }
 
-  Future<void> initialize() async {
-    await _initAgoraRtcEngine();
-
-    VideoEncoderConfiguration configuration = const VideoEncoderConfiguration();
-    const VideoEncoderConfiguration(
-      dimensions: VideoDimensions(width: 640, height: 360),
-      frameRate: 15,
-      bitrate: 0,
-    );
-    await engine.setVideoEncoderConfiguration(configuration);
-    await engine.joinChannel(
-      token:
-          "007eJxTYMi4t6KMs+bwpiPqK3tecc7auXVb88XGiL8aMlllwRkePAkKDEaWaRYWaaaGFqnmFiaGyYlJZqmpaebJJinJySZJZmZpxoePJTcEMjKsPjSNkZEBAkF8Hoa0nNKSktSikIzU3FQGBgDF1yRn",
-      channelId: "flutterTheme",
-      uid: userData["id"],
-      options: const ChannelMediaOptions(),
-    );
   }
 
   Future<void> _initAgoraRtcEngine() async {
     engine = createAgoraRtcEngine();
-    await engine.initialize(const RtcEngineContext(
-      appId: "29f88f518e7841cab6eef7c4dcc4b66f",
+    await engine.initialize(RtcEngineContext(
+      appId: fonts.appId,
       channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
     ));
   }

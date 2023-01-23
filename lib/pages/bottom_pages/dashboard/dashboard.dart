@@ -5,7 +5,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_theme/config.dart';
-import 'package:flutter_theme/pages/theme_pages/pick_up_call/pick_up_call.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 

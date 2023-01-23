@@ -12,7 +12,7 @@ class CommonImage extends StatelessWidget {
             CircleAvatar(
               backgroundColor:
               const Color(0xffE6E6E6),
-              radius: Sizes.s28,
+              radius: Sizes.s24,
               backgroundImage: NetworkImage(
                   '$image'),
             ),

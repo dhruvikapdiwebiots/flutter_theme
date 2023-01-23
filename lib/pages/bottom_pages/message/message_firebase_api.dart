@@ -6,9 +6,6 @@ import '../../../config.dart';
 class MessageFirebaseApi {
   String? currentUserId;
   final messageCtrl = Get.find<MessageController>();
-  final permissionHandelCtrl = Get.isRegistered<PermissionHandlerController>()
-      ? Get.find<PermissionHandlerController>()
-      : Get.put(PermissionHandlerController());
 
   //get contact list
   getContactList(List<Contact> contacts) async {
@@ -116,29 +113,6 @@ class MessageFirebaseApi {
     }
   }
 
-  //get all exist users
-  Future<List> getExistUser() async {
-    await permissionHandelCtrl.getCurrentPosition();
-    List contactList = [];
-    final msgList = await FirebaseFirestore.instance.collection("users").get();
-    List<Contact> contactUserList =  await permissionHandelCtrl.getContact();
-    for (final user in msgList.docs) {
-      for (final contact in contactUserList) {
-        if (contact.phones.isNotEmpty) {
-          String phone =
-              phoneNumberExtension(contact.phones[0].number.toString());
-          if (phone == user.data()["phone"]) {
-
-            final storeUser = appCtrl.storage.read(session.user);
-            if (user.data()["id"] != storeUser["id"]) {
-              contactList.add(user.data());
-            }
-          }
-        }
-      }
-    }
-    return contactList;
-  }
 
   //chat list
 

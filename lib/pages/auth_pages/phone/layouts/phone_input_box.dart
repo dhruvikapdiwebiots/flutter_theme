@@ -51,7 +51,7 @@ class PhoneInputBox extends StatelessWidget {
                           borderSide: BorderSide.none, gapPadding: 0),
                       onSaved: (PhoneNumber number) {}))),
           if (phoneCtrl.isCorrect)
-            const Icon(Icons.check_circle, color: Colors.green)
+             Icon(Icons.check_circle, color: appCtrl.appTheme.greenColor)
         ],
       ).paddingSymmetric(horizontal: Insets.i15).decorated(
           border: Border(

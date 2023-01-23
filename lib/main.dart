@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
       translations: Language(),
       locale: const Locale('en', 'US'),
       fallbackLocale: const Locale('en', 'US'), // tran
-      title: fonts.chatter.tr,
+      title: fonts.chatify.tr,
       home:  Splash(),
       getPages: appRoute.getPages,
       theme: AppTheme.fromType(ThemeType.light).themeData,

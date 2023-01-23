@@ -21,9 +21,6 @@ class DashboardController extends GetxController
   final contactCtrl = Get.isRegistered<ContactListController>()
       ? Get.find<ContactListController>()
       : Get.put(ContactListController());
-  final createGroupCtrl = Get.isRegistered<CreateGroupController>()
-      ? Get.find<CreateGroupController>()
-      : Get.put(CreateGroupController());
 
   final messageCtrl = Get.isRegistered<MessageController>()
       ? Get.find<MessageController>()
@@ -124,9 +121,7 @@ user = appCtrl.storage.read(session.user);
   @override
   void onInit() {
     // TODO: implement onInit
-    log("dsfs ");
     contactCtrl.onInit();
-    createGroupCtrl.onInit();
     messageCtrl.onReady();
     super.onInit();
   }

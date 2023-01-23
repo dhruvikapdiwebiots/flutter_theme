@@ -24,7 +24,7 @@ class Splash extends StatelessWidget {
                     const VSpace(Sizes.s15),
                     AnimatedTextKit(
                       animatedTexts: [
-                        TyperAnimatedText(fonts.chatter.tr.toUpperCase(),textStyle: AppCss.poppinsblack24.textColor(appCtrl.appTheme.txt))
+                        TyperAnimatedText(fonts.chatify.tr.toUpperCase(),textStyle: AppCss.poppinsblack24.textColor(appCtrl.appTheme.txt))
                       ],
                       onTap: () {
                       },

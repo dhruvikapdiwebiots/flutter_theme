@@ -39,7 +39,7 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher_foreground"
 
-        android:label="Flutter Theme">
+        android:label="Chatify">
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"

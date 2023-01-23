@@ -24,7 +24,7 @@ class DashboardBody extends StatelessWidget {
                   actions: const [
                     PopUpAction(),
                   ],
-                  title: Text(fonts.chatter.tr,
+                  title: Text(fonts.chatify.tr,
                       style: AppCss.poppinsblack16
                           .textColor(appCtrl.appTheme.white)),
                   bottom: const DashboardTab(),

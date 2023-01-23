@@ -21,10 +21,7 @@ class UserLastSeen extends StatelessWidget {
             builder: (context, snapshot) {
               if (snapshot.data != null) {
                 if (!snapshot.hasData) {
-                  return Center(
-                      child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                              appCtrl.appTheme.primary)));
+                  return Container();
                 } else {
                   chatCtrl.message = (snapshot.data!).docs;
 
@@ -41,10 +38,7 @@ class UserLastSeen extends StatelessWidget {
                   );
                 }
               } else {
-                return Center(
-                    child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                            appCtrl.appTheme.primary)));
+                return Container();
               }
             });
       }

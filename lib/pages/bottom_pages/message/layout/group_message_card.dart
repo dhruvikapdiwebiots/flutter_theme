@@ -1,4 +1,6 @@
 
+import 'dart:developer';
+
 import 'package:intl/intl.dart';
 
 import '../../../../config.dart';
@@ -28,6 +30,7 @@ class GroupMessageCard extends StatelessWidget {
                   .snapshots(),
               builder: (context, userSnapShot){
                 if(userSnapShot.hasData){
+                  log(" (snapshot.data!) : ${ (snapshot.data!)}");
                   return Container(
                     margin: const EdgeInsets.only(
                         bottom: Insets.i10, left: Insets.i5, right: Insets.i5),
