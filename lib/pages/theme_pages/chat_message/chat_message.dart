@@ -79,6 +79,7 @@ class _ChatState extends State<Chat>
                           const InputBox()
                         ]),
                         // Loading
+                  if(chatCtrl.isLoading)
                         const BuildLoader()
                       ])
                     : Center(

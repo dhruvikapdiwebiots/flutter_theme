@@ -37,7 +37,9 @@ class StatusFloatingButton extends StatelessWidget {
                       specialPickerType: SpecialPickerType.wechatMoment,
                     ),
                   );
-                  File? videoFile = await result![0].file;
+                  log("sta : ${result![0].file}");
+                  File? videoFile = await result[0].file;
+                  log("mpd : ${result[0].title!.contains("mp4")}");
                   statusCtrl.addStatus(
                       videoFile!,
                       result[0].title!.contains("mp4")

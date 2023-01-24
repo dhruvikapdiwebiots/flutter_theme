@@ -113,7 +113,7 @@ class BroadcastChatController extends GetxController {
   //share media
   shareMedia(BuildContext context) {
     showModalBottomSheet(
-        backgroundColor: Colors.transparent,
+        backgroundColor: appCtrl.appTheme.transparentColor,
         context: context,
         shape: const RoundedRectangleBorder(
             borderRadius:
@@ -192,13 +192,13 @@ class BroadcastChatController extends GetxController {
     showModalBottomSheet(
       context: Get.context!,
       isDismissible: false,
-      backgroundColor: Colors.transparent,
+      backgroundColor: appCtrl.appTheme.transparentColor,
       builder: (BuildContext bc) {
         return Container(
             margin: const EdgeInsets.all(10),
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(10)),
+                color: appCtrl.appTheme.whiteColor, borderRadius: BorderRadius.circular(10)),
             child: AudioRecordingPlugin(type: type, index: index));
       },
     );
@@ -341,7 +341,7 @@ class BroadcastChatController extends GetxController {
 // BUILD ITEM MESSAGE BOX FOR RECEIVER AND SENDER BOX DESIGN
   Widget buildItem(int index, document) {
     if (document['sender'] == userData["id"]) {
-      return BroadcastSender(
+      return SenderMessage(
         document: document,
         index: index,
       );

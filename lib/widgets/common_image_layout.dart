@@ -18,7 +18,7 @@ class CommonImage extends StatelessWidget {
             ),
         placeholder: (context, url) => Image.asset(
           imageAssets.user,
-          color: appCtrl.appTheme.whiteColor,
+          color: appCtrl.appTheme.blackColor,
         ).paddingAll(Insets.i15).decorated(
             color: appCtrl.appTheme.grey
                 .withOpacity(.4),
@@ -26,8 +26,9 @@ class CommonImage extends StatelessWidget {
         errorWidget: (context, url, error) =>
             Image.asset(
               imageAssets.user,
+              height: Sizes.s28,
               color: appCtrl.appTheme.whiteColor,
-            ).paddingAll(Insets.i15).decorated(
+            ).paddingAll(Insets.i10).decorated(
                 color: appCtrl.appTheme.grey
                     .withOpacity(.4),
                 shape: BoxShape.circle));

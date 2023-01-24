@@ -65,7 +65,7 @@ class Content extends StatelessWidget {
               )),
           CustomPaint(painter: CustomShape(appCtrl.appTheme.primary)),
         ],
-      ).marginSymmetric(vertical: Insets.i10,horizontal: Insets.i15)
+      ).marginSymmetric(vertical: Insets.i5,horizontal: Insets.i15)
     );
   }
 }

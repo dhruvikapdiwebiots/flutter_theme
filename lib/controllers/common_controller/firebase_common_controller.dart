@@ -1,4 +1,3 @@
-
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
@@ -10,17 +9,15 @@ class FirebaseCommonController extends GetxController {
   //online status update
   void setIsActive() async {
     var user = appCtrl.storage.read(session.user) ?? "";
-    if(user != "") {
-      await FirebaseFirestore.instance.collection("users")
+    if (user != "") {
+      await FirebaseFirestore.instance
+          .collection("users")
           .doc(user["id"])
           .update(
         {
           "status": "Online",
-          "isSeen":true,
-          "lastSeen": DateTime
-              .now()
-              .millisecondsSinceEpoch
-              .toString()
+          "isSeen": true,
+          "lastSeen": DateTime.now().millisecondsSinceEpoch.toString()
         },
       );
     }
@@ -29,16 +26,14 @@ class FirebaseCommonController extends GetxController {
   //last seen update
   void setLastSeen() async {
     var user = appCtrl.storage.read(session.user) ?? "";
-    if(user != "") {
-      await FirebaseFirestore.instance.collection("users")
+    if (user != "") {
+      await FirebaseFirestore.instance
+          .collection("users")
           .doc(user["id"])
           .update(
         {
           "status": "Offline",
-          "lastSeen": DateTime
-              .now()
-              .millisecondsSinceEpoch
-              .toString()
+          "lastSeen": DateTime.now().millisecondsSinceEpoch.toString()
         },
       );
     }
@@ -47,10 +42,7 @@ class FirebaseCommonController extends GetxController {
   //last seen update
   void groupTypingStatus(pId, documentId, isTyping) async {
     var user = appCtrl.storage.read(session.user);
-    await FirebaseFirestore.instance
-        .collection("groups")
-        .doc(pId)
-        .update(
+    await FirebaseFirestore.instance.collection("groups").doc(pId).update(
       {"status": isTyping ? "${user["name"]} is typing" : ""},
     );
   }
@@ -68,7 +60,7 @@ class FirebaseCommonController extends GetxController {
 
   statusDeleteAfter24Hours() async {
     var user = appCtrl.storage.read(session.user) ?? "";
-    if(user != "") {
+    if (user != "") {
       FirebaseFirestore.instance
           .collection('status')
           .where("uid", isEqualTo: user["id"])
@@ -88,15 +80,15 @@ class FirebaseCommonController extends GetxController {
               var statusesSnapshot = await FirebaseFirestore.instance
                   .collection('status')
                   .where(
-                'uid',
-                isEqualTo: user["id"],
-              )
+                    'uid',
+                    isEqualTo: user["id"],
+                  )
                   .get();
               await FirebaseFirestore.instance
                   .collection('status')
                   .doc(statusesSnapshot.docs[0].id)
                   .update(
-                  {'photoUrl': photoUrl.map((e) => e.toJson()).toList()});
+                      {'photoUrl': photoUrl.map((e) => e.toJson()).toList()});
             }
           });
         }
@@ -123,21 +115,33 @@ class FirebaseCommonController extends GetxController {
   }
 
   //send notification
-  Future<void> sendNotification({title, msg,token,image,dataTitle}) async {
-
+  Future<void> sendNotification(
+      {title,
+      msg,
+      token,
+      image,
+      dataTitle,
+      chatId,
+        groupId,
+      userContactModel,
+        pId,
+      pName}) async {
     log('token : $token');
 
     final data = {
-      "notification": {
-        "body": msg,
-        "title": title,
-        "imageUrl":image
-      },
+      "notification": {"body": msg, "title": dataTitle, },
       "priority": "high",
       "data": {
         "click_action": "FLUTTER_NOTIFICATION_CLICK",
         "alertMessage": 'true',
-        "title":dataTitle
+        "title": title,
+        "chatId": chatId,
+        "groupId":groupId,
+        "userContactModel": userContactModel,
+        "pId": pId,
+        "pName": pName,
+        "imageUrl": image,
+        "isGroup":false
       },
       "to": "$token"
     };
@@ -145,7 +149,7 @@ class FirebaseCommonController extends GetxController {
     final headers = {
       'content-type': 'application/json',
       'Authorization':
-      'key=AAAAgR3DDRg:APA91bHsQChfBTYROhYDv5mGtTRQ1GsEodC6Qx3sfu3wHzJkMW3eAkX061omjkiM3qRZOMqp32O0xIjOcbgPD72aRL6kbxr_KuvYNdefRyYFUFVPABUG5l8EyY6Zx3gxC1TaIsEmmhRt'
+          'key=AAAAgR3DDRg:APA91bHsQChfBTYROhYDv5mGtTRQ1GsEodC6Qx3sfu3wHzJkMW3eAkX061omjkiM3qRZOMqp32O0xIjOcbgPD72aRL6kbxr_KuvYNdefRyYFUFVPABUG5l8EyY6Zx3gxC1TaIsEmmhRt'
     };
 
     BaseOptions options = BaseOptions(
@@ -168,5 +172,4 @@ class FirebaseCommonController extends GetxController {
       log('exception $e');
     }
   }
-
 }

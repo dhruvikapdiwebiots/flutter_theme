@@ -39,6 +39,7 @@ class GroupFileRowList extends StatelessWidget {
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           IconCreation(
               onTap: () {
+                Get.back();
                 chatCtrl.audioRecording(context, "audio", 0);
               },
               icons: Icons.headset,

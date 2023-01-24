@@ -33,17 +33,9 @@ class GroupReceiverContent extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(document!['senderName'],
-                              style: AppCss.poppinsMedium14
-                                  .textColor(appCtrl.appTheme.blackColor)),
-                          if (snapshot.hasData)
-                            Text(snapshot.data!.data()!["phone"],
-                                style: AppCss.poppinsMedium12
-                                    .textColor(appCtrl.appTheme.primary)),
-                        ]),
+                Text(document!['senderName'],
+                    style: AppCss.poppinsMedium14
+                        .textColor(appCtrl.appTheme.blackColor)),
                     const VSpace(Sizes.s10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -52,7 +44,7 @@ class GroupReceiverContent extends StatelessWidget {
                         Expanded(
                           child: Text(document!['content'],
                               style: AppCss.poppinsMedium14
-                                  .textColor(Color(0xFF586780))
+                                  .textColor(const Color(0xFF586780))
                                   .letterSpace(.2)
                                   .textHeight(1.2)),
                         ),
@@ -61,7 +53,7 @@ class GroupReceiverContent extends StatelessWidget {
                               DateTime.fromMillisecondsSinceEpoch(
                                   int.parse(document!['timestamp']))),
                           style: AppCss.poppinsMedium12
-                              .textColor(Color(0xFF7C7C7C)),
+                              .textColor(const Color(0xFF7C7C7C)),
                         )
                       ]
                     )
@@ -76,7 +68,7 @@ class GroupReceiverContent extends StatelessWidget {
                 ),
               )
             ],
-          ).marginSymmetric(vertical: Insets.i5,horizontal: Insets.i15);
+          ).marginSymmetric(vertical: Insets.i5,horizontal: Insets.i5);
         });
   }
 }

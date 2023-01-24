@@ -61,7 +61,7 @@ dialogMessage(
     onConfirm: onConfirm,
     titleStyle: AppCss.poppinsSemiBold16,
     middleTextStyle: AppCss.poppinsRegular12,
-    confirmTextColor: Colors.white,
+    confirmTextColor: appCtrl.appTheme.whiteColor,
     //buttonColor: appColor.primary,
     onCancel: onCancel,
     barrierDismissible: barrierDismissible,
@@ -91,7 +91,7 @@ appUpdateDialog(
         ElevatedButton(
           onPressed: onCancel,
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+            backgroundColor: MaterialStateProperty.all<Color>(appCtrl.appTheme.whiteColor),
             elevation: MaterialStateProperty.resolveWith<double>(
               // As you said you dont need elevation. I'm returning 0 in both case
               (Set<MaterialState> states) {
@@ -104,13 +104,13 @@ appUpdateDialog(
           ),
           child: Text(
             trans('cancel'),
-            style: AppCss.poppinsSemiBold16.copyWith(color: Colors.grey),
+            style: AppCss.poppinsSemiBold16.copyWith(color: appCtrl.appTheme.grey),
           ),
         ),
       ElevatedButton(
         onPressed: onConfirm,
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+          backgroundColor: MaterialStateProperty.all<Color>(appCtrl.appTheme.whiteColor),
           elevation: MaterialStateProperty.resolveWith<double>(
             // As you said you don't need elevation. I'm returning 0 in both case
             (Set<MaterialState> states) {

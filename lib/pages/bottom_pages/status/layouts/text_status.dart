@@ -73,7 +73,7 @@ class _TextStatusState extends State<TextStatus> {
                       size: 30,
                       color: controller.text.isEmpty
                           ? Colors.white24
-                          : Colors.white),
+                          : appCtrl.appTheme.whiteColor),
                 )
               ],
             ),
@@ -94,8 +94,8 @@ class _TextStatusState extends State<TextStatus> {
                   },
                   maxLines: 7,
                   minLines: 1,
-                  style: const TextStyle(
-                      color: Colors.white,
+                  style:  TextStyle(
+                      color: appCtrl.appTheme.whiteColor,
                       fontSize: 23,
                       height: 1.6,
                       fontWeight: FontWeight.w700),

@@ -48,8 +48,8 @@ class MessageCardSubTitle extends StatelessWidget {
                   ? document!["lastMessage"]
                   .split("-BREAK-")[0]
                   : document!["lastMessage"],
-              style: AppCss.poppinsMedium14
-                  .textColor(appCtrl.appTheme.grey),
+              style: AppCss.poppinsMedium12
+                  .textColor(appCtrl.appTheme.grey).textHeight(1.2),
               overflow: TextOverflow.ellipsis),
         )
       ]),

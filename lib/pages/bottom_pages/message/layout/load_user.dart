@@ -19,7 +19,7 @@ class LoadUser extends StatelessWidget {
         return MessageCard(
           blockBy: blockBy,
           document: document,
-          currentUserId: currentUserId,
+          currentUserId: currentUserId
         );
       }
     } else if (document!["isGroup"] == true) {

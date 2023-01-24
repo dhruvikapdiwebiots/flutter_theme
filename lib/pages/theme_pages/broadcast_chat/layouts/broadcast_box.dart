@@ -13,7 +13,7 @@ class BroadcastInputBox extends StatelessWidget {
               border: Border(
                   top:
                       BorderSide(color: appCtrl.appTheme.darkGray, width: 0.5)),
-              color: Colors.white),
+              color: appCtrl.appTheme.whiteColor),
           child: Row(children: <Widget>[
             const HSpace(Sizes.s15),
             Flexible(
@@ -40,7 +40,7 @@ class BroadcastInputBox extends StatelessWidget {
               color: appCtrl.appTheme.primary,
             ),
             Material(
-                color: Colors.white,
+                color: appCtrl.appTheme.whiteColor,
                 child: Container(
                     margin: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: IconButton(

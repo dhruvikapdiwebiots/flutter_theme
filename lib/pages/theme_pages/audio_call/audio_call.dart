@@ -2,6 +2,8 @@
 
 
 
+import 'dart:developer';
+
 import '../../../config.dart';
 
 class AudioCall extends StatefulWidget {
@@ -25,11 +27,12 @@ class _AudioCallState extends State<AudioCall> {
     audioCallCtrl.userData = appCtrl.storage.read(session.user);
     setState(() {});
 
-    audioCallCtrl.initAgora();
+    audioCallCtrl.onReady();
   }
 
   @override
   Widget build(BuildContext context) {
+
     return GetBuilder<AudioCallController>(
       builder: (context) {
         return Scaffold(
@@ -39,6 +42,7 @@ class _AudioCallState extends State<AudioCall> {
               audioCallCtrl.stream as Stream<DocumentSnapshot<Map<String, dynamic>>>?,
               builder: (BuildContext context, snapshot) {
                 if (snapshot.hasData) {
+                  print("snapshot.hasData : ${snapshot.data!.data()}");
                   if (snapshot.data!.data() == null ||
                       snapshot.data == null) {
 

@@ -69,7 +69,7 @@ class _StatusLayoutState extends State<StatusLayout> {
           ["statusType"] ==
               StatusType.text.name
               ? CircleAvatar(
-            radius: AppRadius.r30,
+            radius: AppRadius.r25,
             backgroundColor: Color(int.parse(
                 (widget.snapshot!.data!).docs[0]["photoUrl"]
                 [(widget.snapshot!.data!).docs[0]["photoUrl"].length - 1]
@@ -130,7 +130,7 @@ class _StatusLayoutState extends State<StatusLayout> {
                   ).paddingAll(Insets.i15).decorated(
                       color: appCtrl.appTheme.grey.withOpacity(.4),
                       shape: BoxShape.circle)) : CircleAvatar(
-              radius: 32,
+              radius: AppRadius.r22,
               child: AspectRatio(
                 aspectRatio: videoController!.value.aspectRatio,
                 // Use the VideoPlayer widget to display the video.

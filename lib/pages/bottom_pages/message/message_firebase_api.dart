@@ -5,7 +5,7 @@ import '../../../config.dart';
 
 class MessageFirebaseApi {
   String? currentUserId;
-  final messageCtrl = Get.find<MessageController>();
+  final messageCtrl = Get.isRegistered<MessageController>()? Get.find<MessageController>():Get.put(MessageController());
 
   //get contact list
   getContactList(List<Contact> contacts) async {

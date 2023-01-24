@@ -20,7 +20,7 @@ class _ChatCardState extends State<ChatCard> {
               .collection("users")
               .doc(messageCtrl.currentUserId)
               .collection("chats")
-              .orderBy("updateStamp", descending: true)
+              .orderBy("updateStamp", descending: true,).limit(15)
               .snapshots(),
           builder: (context, snapshot) {
             log("has : ${snapshot.hasData}");

@@ -70,10 +70,10 @@ class CallList extends StatelessWidget {
                                 size: 15,
                                 color:  snapshot.data!.docs[index].data()['type'] == 'inComing'
                                     ? ( snapshot.data!.docs[index].data()['started'] == null
-                                    ? Colors.redAccent
+                                    ? appCtrl.appTheme.redColor
                                     : appCtrl.appTheme.greenColor)
                                     : ( snapshot.data!.docs[index].data()['started'] == null
-                                    ? Colors.redAccent
+                                    ? appCtrl.appTheme.redColor
                                     : appCtrl.appTheme.greenColor),
                               ),
                               const HSpace(Sizes.s5),
@@ -87,6 +87,7 @@ class CallList extends StatelessWidget {
                           ),
                           trailing: Icon(snapshot.data!.docs[index].data()["isVideoCall"] ?Icons.video_camera_back : Icons.call,color: appCtrl.appTheme.primary),
                         ),
+                        Divider(color: appCtrl.appTheme.lightGrey1Color,endIndent: Insets.i15,indent: Insets.i15,height: 1,)
                       ],
                     );
                   },

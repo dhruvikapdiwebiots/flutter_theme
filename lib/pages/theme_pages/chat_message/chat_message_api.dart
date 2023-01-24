@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../../config.dart';
@@ -73,7 +74,12 @@ class ChatMessageApi {
   }
 
   //save group data
-  saveGroupData(id, groupId, content, pData) async {
+  saveGroupData(
+    id,
+    groupId,
+    content,
+    pData,
+  ) async {
     var user = appCtrl.storage.read(session.user);
     List receiver = pData["users"];
     receiver.asMap().entries.forEach((element) async {
@@ -95,6 +101,23 @@ class ChatMessageApi {
             "lastMessage": content,
             "senderId": user["id"],
           });
+          print("ele : ${element.value}");
+          if (user["id"] != element.value["id"]) {
+            FirebaseFirestore.instance
+                .collection("users")
+                .doc(element.value["id"])
+                .get()
+                .then((snap) {
+              if (snap.data()!["pushToken"] != "") {
+                firebaseCtrl.sendNotification(
+                    title: "Group Message",
+                    msg: content,
+                    groupId: groupId,
+                    token: snap.data()!["pushToken"],
+                    dataTitle: pData["name"]);
+              }
+            });
+          }
         }
       });
     });
@@ -138,7 +161,6 @@ class ChatMessageApi {
         "channelId": channelId,
         "isVideoCall": isVideoCall,
       }).then((value) async {
-
         await FirebaseFirestore.instance
             .collection("calls")
             .doc(call.receiverId)
@@ -156,53 +178,41 @@ class ChatMessageApi {
           "hasDialled": false,
           "channelId": channelId,
           "isVideoCall": isVideoCall
-        }).then((value) {
+        }).then((value)async {
           print("ddssdf");
           call.hasDialled = true;
           if (isVideoCall == false) {
+            firebaseCtrl.sendNotification(
+                title: "Incoming Audio Call...",
+                msg: "${call.callerName} audio call",
+                token: call.receiverToken,
+                pName: call.callerName,
+                image: userData["image"],
+                dataTitle: call.callerName);
             var data = {
               "channelName": call.channelId,
               "call": call,
               "role": role
             };
             Get.toNamed(routeName.audioCall, arguments: data);
-
-            /*  await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => AudioCall(
-              currentuseruid: currentuseruid,
-              call: call,
-              channelName: call.channelId,
-              role: _role,
-            ),
-          ),
-        );*/
           } else {
+            firebaseCtrl.sendNotification(
+                title: "Incoming Video Call...",
+                msg: "${call.callerName} video call",
+                token: call.receiverToken,
+                pName: call.callerName,
+                image: userData["image"],
+                dataTitle: call.callerName);
+
             var data = {
               "channelName": call.channelId,
               "call": call,
               "role": role
             };
-            print("object : $data");
+
             Get.toNamed(routeName.videoCall, arguments: data);
 
-            /*  firebaseCtrl.sendNotification(
-          title: "Incoming Video Call...",
-          msg: "${call.callerName} video call",
-          token: call.receiverToken,
-          image: userData["image"]);*/
-            /* await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => VideoCall(
-              currentuseruid: currentuseruid,
-              call: call,
-              channelName: call.channelId,
-              role: _role,
-            ),
-          ),
-        );*/
+
           }
         });
       });
@@ -211,6 +221,7 @@ class ChatMessageApi {
       print("Failed with error '${e.code}': ${e.message}");
     }
   }
+
 
   Future<bool> audioVideoCallSave(
       {required Call call,

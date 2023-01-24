@@ -10,7 +10,7 @@ class BuildLoader extends StatelessWidget {
           return Positioned(
             child: chatCtrl.isLoading
                 ? Container(
-              color: Colors.white.withOpacity(0.8),
+              color: appCtrl.appTheme.whiteColor.withOpacity(0.8),
               child: Center(
                 child: CircularProgressIndicator(
                     valueColor: AlwaysStoppedAnimation<Color>(

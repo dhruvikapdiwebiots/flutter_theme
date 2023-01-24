@@ -58,8 +58,18 @@ class AudioCallController extends GetxController {
       stopTimer();
     }
 
+    void setCountDown() {
+      const reduceSecondsBy = 1;
+      final seconds = timerInterval.inSeconds + reduceSecondsBy;
+      streamController!.add(seconds);
+      timerInterval = Duration(seconds: seconds);
+      update();
+    }
+
     void startTimer() {
-      timer = Timer.periodic(timerInterval, tick);
+      timer =
+          Timer.periodic(const Duration(seconds: 1), (_) => setCountDown());
+     // timer = Timer.periodic(timerInterval, tick);
     }
 
     streamController = StreamController<int>(
@@ -73,7 +83,20 @@ class AudioCallController extends GetxController {
   }
 
   @override
-  void onReady() {
+  void dispose() {
+    super.dispose();
+    _dispose();
+  }
+
+
+  Future<void> _dispose() async {
+    await engine.leaveChannel();
+    await engine.release();
+  }
+
+
+  @override
+  void onReady() async{
     // TODO: implement onReady
     var data = Get.arguments;
     channelName = data["channelName"];
@@ -92,6 +115,10 @@ class AudioCallController extends GetxController {
         .doc(call!.timestamp.toString())
         .snapshots();
     update();
+    // retrieve permissions
+    await [Permission.microphone].request();
+    log("permis :");
+    //create the engine
     initAgora();
     super.onReady();
   }
@@ -113,13 +140,11 @@ class AudioCallController extends GetxController {
   }
 
   Future<void> initAgora() async {
-    // retrieve permissions
-    await [Permission.microphone].request();
-    log("permis :");
-    //create the engine
+
     engine = createAgoraRtcEngine();
     await engine.initialize(RtcEngineContext(
       appId: fonts.appId,
+
       channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
     ));
     log("engine : $engine");
@@ -260,6 +285,7 @@ class AudioCallController extends GetxController {
           _stopCallingSound();
           _infoStrings.add('onLeaveChannel');
           _users.clear();
+          _dispose();
           update();
           if (isAlreadyEnded == false) {
             FirebaseFirestore.instance
@@ -430,6 +456,7 @@ class AudioCallController extends GetxController {
     Provider.of<FirestoreDataProviderCALLHISTORY>(context, listen: false);*/
     _stopCallingSound();
     log("endCall1");
+    _dispose();
     DateTime now = DateTime.now();
     if (remoteUId != null) {
       await FirebaseFirestore.instance
@@ -508,88 +535,107 @@ class AudioCallController extends GetxController {
     if (status == 'rejected') {
       _stopCallingSound();
     }
-    return Container(
-      alignment: Alignment.center,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // SizedBox(height: h / 35),
-              SizedBox(
-                height: Sizes.s150,
-                child: CachedNetworkImage(
-                    imageUrl: call!.receiverPic!,
-                    imageBuilder: (context, imageProvider) => CircleAvatar(
-                          backgroundColor: const Color(0xffE6E6E6),
-                          radius: Sizes.s50,
-                          backgroundImage: NetworkImage(call!.receiverPic!),
-                        ),
-                    placeholder: (context, url) => Image.asset(
+    return GetBuilder<AudioCallController>(builder: (_) {
+      return Container(
+        alignment: Alignment.center,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // SizedBox(height: h / 35),
+                const VSpace(
+                  Sizes.s50,
+                ),
+                call!.receiverPic != null
+                    ? SizedBox(
+                        height: Sizes.s100,
+                        child: CachedNetworkImage(
+                            imageUrl: call!.receiverPic!,
+                            imageBuilder: (context, imageProvider) =>
+                                CircleAvatar(
+                                  backgroundColor: const Color(0xffE6E6E6),
+                                  radius: Sizes.s50,
+                                  backgroundImage:
+                                      NetworkImage(call!.receiverPic!),
+                                ),
+                            placeholder: (context, url) => Image.asset(
+                                  imageAssets.user,
+                                  color: appCtrl.appTheme.whiteColor,
+                                ).paddingAll(Insets.i15).decorated(
+                                    color:
+                                        appCtrl.appTheme.grey.withOpacity(.4),
+                                    shape: BoxShape.circle),
+                            errorWidget: (context, url, error) => Image.asset(
+                                  imageAssets.user,
+                                  color: appCtrl.appTheme.whiteColor,
+                                ).paddingAll(Insets.i15).decorated(
+                                    color:
+                                        appCtrl.appTheme.grey.withOpacity(.4),
+                                    shape: BoxShape.circle)),
+                      )
+                    : SizedBox(
+                        height: Sizes.s100,
+                        child: Image.asset(
                           imageAssets.user,
                           color: appCtrl.appTheme.whiteColor,
                         ).paddingAll(Insets.i15).decorated(
                             color: appCtrl.appTheme.grey.withOpacity(.4),
                             shape: BoxShape.circle),
-                    errorWidget: (context, url, error) => Image.asset(
-                          imageAssets.user,
-                          color: appCtrl.appTheme.whiteColor,
-                        ).paddingAll(Insets.i15).decorated(
-                            color: appCtrl.appTheme.grey.withOpacity(.4),
-                            shape: BoxShape.circle)),
-              ),
+                      ),
 
-              Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                const SizedBox(height: 7),
-                SizedBox(
-                    width: w / 1.1,
-                    child: Text(
-                        call!.callerId == userData["id"]
-                            ? call!.receiverName!
-                            : call!.callerName!,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: AppCss.poppinsblack28
-                            .textColor(appCtrl.appTheme.blackColor)))
-              ]),
-              // SizedBox(height: h / 25),
-              const VSpace(Sizes.s20),
-              status == 'pickedUp'
-                  ? Text(
-                      "$hoursStr:$minutesStr:$secondsStr",
-                      style: TextStyle(
-                          fontSize: 20.0,
-                          color: appCtrl.appTheme.greenColor.withOpacity(.3),
-                          fontWeight: FontWeight.w600),
-                    )
-                  : Text(
-                      status == 'pickedUp'
-                          ? fonts.picked.tr
-                          : status == 'noNetwork'
-                              ? fonts.connecting.tr
-                              : status == 'ringing' || status == 'missedCall'
-                                  ? fonts.calling.tr
-                                  : status == 'calling'
-                                      ? call!.receiverId == userData["id"]
-                                          ? fonts.connecting.tr
-                                          : fonts.calling.tr
-                                      : status == 'pickedUp'
-                                          ? fonts.onCall.tr
-                                          : status == 'ended'
-                                              ? fonts.callEnded.tr
-                                              : status == 'rejected'
-                                                  ? fonts.callRejected.tr
-                                                  : fonts.plsWait.tr,
-                      style: AppCss.poppinsMedium14
-                          .textColor(appCtrl.appTheme.blackColor)),
-              const SizedBox(height: 16),
-            ],
-          ).marginSymmetric(vertical: Insets.i15),
-        ],
-      ),
-    );
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  const SizedBox(height: 7),
+                  SizedBox(
+                      width: w / 1.1,
+                      child: Text(
+                          call!.callerId == userData["id"]
+                              ? call!.receiverName!
+                              : call!.callerName!,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: AppCss.poppinsblack28
+                              .textColor(appCtrl.appTheme.blackColor)))
+                ]),
+                // SizedBox(height: h / 25),
+                const VSpace(Sizes.s20),
+                status == 'pickedUp'
+                    ? Text(
+                        "$hoursStr:$minutesStr:$secondsStr",
+                        style: TextStyle(
+                            fontSize: 20.0,
+                            color: appCtrl.appTheme.greenColor.withOpacity(.3),
+                            fontWeight: FontWeight.w600),
+                      )
+                    : Text(
+                        status == 'pickedUp'
+                            ? fonts.picked.tr
+                            : status == 'noNetwork'
+                                ? fonts.connecting.tr
+                                : status == 'ringing' || status == 'missedCall'
+                                    ? fonts.calling.tr
+                                    : status == 'calling'
+                                        ? call!.receiverId == userData["id"]
+                                            ? fonts.connecting.tr
+                                            : fonts.calling.tr
+                                        : status == 'pickedUp'
+                                            ? fonts.onCall.tr
+                                            : status == 'ended'
+                                                ? fonts.callEnded.tr
+                                                : status == 'rejected'
+                                                    ? fonts.callRejected.tr
+                                                    : fonts.plsWait.tr,
+                        style: AppCss.poppinsMedium14
+                            .textColor(appCtrl.appTheme.blackColor)),
+                const SizedBox(height: 16),
+              ],
+            ).marginSymmetric(vertical: Insets.i15),
+          ],
+        ),
+      );
+    });
   }
 }

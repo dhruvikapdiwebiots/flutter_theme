@@ -30,7 +30,8 @@ class _PickupLayoutState extends State<PickupLayout>
     super.initState();
     controller =
         AnimationController(vsync: this, duration: const Duration(seconds: 2));
-    colorAnimation = ColorTween(begin: Colors.red, end: Colors.red)
+    colorAnimation = ColorTween(
+            begin: appCtrl.appTheme.redColor, end: appCtrl.appTheme.redColor)
         .animate(CurvedAnimation(parent: controller!, curve: Curves.bounceOut));
     sizeAnimation = Tween<double>(begin: 30.0, end: 60.0).animate(controller!);
     controller!.addListener(() async {
@@ -96,8 +97,10 @@ class _PickupLayoutState extends State<PickupLayout>
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
+                            const VSpace(Sizes.s20),
                             SizedBox(
-                              height: Sizes.s150,
+                              height: Sizes.s100,
+                              width: Sizes.s100,
                               child: CachedNetworkImage(
                                   imageUrl: snapshot.data!.docs[0]
                                       .data()["callerPic"],
@@ -112,8 +115,8 @@ class _PickupLayoutState extends State<PickupLayout>
                                       ),
                                   placeholder: (context, url) => Image.asset(
                                         imageAssets.user,
-                                        height: Sizes.s80,
-                                        width:Sizes.s80 ,
+                                        height: Sizes.s50,
+                                        width: Sizes.s50,
                                         color: appCtrl.appTheme.whiteColor,
                                       ).paddingAll(Insets.i12).decorated(
                                           color: appCtrl.appTheme.grey
@@ -121,8 +124,8 @@ class _PickupLayoutState extends State<PickupLayout>
                                           shape: BoxShape.circle),
                                   errorWidget: (context, url, error) =>
                                       Image.asset(
-                                        height: Sizes.s80,
-                                        width:Sizes.s80 ,
+                                        height: Sizes.s50,
+                                        width: Sizes.s50,
                                         imageAssets.user,
                                         color: appCtrl.appTheme.whiteColor,
                                       ).paddingAll(Insets.i15).decorated(
@@ -134,17 +137,17 @@ class _PickupLayoutState extends State<PickupLayout>
                             Text(call.callerName!,
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
-                                style: AppCss.poppinsblack20.textColor(appCtrl.appTheme.whiteColor)),
+                                style: AppCss.poppinsblack20
+                                    .textColor(appCtrl.appTheme.whiteColor)),
                             const VSpace(Sizes.s8),
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(
-                                    call.isVideoCall == true
-                                        ? Icons.videocam
-                                        : Icons.mic_rounded,
-                                    color: appCtrl.appTheme.whiteColor
-                                  ),
+                                      call.isVideoCall == true
+                                          ? Icons.videocam
+                                          : Icons.mic_rounded,
+                                      color: appCtrl.appTheme.whiteColor),
                                   const HSpace(Sizes.s10),
                                   Text(
                                       call.isVideoCall == true
@@ -212,9 +215,9 @@ class _PickupLayoutState extends State<PickupLayout>
                                   }, SetOptions(merge: true));
                                   Get.back();
                                 },
-                                child: const Icon(
+                                child: Icon(
                                   Icons.call_end,
-                                  color: Colors.white,
+                                  color: appCtrl.appTheme.whiteColor,
                                   size: 35.0,
                                 ).paddingAll(Insets.i15).decorated(
                                     color: appCtrl.appTheme.redColor,
@@ -239,13 +242,14 @@ class _PickupLayoutState extends State<PickupLayout>
                                         "role":
                                             ClientRoleType.clientRoleBroadcaster
                                       };
+                                      log("data : $data");
                                       Get.toNamed(routeName.audioCall,
                                           arguments: data);
                                     }
                                   },
-                                  child: const Icon(
+                                  child: Icon(
                                     Icons.call,
-                                    color: Colors.white,
+                                    color: appCtrl.appTheme.whiteColor,
                                     size: 35.0,
                                   ).paddingAll(Insets.i15).decorated(
                                       color: appCtrl.appTheme.greenColor,

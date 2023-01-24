@@ -51,6 +51,7 @@ class ChatController extends GetxController {
     imageUrl = '';
     userData = appCtrl.storage.read(session.user);
     var data = Get.arguments;
+    log("data : $data");
     if (data == "No User") {
       isUserAvailable = false;
     } else {
@@ -186,7 +187,8 @@ class ChatController extends GetxController {
       UploadTask uploadTask = reference.putFile(file);
       TaskSnapshot snap = await uploadTask;
       String downloadUrl = await snap.ref.getDownloadURL();
-
+isLoading = true;
+update();
       log("fileName : $downloadUrl");
       onSendMessage(
           "${result.files.single.name}-BREAK-$downloadUrl",
@@ -526,12 +528,14 @@ class ChatController extends GetxController {
         });
       }
     }
-    if (pData["pushToken"] != "" && pData["pushToken"] != null) {
+    if (pData["pushToken"] != "") {
+
       firebaseCtrl.sendNotification(
-          title: pName,
+          title: "Single Message",
           msg: content,
-          token: pData["pushToken"],
-          image: userData["image"]);
+          chatId: chatId,
+          token: pData["pushToken"],pId: pId,pName: pName,userContactModel: userContactModel,
+          image: userData["image"],dataTitle:pName );
     }
     isLoading = false;
     update();

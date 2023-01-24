@@ -32,6 +32,7 @@ dynamic user;
     log("contacts : ${contacts!.length}");
     update();
     if(user != "") {
+      log("contacts1");
       getFirebaseContact(contacts!);
     }
   }
@@ -52,6 +53,7 @@ contactList = [];
               .get()
               .then((value) {
             if (value.docs.isNotEmpty) {
+              log("da : ${value.docs[0].data()}");
               if(value.docs[0].data()["isActive"] == true) {
                 if(!contactList.contains(value.docs[0].data())) {
                   contactList.add(value.docs[0].data());
@@ -66,6 +68,8 @@ contactList = [];
       }
       update();
     });
+
+    log("contactList : ${contactList.length}");
 
     isLoading = false;
     update();

@@ -40,7 +40,7 @@ class DocImageLayout extends StatelessWidget {
         OpenFilex.open(filePath);
       },
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: isReceiver ?CrossAxisAlignment.start : CrossAxisAlignment.end,
         children: [
           if (isGroup)
             if (isReceiver)
@@ -53,36 +53,41 @@ class DocImageLayout extends StatelessWidget {
                               .textColor(appCtrl.appTheme.primary)),
                       const VSpace(Sizes.s8)
                     ])),
-          Row(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Image.asset(imageAssets.jpg, height: Sizes.s20),
-              const HSpace(Sizes.s10),
-              Expanded(
-                child: Text(
-                  document!['content'].split("-BREAK-")[0],
-                  textAlign: TextAlign.start,
+              Row(
+                children: [
+                  Image.asset(imageAssets.jpg, height: Sizes.s20),
+                  const HSpace(Sizes.s10),
+                  Expanded(
+                    child: Text(
+                      document!['content'].split("-BREAK-")[0],
+                      textAlign: TextAlign.start,
 
+                      style: AppCss.poppinsMedium12.textColor(isReceiver
+                          ? appCtrl.appTheme.lightBlackColor
+                          : appCtrl.appTheme.whiteColor),
+                    ),
+                  ),
+                ],
+              )
+                  .width(220)
+                  .paddingSymmetric(horizontal: Insets.i10, vertical: Insets.i15)
+                  .decorated(
+                  color: isReceiver
+                      ? appCtrl.appTheme.lightGrey1Color
+                      : appCtrl.appTheme.lightPrimary,
+                  borderRadius: BorderRadius.circular(AppRadius.r8)),
+              const VSpace(Sizes.s10),
+              Text(
+                  DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(
+                      int.parse(document!['timestamp']))),
                   style: AppCss.poppinsMedium12.textColor(isReceiver
                       ? appCtrl.appTheme.lightBlackColor
-                      : appCtrl.appTheme.whiteColor),
-                ),
-              ),
+                      : appCtrl.appTheme.whiteColor)),
             ],
           )
-              .width(220)
-              .paddingSymmetric(horizontal: Insets.i10, vertical: Insets.i15)
-              .decorated(
-              color: isReceiver
-                  ? appCtrl.appTheme.lightGrey1Color
-                  : appCtrl.appTheme.lightPrimary,
-              borderRadius: BorderRadius.circular(AppRadius.r8)),
-          const VSpace(Sizes.s10),
-          Text(
-              DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(
-                  int.parse(document!['timestamp']))),
-              style: AppCss.poppinsMedium12.textColor(isReceiver
-                  ? appCtrl.appTheme.lightBlackColor
-                  : appCtrl.appTheme.whiteColor))
         ],
       )
           .paddingAll(Insets.i8)
@@ -91,7 +96,7 @@ class DocImageLayout extends StatelessWidget {
               ? appCtrl.appTheme.whiteColor
               : appCtrl.appTheme.primary,
           borderRadius: BorderRadius.circular(AppRadius.r8))
-          .marginSymmetric(horizontal: Insets.i10, vertical: Insets.i5),
+          .marginSymmetric(horizontal: Insets.i5, vertical: Insets.i5),
     );
   }
 }

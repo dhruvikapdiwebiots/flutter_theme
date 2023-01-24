@@ -147,7 +147,7 @@ class GroupChatMessageController extends GetxController {
   //share media
   shareMedia(BuildContext context) {
     showModalBottomSheet(
-        backgroundColor: Colors.transparent,
+        backgroundColor: appCtrl.appTheme.transparentColor,
         context: context,
         shape: const RoundedRectangleBorder(
           borderRadius:
@@ -241,11 +241,12 @@ class GroupChatMessageController extends GetxController {
     update();
   }
 
+  //audio recording
   void audioRecording(BuildContext context, String type, int index) {
     showModalBottomSheet(
       context: Get.context!,
       isDismissible: false,
-      backgroundColor: Colors.transparent,
+      backgroundColor: appCtrl.appTheme.transparentColor,
       builder: (BuildContext bc) {
         return Container(
             margin: const EdgeInsets.all(10),
@@ -255,25 +256,19 @@ class GroupChatMessageController extends GetxController {
                 borderRadius: BorderRadius.circular(10)),
             child: AudioRecordingPlugin(type: type, index: index));
       },
-    ).then((value) {
-      Get.back();
-      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-      Reference reference = FirebaseStorage.instance.ref().child(fileName);
-      var file = File(value.path);
+    ).then((value) async {
+      File file = File(value);
+      log("file : $file");
+      String fileName =
+          "${file.name}-${DateTime.now().millisecondsSinceEpoch.toString()}";
+      Reference reference =
+      FirebaseStorage.instance.ref().child(fileName);
       UploadTask uploadTask = reference.putFile(file);
-      uploadTask.then((res) {
-        res.ref.getDownloadURL().then((downloadUrl) {
-          imageUrl = downloadUrl;
-          isLoading = false;
-          onSendMessage(imageUrl!, MessageType.audio);
-          update();
-        }, onError: (err) {
-          isLoading = false;
-          update();
-          Fluttertoast.showToast(msg: 'Not Upload');
-        });
-      });
-      onSendMessage(value, MessageType.audio);
+      TaskSnapshot snap = await uploadTask;
+      String downloadUrl = await snap.ref.getDownloadURL();
+      log("audioFile : $downloadUrl");
+      onSendMessage(downloadUrl, MessageType.audio);
+      log("audioFile : $downloadUrl");
     });
   }
 

@@ -340,7 +340,7 @@ extension StyledWidget on Widget {
           {BorderRadiusGeometry borderRadius = BorderRadius.zero,
           Color shadowColor = const Color(0xFF000000)}) =>
       Material(
-        color: Colors.transparent,
+        color: appCtrl.appTheme.transparentColor,
         elevation: elevation,
         borderRadius: borderRadius,
         shadowColor: shadowColor,
@@ -425,7 +425,7 @@ extension StyledWidget on Widget {
           GestureDetector? gestures =
               context.findAncestorWidgetOfExactType<GestureDetector>();
           return Material(
-            color: Colors.transparent,
+            color: appCtrl.appTheme.transparentColor,
             child: InkWell(
               focusColor: focusColor,
               hoverColor: hoverColor,
@@ -754,25 +754,25 @@ extension StyledWidget on Widget {
   Widget safeArea() => SafeArea(child: this);
 
   Widget inkWell({GestureTapCallback? onTap}) => Material(
-    color: Colors.transparent,
+    color: appCtrl.appTheme.transparentColor,
     child: Theme(
           data: Theme.of(Get.context!).copyWith(
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            hoverColor: Colors.transparent,
+            splashColor: appCtrl.appTheme.transparentColor,
+            highlightColor: appCtrl.appTheme.transparentColor,
+            hoverColor: appCtrl.appTheme.transparentColor,
             splashFactory: NoSplash.splashFactory,
           ),
           child: InkWell(
             onTap: onTap,
-            highlightColor: Colors.transparent,
+            highlightColor: appCtrl.appTheme.transparentColor,
             splashFactory: NoSplash.splashFactory,
             overlayColor:  MaterialStateProperty.resolveWith<Color>(
                   (Set<MaterialState> states) {
-                return Colors.transparent;
+                return appCtrl.appTheme.transparentColor;
               },
             ),
-            hoverColor: Colors.transparent,
-            splashColor: Colors.transparent,
+            hoverColor: appCtrl.appTheme.transparentColor,
+            splashColor: appCtrl.appTheme.transparentColor,
             child: this,
           ),
         ),

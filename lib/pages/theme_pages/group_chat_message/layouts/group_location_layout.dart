@@ -20,46 +20,7 @@ class GroupLocationLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /*return InkWell(
-      onTap: onTap,
-      onLongPress: onLongPress,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (document!["sender"] != currentUserId)
-                Text(document!['senderName'],
-                        style: AppCss.poppinsMedium14
-                            .textColor(appCtrl.appTheme.whiteColor))
-                    .alignment(Alignment.bottomLeft)
-                    .paddingAll(Insets.i15),
-              Image.asset(
-                imageAssets.map,
-                height: Sizes.s150,
-              ).clipRRect(all: AppRadius.r10),
-              const VSpace(Sizes.s10),
-            ],
-          ),
-          Text(
-            DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(
-                int.parse(document!['timestamp']))),
-            style:
-                AppCss.poppinsMedium12.textColor(appCtrl.appTheme.whiteColor),
-          ).alignment(Alignment.bottomRight)
-        ],
-      )
-          .paddingOnly(
-              top: Insets.i6,
-              left: Insets.i6,
-              right: Insets.i6,
-              bottom: Insets.i10)
-          .decorated(
-              color:appCtrl.isTheme ?appCtrl.appTheme.white :  appCtrl.appTheme.primary,
-              borderRadius: BorderRadius.circular(AppRadius.r10))
-          .paddingSymmetric(vertical: Insets.i10),
-    );*/
+
     return InkWell(
       onTap: onTap,
       onLongPress: onLongPress,
@@ -67,27 +28,34 @@ class GroupLocationLayout extends StatelessWidget {
         alignment: isReceiver ? Alignment.topLeft : Alignment.topRight,
         children: [
           Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (isReceiver)
                 if (document!["sender"] != currentUserId)
                   Text(document!['senderName'],
                           style: AppCss.poppinsMedium14
-                              .textColor(appCtrl.appTheme.whiteColor))
+                              .textColor( isReceiver ? appCtrl.appTheme.primary : appCtrl.appTheme.whiteColor))
                       .alignment(Alignment.bottomLeft)
-                      .paddingAll(Insets.i15),
-              Image.asset(
-                imageAssets.map,
-                height: Sizes.s150,
-              ).clipRRect(all: AppRadius.r10),
-              const VSpace(Sizes.s10),
-              Text(
-                DateFormat('HH:mm a').format(
-                    DateTime.fromMillisecondsSinceEpoch(
-                        int.parse(document!['timestamp']))),
-                style: AppCss.poppinsMedium12.textColor(isReceiver
-                    ? appCtrl.appTheme.lightBlackColor
-                    : appCtrl.appTheme.whiteColor),
+                      .paddingAll(Insets.i5),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Image.asset(
+                    imageAssets.map,
+                    height: Sizes.s150,
+                  ).clipRRect(all: AppRadius.r10),
+                  const VSpace(Sizes.s10),
+                  Text(
+
+                    DateFormat('HH:mm a').format(
+                        DateTime.fromMillisecondsSinceEpoch(
+                            int.parse(document!['timestamp']))),
+                    textAlign: TextAlign.end,
+                    style: AppCss.poppinsMedium12.textColor(isReceiver
+                        ? appCtrl.appTheme.lightBlackColor
+                        : appCtrl.appTheme.whiteColor),
+                  ),
+                ],
               )
             ],
           ).paddingAll(Insets.i5),

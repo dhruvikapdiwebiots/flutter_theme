@@ -116,7 +116,8 @@ class EditProfileController extends GetxController {
                   "phone": phoneText.text,
                   "email": emailText.text,
                   "statusDesc": statusText.text,
-                  "pushToken": token
+                  "pushToken": token,
+                  "isActive":true
                 })
                 .then((result) async {
               log("new USer true");
@@ -150,7 +151,8 @@ class EditProfileController extends GetxController {
                 "phone": phoneText.text,
                 "email": emailText.text,
                 "statusDesc": statusText.text,
-                "pushToken": token
+                "pushToken": token,
+                "isActive":true
               }).then((result) async {
             log("new USer true");
             FirebaseFirestore.instance.collection('users').doc(user["id"])
@@ -198,6 +200,8 @@ class EditProfileController extends GetxController {
 
 // UPLOAD SELECTED IMAGE TO FIREBASE
   Future uploadFile() async {
+    isLoading = true;
+    update();
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     Reference reference = FirebaseStorage.instance.ref().child(fileName);
     log("reference : $reference");
@@ -224,6 +228,7 @@ class EditProfileController extends GetxController {
                 update();
           });
         });
+        isLoading = false;
         update();
         log(user["image"]);
 

@@ -40,7 +40,7 @@ class PhoneBody extends StatelessWidget {
                     opacity: phoneCtrl.mobileNumber ? 1.0 : 0.0,
                     child: Text(fonts.phoneError.tr,
                         style: AppCss.poppinsMedium12
-                            .textColor(Colors.red))
+                            .textColor(appCtrl.appTheme.redColor))
                         .alignment(Alignment.centerRight)),
               const VSpace(Sizes.s55),
               CommonButton(

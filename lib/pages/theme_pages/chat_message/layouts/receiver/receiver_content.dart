@@ -64,7 +64,7 @@ class ReceiverContent extends StatelessWidget {
             ),
           )
         ],
-      ).marginSymmetric(vertical: Insets.i5,horizontal: Insets.i15)
+      ).marginSymmetric(vertical: Insets.i5,horizontal: Insets.i5)
     );
   }
 }

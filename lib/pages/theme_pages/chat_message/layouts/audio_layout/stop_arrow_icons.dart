@@ -20,7 +20,7 @@ class StopArrowIcons extends StatelessWidget {
             const BorderRadius.all(Radius.circular(100))),
         child: IconButton(
             onPressed: onPressed,
-            color: Colors.black,
+            color: appCtrl.appTheme.blackColor,
             icon: Icon(
               mPlayer != null
                   ? mPlayer!.isPlaying

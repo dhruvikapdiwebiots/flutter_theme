@@ -139,7 +139,7 @@ class PermissionHandlerController extends GetxController {
    List<Contact> contacts = [];
     bool permissionStatus = await permissionGranted();
     if (permissionStatus) {
-      getCurrentPosition();
+
       contacts = await getAllContacts();
     }
     return contacts;

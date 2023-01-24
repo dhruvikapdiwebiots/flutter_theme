@@ -31,18 +31,10 @@ class PopUpAction extends StatelessWidget {
                               Get.back();
                               log("title : ${e.value["title"]}");
                               if (e.key == 0) {
-                                final groupCtrl =
-                                    Get.isRegistered<CreateGroupController>()
-                                        ? Get.find<CreateGroupController>()
-                                        : Get.put(CreateGroupController());
 
                                 Get.toNamed(routeName.groupChat,
                                     arguments: false);
                               } else if (e.key == 1) {
-                                final groupChatCtrl =
-                                    Get.isRegistered<CreateGroupController>()
-                                        ? Get.find<CreateGroupController>()
-                                        : Get.put(CreateGroupController());
 
                                 Get.toNamed(routeName.groupChat,
                                     arguments: true);
@@ -103,12 +95,21 @@ class PopUpAction extends StatelessWidget {
                                   if (e.value["title"] == "clearLogs") {
                                     await FirebaseFirestore.instance
                                         .collection("calls")
-                                        .doc(dashboardCtrl.user["id"]).collection("collectionCallHistory").get().then((value) {
-                                          value.docs.asMap().entries.forEach((element) {
-                                            FirebaseFirestore.instance
-                                                .collection("calls")
-                                                .doc(dashboardCtrl.user["id"]).collection("collectionCallHistory").doc(element.value.id).delete();
-                                          });
+                                        .doc(dashboardCtrl.user["id"])
+                                        .collection("collectionCallHistory")
+                                        .get()
+                                        .then((value) {
+                                      value.docs
+                                          .asMap()
+                                          .entries
+                                          .forEach((element) {
+                                        FirebaseFirestore.instance
+                                            .collection("calls")
+                                            .doc(dashboardCtrl.user["id"])
+                                            .collection("collectionCallHistory")
+                                            .doc(element.value.id)
+                                            .delete();
+                                      });
                                     });
                                   }
                                 }),

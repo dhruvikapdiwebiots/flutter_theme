@@ -14,8 +14,9 @@ class CurrentUserEmptyStatus extends StatelessWidget {
         title: Text(
           fonts.yourStatus.tr,
         ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: Insets.i5),
         leading: Stack(alignment: Alignment.bottomRight, children: [
-          Image.asset(imageAssets.user).paddingAll(Insets.i15).decorated(
+          Image.asset(imageAssets.user,height: Sizes.s30,).paddingAll(Insets.i10).decorated(
               color: appCtrl.appTheme.grey.withOpacity(.4),
               shape: BoxShape.circle),
           Icon(

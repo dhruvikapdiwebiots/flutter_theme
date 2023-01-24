@@ -51,7 +51,7 @@ class OtpController extends GetxController {
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.CENTER,
         backgroundColor: color,
-        textColor: Colors.white,
+        textColor: appCtrl.appTheme.whiteColor,
         fontSize: 16.0);
   }
 
@@ -200,6 +200,7 @@ class OtpController extends GetxController {
           "phone": mobileNumber,
           "email": user.email,
           "deviceName": appCtrl.deviceName,
+          "isActive":true,
           "device": appCtrl.device,
           "statusDesc": "Hello, I am using Chatter"
         }).catchError((err) {

@@ -28,7 +28,7 @@ class GroupVideoDocState extends State<GroupVideoDoc> {
     log(widget.document!["content"]);
     if (widget.document!["type"] == MessageType.video.name) {
       videoController = VideoPlayerController.network(
-        widget.document!["content"],
+        widget.document!["content"].contains("-BREAK-") ? widget.document!["content"].split("-BREAK-")[1] :widget.document!["content"],
       );
       initializeVideoPlayerFuture = videoController!.initialize();
     }
@@ -52,14 +52,15 @@ class GroupVideoDocState extends State<GroupVideoDoc> {
                 alignment: Alignment.bottomRight,
                 children: [
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (widget.isReceiver)
                         if (widget.document!["sender"] != widget.currentUserId)
                           Column(children: [
                             Text(widget.document!['senderName'],
                                 style: AppCss.poppinsMedium12
-                                    .textColor(appCtrl.appTheme.primary)),
-                            const VSpace(Sizes.s8)
+                                    .textColor(appCtrl.appTheme.primary)).paddingAll(Insets.i5).decorated(color: appCtrl.appTheme.whiteColor,borderRadius: BorderRadius.circular(AppRadius.r20)),
+
                           ]),
                       AspectRatio(
                         aspectRatio: videoController!.value.aspectRatio,
@@ -70,7 +71,8 @@ class GroupVideoDocState extends State<GroupVideoDoc> {
                   ),
                   Text(DateFormat('HH:mm a').format(
                       DateTime.fromMillisecondsSinceEpoch(
-                          int.parse(widget.document!['timestamp']))),style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.whiteColor),).marginAll(Insets.i10)
+                          int.parse(widget.document!['timestamp']))),style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.whiteColor),).boxShadow( blurRadius: 15.0,
+                      color: appCtrl.appTheme.blackColor.withOpacity(.25),offset:const Offset(-2, 2)).marginAll(Insets.i10)
                 ],
               ).marginSymmetric(vertical: Insets.i5,horizontal: Insets.i5).inkWell(onTap: (){
                 launchUrl(Uri.parse(widget.document!["content"].split("-BREAK-")[1]));

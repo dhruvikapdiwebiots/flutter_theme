@@ -13,9 +13,9 @@ class BroadCastMessageCard extends StatelessWidget {
   Widget build(BuildContext context) {
     List selectedContact = document!["receiverId"];
     return Container(
-
+      decoration: BoxDecoration(border: Border(bottom: BorderSide(color: appCtrl.appTheme.lightGreyColor))),
       margin: const EdgeInsets.only(
-          bottom: Insets.i10, left: Insets.i5, right: Insets.i5),
+          bottom: Insets.i5, left: Insets.i5, right: Insets.i5),
 
       child: ListTile(
         onTap: (){
@@ -32,15 +32,12 @@ class BroadCastMessageCard extends StatelessWidget {
             style: AppCss.poppinsblack16
                 .textColor(appCtrl.appTheme.blackColor)
         ),
-        subtitle: Padding(
-          padding: const EdgeInsets.only(top: 6.0),
-          child: Text(
-              document!["lastMessage"],
-              style: AppCss.poppinsMedium14
-                  .textColor(appCtrl.appTheme.grey)
-          ),
+        subtitle: Text(
+            document!["lastMessage"],
+            style: AppCss.poppinsMedium14
+                .textColor(appCtrl.appTheme.grey)
         ),
-        leading:const Icon(Icons.volume_down).paddingAll(Insets.i15).decorated(color: appCtrl.appTheme.grey.withOpacity(.4),shape: BoxShape.circle),
+        leading:const Icon(Icons.volume_down).paddingAll(Insets.i12).decorated(color: appCtrl.appTheme.grey.withOpacity(.4),shape: BoxShape.circle),
         trailing: Text(
             DateFormat('HH:mm a').format(
                 DateTime.fromMillisecondsSinceEpoch(

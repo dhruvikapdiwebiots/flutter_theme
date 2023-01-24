@@ -1,5 +1,4 @@
 
-import 'dart:developer';
 
 import 'package:intl/intl.dart';
 
@@ -30,10 +29,10 @@ class GroupMessageCard extends StatelessWidget {
                   .snapshots(),
               builder: (context, userSnapShot){
                 if(userSnapShot.hasData){
-                  log(" (snapshot.data!) : ${ (snapshot.data!)}");
                   return Container(
-                    margin: const EdgeInsets.only(
-                        bottom: Insets.i10, left: Insets.i5, right: Insets.i5),
+                    decoration: BoxDecoration(border: Border(bottom: BorderSide(color: appCtrl.appTheme.lightGreyColor))),
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: Insets.i5),
                     child: ListTile(
                         onTap: () {
                           Get.toNamed(routeName.groupChatMessage,

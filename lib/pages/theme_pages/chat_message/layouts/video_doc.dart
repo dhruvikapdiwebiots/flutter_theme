@@ -22,7 +22,7 @@ class _VideoDocState extends State<VideoDoc> {
     // TODO: implement initState
     if (widget.document!["type"] == MessageType.video.name) {
       videoController = VideoPlayerController.network(
-        widget.document!["content"],
+        widget.document!["content"].contains("-BREAK-") ? widget.document!["content"].split("-BREAK-")[1] :widget.document!["content"],
       );
       initializeVideoPlayerFuture = videoController!.initialize();
     }

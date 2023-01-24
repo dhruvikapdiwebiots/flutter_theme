@@ -2,8 +2,8 @@
 import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
+
 import 'config.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
 
 
 void main() async {
@@ -12,7 +12,7 @@ void main() async {
   GetStorage.init();
   cameras = await availableCameras();
   // Set the background messaging handler early on, as a named top-level function
-
+  await AwesomeNotificationController.initializeLocalNotifications();
   Get.put(AppController());
   Get.put(FirebaseCommonController());
   Get.put(CustomNotificationController());

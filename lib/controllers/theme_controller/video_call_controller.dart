@@ -392,7 +392,7 @@ class VideoCallController extends GetxController {
               elevation: 2.0,
               fillColor: status == 'ended' || status == 'rejected'
                   ? appCtrl.appTheme.blackColor
-                  : Colors.redAccent,
+                  : appCtrl.appTheme.redColor,
               padding: const EdgeInsets.all(15.0),
               child: Icon(
                 status == 'ended' || status == 'rejected'

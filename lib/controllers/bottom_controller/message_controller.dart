@@ -34,7 +34,6 @@ class MessageController extends GetxController {
     }
     update();
     //contactExistList = await MessageFirebaseApi().getExistUser();
-    update();
     super.onReady();
   }
 

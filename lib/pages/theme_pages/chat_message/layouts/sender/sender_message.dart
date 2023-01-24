@@ -83,7 +83,6 @@ class _SenderMessageState extends State<SenderMessage> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ChatController>(builder: (chatCtrl) {
-      log("con : ${widget.document!["content"].contains(".xlsx")}");
       return Stack(
         children: [
           Container(

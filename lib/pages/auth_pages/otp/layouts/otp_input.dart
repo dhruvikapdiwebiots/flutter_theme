@@ -51,7 +51,7 @@ class OtpInput extends StatelessWidget {
                         : appCtrl.appTheme.primary))),
         errorPinTheme: OtpCommon()
             .defaultPinTheme
-            .copyBorderWith(border: Border.all(color: Colors.redAccent)),
+            .copyBorderWith(border: Border.all(color: appCtrl.appTheme.redColor)),
       );
     });
   }
