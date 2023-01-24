@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart';
@@ -22,7 +22,6 @@ class _DashboardState extends State<Dashboard>
     // TODO: implement initState
     WidgetsBinding.instance.addObserver(this);
     dashboardCtrl.initConnectivity();
-   // listenToNotification();
     super.initState();
   }
 
@@ -52,7 +51,6 @@ class _DashboardState extends State<Dashboard>
           scaffold: StreamBuilder(
               stream: Connectivity().onConnectivityChanged,
               builder: (context, AsyncSnapshot<ConnectivityResult> snapshot) {
-                log("snapshot : ${snapshot.data}");
 
                 return WillPopScope(
                   onWillPop: () async {

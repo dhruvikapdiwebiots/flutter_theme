@@ -5,9 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-import '../../main.dart';
-import 'package:http/http.dart' as http;
-
 //when app in background
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   log('Handling a background message ${message.messageId}');
@@ -66,6 +63,11 @@ class CustomNotificationController extends GetxController {
           flutterLocalNotificationsPlugin.cancelAll();
           log("message.data : ${message.data}");
           if (message.data["isGroup"] == true) {
+            FirebaseFirestore.instance
+                .collection("groups")
+                .doc(message.data["groupId"])
+                .get()
+                .then((value) => Get.toNamed(routeName.groupChatMessage,arguments: value.data()));
           } else {
             var data = {
               "chatId": message.data["chatId"],
@@ -120,39 +122,6 @@ class CustomNotificationController extends GetxController {
         log("newnotifications");
         showFlutterNotification(message);
       } else {
-        // if (message.data['title'] == 'Group Message') {
-        //   var currentpeer =
-        //       Provider.of<CurrentChatPeer>(this.context, listen: false);
-        //   if (currentpeer.groupChatId != message.data['groupid']) {
-        //     flutterLocalNotificationsPlugin!.cancelAll();
-
-        //     showOverlayNotification((context) {
-        //       return Card(
-        //         margin: const EdgeInsets.symmetric(horizontal: 4),
-        //         child: SafeArea(
-        //           child: ListTile(
-        //             title: Text(
-        //               message.data['titleMultilang'],
-        //               maxLines: 1,
-        //               overflow: TextOverflow.ellipsis,
-        //             ),
-        //             subtitle: Text(
-        //               message.data['bodyMultilang'],
-        //               maxLines: 2,
-        //               overflow: TextOverflow.ellipsis,
-        //             ),
-        //             trailing: IconButton(
-        //                 icon: Icon(Icons.close),
-        //                 onPressed: () {
-        //                   OverlaySupportEntry.of(context)!.dismiss();
-        //                 }),
-        //           ),
-        //         ),
-        //       );
-        //     }, duration: Duration(milliseconds: 2000));
-        //   }
-        // } else
-
         if (message.data['title'] == 'Call Ended') {
           flutterLocalNotificationsPlugin.cancelAll();
         } else {
@@ -167,12 +136,10 @@ class CustomNotificationController extends GetxController {
           }
         }
       }
-
-      //Navigator.pushNamed(context, '/result', arguments: message.data);
     });
 
     //when app in background
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
       log('A new onMessageOpenedApp event was published!');
       log("onMessageOpenedApp: $message");
       flutterLocalNotificationsPlugin.cancelAll();
@@ -189,6 +156,35 @@ class CustomNotificationController extends GetxController {
             notificationData['title'] != 'Incoming Call ended' &&
             notificationData['title'] != 'Group Message') {
           flutterLocalNotificationsPlugin.cancelAll();
+        } else if (message.data["title"] == "Incoming Video Call..." &&
+            message.data["title"] == "Incoming Audio Call...") {
+          await AwesomeNotifications().createNotification(
+              content: NotificationContent(
+                  id: -1,
+                  // -1 is replaced by a random number
+                  channelKey: 'alerts',
+                  title: 'Huston! The eagle has landed!',
+                  body:
+                      "A small step for a man, but a giant leap to Flutter's community!",
+                  bigPicture: 'https://storage.googleapis.com/cms-storage-bucket/d406c736e7c4c57f5f61.png',
+                  largeIcon: 'https://storage.googleapis.com/cms-storage-bucket/0dbfcc7a59cd1cf16282.png',
+                  //'asset://assets/images/balloons-in-sky.jpg',
+                  notificationLayout: NotificationLayout.BigPicture,
+                  payload: {'notificationId': "1234567890"}),
+              actionButtons: [
+                NotificationActionButton(key: 'REDIRECT', label: 'Redirect'),
+                NotificationActionButton(
+                  key: 'REPLY',
+                  label: 'Reply Message',
+                  requireInputText: true,
+                  actionType: ActionType.SilentAction,
+                ),
+                NotificationActionButton(
+                    key: 'DISMISS',
+                    label: 'Dismiss',
+                    actionType: ActionType.DismissAction,
+                    isDangerousOption: true)
+              ]);
         } else {
           flutterLocalNotificationsPlugin.cancelAll();
         }

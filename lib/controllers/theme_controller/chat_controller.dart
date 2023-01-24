@@ -96,7 +96,7 @@ class ChatController extends GetxController {
 
   //audio and video call tap
   audioVideoCallTap(isVideoCall) async {
-    log("is :$pData");
+
  await   ChatMessageApi()
         .audioAndVideoCallApi(toData: pData, isVideoCall: isVideoCall);
   }

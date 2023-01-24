@@ -30,14 +30,7 @@ class _VideoCallState extends State<VideoCall> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<VideoCallController>(builder: (_) {
-      var data = Get.arguments;
-      videoCallCtrl.channelName = data["channelName"];
-      videoCallCtrl.call = data["call"];
-      videoCallCtrl.userData = appCtrl.storage.read(session.user);
-      setState(() {});
-      log("videoCallCtrl.channelName : ${videoCallCtrl.call!.channelId}");
-      log("videoCallCtrl.channelName : ${videoCallCtrl.channelName}");
-      videoCallCtrl.initAgora();
+
       return Scaffold(
         backgroundColor: appCtrl.appTheme.whiteColor,
         body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(

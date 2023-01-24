@@ -40,7 +40,7 @@ class ContactListController extends GetxController {
           String phone = phoneNumberExtension(p.phones[0].number);
           await FirebaseFirestore.instance
               .collection("users")
-              .where("phone", isEqualTo: phone)
+              .where("phone", isEqualTo: phone).limit(1)
               .get()
               .then((value) {
             if (value.docs.isNotEmpty) {

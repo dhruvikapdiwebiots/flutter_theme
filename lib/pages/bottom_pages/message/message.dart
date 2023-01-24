@@ -41,10 +41,12 @@ class _MessageState extends State<Message>
         child: Scaffold(
             key: messageCtrl.scaffoldKey,
             backgroundColor: appCtrl.appTheme.whiteColor,
-            floatingActionButton: FloatingActionButton(
+            floatingActionButton: FloatingActionButton.extended(
               onPressed: () =>   Get.to(() => ContactList(),transition: Transition.downToUp,),
               backgroundColor: appCtrl.appTheme.primary,
-              child:  Icon(Icons.message,color: appCtrl.appTheme.whiteColor),
+
+              label:  Text(fonts.newChat.tr,style: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.whiteColor)),
+              icon:  Icon(Icons.message,color: appCtrl.appTheme.whiteColor),
             ),
             body:const ChatCard()),
       );

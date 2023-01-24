@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
-import 'package:audioplayers/audioplayers.dart' as audioPlayers;
+import 'package:audioplayers/audioplayers.dart' as audio_players;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wakelock/wakelock.dart';
@@ -22,12 +22,12 @@ class VideoCallController extends GetxController {
   StreamSubscription<int>? timerSubscription;
   bool muted = false;
   final _users = <int>[];
-  bool isalreadyendedcall = false;
-  bool isuserenlarged = false;
+  bool isAlreadyEndedCall = false;
+
   ClientRoleType? role;
   dynamic userData;
   Stream<DocumentSnapshot>? stream;
-  audioPlayers.AudioPlayer? player;
+  audio_players.AudioPlayer? player;
   AudioCache audioCache = AudioCache();
   int? remoteUidValue;
 
@@ -169,7 +169,7 @@ class VideoCallController extends GetxController {
           log("remoteUidValue : $remoteUidValue");
           update();
           debugPrint("remote user $remoteUidValue joined");
-          final info = 'userJoined: $remoteUidValue';
+
           if (userData["id"] == call!.callerId) {
             _stopCallingSound();
             FirebaseFirestore.instance
@@ -215,7 +215,7 @@ class VideoCallController extends GetxController {
           _users.remove(remoteUid);
           update();
           _stopCallingSound();
-          if (isalreadyendedcall == false) {
+          if (isAlreadyEndedCall == false) {
             FirebaseFirestore.instance
                 .collection("calls")
                 .doc(call!.callerId)
@@ -246,7 +246,7 @@ class VideoCallController extends GetxController {
           _users.clear();
           _dispose();
           update();
-          if (isalreadyendedcall == false) {
+          if (isAlreadyEndedCall == false) {
             FirebaseFirestore.instance
                 .collection("calls")
                 .doc(call!.callerId)
@@ -277,7 +277,7 @@ class VideoCallController extends GetxController {
       ),
     );
 
-    log("engine1 : ${engine}");
+    log("engine1 : $engine");
 
     await engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
     await engine.enableVideo();
@@ -383,7 +383,7 @@ class VideoCallController extends GetxController {
             width: 65.67,
             child: RawMaterialButton(
               onPressed: () async {
-                isalreadyendedcall =
+                isAlreadyEndedCall =
                     status == 'ended' || status == 'rejected' ? true : false;
                 update();
                 _onCallEnd(Get.context!);
@@ -521,7 +521,7 @@ class VideoCallController extends GetxController {
 
   Future<void> playCallingTone() async {
     player = (await audioCache.load('sounds/callingtone.mp3'))
-        as audioPlayers.AudioPlayer;
+        as audio_players.AudioPlayer;
     update();
   }
 }

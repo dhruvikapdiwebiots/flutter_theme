@@ -52,12 +52,6 @@ class AudioCallController extends GetxController {
       }
     }
 
-    void tick(_) {
-      counter++;
-      streamController!.add(counter);
-      stopTimer();
-    }
-
     void setCountDown() {
       const reduceSecondsBy = 1;
       final seconds = timerInterval.inSeconds + reduceSecondsBy;

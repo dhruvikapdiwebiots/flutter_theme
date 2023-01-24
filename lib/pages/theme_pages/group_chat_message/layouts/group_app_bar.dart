@@ -2,9 +2,9 @@ import '../../../../config.dart';
 
 class GroupChatMessageAppBar extends StatelessWidget with PreferredSizeWidget {
   final String? name, image;
-  final GestureTapCallback? callTap;
+  final VoidCallback? callTap,moreTap,videoTap;
 
-  const GroupChatMessageAppBar({Key? key, this.name, this.callTap, this.image})
+  const GroupChatMessageAppBar({Key? key, this.name, this.callTap, this.image,this.videoTap,this.moreTap})
       : super(key: key);
 
   @override
@@ -18,13 +18,15 @@ class GroupChatMessageAppBar extends StatelessWidget with PreferredSizeWidget {
           color: appCtrl.appTheme.white,
         ).inkWell(onTap: () => Get.back()),
         actions: [
-          Icon(Icons.video_call,
-              color: appCtrl.appTheme.white, size: Sizes.s20),
-          const HSpace(Sizes.s15),
-          Icon(Icons.call, color: appCtrl.appTheme.white, size: Sizes.s20),
-          const HSpace(Sizes.s10),
-          Icon(Icons.more_vert, color: appCtrl.appTheme.white, size: Sizes.s20)
-              .paddingSymmetric(horizontal: Insets.i5),
+          IconButton(
+            onPressed: videoTap,
+            icon:  Icon(Icons.video_call,color: appCtrl.appTheme.white),
+          ),
+          IconButton(
+            onPressed: callTap,
+            icon:  Icon(Icons.call,color: appCtrl.appTheme.white),
+          ),
+
         ],
         title: Row(
           children: [

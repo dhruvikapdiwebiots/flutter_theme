@@ -127,7 +127,7 @@ class ChatMessageApi {
   audioAndVideoCallApi({toData, isVideoCall}) async {
     try {
       var userData = appCtrl.storage.read(session.user);
-
+print("userData : $userData");
       String channelId = Random().nextInt(1000).toString();
       int timestamp = DateTime.now().millisecondsSinceEpoch;
       Call call = Call(
@@ -161,6 +161,7 @@ class ChatMessageApi {
         "channelId": channelId,
         "isVideoCall": isVideoCall,
       }).then((value) async {
+        print("va;ue : $value");
         await FirebaseFirestore.instance
             .collection("calls")
             .doc(call.receiverId)
@@ -219,41 +220,6 @@ class ChatMessageApi {
     } on FirebaseException catch (e) {
       // Caught an exception from Firebase.
       print("Failed with error '${e.code}': ${e.message}");
-    }
-  }
-
-
-  Future<bool> audioVideoCallSave(
-      {required Call call,
-      required bool? isVideoCall,
-      required int timestamp}) async {
-    try {
-      print("hasDialledMap ");
-      call.hasDialled = true;
-      Map<String, dynamic> hasDialledMap = call.toMap(call);
-
-      call.hasDialled = false;
-      Map<String, dynamic> hasNotDialledMap = call.toMap(call);
-
-      await FirebaseFirestore.instance
-          .collection("calls")
-          .doc(call.callerId)
-          .set(hasDialledMap)
-          .then((value) async {
-        print("ddssdf");
-        await FirebaseFirestore.instance
-            .collection("calls")
-            .doc(call.receiverId)
-            .set(hasNotDialledMap)
-            .then((value) => print("comple"));
-      });
-
-      return true;
-    } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
-      return false;
     }
   }
 }

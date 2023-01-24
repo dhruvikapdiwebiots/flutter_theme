@@ -115,4 +115,5 @@ final dynamic ar = {
   "callEnded": "المكالمة انتهت",
   "callRejected": "تم رفض المكالة",
   "plsWait": "ارجوك انتظر",
+  "newChat": "دردشة جديدة",
 };

@@ -114,4 +114,5 @@ final dynamic hi = {
   "callEnded": "कॉल समाप्त",
   "callRejected": "कॉल अस्वीकार कर दिया",
   "plsWait": "कृपया प्रतीक्षा करें",
+  "newChat": "नई चैट",
 };

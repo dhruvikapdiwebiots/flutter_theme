@@ -114,4 +114,5 @@ final dynamic kr = {
   "callEnded": "통화 종료",
   "callRejected": "통화 거부됨",
   "plsWait": "기다리세요",
+  "newChat": "새 채팅",
 };

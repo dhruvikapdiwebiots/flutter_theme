@@ -114,4 +114,5 @@ final dynamic en = {
   "callEnded": "Call Ended",
   "callRejected": "Call Rejected",
   "plsWait": "Please Wait",
+  "newChat": "New Chat",
 };

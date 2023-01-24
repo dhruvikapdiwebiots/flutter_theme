@@ -49,12 +49,16 @@ class _GroupChatMessageState extends State<GroupChatMessage>
   Widget build(BuildContext context) {
     log("use : ${chatCtrl.getPeerStatus()}");
     return GetBuilder<GroupChatMessageController>(builder: (_) {
-      return  PickupLayout(
-          scaffold: WillPopScope(
+      return PickupLayout(
+        scaffold: WillPopScope(
             onWillPop: chatCtrl.onBackPress,
             child: Scaffold(
-                appBar: GroupChatMessageAppBar(name: chatCtrl.pName,image: chatCtrl.groupImage,),
-                backgroundColor:appCtrl.appTheme.chatBgColor,
+                appBar: GroupChatMessageAppBar(
+                  name: chatCtrl.pName,
+                  image: chatCtrl.groupImage,
+
+                ),
+                backgroundColor: appCtrl.appTheme.chatBgColor,
                 body: Stack(children: <Widget>[
                   //body layout
                   const GroupChatBody(),

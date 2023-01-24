@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
+import 'dart:math';
+import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:dartx/dartx_io.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -64,7 +66,7 @@ class GroupChatMessageController extends GetxController {
         .then((value) {
       if (value.exists) {
         List receiver = pData["users"];
-        nameList =null;
+        nameList = null;
         for (var i = 0; i < receiver.length; i++) {
           if (nameList != null && nameList != "") {
             if (receiver[i]["name"] != user["name"]) {
@@ -78,7 +80,6 @@ class GroupChatMessageController extends GetxController {
         }
       }
 
-      log("pData : ${pData["image"]}");
       update();
     });
 
@@ -108,11 +109,10 @@ class GroupChatMessageController extends GetxController {
           "${file.name}-${DateTime.now().millisecondsSinceEpoch.toString()}";
       Reference reference = FirebaseStorage.instance.ref().child(fileName);
       UploadTask uploadTask = reference.putFile(file);
-      log("uploadTask : $uploadTask");
+
       uploadTask.then((res) {
         res.ref.getDownloadURL().then((downloadUrl) {
           imageUrl = downloadUrl;
-          log("image : $imageUrl");
           isLoading = false;
           onSendMessage(
               "${result.files.single.name}-BREAK-$imageUrl",
@@ -164,7 +164,7 @@ class GroupChatMessageController extends GetxController {
   Future uploadFile() async {
     imageFile = pickerCtrl.imageFile;
     update();
-    log("uploadFile : $imageFile");
+
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     Reference reference = FirebaseStorage.instance.ref().child(fileName);
     var file = File(imageFile!.path);
@@ -187,7 +187,6 @@ class GroupChatMessageController extends GetxController {
     videoFile = pickerCtrl.videoFile;
     update();
     if (videoFile != null) {
-      log("videoSend : $videoFile");
       const Duration(seconds: 2);
       String fileName = DateTime.now().millisecondsSinceEpoch.toString();
       Reference reference = FirebaseStorage.instance.ref().child(fileName);
@@ -258,17 +257,15 @@ class GroupChatMessageController extends GetxController {
       },
     ).then((value) async {
       File file = File(value);
-      log("file : $file");
+
       String fileName =
           "${file.name}-${DateTime.now().millisecondsSinceEpoch.toString()}";
-      Reference reference =
-      FirebaseStorage.instance.ref().child(fileName);
+      Reference reference = FirebaseStorage.instance.ref().child(fileName);
       UploadTask uploadTask = reference.putFile(file);
       TaskSnapshot snap = await uploadTask;
       String downloadUrl = await snap.ref.getDownloadURL();
-      log("audioFile : $downloadUrl");
+
       onSendMessage(downloadUrl, MessageType.audio);
-      log("audioFile : $downloadUrl");
     });
   }
 
@@ -329,6 +326,115 @@ class GroupChatMessageController extends GetxController {
             GroupReceiverMessage(document: document, index: index)
       ],
     );
+  }
+
+  //group call
+  audioAndVideoCall(isVideoCall) async {
+    try {
+      var userData = appCtrl.storage.read(session.user);
+      print("userData : $userData");
+      String channelId = Random().nextInt(1000).toString();
+      ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
+      int timestamp = DateTime.now().millisecondsSinceEpoch;
+      List receiver = pData["users"];
+
+      receiver.asMap().entries.forEach((element) {
+        FirebaseFirestore.instance
+            .collection("users")
+            .doc(element.value["id"])
+            .get()
+            .then((snap) async {
+          Call call = Call(
+              timestamp: timestamp,
+              callerId: userData["id"],
+              callerName: userData["name"],
+              callerPic: userData["image"],
+              receiverId: snap.data()!["id"],
+              receiverName: snap.data()!["name"],
+              receiverPic: snap.data()!["image"],
+              callerToken: userData["pushToken"],
+              receiverToken: snap.data()!["pushToken"],
+              channelId: channelId,
+              isVideoCall: isVideoCall);
+
+          await FirebaseFirestore.instance
+              .collection("calls")
+              .doc(call.callerId)
+              .collection("calling")
+              .add({
+            "timestamp": timestamp,
+            "callerId": userData["id"],
+            "callerName": userData["name"],
+            "callerPic": userData["image"],
+            "receiverId": snap.data()!["id"],
+            "receiverName": snap.data()!["name"],
+            "receiverPic": snap.data()!["image"],
+            "callerToken": userData["pushToken"],
+            "receiverToken": snap.data()!["pushToken"],
+            "hasDialled": true,
+            "channelId": channelId,
+            "isVideoCall": isVideoCall,
+          }).then((value) async {
+            print("va;ue : $value");
+            await FirebaseFirestore.instance
+                .collection("calls")
+                .doc(call.receiverId)
+                .collection("calling")
+                .add({
+              "timestamp": timestamp,
+              "callerId": userData["id"],
+              "callerName": userData["name"],
+              "callerPic": userData["image"],
+              "receiverId": snap.data()!["id"],
+              "receiverName": snap.data()!["name"],
+              "receiverPic": snap.data()!["image"],
+              "callerToken": userData["pushToken"],
+              "receiverToken": snap.data()!["pushToken"],
+              "hasDialled": false,
+              "channelId": channelId,
+              "isVideoCall": isVideoCall
+            }).then((value) async {
+              print("ddssdf");
+              call.hasDialled = true;
+              if (isVideoCall == false) {
+                firebaseCtrl.sendNotification(
+                    title: "Incoming Audio Call...",
+                    msg: "${call.callerName} audio call",
+                    token: call.receiverToken,
+                    pName: call.callerName,
+                    image: userData["image"],
+                    dataTitle: call.callerName);
+                var data = {
+                  "channelName": call.channelId,
+                  "call": call,
+                  "role": role
+                };
+                Get.toNamed(routeName.audioCall, arguments: data);
+              } else {
+                firebaseCtrl.sendNotification(
+                    title: "Incoming Video Call...",
+                    msg: "${call.callerName} video call",
+                    token: call.receiverToken,
+                    pName: call.callerName,
+                    image: userData["image"],
+                    dataTitle: call.callerName);
+
+                var data = {
+                  "channelName": call.channelId,
+                  "call": call,
+                  "role": role,
+                };
+
+                Get.toNamed(routeName.videoCall, arguments: data);
+              }
+            });
+          });
+        });
+      });
+    } on FirebaseException catch (e) {
+      // Caught an exception from Firebase.
+      print("Failed with error '${e.code}': ${e.message}");
+    }
   }
 
   // ON BACK PRESS
