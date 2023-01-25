@@ -256,6 +256,7 @@ contactList = [];
   void onReady() {
 // TODO: implement onReady
     isGroup = Get.arguments ?? false;
+    refreshContacts();
     update();
     super.onReady();
 
@@ -265,6 +266,6 @@ contactList = [];
   void onInit() {
     // TODO: implement onInit
     super.onInit();
-    refreshContacts();
+   // refreshContacts();
   }
 }

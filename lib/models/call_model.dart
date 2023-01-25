@@ -12,6 +12,7 @@ class Call {
   bool? isVideoCall;
   String? callerToken;
   String? receiverToken;
+  List? receiver;
 
   Call({
     this.callerId,
@@ -26,6 +27,7 @@ class Call {
     this.isVideoCall,
     this.callerToken,
     this.receiverToken,
+    this.receiver,
   });
 
   // to map

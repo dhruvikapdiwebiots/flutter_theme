@@ -56,7 +56,13 @@ class _GroupChatMessageState extends State<GroupChatMessage>
                 appBar: GroupChatMessageAppBar(
                   name: chatCtrl.pName,
                   image: chatCtrl.groupImage,
-
+                  videoTap: () async{
+                    await chatCtrl.permissionHandelCtrl.getCameraMicrophonePermissions().then((value) {
+                      if(value == true){
+                        chatCtrl.audioAndVideoCall(true);
+                      }
+                    });
+                  },
                 ),
                 backgroundColor: appCtrl.appTheme.chatBgColor,
                 body: Stack(children: <Widget>[

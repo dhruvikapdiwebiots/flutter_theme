@@ -141,7 +141,7 @@ print("userData : $userData");
           callerToken: userData["pushToken"],
           receiverToken: toData["pushToken"],
           channelId: channelId,
-          isVideoCall: isVideoCall);
+          isVideoCall: isVideoCall,receiver: null);
       ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
       await FirebaseFirestore.instance
           .collection("calls")

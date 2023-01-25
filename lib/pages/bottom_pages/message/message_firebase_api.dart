@@ -7,10 +7,10 @@ class MessageFirebaseApi {
   String? currentUserId;
   final messageCtrl = Get.isRegistered<MessageController>()? Get.find<MessageController>():Get.put(MessageController());
 
+
   //get contact list
   getContactList(List<Contact> contacts) async {
     List message = [];
-
     final data = appCtrl.storage.read(session.user);
     currentUserId = data["id"];
     var statusesSnapshot =

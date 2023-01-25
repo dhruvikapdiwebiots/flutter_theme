@@ -25,6 +25,7 @@ class DashboardController extends GetxController
   final messageCtrl = Get.isRegistered<MessageController>()
       ? Get.find<MessageController>()
       : Get.put(MessageController());
+
   List actionList = [];
   List statusAction = [];
   List callsAction = [];
@@ -101,10 +102,11 @@ class DashboardController extends GetxController
       selectedIndex = controller!.index;
       update();
     });
-user = appCtrl.storage.read(session.user);
-    // firebaseCtrl.statusDeleteAfter24Hours();
+    user = appCtrl.storage.read(session.user);
+    final groupCtrl = Get.put(CreateGroupController());
+    groupCtrl.refreshContacts();
+    groupCtrl.update();
     update();
-
     super.onReady();
   }
 
@@ -123,6 +125,7 @@ user = appCtrl.storage.read(session.user);
     // TODO: implement onInit
     contactCtrl.onInit();
     messageCtrl.onReady();
+
     super.onInit();
   }
 }

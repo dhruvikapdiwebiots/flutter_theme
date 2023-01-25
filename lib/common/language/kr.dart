@@ -27,12 +27,10 @@ final dynamic kr = {
   "nameError": "이름을 입력하세요",
   "alreadyAccount": "이미 계정이 있습니다",
   "confirmPassword": "비밀번호 확인",
-  "phoneDesc":
-      "휴대전화 번호를 입력하면 번호 확인을 위해 OTP가 전송됩니다.",
+  "phoneDesc": "휴대전화 번호를 입력하면 번호 확인을 위해 OTP가 전송됩니다.",
   "phoneError": "휴대폰 번호를 입력하세요",
   "next": "다음",
-  "otpContain":
-      "귀하의 휴대폰 번호로 OTP가 전송되었습니다. 아래에 입력하십시오.",
+  "otpContain": "귀하의 휴대폰 번호로 OTP가 전송되었습니다. 아래에 입력하십시오.",
   "otpError": "OTP를 확인하는 동안 오류가 발생했습니다. 다시 시도하세요.",
   "tryAgain": "잠시 후 다시 시도해 주세요.",
   "somethingWrong": "문제가 발생했습니다.",
@@ -92,12 +90,9 @@ final dynamic kr = {
   "intro1": "언제 어디서나 채팅",
   "intro2": "친구를 연결",
   "intro3": "그룹 채팅 만들기",
-  "introDesc1":
-      "모든 화면, 모든 장치에 정보를 전달하면 즉시 단순해집니다.",
-  "introDesc2":
-      "사용자 간의 지연 없는 비디오 채팅 연결은 쉽고 어디서나 모든 장치에서 가능합니다.",
-  "introDesc3":
-      "사용 가능한 Lorem Ipsum 구절에는 많은 변형이 있지만 대부분은 어떤 형태로든 변경되었습니다.",
+  "introDesc1": "모든 화면, 모든 장치에 정보를 전달하면 즉시 단순해집니다.",
+  "introDesc2": "사용자 간의 지연 없는 비디오 채팅 연결은 쉽고 어디서나 모든 장치에서 가능합니다.",
+  "introDesc3": "사용 가능한 Lorem Ipsum 구절에는 많은 변형이 있지만 대부분은 어떤 형태로든 변경되었습니다.",
   "inviteUser": "채팅하기 를 사용하도록 사용자 초대",
   "registerUser": "에 사용자 등록",
   "recentUpdates": "최근 업데이트",
@@ -115,4 +110,8 @@ final dynamic kr = {
   "callRejected": "통화 거부됨",
   "plsWait": "기다리세요",
   "newChat": "새 채팅",
+  "pleaseWait": "원격 사용자가 참여할 때까지 기다리십시오.",
+  "deleteConfirmation":
+      "계정을 삭제하시겠습니까? 삭제하면 모든 데이터가 손실됩니다.",
+  "ok": "확인",
 };

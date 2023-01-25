@@ -339,6 +339,7 @@ class GroupChatMessageController extends GetxController {
       List receiver = pData["users"];
 
       receiver.asMap().entries.forEach((element) {
+        print("name : ${element.value["name"]}");
         FirebaseFirestore.instance
             .collection("users")
             .doc(element.value["id"])
@@ -355,7 +356,7 @@ class GroupChatMessageController extends GetxController {
               callerToken: userData["pushToken"],
               receiverToken: snap.data()!["pushToken"],
               channelId: channelId,
-              isVideoCall: isVideoCall);
+              isVideoCall: isVideoCall,receiver: receiver);
 
           await FirebaseFirestore.instance
               .collection("calls")

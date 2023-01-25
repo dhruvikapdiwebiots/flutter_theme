@@ -28,27 +28,42 @@ class PopUpAction extends StatelessWidget {
                                   .textColor(appCtrl.appTheme.blackColor),
                             ).inkWell(onTap: () {
                               dashboardCtrl.selectedPopTap = e.key;
+                              log("e.key :: ${e.key}");
                               Get.back();
                               log("title : ${e.value["title"]}");
-                              if (e.key == 0) {
-
+                              if (e.value["title"] == "newBroadCast") {
+                                final groupChatCtrl =
+                                    Get.isRegistered<CreateGroupController>()
+                                        ? Get.find<CreateGroupController>()
+                                        : Get.put(CreateGroupController());
+                                groupChatCtrl.isGroup = false;
+                                if(groupChatCtrl.contacts!.isEmpty) {
+                                  groupChatCtrl.refreshContacts();
+                                }
                                 Get.toNamed(routeName.groupChat,
                                     arguments: false);
-                              } else if (e.key == 1) {
-
+                              } else if (e.value["title"] == "newGroup") {
+                                final groupChatCtrl =
+                                    Get.isRegistered<CreateGroupController>()
+                                        ? Get.find<CreateGroupController>()
+                                        : Get.put(CreateGroupController());
+                                groupChatCtrl.isGroup = true;
+                                if(groupChatCtrl.contacts!.isEmpty) {
+                                  groupChatCtrl.refreshContacts();
+                                }
+                                groupChatCtrl.update();
                                 Get.toNamed(routeName.groupChat,
                                     arguments: true);
                               } else {
                                 Get.toNamed(routeName.setting);
                               }
-                              dashboardCtrl.selectedPopTap = e.key;
                               dashboardCtrl.update();
                             }),
                           ))
                       .toList(),
                 ];
               },
-              onSelected: (value) => dashboardCtrl.popupMenuTap(value))
+            )
           : dashboardCtrl.selectedIndex == 1
               ? PopupMenuButton(
                   color: appCtrl.appTheme.whiteColor,
@@ -73,7 +88,7 @@ class PopUpAction extends StatelessWidget {
                           .toList(),
                     ];
                   },
-                  onSelected: (value) => dashboardCtrl.popupMenuTap(value))
+                )
               : PopupMenuButton(
                   color: appCtrl.appTheme.whiteColor,
                   icon: Icon(Icons.more_vert, color: appCtrl.appTheme.white),
@@ -111,13 +126,15 @@ class PopUpAction extends StatelessWidget {
                                             .delete();
                                       });
                                     });
+                                  } else {
+                                    Get.toNamed(routeName.setting);
                                   }
                                 }),
                               ))
                           .toList(),
                     ];
                   },
-                  onSelected: (value) => dashboardCtrl.popupMenuTap(value));
+                );
     });
   }
 }

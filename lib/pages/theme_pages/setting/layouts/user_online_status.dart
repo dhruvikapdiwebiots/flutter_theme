@@ -17,10 +17,7 @@ class UserOnlineStatus extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.data != null) {
             if (!snapshot.hasData) {
-              return Center(
-                  child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                          appCtrl.appTheme.primary)));
+              return Container();
             } else {
               return Text(
                   snapshot.data!.docs[0]["status"] == "Offline"
@@ -35,10 +32,7 @@ class UserOnlineStatus extends StatelessWidget {
               );
             }
           } else {
-            return Center(
-                child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                        appCtrl.appTheme.primary)));
+            return Container();
           }
         });
   }

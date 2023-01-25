@@ -101,5 +101,9 @@ class Fonts{
   final callRejected = "callRejected";
   final plsWait = "plsWait";
   final newChat = "newChat";
+  final pleaseWait = "pleaseWait";
+  final deleteAccount = "deleteAccount";
+  final deleteConfirmation = "deleteConfirmation";
+  final ok = "ok";
   String unblockUser(val) => "unblockUser".trParams({'pName':val});
 }

@@ -1,7 +1,7 @@
 import '../../../config.dart';
 
 class GroupChat extends StatelessWidget {
-  final groupChatCtrl =  Get.find<CreateGroupController>();
+  final groupChatCtrl =  Get.isRegistered<CreateGroupController>() ? Get.find<CreateGroupController>() : Get.put(CreateGroupController());
 
   GroupChat({Key? key}) : super(key: key);
 

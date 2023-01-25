@@ -340,8 +340,9 @@ class BroadcastChatController extends GetxController {
 
 // BUILD ITEM MESSAGE BOX FOR RECEIVER AND SENDER BOX DESIGN
   Widget buildItem(int index, document) {
+    print("log : ${document["sender"]}");
     if (document['sender'] == userData["id"]) {
-      return SenderMessage(
+      return BroadcastSenderMessage(
         document: document,
         index: index,
       );

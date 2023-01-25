@@ -115,4 +115,7 @@ final dynamic en = {
   "callRejected": "Call Rejected",
   "plsWait": "Please Wait",
   "newChat": "New Chat",
+  "pleaseWait": "Please wait for remote user to join",
+  "deleteConfirmation": "Are you sure you want to delete your Account? After delete you will lose all your data.",
+  "ok": "Ok",
 };
