@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:audioplayers/audioplayers.dart' as audio_players;
 import 'package:audioplayers/audioplayers.dart';
+
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wakelock/wakelock.dart';
 import '../../config.dart';
@@ -23,7 +24,7 @@ class VideoCallController extends GetxController {
   StreamSubscription<int>? timerSubscription;
   bool muted = false;
   bool isAlreadyEndedCall = false;
-String nameList ="";
+  String nameList = "";
   ClientRoleType? role;
   dynamic userData;
   Stream<DocumentSnapshot>? stream;
@@ -110,7 +111,6 @@ String nameList ="";
     ));
     log("engine : $engine");
 
-
     engine.registerEventHandler(
       RtcEngineEventHandler(
         onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
@@ -118,12 +118,9 @@ String nameList ="";
           localUserJoined = true;
           final info = 'onJoinChannel: $channel, uid: ${connection.localUid}';
           infoStrings.add(info);
-          if(call!.receiver != null) {
+          if (call!.receiver != null) {
             List receiver = call!.receiver!;
-            receiver
-                .asMap()
-                .entries
-                .forEach((element) {
+            receiver.asMap().entries.forEach((element) {
               if (nameList != "") {
                 if (element.value["name"] != element.value["name"]) {
                   nameList = "$nameList, ${element.value["name"]}";
@@ -155,7 +152,8 @@ String nameList ="";
               'status': 'calling',
               'started': null,
               'ended': null,
-              'callerName': call!.receiver != null ?nameList : call!.callerName,
+              'callerName':
+                  call!.receiver != null ? nameList : call!.callerName,
             }, SetOptions(merge: true));
             if (call!.receiver != null) {
               List receiver = call!.receiver!;
@@ -178,10 +176,10 @@ String nameList ="";
                     'status': 'missedCall',
                     'started': null,
                     'ended': null,
-                    'callerName': call!.receiver != null ? nameList: call!.callerName,
+                    'callerName':
+                        call!.receiver != null ? nameList : call!.callerName,
                   }, SetOptions(merge: true));
                 }
-
               });
               log("nameList : $nameList");
               update();
@@ -203,7 +201,8 @@ String nameList ="";
                 'status': 'missedCall',
                 'started': null,
                 'ended': null,
-                'callerName': call!.receiver != null ?nameList :call!.callerName,
+                'callerName':
+                    call!.receiver != null ? nameList : call!.callerName,
               }, SetOptions(merge: true));
             }
           }
@@ -248,7 +247,6 @@ String nameList ="";
             if (call!.receiver != null) {
               List receiver = call!.receiver!;
               receiver.asMap().entries.forEach((element) {
-
                 if (element.value["id"] != userData["id"]) {
                   FirebaseFirestore.instance
                       .collection("calls")
@@ -410,7 +408,7 @@ String nameList ="";
     update();
   }
 
-  void _onToggleSpeaker() {
+  void onToggleSpeaker() {
     isSpeaker = !isSpeaker;
     update();
     engine.setEnableSpeakerphone(isSpeaker);
@@ -420,7 +418,7 @@ String nameList ="";
     player!.stop();
   }
 
-  void _onToggleMute() {
+  void onToggleMute() {
     muted = !muted;
     update();
     _stopCallingSound();
@@ -449,98 +447,7 @@ String nameList ="";
     String? status,
   ) {
     if (role == ClientRoleType.clientRoleAudience) return Container();
-    return Container(
-      alignment: Alignment.bottomCenter,
-      padding: const EdgeInsets.symmetric(vertical: Insets.i35),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          SizedBox(
-              width: 65.67,
-              child: RawMaterialButton(
-                onPressed: _onToggleSpeaker,
-                shape: const CircleBorder(),
-                elevation: 2.0,
-                fillColor: isSpeaker
-                    ? appCtrl.appTheme.primary
-                    : appCtrl.appTheme.whiteColor,
-                padding: const EdgeInsets.all(12.0),
-                child: Icon(
-                  isSpeaker
-                      ? Icons.volume_mute_rounded
-                      : Icons.volume_off_sharp,
-                  color: isSpeaker
-                      ? appCtrl.appTheme.whiteColor
-                      : appCtrl.appTheme.primary,
-                  size: 22.0,
-                ),
-              )),
-          status != 'ended' && status != 'rejected'
-              ? SizedBox(
-                  width: 65.67,
-                  child: RawMaterialButton(
-                    onPressed: _onToggleMute,
-                    shape: const CircleBorder(),
-                    elevation: 2.0,
-                    fillColor: muted
-                        ? appCtrl.appTheme.primary
-                        : appCtrl.appTheme.whiteColor,
-                    padding: const EdgeInsets.all(12.0),
-                    child: Icon(
-                      muted ? Icons.mic_off : Icons.mic,
-                      color: muted
-                          ? appCtrl.appTheme.whiteColor
-                          : appCtrl.appTheme.primary,
-                      size: 22.0,
-                    ),
-                  ))
-              : const SizedBox(height: 42, width: 65.67),
-          SizedBox(
-            width: 65.67,
-            child: RawMaterialButton(
-              onPressed: () async {
-                isAlreadyEndedCall =
-                    status == 'ended' || status == 'rejected' ? true : false;
-                update();
-                _onCallEnd(Get.context!);
-              },
-              shape: const CircleBorder(),
-              elevation: 2.0,
-              fillColor: status == 'ended' || status == 'rejected'
-                  ? appCtrl.appTheme.blackColor
-                  : appCtrl.appTheme.redColor,
-              padding: const EdgeInsets.all(15.0),
-              child: Icon(
-                status == 'ended' || status == 'rejected'
-                    ? Icons.close
-                    : Icons.call,
-                color: appCtrl.appTheme.whiteColor,
-                size: 35.0,
-              ),
-            ),
-          ),
-          status == 'ended' || status == 'rejected'
-              ? const SizedBox(
-                  width: 65.67,
-                )
-              : SizedBox(
-                  width: 65.67,
-                  child: RawMaterialButton(
-                    onPressed: onSwitchCamera,
-                    shape: const CircleBorder(),
-                    elevation: 2.0,
-                    fillColor: appCtrl.appTheme.whiteColor,
-                    padding: const EdgeInsets.all(12.0),
-                    child: Icon(
-                      Icons.switch_camera,
-                      color: appCtrl.appTheme.primary,
-                      size: 20.0,
-                    ),
-                  ),
-                )
-        ],
-      ),
-    );
+    return VideoToolBar(isShowSpeaker: isShowSpeaker,status: status,);
   }
 
   Future<void> onSwitchCamera() async {
@@ -634,13 +541,12 @@ String nameList ="";
     }
   }
 
-  void _onCallEnd(BuildContext context) async {
+  void onCallEnd(BuildContext context) async {
     await endCall(call: call!).then((value) async {
       log("value : $value");
       DateTime now = DateTime.now();
       if (call!.receiver != null) {
         List receiver = call!.receiver!;
-
 
         update();
         receiver.asMap().entries.forEach((element) {

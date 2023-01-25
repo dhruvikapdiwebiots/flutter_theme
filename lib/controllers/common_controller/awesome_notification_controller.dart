@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 
 import '../../config.dart';
@@ -54,10 +56,10 @@ class AwesomeNotificationController {
         receivedAction.actionType == ActionType.SilentBackgroundAction
     ){
       // For background actions, you must hold the execution until the end
-      print('Message sent via notification input: "${receivedAction.buttonKeyInput}"');
+      log('Message sent via notification input: "${receivedAction.buttonKeyInput}"');
     }
     else {
-      print('Message sent via notification sdddd: "${receivedAction.buttonKeyInput}"');
+      log('Message sent via notification sdddd: "${receivedAction.buttonKeyInput}"');
     }
   }
 

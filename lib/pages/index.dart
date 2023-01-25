@@ -110,6 +110,9 @@ export 'theme_pages/chat_message/layouts/audio_layout/voice_stop_icons.dart';
 export 'theme_pages/pick_up_call/pick_up_call.dart';
 export 'theme_pages/broadcast_chat/layouts/excel_layout.dart';
 export 'theme_pages/group_chat_message/layouts/doc_image.dart';
+export 'theme_pages/audio_call/layouts/audio_portrait.dart';
+export 'theme_pages/audio_call/layouts/audio_tool_bar.dart';
+export 'theme_pages/video_call/layouts/video_tool_bar.dart';
 
 export '/models/progress_bar.dart';
 export '/utilities/type_list.dart';

@@ -34,6 +34,6 @@ class AppRoute {
     GetPage(name: _routeName.otherSetting, page: () =>const OtherSetting()),
     GetPage(name: _routeName.broadcastChat, page: () =>const BroadcastChat()),
     GetPage(name: _routeName.videoCall, page: () => const VideoCall()),
-    GetPage(name: _routeName.audioCall, page: () =>  AudioCall()),
+    GetPage(name: _routeName.audioCall, page: () => const AudioCall()),
   ];
 }

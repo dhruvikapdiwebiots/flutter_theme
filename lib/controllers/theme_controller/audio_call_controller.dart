@@ -35,13 +35,13 @@ class AudioCallController extends GetxController {
   String hoursStr = '00';
   String minutesStr = '00';
   String secondsStr = '00';
+  int counter = 0;
 
   Stream<int> stopWatchStream() {
     // ignore: close_sinks
 
     Timer? timer;
     Duration timerInterval = const Duration(seconds: 1);
-    int counter = 0;
 
     void stopTimer() {
       if (timer != null) {
@@ -61,9 +61,8 @@ class AudioCallController extends GetxController {
     }
 
     void startTimer() {
-      timer =
-          Timer.periodic(const Duration(seconds: 1), (_) => setCountDown());
-     // timer = Timer.periodic(timerInterval, tick);
+      timer = Timer.periodic(const Duration(seconds: 1), (_) => setCountDown());
+      // timer = Timer.periodic(timerInterval, tick);
     }
 
     streamController = StreamController<int>(
@@ -82,15 +81,13 @@ class AudioCallController extends GetxController {
     _dispose();
   }
 
-
   Future<void> _dispose() async {
     await engine.leaveChannel();
     await engine.release();
   }
 
-
   @override
-  void onReady() async{
+  void onReady() async {
     // TODO: implement onReady
     var data = Get.arguments;
     channelName = data["channelName"];
@@ -134,11 +131,9 @@ class AudioCallController extends GetxController {
   }
 
   Future<void> initAgora() async {
-
     engine = createAgoraRtcEngine();
     await engine.initialize(RtcEngineContext(
       appId: fonts.appId,
-
       channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
     ));
     log("engine : $engine");
@@ -322,7 +317,7 @@ class AudioCallController extends GetxController {
     update();
   }
 
-  void _onToggleSpeaker() {
+  void onToggleSpeaker() {
     isSpeaker = !isSpeaker;
     update();
     engine.setEnableSpeakerphone(isSpeaker);
@@ -332,7 +327,7 @@ class AudioCallController extends GetxController {
     player!.stop();
   }
 
-  void _onToggleMute() {
+  void onToggleMute() {
     muted = !muted;
     update();
     _stopCallingSound();
@@ -350,56 +345,7 @@ class AudioCallController extends GetxController {
     String? status,
   ) {
     if (role == ClientRoleType.clientRoleAudience) return Container();
-    return Container(
-      alignment: Alignment.bottomCenter,
-      padding: const EdgeInsets.symmetric(vertical: Insets.i35),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          Icon(
-            isSpeaker ? Icons.volume_mute_rounded : Icons.volume_off_sharp,
-            color: isSpeaker
-                ? appCtrl.appTheme.whiteColor
-                : appCtrl.appTheme.primary,
-            size: Sizes.s22,
-          )
-              .paddingAll(Insets.i10)
-              .decorated(
-                  color: isSpeaker
-                      ? appCtrl.appTheme.primary
-                      : appCtrl.appTheme.whiteColor,
-                  shape: BoxShape.circle)
-              .inkWell(onTap: _onToggleSpeaker),
-          Icon(
-            status == 'ended' || status == 'rejected'
-                ? Icons.close
-                : Icons.call,
-            color: appCtrl.appTheme.whiteColor,
-            size: Sizes.s35,
-          )
-              .paddingAll(Insets.i15)
-              .decorated(
-                  color: appCtrl.appTheme.redColor, shape: BoxShape.circle)
-              .inkWell(onTap: () async {
-            isAlreadyEnded =
-                status == 'ended' || status == 'rejected' ? true : false;
-            update();
-            _onCallEnd(Get.context!);
-          }),
-          status != 'ended' && status != 'rejected'
-              ? Icon(
-                  muted ? Icons.mic_off : Icons.mic,
-                  color: appCtrl.appTheme.whiteColor,
-                  size: 22.0,
-                )
-                  .paddingAll(Insets.i10)
-                  .decorated(
-                      color: appCtrl.appTheme.primary, shape: BoxShape.circle)
-                  .inkWell(onTap: _onToggleMute)
-              : const SizedBox(height: 42, width: 65.67),
-        ],
-      ),
-    );
+    return AudioToolBar(status: status,isShowSpeaker: isShowSpeaker,);
   }
 
   Future<bool> endCall({required Call call}) async {
@@ -445,7 +391,7 @@ class AudioCallController extends GetxController {
     }
   }
 
-  void _onCallEnd(BuildContext context) async {
+  void onCallEnd(BuildContext context) async {
     /*  final FirestoreDataProviderCALLHISTORY firestoreDataProviderCALLHISTORY =
     Provider.of<FirestoreDataProviderCALLHISTORY>(context, listen: false);*/
     _stopCallingSound();
@@ -520,116 +466,14 @@ class AudioCallController extends GetxController {
   }
 
   audioScreenForPORTRAIT({
-    required BuildContext context,
     String? status,
     bool? isPeerMuted,
   }) {
-    var w = MediaQuery.of(context).size.width;
-    var h = MediaQuery.of(context).size.height;
+
+
     if (status == 'rejected') {
       _stopCallingSound();
     }
-    return GetBuilder<AudioCallController>(builder: (_) {
-      return Container(
-        alignment: Alignment.center,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // SizedBox(height: h / 35),
-                const VSpace(
-                  Sizes.s50,
-                ),
-                call!.receiverPic != null
-                    ? SizedBox(
-                        height: Sizes.s100,
-                        child: CachedNetworkImage(
-                            imageUrl: call!.receiverPic!,
-                            imageBuilder: (context, imageProvider) =>
-                                CircleAvatar(
-                                  backgroundColor: const Color(0xffE6E6E6),
-                                  radius: Sizes.s50,
-                                  backgroundImage:
-                                      NetworkImage(call!.receiverPic!),
-                                ),
-                            placeholder: (context, url) => Image.asset(
-                                  imageAssets.user,
-                                  color: appCtrl.appTheme.whiteColor,
-                                ).paddingAll(Insets.i15).decorated(
-                                    color:
-                                        appCtrl.appTheme.grey.withOpacity(.4),
-                                    shape: BoxShape.circle),
-                            errorWidget: (context, url, error) => Image.asset(
-                                  imageAssets.user,
-                                  color: appCtrl.appTheme.whiteColor,
-                                ).paddingAll(Insets.i15).decorated(
-                                    color:
-                                        appCtrl.appTheme.grey.withOpacity(.4),
-                                    shape: BoxShape.circle)),
-                      )
-                    : SizedBox(
-                        height: Sizes.s100,
-                        child: Image.asset(
-                          imageAssets.user,
-                          color: appCtrl.appTheme.whiteColor,
-                        ).paddingAll(Insets.i15).decorated(
-                            color: appCtrl.appTheme.grey.withOpacity(.4),
-                            shape: BoxShape.circle),
-                      ),
-
-                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  const SizedBox(height: 7),
-                  SizedBox(
-                      width: w / 1.1,
-                      child: Text(
-                          call!.callerId == userData["id"]
-                              ? call!.receiverName!
-                              : call!.callerName!,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          style: AppCss.poppinsblack28
-                              .textColor(appCtrl.appTheme.blackColor)))
-                ]),
-                // SizedBox(height: h / 25),
-                const VSpace(Sizes.s20),
-                status == 'pickedUp'
-                    ? Text(
-                        "$hoursStr:$minutesStr:$secondsStr",
-                        style: TextStyle(
-                            fontSize: 20.0,
-                            color: appCtrl.appTheme.greenColor.withOpacity(.3),
-                            fontWeight: FontWeight.w600),
-                      )
-                    : Text(
-                        status == 'pickedUp'
-                            ? fonts.picked.tr
-                            : status == 'noNetwork'
-                                ? fonts.connecting.tr
-                                : status == 'ringing' || status == 'missedCall'
-                                    ? fonts.calling.tr
-                                    : status == 'calling'
-                                        ? call!.receiverId == userData["id"]
-                                            ? fonts.connecting.tr
-                                            : fonts.calling.tr
-                                        : status == 'pickedUp'
-                                            ? fonts.onCall.tr
-                                            : status == 'ended'
-                                                ? fonts.callEnded.tr
-                                                : status == 'rejected'
-                                                    ? fonts.callRejected.tr
-                                                    : fonts.plsWait.tr,
-                        style: AppCss.poppinsMedium14
-                            .textColor(appCtrl.appTheme.blackColor)),
-                const SizedBox(height: 16),
-              ],
-            ).marginSymmetric(vertical: Insets.i15),
-          ],
-        ),
-      );
-    });
+    return AudioPortrait(status: status,isPeerMuted: isPeerMuted,);
   }
 }

@@ -104,7 +104,9 @@ class _AudioDocState extends State<AudioDoc> with WidgetsBindingObserver {
     _audioPlayer.seek(position);
   }
 
+  @override
   void dispose() {
+    super.dispose();
     _audioPlayer.dispose();
   }
 

@@ -1,11 +1,7 @@
 
 import 'dart:developer';
-import 'dart:io';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
-import 'package:intl/intl.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:permission_handler/permission_handler.dart';
-
 import '../../../../config.dart';
 
 
@@ -109,6 +105,7 @@ class _GroupAudioDocState extends State<GroupAudioDoc> with WidgetsBindingObserv
 
   @override
   void dispose() {
+    super.dispose();
     _audioPlayer.dispose();
   }
 

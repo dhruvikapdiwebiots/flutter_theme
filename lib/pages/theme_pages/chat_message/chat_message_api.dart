@@ -1,9 +1,7 @@
 import 'dart:math';
+import 'dart:developer' as log;
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:flutter/foundation.dart';
-
 import '../../../config.dart';
 
 class ChatMessageApi {
@@ -101,7 +99,6 @@ class ChatMessageApi {
             "lastMessage": content,
             "senderId": user["id"],
           });
-          print("ele : ${element.value}");
           if (user["id"] != element.value["id"]) {
             FirebaseFirestore.instance
                 .collection("users")
@@ -127,7 +124,6 @@ class ChatMessageApi {
   audioAndVideoCallApi({toData, isVideoCall}) async {
     try {
       var userData = appCtrl.storage.read(session.user);
-print("userData : $userData");
       String channelId = Random().nextInt(1000).toString();
       int timestamp = DateTime.now().millisecondsSinceEpoch;
       Call call = Call(
@@ -161,7 +157,6 @@ print("userData : $userData");
         "channelId": channelId,
         "isVideoCall": isVideoCall,
       }).then((value) async {
-        print("va;ue : $value");
         await FirebaseFirestore.instance
             .collection("calls")
             .doc(call.receiverId)
@@ -180,7 +175,6 @@ print("userData : $userData");
           "channelId": channelId,
           "isVideoCall": isVideoCall
         }).then((value)async {
-          print("ddssdf");
           call.hasDialled = true;
           if (isVideoCall == false) {
             firebaseCtrl.sendNotification(
@@ -219,7 +213,7 @@ print("userData : $userData");
       });
     } on FirebaseException catch (e) {
       // Caught an exception from Firebase.
-      print("Failed with error '${e.code}': ${e.message}");
+      log.log("Failed with error '${e.code}': ${e.message}");
     }
   }
 }

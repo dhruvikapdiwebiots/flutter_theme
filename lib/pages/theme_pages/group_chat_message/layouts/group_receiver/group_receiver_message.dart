@@ -1,4 +1,4 @@
-import 'package:intl/intl.dart';
+
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../../../../../config.dart';
 

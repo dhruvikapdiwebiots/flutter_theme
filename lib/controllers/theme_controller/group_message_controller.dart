@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:developer';
+import 'dart:developer' as log;
 import 'dart:io';
 import 'dart:math';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
@@ -332,14 +332,14 @@ class GroupChatMessageController extends GetxController {
   audioAndVideoCall(isVideoCall) async {
     try {
       var userData = appCtrl.storage.read(session.user);
-      print("userData : $userData");
+
       String channelId = Random().nextInt(1000).toString();
       ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
       int timestamp = DateTime.now().millisecondsSinceEpoch;
       List receiver = pData["users"];
 
       receiver.asMap().entries.forEach((element) {
-        print("name : ${element.value["name"]}");
+
         FirebaseFirestore.instance
             .collection("users")
             .doc(element.value["id"])
@@ -376,7 +376,7 @@ class GroupChatMessageController extends GetxController {
             "channelId": channelId,
             "isVideoCall": isVideoCall,
           }).then((value) async {
-            print("va;ue : $value");
+
             await FirebaseFirestore.instance
                 .collection("calls")
                 .doc(call.receiverId)
@@ -395,7 +395,7 @@ class GroupChatMessageController extends GetxController {
               "channelId": channelId,
               "isVideoCall": isVideoCall
             }).then((value) async {
-              print("ddssdf");
+
               call.hasDialled = true;
               if (isVideoCall == false) {
                 firebaseCtrl.sendNotification(
@@ -434,7 +434,7 @@ class GroupChatMessageController extends GetxController {
       });
     } on FirebaseException catch (e) {
       // Caught an exception from Firebase.
-      print("Failed with error '${e.code}': ${e.message}");
+  log.log("err :$e");
     }
   }
 

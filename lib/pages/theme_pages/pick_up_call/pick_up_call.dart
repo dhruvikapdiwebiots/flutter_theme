@@ -2,14 +2,13 @@ import 'dart:developer';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:camera/camera.dart';
-import 'package:flutter_theme/pages/theme_pages/video_call/video_call.dart';
 
 import '../../../config.dart';
 
 class PickupLayout extends StatefulWidget {
   final Widget scaffold;
 
-  const PickupLayout({
+  const PickupLayout({super.key,
     required this.scaffold,
   });
 

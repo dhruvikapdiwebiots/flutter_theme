@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:dartx/dartx_io.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -96,8 +95,7 @@ class ChatController extends GetxController {
 
   //audio and video call tap
   audioVideoCallTap(isVideoCall) async {
-
- await   ChatMessageApi()
+    await ChatMessageApi()
         .audioAndVideoCallApi(toData: pData, isVideoCall: isVideoCall);
   }
 
@@ -176,19 +174,17 @@ class ChatController extends GetxController {
     pickerCtrl.dismissKeyboard();
     Get.back();
     FilePickerResult? result = await FilePicker.platform.pickFiles();
-    log("rez : $result");
     if (result != null) {
       File file = File(result.files.single.path.toString());
       String fileName =
           "${file.name}-${DateTime.now().millisecondsSinceEpoch.toString()}";
       log("file : $file");
-      Reference reference =
-      FirebaseStorage.instance.ref().child(fileName);
+      Reference reference = FirebaseStorage.instance.ref().child(fileName);
       UploadTask uploadTask = reference.putFile(file);
       TaskSnapshot snap = await uploadTask;
       String downloadUrl = await snap.ref.getDownloadURL();
-isLoading = true;
-update();
+      isLoading = true;
+      update();
       log("fileName : $downloadUrl");
       onSendMessage(
           "${result.files.single.name}-BREAK-$downloadUrl",
@@ -388,8 +384,7 @@ update();
       log("file : $file");
       String fileName =
           "${file.name}-${DateTime.now().millisecondsSinceEpoch.toString()}";
-      Reference reference =
-      FirebaseStorage.instance.ref().child(fileName);
+      Reference reference = FirebaseStorage.instance.ref().child(fileName);
       UploadTask uploadTask = reference.putFile(file);
       TaskSnapshot snap = await uploadTask;
       String downloadUrl = await snap.ref.getDownloadURL();
@@ -529,13 +524,16 @@ update();
       }
     }
     if (pData["pushToken"] != "") {
-
       firebaseCtrl.sendNotification(
           title: "Single Message",
           msg: content,
           chatId: chatId,
-          token: pData["pushToken"],pId: pId,pName: pName,userContactModel: userContactModel,
-          image: userData["image"],dataTitle:pName );
+          token: pData["pushToken"],
+          pId: pId,
+          pName: pName,
+          userContactModel: userContactModel,
+          image: userData["image"],
+          dataTitle: pName);
     }
     isLoading = false;
     update();

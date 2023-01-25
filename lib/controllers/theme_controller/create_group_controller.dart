@@ -262,10 +262,4 @@ contactList = [];
 
   }
 
-  @override
-  void onInit() {
-    // TODO: implement onInit
-    super.onInit();
-   // refreshContacts();
-  }
 }
