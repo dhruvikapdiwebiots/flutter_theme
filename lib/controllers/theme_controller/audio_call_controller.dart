@@ -143,7 +143,7 @@ class AudioCallController extends GetxController {
         onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
           debugPrint("local user ${connection.localUid} joined");
           localUserJoined = true;
-
+          log("localUid : ${connection.localUid}");
           if (call!.callerId == userData["id"]) {
             playCallingTone();
 
@@ -196,6 +196,7 @@ class AudioCallController extends GetxController {
           remoteUidValue = remoteUid;
           startTimerNow();
           update();
+          log("remoteUidValue : $remoteUidValue");
           debugPrint("remote user $remoteUidValue joined");
           if (userData["id"] == call!.callerId) {
             _stopCallingSound();
@@ -308,8 +309,10 @@ class AudioCallController extends GetxController {
     await engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
     await engine.startPreview();
 
+    dynamic agoraToken = appCtrl.storage.read(session.agoraToken);
+    log("agoraToken : $agoraToken");
     await engine.joinChannel(
-      token: fonts.token,
+      token: agoraToken,
       channelId: fonts.channel,
       uid: 0,
       options: const ChannelMediaOptions(),
@@ -345,7 +348,10 @@ class AudioCallController extends GetxController {
     String? status,
   ) {
     if (role == ClientRoleType.clientRoleAudience) return Container();
-    return AudioToolBar(status: status,isShowSpeaker: isShowSpeaker,);
+    return AudioToolBar(
+      status: status,
+      isShowSpeaker: isShowSpeaker,
+    );
   }
 
   Future<bool> endCall({required Call call}) async {
@@ -469,11 +475,107 @@ class AudioCallController extends GetxController {
     String? status,
     bool? isPeerMuted,
   }) {
-
-
     if (status == 'rejected') {
       _stopCallingSound();
-    }
-    return AudioPortrait(status: status,isPeerMuted: isPeerMuted,);
+    } var w = MediaQuery.of(Get.context!).size.width;
+    return Container(
+      alignment: Alignment.center,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // SizedBox(height: h / 35),
+              const VSpace(Sizes.s50),
+              call!.receiverPic != null
+                  ? SizedBox(
+                height: Sizes.s100,
+                child: CachedNetworkImage(
+                    imageUrl: call!.receiverPic!,
+                    imageBuilder: (context, imageProvider) =>
+                        CircleAvatar(
+                          backgroundColor: appCtrl.appTheme.contactBgGray,
+                          radius: Sizes.s50,
+                          backgroundImage:
+                          NetworkImage(call!.receiverPic!),
+                        ),
+                    placeholder: (context, url) => Image.asset(
+                        imageAssets.user,
+                        color: appCtrl.appTheme.contactBgGray)
+                        .paddingAll(Insets.i15)
+                        .decorated(
+                        color:
+                        appCtrl.appTheme.grey.withOpacity(.4),
+                        shape: BoxShape.circle),
+                    errorWidget: (context, url, error) => Image.asset(
+                      imageAssets.user,
+                      color: appCtrl.appTheme.whiteColor,
+                    ).paddingAll(Insets.i15).decorated(
+                        color:
+                        appCtrl.appTheme.grey.withOpacity(.4),
+                        shape: BoxShape.circle)),
+              )
+                  : SizedBox(
+                height: Sizes.s100,
+                child: Image.asset(
+                  imageAssets.user,
+                  color: appCtrl.appTheme.whiteColor,
+                ).paddingAll(Insets.i15).decorated(
+                    color: appCtrl.appTheme.grey.withOpacity(.4),
+                    shape: BoxShape.circle),
+              ),
+
+              Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                const SizedBox(height: 7),
+                SizedBox(
+                    width: w / 1.1,
+                    child: Text(
+                        call!.callerId == userData["id"]
+                            ? call!.receiverName!
+                            : call!.callerName!,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: AppCss.poppinsblack28
+                            .textColor(appCtrl.appTheme.blackColor)))
+              ]),
+              // SizedBox(height: h / 25),
+              const VSpace(Sizes.s20),
+              status == 'pickedUp'
+                  ? Text(
+                "${hoursStr}:${minutesStr}:${secondsStr}",
+                style: TextStyle(
+                    fontSize: 20.0,
+                    color: appCtrl.appTheme.greenColor.withOpacity(.3),
+                    fontWeight: FontWeight.w600),
+              )
+                  : Text(
+                  status == 'pickedUp'
+                      ? fonts.picked.tr
+                      : status == 'noNetwork'
+                      ? fonts.connecting.tr
+                      : status == 'ringing' || status == 'missedCall'
+                      ? fonts.calling.tr
+                      : status == 'calling'
+                      ? call!.receiverId == userData["id"]
+                      ? fonts.connecting.tr
+                      : fonts.calling.tr
+                      : status == 'pickedUp'
+                      ? fonts.onCall.tr
+                      : status == 'ended'
+                      ? fonts.callEnded.tr
+                      : status == 'rejected'
+                      ? fonts.callRejected.tr
+                      : fonts.plsWait.tr,
+                  style: AppCss.poppinsMedium14
+                      .textColor(appCtrl.appTheme.blackColor)),
+              const SizedBox(height: 16),
+            ],
+          ).marginSymmetric(vertical: Insets.i15),
+        ],
+      ),
+    );
   }
 }

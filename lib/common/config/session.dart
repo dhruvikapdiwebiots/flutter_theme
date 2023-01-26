@@ -13,5 +13,6 @@ class Session {
   String selectedIndex = 'selectedIndex';
   String usageControls = 'usageControls';
   String userAppSettings = 'userAppSettings';
+  String agoraToken = 'agoraToken';
   String contactList = 'contactList';
 }

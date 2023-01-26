@@ -399,8 +399,10 @@ class VideoCallController extends GetxController {
     await engine.enableVideo();
     await engine.startPreview();
 
+    dynamic agoraToken = appCtrl.storage.read(session.agoraToken);
+    log("agoraToken : $agoraToken");
     await engine.joinChannel(
-      token: fonts.token,
+      token: agoraToken["token"],
       channelId: fonts.channel,
       uid: 0,
       options: const ChannelMediaOptions(),

@@ -3,4 +3,5 @@ class CollectionName{
   String usageControls ="usageControls";
   String userAppSettings ="userAppSettings";
   String chatWith ="chatWith";
+  String agoraToken ="agoraToken";
 }

@@ -28,64 +28,51 @@ class _AudioCallState extends State<AudioCall> {
       return Scaffold(
           backgroundColor: appCtrl.appTheme.whiteColor,
           body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-            stream: audioCallCtrl.stream
-                as Stream<DocumentSnapshot<Map<String, dynamic>>>?,
-            builder: (BuildContext context, snapshot) {
-              if (snapshot.hasData) {
-                if (snapshot.data!.data() == null || snapshot.data == null) {
-                  return Center(
-                    child: Stack(
-                      children: <Widget>[
-                        audioCallCtrl.audioScreenForPORTRAIT(
-                            status: 'calling', isPeerMuted: false),
-                        audioCallCtrl.toolbar(false, 'calling'),
-                      ],
-                    ),
-                  );
-                } else {
-                  return Center(
-                    child: Stack(
-                      children: <Widget>[
-                        // _viewRows(),
-                        audioCallCtrl.audioScreenForPORTRAIT(
-                            status: snapshot.data!.data()!["status"],
-                            isPeerMuted: snapshot.data!.data()!["isMuted"]),
-
-                        audioCallCtrl.toolbar(
-                            snapshot.data!.data()!["status"] == 'pickedUp'
-                                ? true
-                                : false,
-                            snapshot.data!.data()!["status"]),
-                      ],
-                    ),
-                  );
-                }
-              } else if (!snapshot.hasData) {
-                return Center(
-                  child: Stack(
-                    children: <Widget>[
+              stream: audioCallCtrl.stream
+                  as Stream<DocumentSnapshot<Map<String, dynamic>>>?,
+              builder: (BuildContext context, snapshot) {
+                if (snapshot.hasData) {
+                  if (snapshot.data!.data() == null || snapshot.data == null) {
+                    return Center(
+                        child: Stack(children: <Widget>[
+                      audioCallCtrl.audioScreenForPORTRAIT(
+                          status: 'calling', isPeerMuted: false),
+                      audioCallCtrl.toolbar(false, 'calling')
+                    ]));
+                  } else {
+                    return Center(
+                        child: Stack(children: <Widget>[
                       // _viewRows(),
                       audioCallCtrl.audioScreenForPORTRAIT(
-                          status: 'noNetwork', isPeerMuted: false),
+                          status: snapshot.data!.data()!["status"],
+                          isPeerMuted: snapshot.data!.data()!["isMuted"]),
 
-                      audioCallCtrl.toolbar(false, 'noNetwork'),
-                    ],
-                  ),
-                );
-              }
-
-              return Center(
-                child: Stack(
-                  children: <Widget>[
+                      audioCallCtrl.toolbar(
+                          snapshot.data!.data()!["status"] == 'pickedUp'
+                              ? true
+                              : false,
+                          snapshot.data!.data()!["status"])
+                    ]));
+                  }
+                } else if (!snapshot.hasData) {
+                  return Center(
+                      child: Stack(children: <Widget>[
                     // _viewRows(),
                     audioCallCtrl.audioScreenForPORTRAIT(
-                        status: 'calling', isPeerMuted: false),
-                    audioCallCtrl.toolbar(false, 'calling'),
-                  ],
-                ),
-              );
-            },
-          ));
+                        status: 'noNetwork', isPeerMuted: false),
+
+                    audioCallCtrl.toolbar(false, 'noNetwork')
+                  ]));
+                }
+
+                return Center(
+                    child: Stack(children: <Widget>[
+                  // _viewRows(),
+                  audioCallCtrl.audioScreenForPORTRAIT(
+                      status: 'calling', isPeerMuted: false),
+                  audioCallCtrl.toolbar(false, 'calling')
+                ]));
+              }));
     });
   }
 }

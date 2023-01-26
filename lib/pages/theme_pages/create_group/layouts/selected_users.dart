@@ -48,10 +48,10 @@ class SelectedUsers extends StatelessWidget {
                   width: Sizes.s20,
                   height: Sizes.s20,
                   padding: const EdgeInsets.all(2.0),
-                  decoration: const BoxDecoration(
-                      shape: BoxShape.circle, color: Colors.black),
-                  child: const Icon(Icons.close,
-                      size: 14, color: Colors.white)) //............
+                  decoration:  BoxDecoration(
+                      shape: BoxShape.circle, color: appCtrl.appTheme.blueColor),
+                  child:  Icon(Icons.close,
+                      size: Sizes.s14, color: appCtrl.appTheme.white)) //............
               ),
         )
       ],

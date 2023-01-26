@@ -16,7 +16,7 @@ class InputBox extends StatelessWidget {
         decoration: BoxDecoration(
             border: Border(
                 top: BorderSide(color: appCtrl.appTheme.darkGray, width: 0.5)),
-            color: Colors.white),
+            color: appCtrl.appTheme.white),
         child: Row(
           children: <Widget>[
             const HSpace(Sizes.s15),
@@ -64,7 +64,7 @@ class InputBox extends StatelessWidget {
                 },
                 color: appCtrl.appTheme.primary),
             Material(
-                color: Colors.white,
+                color: appCtrl.appTheme.white,
                 child: Container(
                     margin: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: IconButton(

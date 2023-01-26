@@ -40,6 +40,12 @@ class AppTheme {
   Color lightDividerColor;
   Color lightGreyColor;
   Color lightGrey1Color;
+  Color indigoColor;
+  Color pinkColor;
+  Color purpleColor;
+  Color orangeColor;
+  Color tealColor;
+  Color blueColor;
 
   /// Default constructor
   AppTheme({
@@ -73,6 +79,12 @@ class AppTheme {
     required this.lightDividerColor,
     required this.lightGreyColor,
     required this.lightGrey1Color,
+    required this.indigoColor,
+    required this.pinkColor,
+    required this.purpleColor,
+    required this.orangeColor,
+    required this.tealColor,
+    required this.blueColor,
   });
 
   /// fromType factory constructor
@@ -109,6 +121,12 @@ class AppTheme {
           lightGreyColor: const Color(0xFFF5F7FB),
           lightGrey1Color: const Color(0xFFEBF0F8),
           greenColor: Colors.green,
+          indigoColor: Colors.indigo,
+          pinkColor: Colors.pink,
+          purpleColor: Colors.purple,
+          orangeColor: Colors.orange,
+          tealColor: Colors.teal,
+          blueColor: Colors.blue,
         );
 
       case ThemeType.dark:
@@ -142,6 +160,12 @@ class AppTheme {
           lightGreyColor: const Color(0xFFF5F7FB),
           lightGrey1Color: const Color(0xFFEBF0F8),
           greenColor: Colors.green,
+          indigoColor: Colors.indigo,
+          pinkColor: Colors.pink,
+          purpleColor: Colors.purple,
+          orangeColor: Colors.orange,
+          tealColor: Colors.teal,
+          blueColor: Colors.blue,
         );
     }
   }

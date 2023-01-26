@@ -61,7 +61,7 @@ class _TextStatusState extends State<TextStatus> {
                     if (mounted) setState(() {});
                   },
                   icon:  Icon(Icons.palette_rounded,
-                      size: 30, color: appCtrl.appTheme.whiteColor),
+                      size: Sizes.s30, color: appCtrl.appTheme.whiteColor),
                 ),
                 IconButton(
                   onPressed: () {
@@ -70,7 +70,7 @@ class _TextStatusState extends State<TextStatus> {
                     Get.back();
                   },
                   icon: Icon(Icons.done,
-                      size: 30,
+                      size: Sizes.s30,
                       color: controller.text.isEmpty
                           ? Colors.white24
                           : appCtrl.appTheme.whiteColor),

@@ -105,7 +105,7 @@ class AwesomeNotificationController {
                     style: Theme.of(Get.context!)
                         .textTheme
                         .titleLarge
-                        ?.copyWith(color: Colors.red),
+                        ?.copyWith(color: appCtrl.appTheme.redColor),
                   )),
               TextButton(
                   onPressed: () async {

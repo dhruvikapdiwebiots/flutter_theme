@@ -18,7 +18,7 @@ class RegisterUser extends StatelessWidget {
           ? CachedNetworkImage(
               imageUrl: userContactModel!.image!,
               imageBuilder: (context, imageProvider) => CircleAvatar(
-                    backgroundColor: const Color(0xffE6E6E6),
+                    backgroundColor: appCtrl.appTheme.contactBgGray,
                     radius: Sizes.s20,
                     backgroundImage: NetworkImage(userContactModel!.image!),
                   ),

@@ -106,7 +106,7 @@ class _PickupLayoutState extends State<PickupLayout>
                                   imageBuilder: (context, imageProvider) =>
                                       CircleAvatar(
                                         backgroundColor:
-                                            const Color(0xffE6E6E6),
+                                        appCtrl.appTheme.contactBgGray,
                                         radius: Sizes.s60,
                                         backgroundImage: NetworkImage(snapshot
                                             .data!.docs[0]

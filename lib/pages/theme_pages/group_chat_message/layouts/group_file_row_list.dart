@@ -11,13 +11,13 @@ class GroupFileRowList extends StatelessWidget {
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           IconCreation(
               icons: Icons.insert_drive_file,
-              color: Colors.indigo,
+              color: appCtrl.appTheme.indigoColor,
               text: fonts.document.tr,
               onTap: () => chatCtrl.documentShare()),
           const HSpace(Sizes.s40),
           IconCreation(
               icons: Icons.video_collection_sharp,
-              color: Colors.pink,
+              color: appCtrl.appTheme.pinkColor,
               text: fonts.video.tr,
               onTap: ()  {
                 Get.back();
@@ -32,7 +32,7 @@ class GroupFileRowList extends StatelessWidget {
 
               },
               icons: Icons.insert_photo,
-              color: Colors.purple,
+              color: appCtrl.appTheme.purpleColor,
               text: fonts.gallery.tr)
         ]),
         const VSpace(Sizes.s30),
@@ -43,18 +43,18 @@ class GroupFileRowList extends StatelessWidget {
                 chatCtrl.audioRecording(context, "audio", 0);
               },
               icons: Icons.headset,
-              color: Colors.orange,
+              color: appCtrl.appTheme.orangeColor,
               text: fonts.audio.tr),
           const HSpace(Sizes.s40),
           IconCreation(
               onTap: () => chatCtrl.locationShare(),
               icons: Icons.location_pin,
-              color: Colors.teal,
+              color: appCtrl.appTheme.tealColor,
               text: fonts.location.tr),
           const HSpace(Sizes.s40),
           IconCreation(
               icons: Icons.person,
-              color: Colors.blue,
+              color: appCtrl.appTheme.blueColor,
               text: fonts.contact.tr,
               onTap: () {
                 chatCtrl.pickerCtrl.dismissKeyboard();

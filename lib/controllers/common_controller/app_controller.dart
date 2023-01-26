@@ -76,7 +76,12 @@ class AppController extends GetxController {
         .get();
     log("admin : ${userAppSettings.data()}");
     userAppSettingsVal = userAppSettings.data();
-    appCtrl.storage.write(session.userAppSettings, userAppSettings.data());
+    final agoraToken = await FirebaseFirestore.instance
+        .collection(collectionName.admin)
+        .doc(collectionName.agoraToken)
+        .get();
+ await   appCtrl.storage.write(session.agoraToken, agoraToken.data());
+    log("admin : ${agoraToken.data()}");
     update();
   }
 
@@ -120,7 +125,7 @@ language() async {
       return SlideTransition(
         position: Tween(begin: const Offset(0, -1), end: const Offset(0, 0))
             .animate(anim1),
-        child: child,
+        child: child
       );
     },
     transitionDuration: const Duration(milliseconds: 300),

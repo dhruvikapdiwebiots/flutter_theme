@@ -30,7 +30,7 @@ class EditProfile extends StatelessWidget {
                       imageUrl: editCtrl.user["image"],
                       imageBuilder: (context, imageProvider) =>
                           CircleAvatar(
-                            backgroundColor: const Color(0xffE6E6E6),
+                            backgroundColor: appCtrl.appTheme.contactBgGray,
                             radius: 60,
                             backgroundImage: NetworkImage(
                                 '${editCtrl.user["image"]}'),

@@ -195,11 +195,11 @@ class AudioRecordingPluginState extends State<AudioRecordingPlugin> {
                   padding: EdgeInsets.symmetric(horizontal: Insets.i5),
                   child: Icon(Icons.cancel)))
         ]),
-        const SizedBox(height: 20),
+        const SizedBox(height: Sizes.s20),
         Container(
             width: MediaQuery.of(context).size.width * 0.95,
             decoration: BoxDecoration(
-                color: Colors.grey[300],
+                color: appCtrl.appTheme.grey.withOpacity(.5),
                 borderRadius:
                     const BorderRadius.all(Radius.circular(AppRadius.r30))),
             padding: const EdgeInsets.all(0),

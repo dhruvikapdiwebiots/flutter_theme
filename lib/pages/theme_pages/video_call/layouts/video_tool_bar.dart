@@ -30,7 +30,7 @@ class VideoToolBar extends StatelessWidget {
                       ? appCtrl.appTheme.primary
                       : appCtrl.appTheme.whiteColor,
                   shape: BoxShape.circle)
-              .inkWell(onTap: videoCtrl.onToggleSpeaker),
+              .inkWell(onTap: videoCtrl.onToggleSpeaker).marginSymmetric(horizontal: Insets.i10),
           status != 'ended' && status != 'rejected'
               ? Icon(
                   videoCtrl.muted ? Icons.mic_off : Icons.mic,
@@ -43,7 +43,7 @@ class VideoToolBar extends StatelessWidget {
                           ? appCtrl.appTheme.whiteColor
                           : appCtrl.appTheme.primary,
                       shape: BoxShape.circle)
-                  .inkWell(onTap: videoCtrl.onToggleMute)
+                  .inkWell(onTap: videoCtrl.onToggleMute).marginSymmetric(horizontal: Insets.i5)
               : const SizedBox(height: Sizes.s42, width: Sizes.s65),
           Icon(
             status == 'ended' || status == 'rejected'
@@ -60,7 +60,7 @@ class VideoToolBar extends StatelessWidget {
                 status == 'ended' || status == 'rejected' ? true : false;
             videoCtrl.update();
             videoCtrl.onCallEnd(Get.context!);
-          }),
+          }).marginSymmetric(horizontal: Insets.i5),
           status == 'ended' || status == 'rejected'
               ? const SizedBox(
                   width: Sizes.s65,

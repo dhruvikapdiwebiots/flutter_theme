@@ -33,12 +33,12 @@ class GroupChatMessageAppBar extends StatelessWidget with PreferredSizeWidget {
             CachedNetworkImage(
                 imageUrl: image!,
                 imageBuilder: (context, imageProvider) => CircleAvatar(
-                      backgroundColor: const Color(0xffE6E6E6),
+                      backgroundColor: appCtrl.appTheme.contactBgGray,
                       radius: 15,
                       backgroundImage: NetworkImage(image!),
                     ),
                 placeholder: (context, url) => CircleAvatar(
-                      backgroundColor: const Color(0xffE6E6E6),
+                      backgroundColor: appCtrl.appTheme.contactBgGray,
                       radius: 15,
                       backgroundImage: NetworkImage(url),
                     ),

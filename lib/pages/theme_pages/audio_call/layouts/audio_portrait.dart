@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import '../../../../config.dart';
 
 class AudioPortrait extends StatelessWidget {
@@ -9,6 +11,7 @@ final  String? status;
   Widget build(BuildContext context) {
     var w = MediaQuery.of(context).size.width;
     return GetBuilder<AudioCallController>(builder: (audioCtrl) {
+      log("status: $status");
       return Container(
         alignment: Alignment.center,
         child: Column(
@@ -27,7 +30,7 @@ final  String? status;
                       imageUrl: audioCtrl.call!.receiverPic!,
                       imageBuilder: (context, imageProvider) =>
                           CircleAvatar(
-                            backgroundColor: const Color(0xffE6E6E6),
+                            backgroundColor: appCtrl.appTheme.contactBgGray,
                             radius: Sizes.s50,
                             backgroundImage:
                             NetworkImage(audioCtrl.call!.receiverPic!),

@@ -154,7 +154,7 @@ class ContactList extends StatelessWidget {
                                                                                 imageProvider) =>
                                                                             CircleAvatar(
                                                                               backgroundColor:
-                                                                                  const Color(0xffE6E6E6),
+                                                                              appCtrl.appTheme.contactBgGray,
                                                                               radius:
                                                                                   Sizes.s20,
                                                                               backgroundImage:

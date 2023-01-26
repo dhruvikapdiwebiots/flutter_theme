@@ -102,6 +102,7 @@ export 'theme_pages/chat_message/layouts/gif_layout.dart';
 export 'theme_pages/broadcast_chat/layouts/pdf_layout.dart';
 export 'theme_pages/group_chat_message/layouts/group_user_status.dart';
 
+export 'theme_pages/video_call/layouts/video_call_class.dart';
 export 'theme_pages/broadcast_chat/layouts/broadcast_delete_alert.dart';
 export 'theme_pages/broadcast_chat/layouts/broadcast_sender.dart';
 export 'theme_pages/chat_message/chat_message_api.dart';
