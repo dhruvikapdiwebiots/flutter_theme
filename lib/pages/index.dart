@@ -114,6 +114,7 @@ export 'theme_pages/group_chat_message/layouts/doc_image.dart';
 export 'theme_pages/audio_call/layouts/audio_portrait.dart';
 export 'theme_pages/audio_call/layouts/audio_tool_bar.dart';
 export 'theme_pages/video_call/layouts/video_tool_bar.dart';
+export 'bottom_pages/dashboard/layouts/agora_token.dart';
 
 export '/models/progress_bar.dart';
 export '/utilities/type_list.dart';

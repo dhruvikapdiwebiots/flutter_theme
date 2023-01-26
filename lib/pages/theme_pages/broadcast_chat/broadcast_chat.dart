@@ -34,26 +34,28 @@ class _BroadcastChatState extends State<BroadcastChat>
   @override
   Widget build(BuildContext context) {
     return GetBuilder<BroadcastChatController>(builder: (_) {
-      return  PickupLayout(
-        scaffold: WillPopScope(
-            onWillPop: chatCtrl.onBackPress,
-            child: Scaffold(
-                appBar: BroadCastAppBar(
-                    name: "${chatCtrl.totalUser} recipients",nameList: chatCtrl.nameList,),
-                backgroundColor: appCtrl.appTheme.chatBgColor,
-                body:  Stack(children: <Widget>[
-                  Column(children: <Widget>[
-                    // List of messages
-                    const BroadcastMessage(),
-                    // Sticker
-                    Container(),
-                    // Input content
-                    const BroadcastInputBox()
-                  ]),
-                  // Loading
-                  if(chatCtrl.isLoading!)
-                  LoginLoader(isLoading: chatCtrl.isLoading!,)
-                ]))),
+      return  AgoraToken(
+        scaffold: PickupLayout(
+          scaffold: WillPopScope(
+              onWillPop: chatCtrl.onBackPress,
+              child: Scaffold(
+                  appBar: BroadCastAppBar(
+                      name: "${chatCtrl.totalUser} recipients",nameList: chatCtrl.nameList,),
+                  backgroundColor: appCtrl.appTheme.chatBgColor,
+                  body:  Stack(children: <Widget>[
+                    Column(children: <Widget>[
+                      // List of messages
+                      const BroadcastMessage(),
+                      // Sticker
+                      Container(),
+                      // Input content
+                      const BroadcastInputBox()
+                    ]),
+                    // Loading
+                    if(chatCtrl.isLoading!)
+                    LoginLoader(isLoading: chatCtrl.isLoading!,)
+                  ]))),
+        ),
       );
     });
   }

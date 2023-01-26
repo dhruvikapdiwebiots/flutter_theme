@@ -35,7 +35,7 @@ class _AudioCallState extends State<AudioCall> {
                   if (snapshot.data!.data() == null || snapshot.data == null) {
                     return Center(
                         child: Stack(children: <Widget>[
-                      audioCallCtrl.audioScreenForPORTRAIT(
+                      audioCallCtrl.audioScreen(
                           status: 'calling', isPeerMuted: false),
                       audioCallCtrl.toolbar(false, 'calling')
                     ]));
@@ -43,7 +43,7 @@ class _AudioCallState extends State<AudioCall> {
                     return Center(
                         child: Stack(children: <Widget>[
                       // _viewRows(),
-                      audioCallCtrl.audioScreenForPORTRAIT(
+                      audioCallCtrl.audioScreen(
                           status: snapshot.data!.data()!["status"],
                           isPeerMuted: snapshot.data!.data()!["isMuted"]),
 
@@ -58,7 +58,7 @@ class _AudioCallState extends State<AudioCall> {
                   return Center(
                       child: Stack(children: <Widget>[
                     // _viewRows(),
-                    audioCallCtrl.audioScreenForPORTRAIT(
+                    audioCallCtrl.audioScreen(
                         status: 'noNetwork', isPeerMuted: false),
 
                     audioCallCtrl.toolbar(false, 'noNetwork')
@@ -68,7 +68,7 @@ class _AudioCallState extends State<AudioCall> {
                 return Center(
                     child: Stack(children: <Widget>[
                   // _viewRows(),
-                  audioCallCtrl.audioScreenForPORTRAIT(
+                  audioCallCtrl.audioScreen(
                       status: 'calling', isPeerMuted: false),
                   audioCallCtrl.toolbar(false, 'calling')
                 ]));

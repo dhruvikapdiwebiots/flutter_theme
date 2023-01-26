@@ -47,23 +47,25 @@ class _DashboardState extends State<Dashboard>
       }
 
       return OverlaySupport.global(
-        child: PickupLayout(
-          scaffold: StreamBuilder(
-              stream: Connectivity().onConnectivityChanged,
-              builder: (context, AsyncSnapshot<ConnectivityResult> snapshot) {
+        child: AgoraToken(
+          scaffold: PickupLayout(
+            scaffold: StreamBuilder(
+                stream: Connectivity().onConnectivityChanged,
+                builder: (context, AsyncSnapshot<ConnectivityResult> snapshot) {
 
-                return WillPopScope(
-                  onWillPop: () async {
-                    SystemNavigator.pop();
-                    return false;
-                  },
-                  child: dashboardCtrl.bottomList.isNotEmpty
-                      ? DashboardBody(
-                          snapshot: snapshot,
-                        )
-                      : Container(),
-                );
-              }),
+                  return WillPopScope(
+                    onWillPop: () async {
+                      SystemNavigator.pop();
+                      return false;
+                    },
+                    child: dashboardCtrl.bottomList.isNotEmpty
+                        ? DashboardBody(
+                            snapshot: snapshot,
+                          )
+                        : Container(),
+                  );
+                }),
+          ),
         ),
       );
     });

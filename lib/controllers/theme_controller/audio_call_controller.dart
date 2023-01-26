@@ -84,6 +84,7 @@ class AudioCallController extends GetxController {
   Future<void> _dispose() async {
     await engine.leaveChannel();
     await engine.release();
+
   }
 
   @override
@@ -310,9 +311,9 @@ class AudioCallController extends GetxController {
     await engine.startPreview();
 
     dynamic agoraToken = appCtrl.storage.read(session.agoraToken);
-    log("agoraToken : $agoraToken");
+    log("agoraToken Audio : $agoraToken");
     await engine.joinChannel(
-      token: agoraToken,
+      token: agoraToken["token"],
       channelId: fonts.channel,
       uid: 0,
       options: const ChannelMediaOptions(),
@@ -465,13 +466,15 @@ class AudioCallController extends GetxController {
     Get.back();
   }
 
+  //play calling tine
   Future<void> playCallingTone() async {
     player = (await audioCache.load('sounds/callingtone.mp3'))
         as audio_players.AudioPlayer;
     update();
   }
 
-  audioScreenForPORTRAIT({
+  //audio ui design
+  audioScreen({
     String? status,
     bool? isPeerMuted,
   }) {
@@ -545,7 +548,7 @@ class AudioCallController extends GetxController {
               const VSpace(Sizes.s20),
               status == 'pickedUp'
                   ? Text(
-                "${hoursStr}:${minutesStr}:${secondsStr}",
+                "$hoursStr:$minutesStr:$secondsStr",
                 style: TextStyle(
                     fontSize: 20.0,
                     color: appCtrl.appTheme.greenColor.withOpacity(.3),

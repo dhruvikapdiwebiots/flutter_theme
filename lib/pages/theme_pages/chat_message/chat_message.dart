@@ -39,52 +39,54 @@ class _ChatState extends State<Chat>
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ChatController>(builder: (_) {
-      return PickupLayout(
-        scaffold: WillPopScope(
-            onWillPop: chatCtrl.onBackPress,
-            child: Scaffold(
-                appBar: ChatMessageAppBar(
-                    name: chatCtrl.pName,
-                    isBlock: chatCtrl.isBlock
-                        ? chatCtrl.blockBy == chatCtrl.userData["id"]
-                            ? true
-                            : false
-                        : false,
-                    callTap: () async{
-                      await chatCtrl.permissionHandelCtrl.getCameraMicrophonePermissions().then((value) {
-                        if(value == true){
-                          chatCtrl.audioVideoCallTap(false);
-                        }
-                      });
-                    },
-                    videoTap: ()async{
-                      await chatCtrl.permissionHandelCtrl.getCameraMicrophonePermissions().then((value) {
-                        log("value : $value");
-                        if(value == true){
-                          log("message");
-                          chatCtrl.audioVideoCallTap(true);
-                        }
-                      });
-                    },
-                    moreTap: () => chatCtrl.blockUser()),
-                backgroundColor: appCtrl.appTheme.chatBgColor,
-                body: chatCtrl.isUserAvailable
-                    ? Stack(children: <Widget>[
-                        Column(children: <Widget>[
-                          // List of messages
-                          const MessageBox(),
-                          // Sticker
-                          Container(),
-                          // Input content
-                          const InputBox()
-                        ]),
-                        // Loading
-                  if(chatCtrl.isLoading)
-                        const BuildLoader()
-                      ])
-                    : Center(
-                        child: CommonButton(title: fonts.invite.tr, onTap: () {}),
-                      ))),
+      return AgoraToken(
+        scaffold: PickupLayout(
+          scaffold: WillPopScope(
+              onWillPop: chatCtrl.onBackPress,
+              child: Scaffold(
+                  appBar: ChatMessageAppBar(
+                      name: chatCtrl.pName,
+                      isBlock: chatCtrl.isBlock
+                          ? chatCtrl.blockBy == chatCtrl.userData["id"]
+                              ? true
+                              : false
+                          : false,
+                      callTap: () async{
+                        await chatCtrl.permissionHandelCtrl.getCameraMicrophonePermissions().then((value) {
+                          if(value == true){
+                            chatCtrl.audioVideoCallTap(false);
+                          }
+                        });
+                      },
+                      videoTap: ()async{
+                        await chatCtrl.permissionHandelCtrl.getCameraMicrophonePermissions().then((value) {
+                          log("value : $value");
+                          if(value == true){
+                            log("message");
+                            chatCtrl.audioVideoCallTap(true);
+                          }
+                        });
+                      },
+                      moreTap: () => chatCtrl.blockUser()),
+                  backgroundColor: appCtrl.appTheme.chatBgColor,
+                  body: chatCtrl.isUserAvailable
+                      ? Stack(children: <Widget>[
+                          Column(children: <Widget>[
+                            // List of messages
+                            const MessageBox(),
+                            // Sticker
+                            Container(),
+                            // Input content
+                            const InputBox()
+                          ]),
+                          // Loading
+                    if(chatCtrl.isLoading)
+                          const BuildLoader()
+                        ])
+                      : Center(
+                          child: CommonButton(title: fonts.invite.tr, onTap: () {}),
+                        ))),
+        ),
       );
     });
   }
