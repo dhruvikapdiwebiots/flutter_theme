@@ -14,9 +14,9 @@ class MessageBox extends StatelessWidget {
                         appCtrl.appTheme.primary)))
             : StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
-                    .collection('messages')
+                    .collection(collectionName.messages)
                     .doc(chatCtrl.chatId)
-                    .collection("chat")
+                    .collection(collectionName.chat)
                     .orderBy('timestamp', descending: true)
                     .limit(20)
                     .snapshots(),

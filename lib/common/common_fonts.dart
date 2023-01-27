@@ -3,7 +3,6 @@ import 'package:flutter_theme/config.dart';
 class Fonts{
   final gifAPI = "aJToxhjbwRwVxkxKfAk4xQVXygh8b2W6";
   final appId = "29f88f518e7841cab6eef7c4dcc4b66f";
-  final token = "007eJxTYGBb8uxn8e8dbSsjFVqmp0zUcts/M4ifsyr6yZYLYY4TX19TYDCyTLOwSDM1tEg1tzAxTE5MMktNTTNPNklJTjZJMjNLm+h1KbkhkJGBq0SHkZEBAkF8Hoa0nNKSktSikIzU3FQGBgDOICPS";
   final channel = "flutterTheme";
   final intro1 = "intro1";
   final intro2 = "intro2";
@@ -105,5 +104,7 @@ class Fonts{
   final deleteAccount = "deleteAccount";
   final deleteConfirmation = "deleteConfirmation";
   final ok = "ok";
+  final areYouSureToDelete = "areYouSureToDelete";
+  final rtl = "rtl";
   String unblockUser(val) => "unblockUser".trParams({'pName':val});
 }

@@ -12,12 +12,12 @@ class BroadCastDeleteAlert extends StatelessWidget {
     return GetBuilder<BroadcastChatController>(builder: (chatCtrl) {
       return AlertDialog(
         backgroundColor: appCtrl.appTheme.whiteColor,
-        title: const Text('Alert!'),
+        title: Text(fonts.alert.tr),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const <Widget>[
-            Text("Are you sure you want to delete this message?"),
+          children: <Widget>[
+            Text(fonts.areYouSureToDelete.tr),
           ],
         ),
         actions: <Widget>[
@@ -25,13 +25,13 @@ class BroadCastDeleteAlert extends StatelessWidget {
             onPressed: () {
               Get.back();
             },
-            child: const Text('Close'),
+            child: Text(fonts.close.tr),
           ),
           TextButton(
             onPressed: () async {
                Get.back();
                 FirebaseFirestore.instance
-                    .collection('broadcastMessage').doc(chatCtrl.pId).collection("chat")
+                    .collection(collectionName.broadcastMessage).doc(chatCtrl.pId).collection(collectionName.chat)
                     .doc(documentReference!.id)
                     .delete();
                 await FirebaseFirestore.instance
@@ -41,31 +41,31 @@ class BroadCastDeleteAlert extends StatelessWidget {
                     curve: Curves.easeOut);
 
               await FirebaseFirestore.instance
-                  .collection('broadcastMessage')
+                  .collection(collectionName.broadcastMessage)
                   .doc(chatCtrl.pId)
-                  .collection("chats")
+                  .collection(collectionName.chat)
                   .orderBy("timestamp", descending: true)
                   .limit(1)
                   .get()
                   .then((value) {
                 if(value.docs.isEmpty){
                   FirebaseFirestore.instance
-                      .collection("users").doc(chatCtrl.userData["id"]).collection("chats")
+                      .collection(collectionName.users).doc(chatCtrl.userData["id"]).collection(collectionName.chats)
                       .where("chatId", isEqualTo: chatCtrl.chatId)
                       .get()
                       .then((value) {
                     FirebaseFirestore.instance
-                        .collection("contacts").doc(value.docs[0].id).delete();
+                        .collection(collectionName.users).doc(chatCtrl.userData["id"]).collection(collectionName.chats).doc(value.docs[0].id).delete();
                   });
                 }else {
                   FirebaseFirestore.instance
-                      .collection("users").doc(chatCtrl.userData["id"]).collection("chats")
+                      .collection(collectionName.users).doc(chatCtrl.userData["id"]).collection(collectionName.chats)
                       .where("chatId", isEqualTo: chatCtrl.chatId)
                       .get()
                       .then((snapShot) {
                     if (snapShot.docs.isNotEmpty) {
                       FirebaseFirestore.instance
-                          .collection("users").doc(chatCtrl.userData["id"]).collection("chats")
+                          .collection(collectionName.users).doc(chatCtrl.userData["id"]).collection(collectionName.chats)
                           .doc(snapShot.docs[0].id)
                           .update({
                         "updateStamp":
@@ -92,7 +92,7 @@ class BroadCastDeleteAlert extends StatelessWidget {
                 }
               });
             },
-            child: const Text('Yes'),
+            child: Text(fonts.yes.tr),
           ),
         ],
       );

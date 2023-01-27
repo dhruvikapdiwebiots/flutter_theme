@@ -99,7 +99,7 @@ class AudioCallController extends GetxController {
 
     userData = appCtrl.storage.read(session.user);
     stream = FirebaseFirestore.instance
-        .collection("calls")
+        .collection(collectionName.calls)
         .doc(userData["id"] == call!.callerId
             ? call!.receiverId
             : call!.callerId)
@@ -109,7 +109,7 @@ class AudioCallController extends GetxController {
     update();
     // retrieve permissions
     await [Permission.microphone].request();
-    log("permis :");
+    log("permission :");
     //create the engine
     initAgora();
     super.onReady();
@@ -150,9 +150,9 @@ class AudioCallController extends GetxController {
 
             update();
             FirebaseFirestore.instance
-                .collection("calls")
+                .collection(collectionName.calls)
                 .doc(call!.callerId)
-                .collection("collectionCallHistory")
+                .collection(collectionName.collectionCallHistory)
                 .doc(call!.timestamp.toString())
                 .set({
               'type': 'OUTGOING',
@@ -169,9 +169,9 @@ class AudioCallController extends GetxController {
               'callerName': call!.callerName,
             }, SetOptions(merge: true));
             FirebaseFirestore.instance
-                .collection("calls")
+                .collection(collectionName.calls)
                 .doc(call!.receiverId)
-                .collection("collectionCallHistory")
+                .collection(collectionName.collectionCallHistory)
                 .doc(call!.timestamp.toString())
                 .set({
               'type': 'INCOMING',
@@ -202,9 +202,9 @@ class AudioCallController extends GetxController {
           if (userData["id"] == call!.callerId) {
             _stopCallingSound();
             FirebaseFirestore.instance
-                .collection("calls")
+                .collection(collectionName.calls)
                 .doc(call!.callerId)
-                .collection("collectionCallHistory")
+                .collection(collectionName.collectionCallHistory)
                 .doc(call!.timestamp.toString())
                 .set({
               'started': DateTime.now(),
@@ -212,22 +212,22 @@ class AudioCallController extends GetxController {
               'isJoin': true,
             }, SetOptions(merge: true));
             FirebaseFirestore.instance
-                .collection("calls")
+                .collection(collectionName.calls)
                 .doc(call!.receiverId)
-                .collection("collectionCallHistory")
+                .collection(collectionName.collectionCallHistory)
                 .doc(call!.timestamp.toString())
                 .set({
               'started': DateTime.now(),
               'status': 'pickedUp',
             }, SetOptions(merge: true));
             FirebaseFirestore.instance
-                .collection("calls")
+                .collection(collectionName.calls)
                 .doc(call!.callerId)
                 .set({
               "audioCallMade": FieldValue.increment(1),
             }, SetOptions(merge: true));
             FirebaseFirestore.instance
-                .collection("calls")
+                .collection(collectionName.calls)
                 .doc(call!.receiverId)
                 .set({
               "audioCallReceived": FieldValue.increment(1),
@@ -249,18 +249,18 @@ class AudioCallController extends GetxController {
           _stopCallingSound();
           if (isAlreadyEnded == false) {
             FirebaseFirestore.instance
-                .collection("calls")
+                .collection(collectionName.calls)
                 .doc(call!.callerId)
-                .collection("collectionCallHistory")
+                .collection(collectionName.collectionCallHistory)
                 .doc(call!.timestamp.toString())
                 .set({
               'status': 'ended',
               'ended': DateTime.now(),
             }, SetOptions(merge: true));
             FirebaseFirestore.instance
-                .collection("calls")
+                .collection(collectionName.calls)
                 .doc(call!.receiverId)
-                .collection("collectionCallHistory")
+                .collection(collectionName.collectionCallHistory)
                 .doc(call!.timestamp.toString())
                 .set({
               'status': 'ended',
@@ -280,18 +280,18 @@ class AudioCallController extends GetxController {
           update();
           if (isAlreadyEnded == false) {
             FirebaseFirestore.instance
-                .collection("calls")
+                .collection(collectionName.calls)
                 .doc(call!.callerId)
-                .collection("collectionCallHistory")
+                .collection(collectionName.collectionCallHistory)
                 .doc(call!.timestamp.toString())
                 .set({
               'status': 'ended',
               'ended': DateTime.now(),
             }, SetOptions(merge: true));
             FirebaseFirestore.instance
-                .collection("calls")
+                .collection(collectionName.calls)
                 .doc(call!.receiverId)
-                .collection("collectionCallHistory")
+                .collection(collectionName.collectionCallHistory)
                 .doc(call!.timestamp.toString())
                 .set({
               'status': 'ended',
@@ -337,9 +337,9 @@ class AudioCallController extends GetxController {
     _stopCallingSound();
     engine.muteLocalAudioStream(muted);
     FirebaseFirestore.instance
-        .collection("calls")
+        .collection(collectionName.calls)
         .doc(userData["id"])
-        .collection("collectionCallHistory")
+        .collection(collectionName.collectionCallHistory)
         .doc(call!.timestamp.toString())
         .set({'isMuted': muted}, SetOptions(merge: true));
   }
@@ -358,16 +358,16 @@ class AudioCallController extends GetxController {
   Future<bool> endCall({required Call call}) async {
     try {
       await FirebaseFirestore.instance
-          .collection("calls")
+          .collection(collectionName.calls)
           .doc(call.callerId)
-          .collection("calling")
+          .collection(collectionName.calling)
           .where("callerId", isEqualTo: call.callerId)
           .limit(1)
           .get()
           .then((value) {
         if (value.docs.isNotEmpty) {
           FirebaseFirestore.instance
-              .collection("calls")
+              .collection(collectionName.calls)
               .doc(call.callerId)
               .collection("calling")
               .doc(value.docs[0].id)
@@ -375,16 +375,16 @@ class AudioCallController extends GetxController {
         }
       });
       await FirebaseFirestore.instance
-          .collection("calls")
+          .collection(collectionName.calls)
           .doc(call.receiverId)
-          .collection("calling")
+          .collection(collectionName.calling)
           .where("receiverId", isEqualTo: call.receiverId)
           .limit(1)
           .get()
           .then((value) {
         if (value.docs.isNotEmpty) {
           FirebaseFirestore.instance
-              .collection("calls")
+              .collection(collectionName.calls)
               .doc(call.receiverId)
               .collection("calling")
               .doc(value.docs[0].id)
@@ -399,31 +399,29 @@ class AudioCallController extends GetxController {
   }
 
   void onCallEnd(BuildContext context) async {
-    /*  final FirestoreDataProviderCALLHISTORY firestoreDataProviderCALLHISTORY =
-    Provider.of<FirestoreDataProviderCALLHISTORY>(context, listen: false);*/
     _stopCallingSound();
     log("endCall1");
     _dispose();
     DateTime now = DateTime.now();
     if (remoteUId != null) {
       await FirebaseFirestore.instance
-          .collection("calls")
+          .collection(collectionName.calls)
           .doc(call!.callerId)
-          .collection("collectionCallHistory")
+          .collection(collectionName.collectionCallHistory)
           .doc(call!.timestamp.toString())
           .set({'status': 'ended', 'ended': now}, SetOptions(merge: true));
       await FirebaseFirestore.instance
-          .collection("calls")
+          .collection(collectionName.calls)
           .doc(call!.receiverId)
-          .collection("collectionCallHistory")
+          .collection(collectionName.collectionCallHistory)
           .doc(call!.timestamp.toString())
           .set({'status': 'ended', 'ended': now}, SetOptions(merge: true));
     } else {
       await endCall(call: call!).then((value) async {
         FirebaseFirestore.instance
-            .collection("calls")
+            .collection(collectionName.calls)
             .doc(call!.callerId)
-            .collection("collectionCallHistory")
+            .collection(collectionName.collectionCallHistory)
             .doc(call!.timestamp.toString())
             .set({
           'type': 'outGoing',
@@ -440,9 +438,9 @@ class AudioCallController extends GetxController {
           'ended': DateTime.now(),
         }, SetOptions(merge: true));
         FirebaseFirestore.instance
-            .collection("calls")
+            .collection(collectionName.calls)
             .doc(call!.receiverId)
-            .collection("collectionCallHistory")
+            .collection(collectionName.collectionCallHistory)
             .doc(call!.timestamp.toString())
             .set({
           'type': 'inComing',

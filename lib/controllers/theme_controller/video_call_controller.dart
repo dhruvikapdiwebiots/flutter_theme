@@ -85,9 +85,9 @@ class VideoCallController extends GetxController {
     update();
 
     stream = FirebaseFirestore.instance
-        .collection("calls")
+        .collection(collectionName.calls)
         .doc(userData["id"])
-        .collection("collectionCallHistory")
+        .collection(collectionName.collectionCallHistory)
         .doc(call!.timestamp.toString())
         .snapshots();
     update();
@@ -118,6 +118,7 @@ class VideoCallController extends GetxController {
           localUserJoined = true;
           final info = 'onJoinChannel: $channel, uid: ${connection.localUid}';
           infoStrings.add(info);
+          log("info :info" );
           if (call!.receiver != null) {
             List receiver = call!.receiver!;
             receiver.asMap().entries.forEach((element) {
@@ -136,9 +137,9 @@ class VideoCallController extends GetxController {
             playCallingTone();
             update();
             FirebaseFirestore.instance
-                .collection("calls")
+                .collection(collectionName.calls)
                 .doc(call!.callerId)
-                .collection("collectionCallHistory")
+                .collection(collectionName.collectionCallHistory)
                 .doc(call!.timestamp.toString())
                 .set({
               'type': 'outGoing',
@@ -153,16 +154,16 @@ class VideoCallController extends GetxController {
               'started': null,
               'ended': null,
               'callerName':
-                  call!.receiver != null ? nameList : call!.callerName,
+              call!.receiver != null ? nameList : call!.callerName,
             }, SetOptions(merge: true));
             if (call!.receiver != null) {
               List receiver = call!.receiver!;
               receiver.asMap().entries.forEach((element) {
                 if (element.value["id"] != userData["id"]) {
                   FirebaseFirestore.instance
-                      .collection("calls")
+                      .collection(collectionName.calls)
                       .doc(element.value["id"])
-                      .collection("collectionCallHistory")
+                      .collection(collectionName.collectionCallHistory)
                       .doc(call!.timestamp.toString())
                       .set({
                     'type': 'inComing',
@@ -177,7 +178,7 @@ class VideoCallController extends GetxController {
                     'started': null,
                     'ended': null,
                     'callerName':
-                        call!.receiver != null ? nameList : call!.callerName,
+                    call!.receiver != null ? nameList : call!.callerName,
                   }, SetOptions(merge: true));
                 }
               });
@@ -185,9 +186,9 @@ class VideoCallController extends GetxController {
               update();
             } else {
               FirebaseFirestore.instance
-                  .collection("calls")
+                  .collection(collectionName.calls)
                   .doc(call!.receiverId)
-                  .collection("collectionCallHistory")
+                  .collection(collectionName.collectionCallHistory)
                   .doc(call!.timestamp.toString())
                   .set({
                 'type': 'inComing',
@@ -202,7 +203,7 @@ class VideoCallController extends GetxController {
                 'started': null,
                 'ended': null,
                 'callerName':
-                    call!.receiver != null ? nameList : call!.callerName,
+                call!.receiver != null ? nameList : call!.callerName,
               }, SetOptions(merge: true));
             }
           }
@@ -227,9 +228,9 @@ class VideoCallController extends GetxController {
           if (userData["id"] == call!.callerId) {
             _stopCallingSound();
             FirebaseFirestore.instance
-                .collection("calls")
+                .collection(collectionName.calls)
                 .doc(call!.callerId)
-                .collection("collectionCallHistory")
+                .collection(collectionName.collectionCallHistory)
                 .doc(call!.timestamp.toString())
                 .set({
               'started': DateTime.now(),
@@ -249,9 +250,9 @@ class VideoCallController extends GetxController {
               receiver.asMap().entries.forEach((element) {
                 if (element.value["id"] != userData["id"]) {
                   FirebaseFirestore.instance
-                      .collection("calls")
+                      .collection(collectionName.calls)
                       .doc(element.value["id"])
-                      .collection("collectionCallHistory")
+                      .collection(collectionName.collectionCallHistory)
                       .doc(call!.timestamp.toString())
                       .set({
                     'started': DateTime.now(),
@@ -267,16 +268,16 @@ class VideoCallController extends GetxController {
               });
             } else {
               FirebaseFirestore.instance
-                  .collection("calls")
+                  .collection(collectionName.calls)
                   .doc(call!.receiverId)
-                  .collection("collectionCallHistory")
+                  .collection(collectionName.collectionCallHistory)
                   .doc(call!.timestamp.toString())
                   .set({
                 'started': DateTime.now(),
                 'status': 'pickedUp',
               }, SetOptions(merge: true));
               FirebaseFirestore.instance
-                  .collection("calls")
+                  .collection(collectionName.calls)
                   .doc(call!.receiverId)
                   .set({
                 "videoCallReceived": FieldValue.increment(1),
@@ -296,9 +297,9 @@ class VideoCallController extends GetxController {
           _stopCallingSound();
           if (isAlreadyEndedCall == false) {
             FirebaseFirestore.instance
-                .collection("calls")
+                .collection(collectionName.calls)
                 .doc(call!.callerId)
-                .collection("collectionCallHistory")
+                .collection(collectionName.collectionCallHistory)
                 .doc(call!.timestamp.toString())
                 .set({
               'status': 'ended',
@@ -309,9 +310,9 @@ class VideoCallController extends GetxController {
               receiver.asMap().entries.forEach((element) {
                 if (element.value["id"] != userData["id"]) {
                   FirebaseFirestore.instance
-                      .collection("calls")
+                      .collection(collectionName.calls)
                       .doc(element.value["id"])
-                      .collection("collectionCallHistory")
+                      .collection(collectionName.collectionCallHistory)
                       .doc(call!.timestamp.toString())
                       .set({
                     'status': 'ended',
@@ -321,9 +322,9 @@ class VideoCallController extends GetxController {
               });
             } else {
               FirebaseFirestore.instance
-                  .collection("calls")
+                  .collection(collectionName.calls)
                   .doc(call!.receiverId)
-                  .collection("collectionCallHistory")
+                  .collection(collectionName.collectionCallHistory)
                   .doc(call!.timestamp.toString())
                   .set({
                 'status': 'ended',
@@ -346,14 +347,14 @@ class VideoCallController extends GetxController {
           update();
           if (isAlreadyEndedCall == false) {
             FirebaseFirestore.instance
-                .collection("calls")
+                .collection(collectionName.calls)
                 .doc(call!.callerId)
-                .collection("collectionCallHistory")
+                .collection(collectionName.collectionCallHistory)
                 .add({});
             FirebaseFirestore.instance
-                .collection("calls")
+                .collection(collectionName.calls)
                 .doc(call!.callerId)
-                .collection("collectionCallHistory")
+                .collection(collectionName.collectionCallHistory)
                 .doc(call!.timestamp.toString())
                 .set({
               'status': 'ended',
@@ -364,9 +365,9 @@ class VideoCallController extends GetxController {
               receiver.asMap().entries.forEach((element) {
                 if (element.value['id'] != userData["id"]) {
                   FirebaseFirestore.instance
-                      .collection("calls")
+                      .collection(collectionName.calls)
                       .doc(element.value['id'])
-                      .collection("collectionCallHistory")
+                      .collection(collectionName.collectionCallHistory)
                       .doc(call!.timestamp.toString())
                       .set({
                     'status': 'ended',
@@ -376,9 +377,9 @@ class VideoCallController extends GetxController {
               });
             } else {
               FirebaseFirestore.instance
-                  .collection("calls")
+                  .collection(collectionName.calls)
                   .doc(call!.receiverId)
-                  .collection("collectionCallHistory")
+                  .collection(collectionName.collectionCallHistory)
                   .doc(call!.timestamp.toString())
                   .set({
                 'status': 'ended',
@@ -400,7 +401,7 @@ class VideoCallController extends GetxController {
     await engine.startPreview();
 
     dynamic agoraToken = appCtrl.storage.read(session.agoraToken);
-    log("agoraToken : $agoraToken");
+    log("agoraToken q: $agoraToken");
     await engine.joinChannel(
       token: agoraToken["token"],
       channelId: fonts.channel,
@@ -426,9 +427,9 @@ class VideoCallController extends GetxController {
     _stopCallingSound();
     engine.muteLocalAudioStream(muted);
     FirebaseFirestore.instance
-        .collection("calls")
+        .collection(collectionName.calls)
         .doc(userData["id"])
-        .collection("collectionCallHistory")
+        .collection(collectionName.collectionCallHistory)
         .doc(call!.timestamp.toString())
         .set({'isMuted': muted}, SetOptions(merge: true));
   }
@@ -458,6 +459,7 @@ class VideoCallController extends GetxController {
     update();
   }
 
+  //end call delete after end call
   Future<bool> endCall({required Call call}) async {
     try {
       log("endCallDelete");
@@ -465,71 +467,71 @@ class VideoCallController extends GetxController {
         List receiver = call.receiver!;
         receiver.asMap().entries.forEach((element) async {
           await FirebaseFirestore.instance
-              .collection("calls")
+              .collection(collectionName.calls)
               .doc(element.value["id"])
-              .collection("calling")
+              .collection(collectionName.calling)
               .where("callerId", isEqualTo: element.value["id"])
               .limit(1)
               .get()
               .then((value) {
             if (value.docs.isNotEmpty) {
               FirebaseFirestore.instance
-                  .collection("calls")
+                  .collection(collectionName.calls)
                   .doc(element.value["id"])
-                  .collection("calling")
+                  .collection(collectionName.calling)
                   .doc(value.docs[0].id)
                   .delete();
             }
           });
         });
         await FirebaseFirestore.instance
-            .collection("calls")
+            .collection(collectionName.calls)
             .doc(call.callerId)
-            .collection("calling")
+            .collection(collectionName.calling)
             .where("callerId", isEqualTo: call.callerId)
             .limit(1)
             .get()
             .then((value) {
           if (value.docs.isNotEmpty) {
             FirebaseFirestore.instance
-                .collection("calls")
+                .collection(collectionName.calls)
                 .doc(call.callerId)
-                .collection("calling")
+                .collection(collectionName.calling)
                 .doc(value.docs[0].id)
                 .delete();
           }
         });
       } else {
         await FirebaseFirestore.instance
-            .collection("calls")
+            .collection(collectionName.calls)
             .doc(call.callerId)
-            .collection("calling")
+            .collection(collectionName.calling)
             .where("callerId", isEqualTo: call.callerId)
             .limit(1)
             .get()
             .then((value) {
           if (value.docs.isNotEmpty) {
             FirebaseFirestore.instance
-                .collection("calls")
+                .collection(collectionName.calls)
                 .doc(call.callerId)
-                .collection("calling")
+                .collection(collectionName.calling)
                 .doc(value.docs[0].id)
                 .delete();
           }
         });
         await FirebaseFirestore.instance
-            .collection("calls")
+            .collection(collectionName.calls)
             .doc(call.receiverId)
-            .collection("calling")
+            .collection(collectionName.calling)
             .where("receiverId", isEqualTo: call.receiverId)
             .limit(1)
             .get()
             .then((value) {
           if (value.docs.isNotEmpty) {
             FirebaseFirestore.instance
-                .collection("calls")
+                .collection(collectionName.calls)
                 .doc(call.receiverId)
-                .collection("calling")
+                .collection(collectionName.calling)
                 .doc(value.docs[0].id)
                 .delete();
           }
@@ -543,6 +545,7 @@ class VideoCallController extends GetxController {
     }
   }
 
+  //on call end api
   void onCallEnd(BuildContext context) async {
     await endCall(call: call!).then((value) async {
       log("value : $value");
@@ -553,24 +556,24 @@ class VideoCallController extends GetxController {
         update();
         receiver.asMap().entries.forEach((element) {
           FirebaseFirestore.instance
-              .collection("calls")
+              .collection(collectionName.calls)
               .doc(element.value["id"])
-              .collection("collectionCallHistory")
+              .collection(collectionName.calling)
               .doc(call!.timestamp.toString())
               .set({'status': 'ended', 'ended': now, "callName": nameList},
                   SetOptions(merge: true));
         });
       } else {
         FirebaseFirestore.instance
-            .collection("calls")
+            .collection(collectionName.calls)
             .doc(call!.callerId)
-            .collection("collectionCallHistory")
+            .collection(collectionName.collectionCallHistory)
             .doc(call!.timestamp.toString())
             .set({'status': 'ended', 'ended': now}, SetOptions(merge: true));
         FirebaseFirestore.instance
-            .collection("calls")
+            .collection(collectionName.calls)
             .doc(call!.receiverId)
-            .collection("collectionCallHistory")
+            .collection(collectionName.collectionCallHistory)
             .doc(call!.timestamp.toString())
             .set({'status': 'ended', 'ended': now},
                 SetOptions(merge: true)).then((value) {

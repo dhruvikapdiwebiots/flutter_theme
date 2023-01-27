@@ -113,6 +113,7 @@ class _GroupAudioDocState extends State<GroupAudioDoc> with WidgetsBindingObserv
   void initState() {
     // TODO: implement initState
     _init();
+    WidgetsBinding.instance!.addObserver(this);
     super.initState();
   }
 

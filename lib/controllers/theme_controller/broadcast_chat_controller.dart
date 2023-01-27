@@ -215,16 +215,16 @@ class BroadcastChatController extends GetxController {
 
 
       await FirebaseFirestore.instance
-          .collection('users')
+          .collection(collectionName.users)
           .doc(userData["id"])
-          .collection("chats")
+          .collection(collectionName.chats)
           .where("broadcastId", isEqualTo: pId)
           .get()
           .then((snap) {
         FirebaseFirestore.instance
-            .collection('users')
+            .collection(collectionName.users)
             .doc(userData["id"])
-            .collection("chats")
+            .collection(collectionName.chats)
             .doc(snap.docs[0].id)
             .update({
           "receiverId": newpData,
@@ -234,9 +234,9 @@ class BroadcastChatController extends GetxController {
       });
 
       FirebaseFirestore.instance
-          .collection('broadcastMessage')
+          .collection(collectionName.broadcastMessage)
           .doc(pId)
-          .collection("chat")
+          .collection(collectionName.chat)
           .add({
         'sender': userData["id"],
         'senderName': userData["name"],
@@ -249,9 +249,9 @@ class BroadcastChatController extends GetxController {
         'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
       }).then((value) async {
         await FirebaseFirestore.instance
-            .collection('users')
+            .collection(collectionName.users)
             .doc(userData["id"])
-            .collection("chats")
+            .collection(collectionName.chats)
             .where("broadcastId", isEqualTo: pId)
             .get();
       });
@@ -267,9 +267,9 @@ class BroadcastChatController extends GetxController {
         newpData.add(element.value);
         update();
         await FirebaseFirestore.instance
-            .collection("messages")
+            .collection(collectionName.messages)
             .doc(element.value["chatId"])
-            .collection("chat")
+            .collection(collectionName.chat)
             .add({
           'sender': userData["id"],
           'receiver': element.value["id"],
@@ -298,9 +298,9 @@ class BroadcastChatController extends GetxController {
         update();
         element.value["chatId"] = newChatId;
         await FirebaseFirestore.instance
-            .collection("messages")
+            .collection(collectionName.messages)
             .doc(element.value["chatId"])
-            .collection("chat")
+            .collection(collectionName.chat)
             .add({
           'sender': userData["id"],
           'receiver': element.value["id"],

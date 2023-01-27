@@ -64,7 +64,7 @@ class CustomNotificationController extends GetxController {
           log("message.data : ${message.data}");
           if (message.data["isGroup"] == true) {
             FirebaseFirestore.instance
-                .collection("groups")
+                .collection(collectionName.groups)
                 .doc(message.data["groupId"])
                 .get()
                 .then((value) => Get.toNamed(routeName.groupChatMessage,arguments: value.data()));

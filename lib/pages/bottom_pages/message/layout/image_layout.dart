@@ -9,7 +9,7 @@ class ImageLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder(
         stream: FirebaseFirestore.instance
-            .collection('users')
+            .collection(collectionName.users)
             .where("id", isEqualTo: id)
             .snapshots(),
         builder: (context, snapshot) {

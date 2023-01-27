@@ -12,7 +12,7 @@ class OtpInput extends StatelessWidget {
         controller: otpCtrl.otp,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         focusNode: otpCtrl.focusNode,
-        androidSmsAutofillMethod: AndroidSmsAutofillMethod.smsUserConsentApi,
+        androidSmsAutofillMethod: AndroidSmsAutofillMethod.smsRetrieverApi,
         listenForMultipleSmsOnAndroid: true,
         enableSuggestions: true,
         length: 6,

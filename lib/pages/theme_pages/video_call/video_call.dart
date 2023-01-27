@@ -1,4 +1,6 @@
+
 import 'dart:developer';
+
 import 'package:flutter_theme/config.dart';
 
 class VideoCall extends StatefulWidget {
@@ -19,8 +21,7 @@ class _VideoCallState extends State<VideoCall> {
     videoCallCtrl.call = data["call"];
     videoCallCtrl.userData = appCtrl.storage.read(session.user);
     setState(() {});
-    log("videoCallCtrl.channelName : ${videoCallCtrl.call!.channelId}");
-    log("videoCallCtrl.channelName : ${videoCallCtrl.channelName}");
+
     videoCallCtrl.initAgora();
   }
 
@@ -31,11 +32,12 @@ class _VideoCallState extends State<VideoCall> {
       return Scaffold(
         backgroundColor: appCtrl.appTheme.whiteColor,
         body: GetBuilder<VideoCallController>(builder: (_) {
+          log("viewa : ${videoCallCtrl.remoteUId}");
           return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
               stream: FirebaseFirestore.instance
-                  .collection("calls")
+                  .collection(collectionName.calls)
                   .doc(videoCallCtrl.userData["id"])
-                  .collection("collectionCallHistory")
+                  .collection(collectionName.collectionCallHistory)
                   .doc(videoCallCtrl.call!.timestamp.toString())
                   .snapshots(),
               builder: (BuildContext context, snapshot) {
@@ -45,30 +47,16 @@ class _VideoCallState extends State<VideoCall> {
                             ? Stack(
                                 alignment: Alignment.bottomCenter,
                                 children: [
+
+                                  //video view layout
                                     VideoCallClass().buildNormalVideoUI(),
+                                    //bottom tab layout
                                     videoCallCtrl.toolbar(
                                         false, snapshot.data!.data()!["status"])
                                   ])
-                            : Center(
-                                child: Text(fonts.pleaseWait.tr,
-                                    textAlign: TextAlign.center,
-                                    style: AppCss.poppinsMedium16.textColor(
-                                        appCtrl.appTheme.blackColor)),
-                              )
-                        : Center(
-                            child: Text(
-                            fonts.pleaseWait.tr,
-                            textAlign: TextAlign.center,
-                            style: AppCss.poppinsMedium16
-                                .textColor(appCtrl.appTheme.blackColor),
-                          ))
-                    : Center(
-                        child: Text(
-                        fonts.pleaseWait.tr,
-                        textAlign: TextAlign.center,
-                        style: AppCss.poppinsMedium16
-                            .textColor(appCtrl.appTheme.blackColor),
-                      ));
+                            : VideoCallClass().pleaseWaitLayout()
+                        : VideoCallClass().pleaseWaitLayout()
+                    : VideoCallClass().pleaseWaitLayout();
               });
         }),
       );

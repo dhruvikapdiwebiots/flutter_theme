@@ -20,12 +20,6 @@ class DocxLayout extends StatelessWidget {
       onLongPress: onLongPress,
       onTap: () async {
         var openResult = 'Unknown';
-
-        /*final _url = Uri.parse(document!['content'].split("-BREAK-")[1]);
-        if (!await launchUrl(_url, mode: LaunchMode.externalApplication)) {
-          // <--
-          throw Exception('Could not launch $_url');
-        }*/
         var dio = Dio();
         var tempDir = await getExternalStorageDirectory();
 

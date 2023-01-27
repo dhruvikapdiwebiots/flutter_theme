@@ -17,7 +17,6 @@ class OtpController extends GetxController {
     // TODO: implement onReady
     mobileNumber = Get.arguments;
     update();
-    //onVerifyCode(mobileNumber);
     super.onReady();
   }
 
@@ -35,7 +34,7 @@ class OtpController extends GetxController {
     final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
     firebaseMessaging.getToken().then((token) async {
       await FirebaseFirestore.instance
-          .collection('users')
+          .collection(collectionName.users)
           .doc(user["id"])
           .update({'status': "Online", "pushToken": token, "isActive": true});
       log('check : ${appCtrl.storage.read(session.isIntro)}');
@@ -59,8 +58,6 @@ class OtpController extends GetxController {
   void onVerifyCode(phone, dialCode) {
     mobileNumber = phone;
     dialCodeVal = dialCode;
-    log("phone : $phone");
-    log("phone : $dialCode");
     isCodeSent = true;
     isLoading = true;
     update();
@@ -116,7 +113,7 @@ class OtpController extends GetxController {
         User user = value.user!;
         try {
           FirebaseFirestore.instance
-              .collection("users")
+              .collection(collectionName.users)
               .where("phone", isEqualTo: mobileNumber).limit(1)
               .get()
               .then((value) async {
@@ -153,7 +150,7 @@ class OtpController extends GetxController {
             log("get : $err");
           });
         } on FirebaseAuthException catch (e) {
-          log("getfirebase : $e");
+          log("get firebase : $e");
         }
       } else {
         isLoading = false;
@@ -171,7 +168,7 @@ class OtpController extends GetxController {
   //get data
   Future<Object?> getUserData(User user) async {
     final result = await FirebaseFirestore.instance
-        .collection('users')
+        .collection(collectionName.users)
         .doc(user.uid)
         .get();
     dynamic resultData;
@@ -189,7 +186,7 @@ class OtpController extends GetxController {
     try {
       final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
       firebaseMessaging.getToken().then((token) async {
-        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+        await FirebaseFirestore.instance.collection(collectionName.users).doc(user.uid).set({
           'chattingWith': null,
           'id': user.uid,
           'image': user.photoURL ?? "",

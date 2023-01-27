@@ -32,7 +32,7 @@ class PhoneController extends GetxController {
     if (phone.text.isNotEmpty) {
       if (phone.text == "7990261461") {
         FirebaseFirestore.instance
-            .collection("users")
+            .collection(collectionName.users)
             .where("phone", isEqualTo: "7990261461").limit(1)
             .get()
             .then((value) async {
@@ -64,7 +64,7 @@ class PhoneController extends GetxController {
     final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
     firebaseMessaging.getToken().then((token) async {
       await FirebaseFirestore.instance
-          .collection('users')
+          .collection(collectionName.users)
           .doc(user["id"])
           .update({'status': "Online", "pushToken": token, "isActive": true});
       log('check : ${appCtrl.storage.read(session.isIntro)}');

@@ -26,59 +26,6 @@ class _SenderMessageState extends State<SenderMessage> {
   // Show the progress status to the user.
   String progressString = 'File has not been downloaded yet.';
 
-  Future<bool> saveFile(String url, String fileName) async {
-    log("djhfgd");
-    try {
-      PermissionHandlerController.checkAndRequestPermission(
-              Platform.isIOS ? Permission.storage : Permission.storage)
-          .then((res) async {
-        if (res) {
-          final storageRef = FirebaseStorage.instance.refFromURL(url);
-
-          final islandRef = storageRef.child(storageRef.name);
-
-          log("islandRef : $islandRef");
-
-          final appDocDir = await getApplicationDocumentsDirectory();
-          final filePath =
-              "${appDocDir.path}/${DateTime.now().millisecondsSinceEpoch}";
-          final file = File(filePath);
-
-          final downloadTask = FirebaseStorage.instance
-              .ref()
-              .child(storageRef.fullPath)
-              .writeToFile(file);
-
-          log("downloadTask : $downloadTask");
-
-          downloadTask.snapshotEvents.listen((taskSnapshot) {
-            switch (taskSnapshot.state) {
-              case TaskState.running:
-                // TODO: Handle this case.
-                break;
-              case TaskState.paused:
-                // TODO: Handle this case.
-                break;
-              case TaskState.success:
-                // TODO: Handle this case.
-                break;
-              case TaskState.canceled:
-                // TODO: Handle this case.
-                break;
-              case TaskState.error:
-                // TODO: Handle this case.
-                break;
-            }
-          });
-        }
-      });
-
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ChatController>(builder: (chatCtrl) {
@@ -111,9 +58,7 @@ class _SenderMessageState extends State<SenderMessage> {
                             builder: (BuildContext context) => chatCtrl
                                 .buildPopupDialog(context, widget.document!),
                           );
-                        },
-                        onPressed: () =>
-                            saveFile(widget.document!["content"], "image"),
+                        }
                       ),
                     if (widget.document!["type"] == MessageType.contact.name)
                       ContactLayout(

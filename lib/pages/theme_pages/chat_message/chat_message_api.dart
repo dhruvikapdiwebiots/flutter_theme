@@ -12,17 +12,17 @@ class ChatMessageApi {
         ? Get.find<ChatController>()
         : Get.put(ChatController());
     await FirebaseFirestore.instance
-        .collection("users")
+        .collection(collectionName.users)
         .doc(id)
-        .collection("chats")
+        .collection(collectionName.chats)
         .where("chatId", isEqualTo: newChatId)
         .get()
         .then((value) async {
       if (value.docs.isNotEmpty) {
         await FirebaseFirestore.instance
-            .collection('users')
+            .collection(collectionName.users)
             .doc(id)
-            .collection("chats")
+            .collection(collectionName.chats)
             .doc(value.docs[0].id)
             .update({
           "updateStamp": DateTime.now().millisecondsSinceEpoch.toString(),
@@ -43,9 +43,9 @@ class ChatMessageApi {
         });
       } else {
         await FirebaseFirestore.instance
-            .collection('users')
+            .collection(collectionName.users)
             .doc(id)
-            .collection("chats")
+            .collection(collectionName.chats)
             .add({
           "updateStamp": DateTime.now().millisecondsSinceEpoch.toString(),
           "lastMessage": content,
@@ -82,17 +82,17 @@ class ChatMessageApi {
     List receiver = pData["users"];
     receiver.asMap().entries.forEach((element) async {
       await FirebaseFirestore.instance
-          .collection("users")
+          .collection(collectionName.users)
           .doc(element.value["id"])
-          .collection("chats")
+          .collection(collectionName.chats)
           .where("groupId", isEqualTo: groupId)
           .get()
           .then((value) {
         if (value.docs.isNotEmpty) {
           FirebaseFirestore.instance
-              .collection("users")
+              .collection(collectionName.users)
               .doc(element.value["id"])
-              .collection("chats")
+              .collection(collectionName.chats)
               .doc(value.docs[0].id)
               .update({
             "updateStamp": DateTime.now().millisecondsSinceEpoch.toString(),
@@ -101,7 +101,7 @@ class ChatMessageApi {
           });
           if (user["id"] != element.value["id"]) {
             FirebaseFirestore.instance
-                .collection("users")
+                .collection(collectionName.users)
                 .doc(element.value["id"])
                 .get()
                 .then((snap) {
@@ -142,9 +142,9 @@ class ChatMessageApi {
           isVideoCall: isVideoCall,receiver: null);
       ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
       await FirebaseFirestore.instance
-          .collection("calls")
+          .collection(collectionName.calls)
           .doc(call.callerId)
-          .collection("calling")
+          .collection(collectionName.calling)
           .add({
         "timestamp": timestamp,
         "callerId": userData["id"],
@@ -160,9 +160,9 @@ class ChatMessageApi {
         "isVideoCall": isVideoCall,
       }).then((value) async {
         await FirebaseFirestore.instance
-            .collection("calls")
+            .collection(collectionName.calls)
             .doc(call.receiverId)
-            .collection("calling")
+            .collection(collectionName.calling)
             .add({
           "timestamp": timestamp,
           "callerId": userData["id"],

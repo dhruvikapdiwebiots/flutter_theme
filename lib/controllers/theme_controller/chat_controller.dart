@@ -72,9 +72,9 @@ class ChatController extends GetxController {
     log("chatId : $chatId");
     if (chatId != "0") {
       await FirebaseFirestore.instance
-          .collection("users")
+          .collection(collectionName.users)
           .doc(userData["id"])
-          .collection("chat")
+          .collection(collectionName.chats)
           .where("chatId", isEqualTo: chatId)
           .get()
           .then((value) {
@@ -84,12 +84,14 @@ class ChatController extends GetxController {
       });
     }
     await FirebaseFirestore.instance
-        .collection("users")
+        .collection(collectionName.users)
         .doc(pId)
         .get()
         .then((value) {
       pData = value.data();
+
       update();
+      log("get L : $pData");
     });
   }
 
@@ -120,17 +122,17 @@ class ChatController extends GetxController {
   seenMessage() async {
     if (userData["id"] == pId) {
       await FirebaseFirestore.instance
-          .collection("messages")
+          .collection(collectionName.messages)
           .doc(chatId)
-          .collection("chat")
+          .collection(collectionName.chat)
           .where("isSeen", isEqualTo: false)
           .get()
           .then((value) {
         for (var i = 0; i < value.docs.length; i++) {
           FirebaseFirestore.instance
-              .collection("messages")
+              .collection(collectionName.messages)
               .doc(chatId)
-              .collection("chat")
+              .collection(collectionName.chat)
               .doc(value.docs[i].id)
               .update({"isSeen": true});
         }
@@ -138,34 +140,34 @@ class ChatController extends GetxController {
     }
 
     FirebaseFirestore.instance
-        .collection("users")
+        .collection(collectionName.users)
         .doc(userData["id"])
-        .collection("chats")
+        .collection(collectionName.chats)
         .where("chatId", isEqualTo: chatId)
         .get()
         .then((value) {
       if (value.docs.isNotEmpty) {
         FirebaseFirestore.instance
-            .collection("users")
+            .collection(collectionName.users)
             .doc(userData["id"])
-            .collection("chats")
+            .collection(collectionName.chats)
             .doc(value.docs[0].id)
             .update({"isSeen": true});
       }
     });
 
     FirebaseFirestore.instance
-        .collection("users")
+        .collection(collectionName.users)
         .doc(pId)
-        .collection("chats")
+        .collection(collectionName.chats)
         .where("chatId", isEqualTo: chatId)
         .get()
         .then((value) {
       if (value.docs.isNotEmpty) {
         FirebaseFirestore.instance
-            .collection("users")
+            .collection(collectionName.users)
             .doc(pId)
-            .collection("chats")
+            .collection(collectionName.chats)
             .doc(value.docs[0].id)
             .update({"isSeen": true});
       }
@@ -237,9 +239,9 @@ class ChatController extends GetxController {
     update();
     if (isBlock) {
       FirebaseFirestore.instance
-          .collection('messages')
+          .collection(collectionName.messages)
           .doc(newChatId)
-          .collection("chat")
+          .collection(collectionName.chat)
           .add({
         'sender': userData["id"],
         'receiver': pId,
@@ -261,9 +263,9 @@ class ChatController extends GetxController {
           userData["id"]);
     } else {
       FirebaseFirestore.instance
-          .collection('messages')
+          .collection(collectionName.messages)
           .doc(newChatId)
-          .collection("chat")
+          .collection(collectionName.chat)
           .add({
         'sender': userData["id"],
         'receiver': pId,
@@ -422,9 +424,9 @@ class ChatController extends GetxController {
                 SnackBar(content: Text(fonts.unblockUser(pName))));
           } else {
             await FirebaseFirestore.instance
-                .collection('messages')
+                .collection(collectionName.messages)
                 .doc(newChatId)
-                .collection("chat")
+                .collection(collectionName.chat)
                 .add({
               'sender': userData["id"],
               'receiver': pData["id"],
@@ -454,9 +456,9 @@ class ChatController extends GetxController {
           update();
         } else {
           await FirebaseFirestore.instance
-              .collection('messages')
+              .collection(collectionName.messages)
               .doc(newChatId)
-              .collection("chat")
+              .collection(collectionName.chat)
               .add({
             'sender': userData["id"],
             'receiver': pId,
@@ -493,9 +495,9 @@ class ChatController extends GetxController {
         update();
 
         await FirebaseFirestore.instance
-            .collection('messages')
+            .collection(collectionName.messages)
             .doc(newChatId)
-            .collection("chat")
+            .collection(collectionName.chat)
             .add({
           'sender': userData["id"],
           'receiver': pId,

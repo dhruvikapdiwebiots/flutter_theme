@@ -10,9 +10,9 @@ class GroupMessageBox extends StatelessWidget {
         child:
             StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
-                    .collection('groupMessage')
+                    .collection(collectionName.groupMessage)
                     .doc(chatCtrl.pId)
-                    .collection('chat')
+                    .collection(collectionName.chat)
                     .orderBy('timestamp',descending: true)
                     .limit(20)
                     .snapshots(),

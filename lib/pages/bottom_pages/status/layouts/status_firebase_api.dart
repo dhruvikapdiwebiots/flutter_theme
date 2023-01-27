@@ -10,7 +10,7 @@ class StatusFirebaseApi {
     List<PhotoUrl> statusImageUrls = [];
 
     var statusesSnapshot = await FirebaseFirestore.instance
-        .collection('status')
+        .collection(collectionName.status)
         .where("uid", isEqualTo: user["id"])
         .get();
 
@@ -29,7 +29,7 @@ class StatusFirebaseApi {
 
       statusImageUrls.add(PhotoUrl.fromJson(data));
       await FirebaseFirestore.instance
-          .collection('status')
+          .collection(collectionName.status)
           .doc(statusesSnapshot.docs[0].id)
           .update(
               {'photoUrl': statusImageUrls.map((e) => e.toJson()).toList()});
@@ -55,14 +55,14 @@ class StatusFirebaseApi {
         uid: user["id"],
         isSeenByOwn: false);
 
-    await FirebaseFirestore.instance.collection('status').add(status.toJson());
+    await FirebaseFirestore.instance.collection(collectionName.status).add(status.toJson());
   }
 
   //get status list
   Future<List<Status>> getStatusUserList(List<Contact> contacts) async {
     var user = appCtrl.storage.read(session.user);
     var statusesSnapshot =
-        await FirebaseFirestore.instance.collection('status').get();
+        await FirebaseFirestore.instance.collection(collectionName.status).get();
     List<Status> statusData = [];
     for (int i = 0; i < statusesSnapshot.docs.length; i++) {
       for (int j = 0; j < contacts.length; j++) {

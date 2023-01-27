@@ -88,7 +88,7 @@ dependencies:
   intl_phone_number_input: ^0.7.1
   wechat_assets_picker: ^8.3.1+1
   connectivity_plus: ^3.0.2
-  pinput: ^2.2.21
+  pinput: ^2.2.23
   animated_text_kit: ^4.2.2
   image_cropper: ^3.0.1
   giphy_get: ^3.2.0
@@ -96,7 +96,7 @@ dependencies:
   wakelock: ^0.6.2
   bubble: ^1.2.1
   overlay_support: ^2.1.0
-  camera: ^0.10.2
+  camera: ^0.10.2+1
   awesome_notifications: ^0.7.4+1
   audio_video_progress_bar: ^0.11.0
   open_filex: ^4.3.2

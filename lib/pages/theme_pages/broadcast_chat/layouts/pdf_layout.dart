@@ -1,5 +1,10 @@
+import 'dart:developer';
+
+import 'package:dio/dio.dart';
 import 'package:flutter_theme/widgets/pdf_viewer_layout.dart';
 import 'package:intl/intl.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 import '../../../../config.dart';
@@ -25,6 +30,21 @@ class PdfLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onLongPress: onLongPress,
+      onTap: ()async{
+        var openResult = 'Unknown';
+        var dio = Dio();
+        var tempDir = await getExternalStorageDirectory();
+
+        var filePath = tempDir!.path + document!['content'].split("-BREAK-")[0];
+        final response = await dio.download(document!['content'].split("-BREAK-")[1],filePath);
+        log("response : ${response.statusCode}");
+
+        final result = await OpenFilex.open(filePath);
+
+        openResult = "type=${result.type}  message=${result.message}";
+        log("openResult : $openResult");
+        OpenFilex.open(filePath);
+      },
       child: Stack(
         alignment: isReceiver ? Alignment.topLeft : Alignment.topRight,
         children: [

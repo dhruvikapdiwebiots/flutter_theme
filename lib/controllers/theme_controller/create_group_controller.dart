@@ -46,7 +46,7 @@ contactList = [];
         if (user["phone"] !=
             phoneNumberExtension(contact.value.phones[0].number.toString())) {
           FirebaseFirestore.instance
-              .collection("users")
+              .collection(collectionName.users)
               .where("phone",
                   isEqualTo: phoneNumberExtension(
                       contact.value.phones[0].number.toString()))
@@ -125,7 +125,7 @@ contactList = [];
       log("newContact : $newContact");
       await Future.delayed(Durations.s3);
       await FirebaseFirestore.instance
-          .collection('broadcast')
+          .collection(collectionName.broadcast)
           .doc(broadcastId)
           .set({
         "users": newContact,
@@ -135,9 +135,9 @@ contactList = [];
       });
 
       FirebaseFirestore.instance
-          .collection('broadcastMessage')
+          .collection(collectionName.broadcastMessage)
           .doc(broadcastId)
-          .collection("chat")
+          .collection(collectionName.chat)
           .add({
         'sender': user["id"],
         'senderName': user["name"],
@@ -150,7 +150,7 @@ contactList = [];
         'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
       });
 
-      await FirebaseFirestore.instance.collection('users').doc(user["id"]).collection("chats").add({
+      await FirebaseFirestore.instance.collection(collectionName.users).doc(user["id"]).collection(collectionName.chats).add({
         'receiver': null,
         'broadcastId': broadcastId,
         'receiverId': newContact,
@@ -170,7 +170,7 @@ contactList = [];
       isLoading = false;
       update();
       Get.back();
-      FirebaseFirestore.instance.collection('users').doc(user["id"]).collection("chats")
+      FirebaseFirestore.instance.collection(collectionName.users).doc(user["id"]).collection(collectionName.chats)
           .where("broadcastId", isEqualTo: broadcastId)
           .get()
           .then((value) {
@@ -185,8 +185,7 @@ contactList = [];
     final user = appCtrl.storage.read(session.user);
     selectedContact.asMap().entries.forEach((e)async{
       log("e.value : ${e.value["chatId"]}");
-      await FirebaseFirestore.instance.collection("users").doc(user["id"]).collection("chats").where("isOneToOne",isEqualTo: true).get().then((value){
-        log("value.docs.isNotEmpty : ${value.docs}");
+      await FirebaseFirestore.instance.collection(collectionName.users).doc(user["id"]).collection(collectionName.chats).where("isOneToOne",isEqualTo: true).get().then((value){
         if(value.docs.isNotEmpty) {
           value.docs
               .asMap()

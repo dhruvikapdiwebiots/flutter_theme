@@ -48,7 +48,7 @@ class OtherSetting extends StatelessWidget {
                       await appCtrl.storage.write(session.isRTL, appCtrl.isRTL);
                       Get.forceAppUpdate();
                     },
-                    title: Text("RTL",
+                    title: Text(fonts.chats.tr,
                         style: AppCss.poppinsMedium14
                             .textColor(appCtrl.appTheme.blackColor)),
                     leading: Icon(appCtrl.isRTL || appCtrl.languageVal == "ar"

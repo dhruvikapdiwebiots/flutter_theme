@@ -17,6 +17,7 @@ class _BroadcastChatState extends State<BroadcastChat>
   void initState() {
     // TODO: implement initState
     receiverData = Get.arguments;
+    WidgetsBinding.instance!.addObserver(this);
     setState(() {});
     super.initState();
   }

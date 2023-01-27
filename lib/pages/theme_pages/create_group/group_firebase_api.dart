@@ -29,7 +29,7 @@ class GroupFirebaseApi {
 
 
     await Future.delayed(Durations.s3);
-    await FirebaseFirestore.instance.collection('groups').doc(id).set({
+    await FirebaseFirestore.instance.collection(collectionName.groups).doc(id).set({
       "name": groupCtrl.txtGroupName.text,
       "image": groupCtrl.imageUrl,
       "users": groupCtrl.selectedContact,
@@ -40,9 +40,9 @@ class GroupFirebaseApi {
     });
 
     FirebaseFirestore.instance
-        .collection('groupMessage')
+        .collection(collectionName.groupMessage)
         .doc(id)
-        .collection("chat")
+        .collection(collectionName.chat)
         .add({
       'sender': user["id"],
       'senderName': user["name"],
@@ -56,15 +56,15 @@ class GroupFirebaseApi {
     });
 
     await FirebaseFirestore.instance
-        .collection("groups")
+        .collection(collectionName.groups)
         .doc(id)
         .get()
         .then((value) async {
       groupCtrl.selectedContact.map((e) {
         FirebaseFirestore.instance
-            .collection('users')
+            .collection(collectionName.users)
             .doc(e["id"])
-            .collection("chats")
+            .collection(collectionName.chats)
             .add({
           "isSeen": false,
           'receiverId': groupCtrl.selectedContact,

@@ -60,7 +60,7 @@ class GroupChatMessageController extends GetxController {
   getPeerStatus() {
     nameList = "";
     FirebaseFirestore.instance
-        .collection('groups')
+        .collection(collectionName.groups)
         .doc(pId)
         .get()
         .then((value) {
@@ -84,9 +84,9 @@ class GroupChatMessageController extends GetxController {
     });
 
     FirebaseFirestore.instance
-        .collection('groupMessage')
+        .collection(collectionName.groupMessage)
         .doc(pId)
-        .collection("chat")
+        .collection(collectionName.chat)
         .get()
         .then((value) {
       if (value.docs.isNotEmpty) {
@@ -278,9 +278,9 @@ class GroupChatMessageController extends GetxController {
       var user = appCtrl.storage.read(session.user);
       id = user["id"];
       FirebaseFirestore.instance
-          .collection('groupMessage')
+          .collection(collectionName.groupMessage)
           .doc(pId)
-          .collection("chat")
+          .collection(collectionName.chat)
           .add({
         'sender': id,
         'senderName': user["name"],
@@ -341,7 +341,7 @@ class GroupChatMessageController extends GetxController {
       receiver.asMap().entries.forEach((element) {
 
         FirebaseFirestore.instance
-            .collection("users")
+            .collection(collectionName.users)
             .doc(element.value["id"])
             .get()
             .then((snap) async {
@@ -359,9 +359,9 @@ class GroupChatMessageController extends GetxController {
               isVideoCall: isVideoCall,receiver: receiver);
 
           await FirebaseFirestore.instance
-              .collection("calls")
+              .collection(collectionName.calls)
               .doc(call.callerId)
-              .collection("calling")
+              .collection(collectionName.calling)
               .add({
             "timestamp": timestamp,
             "callerId": userData["id"],
@@ -378,9 +378,9 @@ class GroupChatMessageController extends GetxController {
           }).then((value) async {
 
             await FirebaseFirestore.instance
-                .collection("calls")
+                .collection(collectionName.calls)
                 .doc(call.receiverId)
-                .collection("calling")
+                .collection(collectionName.calling)
                 .add({
               "timestamp": timestamp,
               "callerId": userData["id"],

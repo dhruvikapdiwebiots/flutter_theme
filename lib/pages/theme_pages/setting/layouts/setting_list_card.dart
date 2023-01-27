@@ -20,7 +20,7 @@ class SettingListCard extends StatelessWidget {
                 var user = appCtrl.storage.read(session.user);
 
                 await FirebaseFirestore.instance
-                    .collection("users")
+                    .collection(collectionName.users)
                     .doc(user["id"])
                     .update({
                   "status": "Offline",

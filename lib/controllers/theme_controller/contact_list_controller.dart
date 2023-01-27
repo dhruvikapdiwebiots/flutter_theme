@@ -30,7 +30,7 @@ class ContactListController extends GetxController {
     storageContact = await permissionHandelCtrl.getContact();
     update();
 
-    var user = appCtrl.storage.read("user");
+    var user = appCtrl.storage.read(session.user);
     if (storageContact.isNotEmpty) {
       storageContact
           .where((c) => c.phones.isNotEmpty)
@@ -39,7 +39,7 @@ class ContactListController extends GetxController {
           nameList = [];
           String phone = phoneNumberExtension(p.phones[0].number);
           await FirebaseFirestore.instance
-              .collection("users")
+              .collection(collectionName.users)
               .where("phone", isEqualTo: phone).limit(1)
               .get()
               .then((value) {

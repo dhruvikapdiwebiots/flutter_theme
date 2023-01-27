@@ -14,7 +14,7 @@ class MessageFirebaseApi {
     final data = appCtrl.storage.read(session.user);
     currentUserId = data["id"];
     var statusesSnapshot =
-        await FirebaseFirestore.instance.collection('users').get();
+        await FirebaseFirestore.instance.collection(collectionName.users).get();
     for (int i = 0; i < statusesSnapshot.docs.length; i++) {
       for (int j = 0; j < contacts.length; j++) {
         if (contacts[j].phones.isNotEmpty) {
@@ -69,7 +69,7 @@ class MessageFirebaseApi {
     if (isRegister) {
       log("val: ${userContact.uid}");
       await FirebaseFirestore.instance
-          .collection('users')
+          .collection(collectionName.users)
           .doc(currentUserId)
           .collection("chats")
           .where("isOneToOne", isEqualTo: true)

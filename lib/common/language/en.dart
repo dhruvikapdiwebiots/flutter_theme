@@ -118,4 +118,6 @@ final dynamic en = {
   "pleaseWait": "Please wait for remote user to join",
   "deleteConfirmation": "Are you sure you want to delete your Account? After delete you will lose all your data.",
   "ok": "Ok",
+  "rtl": "RTL",
+  "areYouSureToDelete": "Are you sure you want to delete this message?",
 };

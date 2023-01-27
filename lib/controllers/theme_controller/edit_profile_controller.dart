@@ -24,9 +24,6 @@ class EditProfileController extends GetxController {
   final FocusNode statusFocus = FocusNode();
   final FocusNode passwordFocus = FocusNode();
 
-  final authController = Get.isRegistered<FirebaseAuthController>()
-      ? Get.find<FirebaseAuthController>()
-      : Get.put(FirebaseAuthController());
 
   final storage = GetStorage();
   var loggedIn = false;
@@ -91,11 +88,12 @@ class EditProfileController extends GetxController {
     isLoading = true;
     log("imageUrl : $imageUrl");
     update();
+    Get.forceAppUpdate();
     final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
     firebaseMessaging.getToken().then((token) async {
       if (isPhoneLogin) {
         FirebaseFirestore.instance
-            .collection("users")
+            .collection(collectionName.users)
             .where("email", isEqualTo: emailText.text)
             .limit(1)
             .get()
@@ -105,7 +103,7 @@ class EditProfileController extends GetxController {
                 .showSnackBar(
                 const SnackBar(content: Text("Email Already Exist")));
           } else {
-            FirebaseFirestore.instance.collection('users')
+            FirebaseFirestore.instance.collection(collectionName.users)
                 .doc(user["id"])
                 .update(
                 {
@@ -121,7 +119,7 @@ class EditProfileController extends GetxController {
                 })
                 .then((result) async {
               log("new USer true");
-              FirebaseFirestore.instance.collection('users')
+              FirebaseFirestore.instance.collection(collectionName.users)
                   .doc(user["id"])
                   .get()
                   .then((value) async {
@@ -137,12 +135,12 @@ class EditProfileController extends GetxController {
         });
       } else {
         FirebaseFirestore.instance
-            .collection("users")
+            .collection(collectionName.users)
             .where("email", isEqualTo: emailText.text)
             .limit(1)
             .get()
             .then((value) {
-          FirebaseFirestore.instance.collection('users').doc(user["id"]).update(
+          FirebaseFirestore.instance.collection(collectionName.users).doc(user["id"]).update(
               {
                 'image': imageUrl,
                 'name': nameText.text,
@@ -155,7 +153,7 @@ class EditProfileController extends GetxController {
                 "isActive":true
               }).then((result) async {
             log("new USer true");
-            FirebaseFirestore.instance.collection('users').doc(user["id"])
+            FirebaseFirestore.instance.collection(collectionName.users).doc(user["id"])
                 .get()
                 .then((value) async {
               await storage.write(session.id, user["id"]);

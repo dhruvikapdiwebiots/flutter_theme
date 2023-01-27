@@ -60,9 +60,9 @@ class SettingController extends GetxController {
           ).inkWell(onTap: ()async{
             var user = appCtrl.storage.read(session.user);
             Get.offAllNamed(routeName.phone);
-            await FirebaseFirestore.instance.collection("users").doc(user["id"]).delete();
-            await FirebaseFirestore.instance.collection("calls").doc(user["id"]).delete();
-            await FirebaseFirestore.instance.collection("status").doc(user["id"]).delete();
+            await FirebaseFirestore.instance.collection(collectionName.users).doc(user["id"]).delete();
+            await FirebaseFirestore.instance.collection(collectionName.calls).doc(user["id"]).delete();
+            await FirebaseFirestore.instance.collection(collectionName.status).doc(user["id"]).delete();
             FirebaseAuth.instance.signOut();
             await appCtrl.storage.remove(session.user);
             await appCtrl.storage.remove(session.id);

@@ -21,10 +21,10 @@ import geolocator_apple
 import iris_event
 import just_audio
 import location
-import path_provider_macos
+import path_provider_foundation
 import photo_manager
 import share_plus
-import shared_preferences_macos
+import shared_preferences_foundation
 import smart_auth
 import sqflite
 import syncfusion_pdfviewer_macos

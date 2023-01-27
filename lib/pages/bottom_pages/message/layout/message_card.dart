@@ -14,7 +14,7 @@ class MessageCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder(
         stream: FirebaseFirestore.instance
-            .collection("users")
+            .collection(collectionName.users)
             .doc(document!["senderId"])
             .snapshots(),
         builder: (context, snapshot) {

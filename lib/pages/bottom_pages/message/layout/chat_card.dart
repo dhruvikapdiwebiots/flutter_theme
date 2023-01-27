@@ -17,9 +17,9 @@ class _ChatCardState extends State<ChatCard> {
     return GetBuilder<MessageController>(builder: (messageCtrl) {
       return StreamBuilder(
           stream: FirebaseFirestore.instance
-              .collection("users")
+              .collection(collectionName.users)
               .doc(messageCtrl.currentUserId)
-              .collection("chats")
+              .collection(collectionName.chats)
               .orderBy("updateStamp", descending: true,).limit(15)
               .snapshots(),
           builder: (context, snapshot) {

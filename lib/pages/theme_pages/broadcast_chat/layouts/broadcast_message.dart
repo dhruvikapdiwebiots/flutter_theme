@@ -10,9 +10,9 @@ class BroadcastMessage extends StatelessWidget {
       return Flexible(
         child:  StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
-              .collection('broadcastMessage')
+              .collection(collectionName.broadcastMessage)
               .doc(chatCtrl.pId)
-              .collection("chat")
+              .collection(collectionName.chat)
               .orderBy('timestamp', descending: true)
               .limit(20).snapshots(),
           builder: (context, snapshot) {

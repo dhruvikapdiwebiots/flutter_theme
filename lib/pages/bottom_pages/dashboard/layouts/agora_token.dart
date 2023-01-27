@@ -12,13 +12,13 @@ class AgoraToken extends StatelessWidget {
     return user != null && user != ""
         ? StreamBuilder(
       stream: FirebaseFirestore.instance
-          .collection("admin")
+          .collection(collectionName.admin)
           .doc(session.agoraToken)
           .snapshots(),
       builder: (context, snapshot) {
         if(snapshot.hasData && snapshot.data!.data()!.isNotEmpty){
-          appCtrl.storage.write(session.agoraToken, snapshot.data!.data()!["token"]);
-          log("token con : ${snapshot.data!.data()!["token"]}");
+          appCtrl.storage.write(session.agoraToken, snapshot.data!.data());
+          log("token con : ${snapshot.data!.data()}");
         }
         return scaffold!;
 

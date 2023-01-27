@@ -11,7 +11,7 @@ class FirebaseCommonController extends GetxController {
     var user = appCtrl.storage.read(session.user) ?? "";
     if (user != "") {
       await FirebaseFirestore.instance
-          .collection("users")
+          .collection(collectionName.users)
           .doc(user["id"])
           .update(
         {
@@ -28,7 +28,7 @@ class FirebaseCommonController extends GetxController {
     var user = appCtrl.storage.read(session.user) ?? "";
     if (user != "") {
       await FirebaseFirestore.instance
-          .collection("users")
+          .collection(collectionName.users)
           .doc(user["id"])
           .update(
         {
@@ -50,7 +50,10 @@ class FirebaseCommonController extends GetxController {
   //typing update
   void setTyping() async {
     var user = appCtrl.storage.read(session.user);
-    await FirebaseFirestore.instance.collection("users").doc(user["id"]).update(
+    await FirebaseFirestore.instance
+        .collection(collectionName.users)
+        .doc(user["id"])
+        .update(
       {
         "status": "typing...",
         "lastSeen": DateTime.now().millisecondsSinceEpoch.toString(),
@@ -62,7 +65,7 @@ class FirebaseCommonController extends GetxController {
     var user = appCtrl.storage.read(session.user) ?? "";
     if (user != "") {
       FirebaseFirestore.instance
-          .collection('status')
+          .collection(collectionName.status)
           .where("uid", isEqualTo: user["id"])
           .get()
           .then((value) async {
@@ -73,19 +76,16 @@ class FirebaseCommonController extends GetxController {
 
             if (photoUrl.isEmpty) {
               FirebaseFirestore.instance
-                  .collection('status')
+                  .collection(collectionName.status)
                   .doc(value.docs[0].id)
                   .delete();
             } else {
               var statusesSnapshot = await FirebaseFirestore.instance
-                  .collection('status')
-                  .where(
-                    'uid',
-                    isEqualTo: user["id"],
-                  )
+                  .collection(collectionName.status)
+                  .where('uid', isEqualTo: user["id"])
                   .get();
               await FirebaseFirestore.instance
-                  .collection('status')
+                  .collection(collectionName.status)
                   .doc(statusesSnapshot.docs[0].id)
                   .update(
                       {'photoUrl': photoUrl.map((e) => e.toJson()).toList()});
@@ -122,26 +122,29 @@ class FirebaseCommonController extends GetxController {
       image,
       dataTitle,
       chatId,
-        groupId,
+      groupId,
       userContactModel,
-        pId,
+      pId,
       pName}) async {
     log('token : $token');
 
     final data = {
-      "notification": {"body": msg, "title": dataTitle, },
+      "notification": {
+        "body": msg,
+        "title": dataTitle,
+      },
       "priority": "high",
       "data": {
         "click_action": "FLUTTER_NOTIFICATION_CLICK",
         "alertMessage": 'true',
         "title": title,
         "chatId": chatId,
-        "groupId":groupId,
+        "groupId": groupId,
         "userContactModel": userContactModel,
         "pId": pId,
         "pName": pName,
         "imageUrl": image,
-        "isGroup":false
+        "isGroup": false
       },
       "to": "$token"
     };

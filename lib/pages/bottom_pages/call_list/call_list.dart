@@ -15,9 +15,9 @@ class CallList extends StatelessWidget {
         backgroundColor: appCtrl.appTheme.whiteColor,
         body: StreamBuilder(
             stream: FirebaseFirestore.instance
-                .collection("calls")
+                .collection(collectionName.calls)
                 .doc(callListCtrl.user["id"])
-                .collection("collectionCallHistory")
+                .collection(collectionName.collectionCallHistory)
                 .orderBy("timestamp", descending: true)
                 .snapshots(),
             builder: (context, snapshot) {

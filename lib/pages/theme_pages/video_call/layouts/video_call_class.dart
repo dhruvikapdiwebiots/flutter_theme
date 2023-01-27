@@ -1,21 +1,15 @@
-
-
 import 'dart:developer';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import '../../../../config.dart';
 
-class VideoCallClass{
-
+class VideoCallClass {
   //build video call view
 
   Widget buildNormalVideoUI() {
     return GetBuilder<VideoCallController>(builder: (videoCtrl) {
       log("viewa : ${videoCtrl.remoteUId}");
-      return SizedBox(
-        height: Get.height,
-        child: buildJoinUserUI(videoCtrl),
-      );
+      return SizedBox(height: Get.height, child: buildJoinUserUI(videoCtrl));
     });
   }
 
@@ -29,109 +23,89 @@ class VideoCallClass{
           children: <Widget>[_videoView(views[0])],
         );
       case 2:
-        return GetBuilder<VideoCallController>(
-          builder: (videoCallCtrl) {
-            return SizedBox(
-                width: Get.width,
-                height: Get.height,
-                child: Stack(
-                  children: <Widget>[
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Column(
-                        children: <Widget>[
-                          _expandedVideoRow([views[1]]),
-                        ],
-                      ),
-                    ),
-                    Align(
-                        alignment: Alignment.topRight,
-                        child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                width: Sizes.s8,
-                                color: Colors.white38,
-                              ),
-                              borderRadius: BorderRadius.circular(Insets.i10),
-                            ),
-                            margin: const EdgeInsets.fromLTRB(
-                                Insets.i15, Insets.i40, Insets.i10, Insets.i15),
-                            width: Sizes.s110,
-                            height: Sizes.s140,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                _expandedVideoRow([views[0]]),
-                              ],
-                            )))
-                  ],
-                ));
-          }
-        );
+        return GetBuilder<VideoCallController>(builder: (videoCallCtrl) {
+          return SizedBox(
+              width: Get.width,
+              height: Get.height,
+              child: Stack(children: <Widget>[
+                Align(
+                    alignment: Alignment.topLeft,
+                    child: Column(children: <Widget>[
+                      _expandedVideoRow([views[1]])
+                    ])),
+                Align(
+                    alignment: Alignment.topRight,
+                    child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                width: Sizes.s8, color: Colors.white38),
+                            borderRadius: BorderRadius.circular(Insets.i10)),
+                        margin: const EdgeInsets.fromLTRB(
+                            Insets.i15, Insets.i40, Insets.i10, Insets.i15),
+                        width: Sizes.s110,
+                        height: Sizes.s140,
+                        child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              _expandedVideoRow([views[0]])
+                            ])))
+              ]));
+        });
       case 3:
-        return Column(
-          children: <Widget>[
-            _expandedVideoRow(views.sublist(0, 2)),
-            _expandedVideoRow(views.sublist(2, 3))
-          ],
-        );
+        return Column(children: <Widget>[
+          _expandedVideoRow(views.sublist(0, 2)),
+          _expandedVideoRow(views.sublist(2, 3))
+        ]);
       case 4:
-        return Column(
-          children: <Widget>[
-            _expandedVideoRow(views.sublist(0, 2)),
-            _expandedVideoRow(views.sublist(2, 4))
-          ],
-        );
+        return Column(children: <Widget>[
+          _expandedVideoRow(views.sublist(0, 2)),
+          _expandedVideoRow(views.sublist(2, 4))
+        ]);
       default:
     }
     return Container();
   }
 
-
   //user view
   List<Widget> _getRenderViews(VideoCallController? videoCallCtrl) {
     final List<AgoraVideoView> list = [
       AgoraVideoView(
-        controller: VideoViewController.remote(
-            rtcEngine: videoCallCtrl!.engine,
-            canvas: const VideoCanvas(uid: 0),
-            connection: RtcConnection(channelId: fonts.channel)),
-      ),
+          controller: VideoViewController.remote(
+              rtcEngine: videoCallCtrl!.engine,
+              canvas: const VideoCanvas(uid: 0),
+              connection: RtcConnection(channelId: fonts.channel)))
     ];
     videoCallCtrl.users
         .asMap()
         .entries
         .forEach((uid) => list.add(AgoraVideoView(
-      controller: VideoViewController.remote(
-          rtcEngine: videoCallCtrl.engine,
-          canvas: VideoCanvas(uid: uid.value),
-          connection: RtcConnection(channelId: fonts.channel)),
-    )));
+              controller: VideoViewController.remote(
+                  rtcEngine: videoCallCtrl.engine,
+                  canvas: VideoCanvas(uid: uid.value),
+                  connection: RtcConnection(channelId: fonts.channel)),
+            )));
     return list;
   }
 
   //video view
   Widget _videoView(view) {
-    return GetBuilder<VideoCallController>(
-      builder: (videoCallCtrl) {
-        return Expanded(child: Container(child: view));
-      }
-    );
+    return GetBuilder<VideoCallController>(builder: (videoCallCtrl) {
+      return Expanded(child: Container(child: view));
+    });
   }
 
   //multiple user add view
   Widget _expandedVideoRow(List<Widget> views) {
     final wrappedViews = views.map<Widget>(_videoView).toList();
-    return GetBuilder<VideoCallController>(
-      builder: (videoCallCtrl) {
-        return Expanded(
-          child: Row(
-            children: wrappedViews,
-          ),
-        );
-      }
-    );
+    return GetBuilder<VideoCallController>(builder: (videoCallCtrl) {
+      return Expanded(child: Row(children: wrappedViews));
+    });
   }
 
-
+  //please wait
+  Widget pleaseWaitLayout() => Center(
+      child: Text(fonts.pleaseWait.tr,
+          textAlign: TextAlign.center,
+          style:
+              AppCss.poppinsMedium16.textColor(appCtrl.appTheme.blackColor)));
 }

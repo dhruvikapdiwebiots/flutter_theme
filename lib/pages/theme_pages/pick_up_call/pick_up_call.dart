@@ -71,9 +71,9 @@ class _PickupLayoutState extends State<PickupLayout>
     return user != null && user != ""
         ? StreamBuilder(
             stream: FirebaseFirestore.instance
-                .collection("calls")
+                .collection(collectionName.calls)
                 .doc(user["id"])
-                .collection("calling")
+                .collection(collectionName.calling)
                 .limit(1)
                 .snapshots(),
             builder: (context, snapshot) {
@@ -175,9 +175,9 @@ class _PickupLayoutState extends State<PickupLayout>
                                           : Get.put(VideoCallController());
                                   await videoCtrl.endCall(call: call);
                                   FirebaseFirestore.instance
-                                      .collection("calls")
+                                      .collection(collectionName.calls)
                                       .doc(call.callerId)
-                                      .collection("collectionCallHistory")
+                                      .collection(collectionName.collectionCallHistory)
                                       .doc(call.timestamp.toString())
                                       .set({
                                     'type': 'outGoing',
@@ -194,9 +194,9 @@ class _PickupLayoutState extends State<PickupLayout>
                                     'ended': DateTime.now(),
                                   }, SetOptions(merge: true));
                                   FirebaseFirestore.instance
-                                      .collection("calls")
+                                      .collection(collectionName.calls)
                                       .doc(call.receiverId)
-                                      .collection("collectionCallHistory")
+                                      .collection(collectionName.collectionCallHistory)
                                       .doc(call.timestamp.toString())
                                       .set({
                                     'type': 'INCOMING',
