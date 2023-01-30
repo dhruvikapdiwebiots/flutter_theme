@@ -178,8 +178,12 @@ class ChatController extends GetxController {
   documentShare() async {
     pickerCtrl.dismissKeyboard();
     Get.back();
+
     FilePickerResult? result = await FilePicker.platform.pickFiles();
     if (result != null) {
+      isLoading = true;
+      update();
+      Get.forceAppUpdate();
       File file = File(result.files.single.path.toString());
       String fileName =
           "${file.name}-${DateTime.now().millisecondsSinceEpoch.toString()}";
@@ -358,6 +362,8 @@ class ChatController extends GetxController {
         if (value != null) {
           Contact contact = value;
           log("ccc : $contact");
+          isLoading = true;
+          update();
           onSendMessage(
               '${contact.displayName}-BREAK-${contact.phones[0].number}-BREAK-${contact.photo}',
               MessageType.contact);

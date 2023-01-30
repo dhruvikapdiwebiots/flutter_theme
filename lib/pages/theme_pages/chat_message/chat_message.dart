@@ -81,7 +81,7 @@ class _ChatState extends State<Chat>
                           ]),
                           // Loading
                     if(chatCtrl.isLoading)
-                          const BuildLoader()
+                           CommonLoader(isLoading: chatCtrl.isLoading,)
                         ])
                       : Center(
                           child: CommonButton(title: fonts.invite.tr, onTap: () {}),

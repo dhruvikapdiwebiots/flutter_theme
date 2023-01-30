@@ -28,7 +28,7 @@ class SubTitleLayout extends StatelessWidget {
                     .contains("http")
                     :  (document!["lastMessage"].contains(".pdf") ||
                     document!["lastMessage"]
-                        .contains(".docx") ||
+                        .contains(".doc") ||
                     document!["lastMessage"]
                         .contains(".mp3") ||
                     document!["lastMessage"]

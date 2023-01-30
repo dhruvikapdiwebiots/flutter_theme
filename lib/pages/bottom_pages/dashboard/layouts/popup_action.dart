@@ -28,16 +28,17 @@ class PopUpAction extends StatelessWidget {
                                   .textColor(appCtrl.appTheme.blackColor),
                             ).inkWell(onTap: () {
                               dashboardCtrl.selectedPopTap = e.key;
-                              log("e.key :: ${e.key}");
                               Get.back();
-                              log("title : ${e.value["title"]}");
                               if (e.value["title"] == "newBroadCast") {
                                 final groupChatCtrl =
                                     Get.isRegistered<CreateGroupController>()
                                         ? Get.find<CreateGroupController>()
                                         : Get.put(CreateGroupController());
                                 groupChatCtrl.isGroup = false;
-                                if(groupChatCtrl.contacts!.isEmpty) {
+                                if(groupChatCtrl.contacts != null || groupChatCtrl.contactList.isEmpty) {
+                                  groupChatCtrl.contactList = [];
+                                  groupChatCtrl.contacts = [];
+
                                   groupChatCtrl.refreshContacts();
                                 }
                                 Get.toNamed(routeName.groupChat,
@@ -48,7 +49,9 @@ class PopUpAction extends StatelessWidget {
                                         ? Get.find<CreateGroupController>()
                                         : Get.put(CreateGroupController());
                                 groupChatCtrl.isGroup = true;
-                                if(groupChatCtrl.contacts!.isEmpty) {
+                                if(groupChatCtrl.contacts != null || groupChatCtrl.contactList.isEmpty) {
+                                  groupChatCtrl.contactList = [];
+                                  groupChatCtrl.contacts = [];
                                   groupChatCtrl.refreshContacts();
                                 }
                                 groupChatCtrl.update();

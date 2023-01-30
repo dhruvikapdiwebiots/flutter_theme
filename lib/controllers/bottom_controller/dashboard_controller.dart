@@ -103,9 +103,6 @@ class DashboardController extends GetxController
       update();
     });
     user = appCtrl.storage.read(session.user);
-    final groupCtrl = Get.put(CreateGroupController());
-    groupCtrl.refreshContacts();
-    groupCtrl.update();
     update();
     super.onReady();
   }

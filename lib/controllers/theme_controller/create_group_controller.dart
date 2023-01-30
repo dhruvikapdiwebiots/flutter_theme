@@ -13,7 +13,8 @@ class CreateGroupController extends GetxController {
   File? image;
   XFile? imageFile;
   bool isLoading = false, isGroup = true;
-dynamic user;
+  dynamic user;
+  int counter = 0;
   String imageUrl = "";
   TextEditingController txtGroupName = TextEditingController();
   final pickerCtrl = Get.isRegistered<PickerController>()
@@ -28,10 +29,10 @@ dynamic user;
     isLoading = true;
     update();
     contacts = await permissionHandelCtrl.getContact();
-     user = appCtrl.storage.read(session.user) ?? "";
+    user = appCtrl.storage.read(session.user) ?? "";
     log("contacts : ${contacts!.length}");
     update();
-    if(user != "") {
+    if (user != "") {
       log("contacts1");
       getFirebaseContact(contacts!);
     }
@@ -39,12 +40,18 @@ dynamic user;
 
   //get firebase register contact list
   getFirebaseContact(List<Contact> contacts) async {
-contactList = [];
-
+    contactList = [];
+    update();
+    Get.forceAppUpdate();
     contacts.asMap().entries.forEach((contact) {
       if (contact.value.phones.isNotEmpty) {
         if (user["phone"] !=
             phoneNumberExtension(contact.value.phones[0].number.toString())) {
+          counter ++;
+          contactList = [];
+
+          update();
+          Get.forceAppUpdate();
           FirebaseFirestore.instance
               .collection(collectionName.users)
               .where("phone",
@@ -53,23 +60,26 @@ contactList = [];
               .get()
               .then((value) {
             if (value.docs.isNotEmpty) {
-              log("da : ${value.docs[0].data()}");
-              if(value.docs[0].data()["isActive"] == true) {
-                if(!contactList.contains(value.docs[0].data())) {
+              log("coub : $counter");
+              if (value.docs[0].data()["isActive"] == true) {
+                if (!contactList.contains(value.docs[0].data())) {
                   contactList.add(value.docs[0].data());
+                }else{
+                  contactList.remove(value.docs[0].data());
                 }
               }
             }
+
             update();
             Get.forceAppUpdate();
+
           });
           update();
         }
+
       }
       update();
     });
-
-    log("contactList : ${contactList.length}");
 
     isLoading = false;
     update();
@@ -102,6 +112,7 @@ contactList = [];
     FocusScope.of(Get.context!).requestFocus(FocusNode());
   }
 
+  //add group bottom sheet
   addGroupBottomSheet() async {
     final user = appCtrl.storage.read(session.user);
     if (isGroup) {
@@ -150,7 +161,11 @@ contactList = [];
         'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
       });
 
-      await FirebaseFirestore.instance.collection(collectionName.users).doc(user["id"]).collection(collectionName.chats).add({
+      await FirebaseFirestore.instance
+          .collection(collectionName.users)
+          .doc(user["id"])
+          .collection(collectionName.chats)
+          .add({
         'receiver': null,
         'broadcastId': broadcastId,
         'receiverId': newContact,
@@ -170,7 +185,10 @@ contactList = [];
       isLoading = false;
       update();
       Get.back();
-      FirebaseFirestore.instance.collection(collectionName.users).doc(user["id"]).collection(collectionName.chats)
+      FirebaseFirestore.instance
+          .collection(collectionName.users)
+          .doc(user["id"])
+          .collection(collectionName.chats)
           .where("broadcastId", isEqualTo: broadcastId)
           .get()
           .then((value) {
@@ -183,26 +201,22 @@ contactList = [];
   //check chat available with contacts
   Future<List> checkChatAvailable() async {
     final user = appCtrl.storage.read(session.user);
-    selectedContact.asMap().entries.forEach((e)async{
+    selectedContact.asMap().entries.forEach((e) async {
       log("e.value : ${e.value["chatId"]}");
-      await FirebaseFirestore.instance.collection(collectionName.users).doc(user["id"]).collection(collectionName.chats).where("isOneToOne",isEqualTo: true).get().then((value){
-        if(value.docs.isNotEmpty) {
-          value.docs
-              .asMap()
-              .entries
-              .forEach((element) {
+      await FirebaseFirestore.instance
+          .collection(collectionName.users)
+          .doc(user["id"])
+          .collection(collectionName.chats)
+          .where("isOneToOne", isEqualTo: true)
+          .get()
+          .then((value) {
+        if (value.docs.isNotEmpty) {
+          value.docs.asMap().entries.forEach((element) {
             log("element.value : ${element.value.data()}");
-            log("exist : ${element.value.data()["senderId"] == user["id"] &&
-                element.value.data()["receiverId"] ==
-                    e.value["id"] ||
-                element.value.data()["senderId"] ==
-                    e.value["id"] &&
-                    element.value.data()["receiverId"] == user["id"]}");
+            log("exist : ${element.value.data()["senderId"] == user["id"] && element.value.data()["receiverId"] == e.value["id"] || element.value.data()["senderId"] == e.value["id"] && element.value.data()["receiverId"] == user["id"]}");
             if (element.value.data()["senderId"] == user["id"] &&
-                element.value.data()["receiverId"] ==
-                    e.value["id"] ||
-                element.value.data()["senderId"] ==
-                    e.value["id"] &&
+                    element.value.data()["receiverId"] == e.value["id"] ||
+                element.value.data()["senderId"] == e.value["id"] &&
                     element.value.data()["receiverId"] == user["id"]) {
               e.value["chatId"] = element.value.data()["chatId"];
               update();
@@ -216,7 +230,7 @@ contactList = [];
               }
             }
           });
-        }else{
+        } else {
           e.value["chatId"] = null;
           if (!newContact.contains(e.value)) {
             newContact.add(e.value);
@@ -224,25 +238,25 @@ contactList = [];
         }
         update();
       });
-
     });
-
 
     return newContact;
   }
 
-  selectUserTap(value){
+  //select user function
+  selectUserTap(value) {
     var data = {
       "id": value["id"],
       "name": value["name"],
       "phone": value["phone"],
       "image": value["image"]
     };
-    bool exists = selectedContact.any(
-            (file) => file["phone"] == data["phone"]);
+    bool exists = selectedContact.any((file) => file["phone"] == data["phone"]);
     log("exists : $exists");
     if (exists) {
-      selectedContact.removeWhere((element) => element["phone"] == data["phone"],);
+      selectedContact.removeWhere(
+        (element) => element["phone"] == data["phone"],
+      );
     } else {
       selectedContact.add(data);
     }
@@ -250,15 +264,12 @@ contactList = [];
     update();
   }
 
-
   @override
   void onReady() {
 // TODO: implement onReady
     isGroup = Get.arguments ?? false;
-    refreshContacts();
+    //refreshContacts();
     update();
     super.onReady();
-
   }
-
 }

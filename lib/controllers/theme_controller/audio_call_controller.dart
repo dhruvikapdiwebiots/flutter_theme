@@ -119,6 +119,7 @@ class AudioCallController extends GetxController {
     return Future.value(false);
   }
 
+  //start time count
   startTimerNow() {
     timerStream = stopWatchStream();
     timerSubscription = timerStream!.listen((int newTick) {
@@ -146,7 +147,6 @@ class AudioCallController extends GetxController {
           localUserJoined = true;
           log("localUid : ${connection.localUid}");
           if (call!.callerId == userData["id"]) {
-            playCallingTone();
 
             update();
             FirebaseFirestore.instance
@@ -200,7 +200,6 @@ class AudioCallController extends GetxController {
           log("remoteUidValue : $remoteUidValue");
           debugPrint("remote user $remoteUidValue joined");
           if (userData["id"] == call!.callerId) {
-            _stopCallingSound();
             FirebaseFirestore.instance
                 .collection(collectionName.calls)
                 .doc(call!.callerId)
@@ -246,7 +245,7 @@ class AudioCallController extends GetxController {
           _infoStrings.add(info);
           _users.remove(remoteUid);
           update();
-          _stopCallingSound();
+
           if (isAlreadyEnded == false) {
             FirebaseFirestore.instance
                 .collection(collectionName.calls)
@@ -273,7 +272,7 @@ class AudioCallController extends GetxController {
               '[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
         },
         onLeaveChannel: (connection, stats) {
-          _stopCallingSound();
+
           _infoStrings.add('onLeaveChannel');
           _users.clear();
           _dispose();
@@ -321,20 +320,19 @@ class AudioCallController extends GetxController {
     update();
   }
 
+  //speaker mute - unMute
   void onToggleSpeaker() {
     isSpeaker = !isSpeaker;
     update();
     engine.setEnableSpeakerphone(isSpeaker);
   }
 
-  void _stopCallingSound() async {
-    player!.stop();
-  }
 
+  //firebase mute un Mute
   void onToggleMute() {
     muted = !muted;
     update();
-    _stopCallingSound();
+
     engine.muteLocalAudioStream(muted);
     FirebaseFirestore.instance
         .collection(collectionName.calls)
@@ -344,6 +342,8 @@ class AudioCallController extends GetxController {
         .set({'isMuted': muted}, SetOptions(merge: true));
   }
 
+
+  //bottom tool bar
   Widget toolbar(
     bool isShowSpeaker,
     String? status,
@@ -355,6 +355,8 @@ class AudioCallController extends GetxController {
     );
   }
 
+
+  //end call and remove
   Future<bool> endCall({required Call call}) async {
     try {
       await FirebaseFirestore.instance
@@ -398,8 +400,8 @@ class AudioCallController extends GetxController {
     }
   }
 
+  //end call
   void onCallEnd(BuildContext context) async {
-    _stopCallingSound();
     log("endCall1");
     _dispose();
     DateTime now = DateTime.now();
@@ -464,21 +466,13 @@ class AudioCallController extends GetxController {
     Get.back();
   }
 
-  //play calling tine
-  Future<void> playCallingTone() async {
-    player = (await audioCache.load('sounds/callingtone.mp3'))
-        as audio_players.AudioPlayer;
-    update();
-  }
 
   //audio ui design
   audioScreen({
     String? status,
     bool? isPeerMuted,
   }) {
-    if (status == 'rejected') {
-      _stopCallingSound();
-    } var w = MediaQuery.of(Get.context!).size.width;
+   var w = MediaQuery.of(Get.context!).size.width;
     return Container(
       alignment: Alignment.center,
       child: Column(

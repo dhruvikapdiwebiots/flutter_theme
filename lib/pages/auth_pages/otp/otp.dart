@@ -41,7 +41,7 @@ class Otp extends StatelessWidget {
                 ),
               ),
             ),
-            if (otpCtrl.isLoading) LoginLoader(isLoading: otpCtrl.isLoading)
+            if (otpCtrl.isLoading) CommonLoader(isLoading: otpCtrl.isLoading)
           ],
         ),
       );

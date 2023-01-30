@@ -101,7 +101,7 @@ class _GroupReceiverMessageState extends State<GroupReceiverMessage> {
                               builder: (BuildContext context) => chatCtrl
                                   .buildPopupDialog(context, widget.document!));
                         })
-                    : (widget.document!["content"].contains(".docx"))
+                    : (widget.document!["content"].contains(".doc"))
                         ? DocxLayout(
                             document: widget.document,
                             isReceiver: true,

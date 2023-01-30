@@ -17,7 +17,7 @@ class _BroadcastChatState extends State<BroadcastChat>
   void initState() {
     // TODO: implement initState
     receiverData = Get.arguments;
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     setState(() {});
     super.initState();
   }
@@ -54,7 +54,7 @@ class _BroadcastChatState extends State<BroadcastChat>
                     ]),
                     // Loading
                     if(chatCtrl.isLoading!)
-                    LoginLoader(isLoading: chatCtrl.isLoading!,)
+                    CommonLoader(isLoading: chatCtrl.isLoading!,)
                   ]))),
         ),
       );

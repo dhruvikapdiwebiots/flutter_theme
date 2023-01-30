@@ -196,7 +196,7 @@ class AppTheme {
       ),
       buttonTheme: ButtonThemeData(buttonColor: primary),
       highlightColor: Colors.transparent,
-      toggleableActiveColor: primary,
+      toggleButtonsTheme: ToggleButtonsThemeData(selectedColor: primary),
     );
   }
 

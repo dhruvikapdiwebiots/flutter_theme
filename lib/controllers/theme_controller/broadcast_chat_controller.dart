@@ -82,6 +82,8 @@ class BroadcastChatController extends GetxController {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
 
     if (result != null) {
+      isLoading = true;
+      update();
       File file = File(result.files.single.path.toString());
       String fileName =
           "${file.name}-${DateTime.now().millisecondsSinceEpoch.toString()}";

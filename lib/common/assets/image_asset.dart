@@ -1,20 +1,11 @@
 class ImageAssets{
   final String splashIcon = 'assets/images/splash.png';
-  final String darkSplash = 'assets/images/darkSplash.png';
-  final String logo = 'assets/images/chat.png';
   final String login1 = 'assets/images/login1.png';
   final String otp = 'assets/images/otp.png';
-  final String intro = 'assets/images/intro.png';
   final String line = 'assets/images/line.png';
   final String wave = 'assets/images/wave.png';
-  final String intro1 = 'assets/images/intro1.png';
-  final String intro2 = 'assets/images/intro2.png';
-  final String facebook = 'assets/images/facebook.png';
-  final String gmail = 'assets/images/gmail.png';
-  final String email = 'assets/images/email.png';
   final String phone = 'assets/images/phone.png';
   final String back = 'assets/images/back.png';
-  final String chatBg = 'assets/images/chat_bg.jpg';
   final String user = 'assets/images/user.png';
   final String user1 = 'assets/images/user1.png';
   final String pdf = 'assets/images/pdf.png';
@@ -22,7 +13,6 @@ class ImageAssets{
   final String docx = 'assets/images/docx.png';
   final String jpg = 'assets/images/jpg.png';
   final String map = 'assets/images/mapview.png';
-  final String bg = 'assets/images/bg.png';
   final String noChat = 'assets/images/noChat.png';
   final String noInternet = 'assets/images/noInternet.png';
   final String logo1 =

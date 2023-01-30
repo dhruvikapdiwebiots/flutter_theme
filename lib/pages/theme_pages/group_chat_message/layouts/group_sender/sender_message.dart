@@ -110,7 +110,7 @@ class _GroupSenderMessageState extends State<GroupSenderMessage> {
                                     chatCtrl.buildPopupDialog(
                                         context, widget.document!));
                           })
-                      : (widget.document!["content"].contains(".docx"))
+                      : (widget.document!["content"].contains(".doc"))
                           ? DocxLayout(
                               currentUserId: widget.currentUserId,
                               document: widget.document,

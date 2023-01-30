@@ -11,7 +11,7 @@ class CreateGroup extends StatelessWidget {
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
       return GetBuilder<CreateGroupController>(builder: (groupCtrl) {
-        return groupCtrl.isLoading ? LoginLoader(isLoading: groupCtrl.isLoading) : Padding(
+        return groupCtrl.isLoading ? CommonLoader(isLoading: groupCtrl.isLoading) : Padding(
           padding: EdgeInsets.only(
               bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Container(

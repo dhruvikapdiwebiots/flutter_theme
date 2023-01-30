@@ -99,6 +99,8 @@ class VideoCallController extends GetxController {
     return Future.value(false);
   }
 
+
+  //initialise agora
   Future<void> initAgora() async {
     // retrieve permissions
     await [Permission.microphone, Permission.camera].request();
@@ -134,7 +136,6 @@ class VideoCallController extends GetxController {
             });
           }
           if (call!.callerId == userData["id"]) {
-            playCallingTone();
             update();
             FirebaseFirestore.instance
                 .collection(collectionName.calls)
@@ -226,7 +227,6 @@ class VideoCallController extends GetxController {
           debugPrint("remote user $remoteUidValue joined");
 
           if (userData["id"] == call!.callerId) {
-            _stopCallingSound();
             FirebaseFirestore.instance
                 .collection(collectionName.calls)
                 .doc(call!.callerId)
@@ -294,7 +294,6 @@ class VideoCallController extends GetxController {
           remoteUid = 0;
           users.remove(remoteUid);
           update();
-          _stopCallingSound();
           if (isAlreadyEndedCall == false) {
             FirebaseFirestore.instance
                 .collection(collectionName.calls)
@@ -338,7 +337,6 @@ class VideoCallController extends GetxController {
               '[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
         },
         onLeaveChannel: (connection, stats) {
-          _stopCallingSound();
           remoteUId = null;
           infoStrings.add('onLeaveChannel');
           users.clear();
@@ -411,20 +409,19 @@ class VideoCallController extends GetxController {
     update();
   }
 
+
+  //on speaker off on
   void onToggleSpeaker() {
     isSpeaker = !isSpeaker;
     update();
     engine.setEnableSpeakerphone(isSpeaker);
   }
 
-  void _stopCallingSound() async {
-    player!.stop();
-  }
 
+  //mute - unMute toggle
   void onToggleMute() {
     muted = !muted;
     update();
-    _stopCallingSound();
     engine.muteLocalAudioStream(muted);
     FirebaseFirestore.instance
         .collection(collectionName.calls)
@@ -445,6 +442,7 @@ class VideoCallController extends GetxController {
     await engine.release();
   }
 
+  //bottom toolbar
   Widget toolbar(
     bool isShowSpeaker,
     String? status,
@@ -453,6 +451,7 @@ class VideoCallController extends GetxController {
     return VideoToolBar(isShowSpeaker: isShowSpeaker,status: status,);
   }
 
+  //switch camera
   Future<void> onSwitchCamera() async {
     engine.switchCamera();
 
@@ -597,9 +596,4 @@ class VideoCallController extends GetxController {
     Get.back();
   }
 
-  Future<void> playCallingTone() async {
-    player = (await audioCache.load('sounds/callingtone.mp3'))
-        as audio_players.AudioPlayer;
-    update();
-  }
 }

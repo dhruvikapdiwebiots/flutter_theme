@@ -11,7 +11,6 @@ export 'package:flutter_svg/flutter_svg.dart';
 export 'utilities/index.dart';
 export 'common/theme/index.dart';
 export '../../common/config.dart';
-export 'common/theme/index.dart';
 export 'common/language/index.dart';
 export '../../routes/index.dart';
 export 'extensions/spacing.dart';

@@ -70,7 +70,7 @@ class _GroupChatMessageState extends State<GroupChatMessage>
                     //body layout
                     const GroupChatBody(),
                     // Loading
-                    if (chatCtrl.isLoading) const GroupBuildLoader()
+                    if (chatCtrl.isLoading) CommonLoader(isLoading: chatCtrl.isLoading,)
                   ]))),
         ),
       );

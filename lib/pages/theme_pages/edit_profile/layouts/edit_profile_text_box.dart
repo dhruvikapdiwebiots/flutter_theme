@@ -60,9 +60,9 @@ class EditProfileTextBox extends StatelessWidget {
               suffixIcon: Icon(Icons.star, color: appCtrl.appTheme.blackColor),
               errorText:
                   editCtrl.statusValidation ? fonts.phoneError.tr : null),
-          const VSpace(Sizes.s25),
+          const VSpace(Sizes.s25)
 
-        ],
+        ]
       );
     });
   }

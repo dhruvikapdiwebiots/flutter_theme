@@ -61,6 +61,7 @@ class FirebaseCommonController extends GetxController {
     );
   }
 
+  //status delete after 24 hours
   statusDeleteAfter24Hours() async {
     var user = appCtrl.storage.read(session.user) ?? "";
     if (user != "") {

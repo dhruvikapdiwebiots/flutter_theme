@@ -1,12 +1,5 @@
 export 'auth_pages/intro/layouts/indicator_layout.dart';
 export 'auth_pages/intro/layouts/intro_page_layout.dart';
-export 'auth_pages/login/layouts/login_body.dart';
-export 'auth_pages/login/layouts/login_body.dart';
-export 'auth_pages/login/layouts/login_widget.dart';
-export 'auth_pages/signup/layouts/signup_body.dart';
-export 'auth_pages/signup/layouts/name_text_box.dart';
-export 'auth_pages/signup/layouts/signup_widget.dart';
-export 'auth_pages/signup/layouts/signup_text_box.dart';
 export 'auth_pages/otp/layouts/otp_body.dart';
 export 'bottom_pages/message/layout/message_card.dart';
 export 'bottom_pages/message/layout/alert_back.dart';
@@ -51,7 +44,8 @@ export 'theme_pages/create_group/layouts/all_registered_contact.dart';
 export 'theme_pages/create_group/layouts/selected_contact_list.dart';
 export 'theme_pages/create_group/layouts/selected_users.dart';
 export 'theme_pages/create_group/layouts/create_group.dart';
-export 'auth_pages/login/layouts/login_loader.dart';
+
+export 'theme_pages/edit_profile/layouts/edit_profile_body.dart';
 export 'bottom_pages/message/layout/group_message_card.dart';
 export 'bottom_pages/message/layout/receiver_message_card.dart';
 export 'bottom_pages/message/message_firebase_api.dart';
@@ -101,7 +95,7 @@ export 'theme_pages/broadcast_chat/layouts/docx_layout.dart';
 export 'theme_pages/chat_message/layouts/gif_layout.dart';
 export 'theme_pages/broadcast_chat/layouts/pdf_layout.dart';
 export 'theme_pages/group_chat_message/layouts/group_user_status.dart';
-
+export 'theme_pages/edit_profile/layouts/edit_profile_image.dart';
 export 'theme_pages/video_call/layouts/video_call_class.dart';
 export 'theme_pages/broadcast_chat/layouts/broadcast_delete_alert.dart';
 export 'theme_pages/broadcast_chat/layouts/broadcast_sender.dart';
@@ -115,6 +109,8 @@ export 'theme_pages/audio_call/layouts/audio_portrait.dart';
 export 'theme_pages/audio_call/layouts/audio_tool_bar.dart';
 export 'theme_pages/video_call/layouts/video_tool_bar.dart';
 export 'bottom_pages/dashboard/layouts/agora_token.dart';
+export 'theme_pages/pick_up_call/pick_up_body.dart';
+export 'theme_pages/pick_up_call/caller_image.dart';
 
 export '/models/progress_bar.dart';
 export '/utilities/type_list.dart';
@@ -123,7 +119,9 @@ export '../widgets/no_internet.dart';
 export '../widgets/common_image_layout.dart';
 export '/models/bottom_nav_bar_model.dart';
 export '../widgets/email_text_box.dart';
+export '../widgets/name_text_box.dart';
 export '../widgets/password_text_box.dart';
-export '../widgets/social_layout.dart';
 export '../widgets/custom_shape.dart';
+
+export '../widgets/common_loader.dart';
 export '../widgets/common_widget.dart';

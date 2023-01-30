@@ -28,7 +28,7 @@ class GroupCardSubTitle extends StatelessWidget {
                       ? "$name Media Share"
                       : "Media Share"
                   : (document!["lastMessage"].contains(".pdf") ||
-                          document!["lastMessage"].contains(".docx") ||
+                          document!["lastMessage"].contains(".doc") ||
                           document!["lastMessage"].contains(".mp3") ||
                           document!["lastMessage"].contains(".mp4") ||
                           document!["lastMessage"].contains(".xlsx") ||

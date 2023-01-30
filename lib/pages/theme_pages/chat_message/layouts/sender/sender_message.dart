@@ -1,7 +1,3 @@
-import 'dart:io';
-import 'dart:developer';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 import '../../../../../config.dart';
@@ -110,7 +106,7 @@ class _SenderMessageState extends State<SenderMessage> {
                               },
                               pdfViewerKey: _pdfViewerKey,
                             )
-                          : (widget.document!["content"].contains(".docx"))
+                          : (widget.document!["content"].contains(".doc"))
                               ? DocxLayout(
                                   document: widget.document,
                                   onLongPress: () {

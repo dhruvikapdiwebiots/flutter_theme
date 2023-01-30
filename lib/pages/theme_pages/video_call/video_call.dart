@@ -1,5 +1,4 @@
 
-import 'dart:developer';
 
 import 'package:flutter_theme/config.dart';
 
@@ -32,7 +31,6 @@ class _VideoCallState extends State<VideoCall> {
       return Scaffold(
         backgroundColor: appCtrl.appTheme.whiteColor,
         body: GetBuilder<VideoCallController>(builder: (_) {
-          log("viewa : ${videoCallCtrl.remoteUId}");
           return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
               stream: FirebaseFirestore.instance
                   .collection(collectionName.calls)

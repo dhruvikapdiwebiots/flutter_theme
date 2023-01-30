@@ -90,7 +90,7 @@ class _ConfirmStatusScreenState extends State<ConfirmStatusScreen> {
                       )
                     : Container(),
             if (statusCtrl.isLoading)
-              LoginLoader(
+              CommonLoader(
                 isLoading: statusCtrl.isLoading,
               )
           ],

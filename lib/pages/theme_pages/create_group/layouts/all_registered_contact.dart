@@ -27,7 +27,8 @@ class AllRegisteredContact extends StatelessWidget {
           imageUrl:   data["image"],
           imageBuilder: (context, imageProvider) => CircleAvatar(
             backgroundColor:appCtrl.appTheme.contactBgGray,
-            radius: Sizes.s28,
+
+          radius: Sizes.s28,
             backgroundImage:
             NetworkImage(data["image"]),
           ),

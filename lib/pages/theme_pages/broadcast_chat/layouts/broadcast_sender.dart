@@ -165,7 +165,7 @@ class _BroadcastSenderMessage extends State<BroadcastSenderMessage> {
                         },
                         pdfViewerKey: _pdfViewerKey,
                       )
-                          : (widget.document!["content"].contains(".docx"))
+                          : (widget.document!["content"].contains(".doc"))
                           ? DocxLayout(
                           document: widget.document,
                           onLongPress: () {

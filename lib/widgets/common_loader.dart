@@ -1,8 +1,8 @@
 import '../../../../config.dart';
 
-class LoginLoader extends StatelessWidget {
+class CommonLoader extends StatelessWidget {
   final bool isLoading;
-  const LoginLoader({Key? key,this.isLoading = false}) : super(key: key);
+  const CommonLoader({Key? key,this.isLoading = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +10,7 @@ class LoginLoader extends StatelessWidget {
       child: isLoading
           ? Container(
 height: MediaQuery.of(context).size.height,
-        color: appCtrl.appTheme.blackColor.withOpacity(.2),
+        color: appCtrl.appTheme.blackColor.withOpacity(.3),
         child: Center(
           child: CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(

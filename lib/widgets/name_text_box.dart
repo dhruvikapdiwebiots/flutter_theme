@@ -10,12 +10,12 @@ class NameTextBox extends StatelessWidget {
 
   const NameTextBox(
       {Key? key,
-      this.nameText,
-      this.suffixIcon,
-      this.nameFocus,
-      this.border,
-      this.nameValidation,
-      this.onFieldSubmitted})
+        this.nameText,
+        this.suffixIcon,
+        this.nameFocus,
+        this.border,
+        this.nameValidation,
+        this.onFieldSubmitted})
       : super(key: key);
 
   @override

@@ -24,6 +24,7 @@ class Setting extends StatelessWidget {
                 ? Column(children: [
                     Row(
                       children: [
+                        //user image
                         UserImage(image: settingCtrl.user["image"]),
                         const HSpace(Sizes.s20),
                         Column(
