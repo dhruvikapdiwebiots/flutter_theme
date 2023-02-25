@@ -4,7 +4,6 @@ import 'package:flutter_theme/config.dart';
 
 class MessageController extends GetxController {
   String? currentUserId;
-  GoogleSignIn googleSignIn = GoogleSignIn();
   User? currentUser;
   dynamic storageUser;
   bool isHomePageSelected = true;

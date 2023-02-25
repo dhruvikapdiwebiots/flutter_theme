@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter_theme/config.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseAuthController extends GetxController {
   final GoogleSignIn _googleSignIn = GoogleSignIn();

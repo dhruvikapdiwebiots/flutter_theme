@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-
-import 'package:flip_card/flip_card.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
@@ -18,7 +16,6 @@ class PhoneController extends GetxController {
   bool displayFront = true;
   bool flipXAxis = true;
   final formKey = GlobalKey<FormState>();
-  GlobalKey<FlipCardState> cardKey = GlobalKey<FlipCardState>();
   bool showFrontSide = true;
   var otpCtrl = Get.isRegistered<OtpController>()
       ? Get.find<OtpController>()

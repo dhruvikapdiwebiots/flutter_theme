@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/services.dart';
 
@@ -68,6 +67,8 @@ class AppController extends GetxController {
         .get();
     log("admin : ${usageControls.data()}");
     usageControlsVal = usageControls.data();
+
+
     appCtrl.storage.write(session.usageControls, usageControls.data());
     update();
     final userAppSettings = await FirebaseFirestore.instance

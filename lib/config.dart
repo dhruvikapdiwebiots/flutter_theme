@@ -6,7 +6,6 @@ export 'package:get_storage/get_storage.dart';
 export 'package:get/get.dart';
 export 'package:flutter/material.dart';
 export 'package:google_fonts/google_fonts.dart';
-export 'package:font_awesome_flutter/font_awesome_flutter.dart';
 export 'package:flutter_svg/flutter_svg.dart';
 export 'utilities/index.dart';
 export 'common/theme/index.dart';
