@@ -59,28 +59,23 @@ class StatusFirebaseApi {
   }
 
   //get status list
-  Future<List<Status>> getStatusUserList(List<Contact> contacts) async {
+  List<Status> getStatusUserList(List<Contact> contacts,QuerySnapshot<Map<String, dynamic>> statusesSnapshot)  {
     var user = appCtrl.storage.read(session.user);
-    var statusesSnapshot =
-        await FirebaseFirestore.instance.collection(collectionName.status).get();
     List<Status> statusData = [];
-    for (int i = 0; i < statusesSnapshot.docs.length; i++) {
-      for (int j = 0; j < contacts.length; j++) {
-        if (contacts[j].phones.isNotEmpty) {
-          String phone =
-              phoneNumberExtension(contacts[j].phones[0].number.toString());
-          if (phone == statusesSnapshot.docs[i].data()["phoneNumber"]) {
-            if (statusesSnapshot.docs[i].data()["uid"] != user["id"]) {
-              Status tempStatus =
-                  Status.fromJson(statusesSnapshot.docs[i].data());
-              if(!statusData.contains(tempStatus)) {
-                statusData.add(tempStatus);
-              }
-            }
+    statusesSnapshot.docs.asMap().entries.forEach((element) {
+      int i = contacts.indexWhere((contactList) => phoneNumberExtension(contactList.phones[0].number.toString()) ==element.value.data()["phoneNumber"]);
+      log("i :$i" );
+      if(i >0){
+        if (element.value.data()["uid"] != user["id"]) {
+          Status tempStatus =
+          Status.fromJson(element.value.data());
+          if(!statusData.contains(tempStatus)) {
+            statusData.add(tempStatus);
           }
         }
       }
-    }
+    });
+    appCtrl.storage.write(session.statusList, statusData);
     log("statusData : $statusData");
 
     return statusData;

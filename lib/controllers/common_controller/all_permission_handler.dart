@@ -82,6 +82,7 @@ class PermissionHandlerController extends GetxController {
 //get contact permission
   Future<PermissionStatus> getContactPermission() async {
     PermissionStatus permission = await Permission.contacts.status;
+    debugPrint("getContactPermission : $permission");
     if (permission != PermissionStatus.granted &&
         permission != PermissionStatus.permanentlyDenied) {
       PermissionStatus permissionStatus = await Permission.contacts.request();
@@ -138,10 +139,12 @@ class PermissionHandlerController extends GetxController {
  Future<List<Contact>> getContact() async {
    List<Contact> contacts = [];
     bool permissionStatus = await permissionGranted();
+    log("permissionStatus : $permissionStatus");
     if (permissionStatus) {
 
       contacts = await getAllContacts();
     }
+    log("contacts : $contacts");
     return contacts;
   }
 
@@ -150,6 +153,7 @@ class PermissionHandlerController extends GetxController {
 //get camera permission
   static Future<PermissionStatus> getCameraPermission() async {
     PermissionStatus cameraPermission = await Permission.camera.request();
+    log("cameraPermission : $cameraPermission");
     if (cameraPermission != PermissionStatus.granted &&
         cameraPermission != PermissionStatus.denied) {
       return Permission.camera as FutureOr<PermissionStatus>? ??

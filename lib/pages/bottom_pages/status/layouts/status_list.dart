@@ -1,4 +1,6 @@
 
+import 'dart:developer';
+
 import 'package:flutter_theme/pages/bottom_pages/status/layouts/status_list_card.dart';
 
 import '../../../../config.dart';
@@ -17,27 +19,29 @@ class _StatusListLayoutState extends State<StatusListLayout> {
       return SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height - 50,
-        child: FutureBuilder(
-            future: statusCtrl.getStatus(),
+        child: StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection(collectionName.status)
+                .orderBy("createdAt", descending: true,).limit(15)
+                .snapshots(),
             builder: (context, snapshot) {
-              List<Status> status = (snapshot.data) ?? [];
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              if ((snapshot.data) == null) {
+              log("has : ${snapshot.hasData}");
+              if (!snapshot.hasData) {
                 return Container();
               } else {
+                log("snapshot : ${snapshot.data}");
+                statusCtrl.status =  StatusFirebaseApi().getStatusUserList(statusCtrl.userContactList,snapshot.data!);
                 return ListView.builder(
-                  itemCount: status.length,
+                  itemCount: statusCtrl.status.length,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
                     return InkWell(
                       onTap: () {
                         Get.toNamed(routeName.statusView,
-                            arguments: (snapshot.data!)[index]);
+                            arguments: statusCtrl.status[index]);
                       },
-                      child: StatusListCard(index: index,snapshot: snapshot,status: status),
+                      child: StatusListCard(index: index,snapshot: statusCtrl.status[index],status: statusCtrl.status),
                     );
                   },
                 );

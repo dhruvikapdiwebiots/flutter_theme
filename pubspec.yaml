@@ -64,7 +64,7 @@ dependencies:
   cloud_firestore: ^4.3.1
   firebase_storage: ^11.0.10
   firebase_messaging: ^14.2.1
-  flutter_local_notifications: ^12.0.4
+  flutter_local_notifications: ^13.0.0
   local_auth: ^1.1.0
   pin_input_text_field: ^4.2.0
   firebase_auth: ^4.2.5
@@ -96,16 +96,10 @@ dependencies:
   wakelock: ^0.6.2
   bubble: ^1.2.1
   overlay_support: ^2.1.0
-  camera: ^0.10.2+1
+  camera: ^0.10.3+1
   awesome_notifications: ^0.7.4+1
   audio_video_progress_bar: ^0.11.0
   open_filex: ^4.3.2
-
-
-
-
-
-
 
 
 

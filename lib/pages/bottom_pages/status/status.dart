@@ -25,7 +25,7 @@ class _StatusListState extends State<StatusList>
     } else {
       firebaseCtrl.setLastSeen();
     }
-    firebaseCtrl.statusDeleteAfter24Hours();
+  //  firebaseCtrl.statusDeleteAfter24Hours();
   }
 
   @override

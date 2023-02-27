@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:camera/camera.dart';
 import '../../../config.dart';
 
@@ -17,7 +19,7 @@ class _PickupLayoutState extends State<PickupLayout>
     with SingleTickerProviderStateMixin {
   AnimationController? controller;
   Animation? colorAnimation;
-  late CameraController cameraController;
+  CameraController? cameraController;
 
   Animation? sizeAnimation;
 
@@ -35,24 +37,27 @@ class _PickupLayoutState extends State<PickupLayout>
     });
 
     controller!.repeat();
-    cameraController = CameraController(cameras[1], ResolutionPreset.max);
-    cameraController.initialize().then((_) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {});
-    }).catchError((Object e) {
-      if (e is CameraException) {
-        switch (e.code) {
-          case 'CameraAccessDenied':
-            // Handle access errors here.
-            break;
-          default:
-            // Handle other errors here.
-            break;
+    if(cameras.isNotEmpty) {
+      cameraController = CameraController(cameras[1], ResolutionPreset.max);
+      log("cameraController : $cameraController");
+      cameraController!.initialize().then((_) {
+        if (!mounted) {
+          return;
         }
-      }
-    });
+        setState(() {});
+      }).catchError((Object e) {
+        if (e is CameraException) {
+          switch (e.code) {
+            case 'CameraAccessDenied':
+            // Handle access errors here.
+              break;
+            default:
+              // Handle other errors here.
+              break;
+          }
+        }
+      });
+    }
   }
 
   @override

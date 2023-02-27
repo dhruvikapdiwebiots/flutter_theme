@@ -37,4 +37,4 @@ final firebaseCtrl = Get.isRegistered<FirebaseCommonController>()
     ? Get.find<FirebaseCommonController>()
     : Get.put(FirebaseCommonController());
 
-List<CameraDescription> cameras = <CameraDescription>[];
+List<CameraDescription> cameras = [];

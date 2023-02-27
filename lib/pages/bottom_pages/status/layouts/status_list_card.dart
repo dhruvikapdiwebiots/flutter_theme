@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import '../../../../config.dart';
 
 class StatusListCard extends StatelessWidget {
-  final AsyncSnapshot? snapshot;
+  final Status? snapshot;
   final int? index;
   final List<Status>? status;
 
@@ -19,19 +19,19 @@ class StatusListCard extends StatelessWidget {
           contentPadding: EdgeInsets.zero,
           title:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text((snapshot!.data!)[index].username!,
+            Text(snapshot!.username!,
                 style: AppCss.poppinsblack14.textColor(appCtrl.appTheme.txt)),
             const VSpace(Sizes.s10),
             Row(children: [
               if (DateFormat("dd/MM/yyyy").format(statusCtrl.date) ==
                   DateFormat('dd/MM/yyyy').format(
                       DateTime.fromMillisecondsSinceEpoch(
-                          int.parse((snapshot!.data!)[index].createdAt))))
+                          int.parse(snapshot!.createdAt!))))
                 Text("Today, ",
                     style: AppCss.poppinsMedium12
                         .textColor(appCtrl.appTheme.grey)),
               Text(
-                  "Yesterday, ${DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(int.parse((snapshot!.data!)[index].createdAt)))}",
+                  "Yesterday, ${DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(int.parse(snapshot!.createdAt!)))}",
                   style:
                       AppCss.poppinsMedium12.textColor(appCtrl.appTheme.grey)),
             ])
@@ -97,7 +97,7 @@ class StatusListCard extends StatelessWidget {
                             ).paddingAll(Insets.i15).decorated(
                                 color: appCtrl.appTheme.grey.withOpacity(.4),
                                 shape: BoxShape.circle))
-                    : StatusVideo(snapshot: status![0]),
+                    : StatusVideo(snapshot: snapshot!),
           ]),
         ),
         const Divider()

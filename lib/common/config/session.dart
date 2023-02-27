@@ -15,4 +15,5 @@ class Session {
   String userAppSettings = 'userAppSettings';
   String agoraToken = 'agoraToken';
   String contactList = 'contactList';
+  String statusList = 'statusList';
 }

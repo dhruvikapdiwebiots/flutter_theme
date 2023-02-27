@@ -26,6 +26,10 @@ class DashboardController extends GetxController
       ? Get.find<MessageController>()
       : Get.put(MessageController());
 
+  final statusCtrl = Get.isRegistered<StatusController>()
+      ? Get.find<StatusController>()
+      : Get.put(StatusController());
+
   List actionList = [];
   List statusAction = [];
   List callsAction = [];
@@ -65,27 +69,17 @@ class DashboardController extends GetxController
 
   //on tap select
   onTapSelect(val) async {
-    final statusCtrl = Get.isRegistered<StatusController>()
-        ? Get.find<StatusController>()
-        : Get.put(StatusController());
+
     selectedIndex = val;
 
     update();
-    if (selectedIndex == 1) {
-      statusCtrl.onReady();
-      statusCtrl.getStatus();
-    }
   }
 
   onChange(val) async {
-    final statusCtrl = Get.isRegistered<StatusController>()
-        ? Get.find<StatusController>()
-        : Get.put(StatusController());
+
     selectedIndex = val;
-    if (selectedIndex == 1) {
-      statusCtrl.onReady();
-      statusCtrl.getStatus();
-    }
+
+    update();
   }
 
   @override
@@ -103,6 +97,7 @@ class DashboardController extends GetxController
       update();
     });
     user = appCtrl.storage.read(session.user);
+
     update();
     super.onReady();
   }
@@ -122,7 +117,7 @@ class DashboardController extends GetxController
     // TODO: implement onInit
     contactCtrl.onInit();
     messageCtrl.onReady();
-
+    statusCtrl.onReady();
     super.onInit();
   }
 }

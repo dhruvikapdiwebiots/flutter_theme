@@ -32,7 +32,7 @@ class _DashboardState extends State<Dashboard>
     } else {
       firebaseCtrl.setLastSeen();
     }
-    firebaseCtrl.statusDeleteAfter24Hours();
+   // firebaseCtrl.statusDeleteAfter24Hours();
     dashboardCtrl.connectivitySubscription =
         dashboardCtrl.connectivity.onConnectivityChanged.listen((event) {
       dashboardCtrl.updateConnectionStatus(event);
