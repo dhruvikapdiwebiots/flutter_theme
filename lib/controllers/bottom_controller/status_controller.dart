@@ -6,7 +6,6 @@ import 'package:flutter_theme/config.dart';
 class StatusController extends GetxController {
   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   List<Contact> contactList = [];
-  List<Contact> userContactList = [];
   List<Status> status = [];
   String? groupId, currentUserId, imageUrl;
   Image? contactPhoto;
@@ -37,20 +36,9 @@ class StatusController extends GetxController {
     }
     update();
 
-    contactList = await permissionHandelCtrl.getContact();
-    FirebaseFirestore.instance.collection(collectionName.users).get().then((value) {
-      debugPrint("coooo : ${value.docs.length}" );
-      value.docs.asMap().entries.forEach((user) {
-        contactList.asMap().entries.forEach((element) {
-          if(user.value.data()["phone"] == phoneNumberExtension(element.value.phones[0].number.toString())){
-            userContactList.add(element.value);
-          }
-          update();
-        });
-      });
-    });
-    debugPrint("contactList : $userContactList");
+    debugPrint("contactList : ${appCtrl.userContactList}");
     update();
+
     super.onReady();
   }
 

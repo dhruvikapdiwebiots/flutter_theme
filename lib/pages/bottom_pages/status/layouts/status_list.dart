@@ -16,37 +16,41 @@ class _StatusListLayoutState extends State<StatusListLayout> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<StatusController>(builder: (statusCtrl) {
-      return SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height - 50,
-        child: StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection(collectionName.status)
-                .orderBy("createdAt", descending: true,).limit(15)
-                .snapshots(),
-            builder: (context, snapshot) {
-              log("has : ${snapshot.hasData}");
-              if (!snapshot.hasData) {
-                return Container();
-              } else {
-                log("snapshot : ${snapshot.data}");
-                statusCtrl.status =  StatusFirebaseApi().getStatusUserList(statusCtrl.userContactList,snapshot.data!);
-                return ListView.builder(
-                  itemCount: statusCtrl.status.length,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        Get.toNamed(routeName.statusView,
-                            arguments: statusCtrl.status[index]);
+      return GetBuilder<AppController>(
+        builder: (appCtrl) {
+          return SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height - 50,
+            child: StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection(collectionName.status)
+                    .orderBy("createdAt", descending: true,).limit(15)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  log("has : ${snapshot.hasData}");
+                  if (!snapshot.hasData) {
+                    return Container();
+                  } else {
+                    log("snapshot : ${snapshot.data}");
+                    statusCtrl.status =  StatusFirebaseApi().getStatusUserList(appCtrl.userContactList,snapshot.data!);
+                    return ListView.builder(
+                      itemCount: statusCtrl.status.length,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return InkWell(
+                          onTap: () {
+                            Get.toNamed(routeName.statusView,
+                                arguments: statusCtrl.status[index]);
+                          },
+                          child: StatusListCard(index: index,snapshot: statusCtrl.status[index],status: statusCtrl.status),
+                        );
                       },
-                      child: StatusListCard(index: index,snapshot: statusCtrl.status[index],status: statusCtrl.status),
                     );
-                  },
-                );
-              }
-            }),
+                  }
+                }),
+          );
+        }
       );
     });
   }

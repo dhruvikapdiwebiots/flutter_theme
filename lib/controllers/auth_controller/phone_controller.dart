@@ -35,6 +35,11 @@ class PhoneController extends GetxController {
             .get()
             .then((value) async {
           if (value.docs.isNotEmpty) {
+            final permissionHandelCtrl = Get.isRegistered<PermissionHandlerController>()
+                ? Get.find<PermissionHandlerController>()
+                : Get.put(PermissionHandlerController());
+            appCtrl. contactList = await permissionHandelCtrl.getContact();
+            appCtrl.update();
             homeNavigation(value.docs[0].data());
           }
           log("value : ${value.docs}");
@@ -69,6 +74,7 @@ class PhoneController extends GetxController {
       log('check : ${appCtrl.storage.read(session.isIntro)}');
       Get.toNamed(routeName.dashboard);
     });
+
   }
 
 

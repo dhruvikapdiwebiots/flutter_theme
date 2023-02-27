@@ -69,7 +69,7 @@ class StatusListCard extends StatelessWidget {
                             .toString(),
                         imageBuilder: (context, imageProvider) => CircleAvatar(
                               backgroundColor: appCtrl.appTheme.contactBgGray,
-                              radius: AppRadius.r30,
+                              radius: AppRadius.r25,
                               backgroundImage: NetworkImage(status![index!]
                                   .photoUrl![
                                       status![index!].photoUrl!.length - 1]

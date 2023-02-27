@@ -8,7 +8,8 @@ import '../../config.dart';
 class AppController extends GetxController {
   AppTheme _appTheme = AppTheme.fromType(ThemeType.light);
   final storage = GetStorage();
-
+  List<Contact> contactList = [];
+  List<Contact> userContactList = [];
   AppTheme get appTheme => _appTheme;
   int selectedIndex = 0;
   bool isTheme = false;
@@ -35,6 +36,7 @@ class AppController extends GetxController {
   void onReady() {
     // TODO: implement onReady
     getData();
+
     initPlatformState();
     update();
     getAdminPermission();
@@ -44,6 +46,7 @@ class AppController extends GetxController {
 
   //get data from storage
   getData() async {
+
     //theme check
     bool loadThemeFromStorage = storage.read(session.isDarkMode) ?? false;
     if (loadThemeFromStorage) {
@@ -51,6 +54,8 @@ class AppController extends GetxController {
     } else {
       isTheme = false;
     }
+
+    log("contactList : $contactList");
 
     update();
     await storage.write(session.isDarkMode, isTheme);

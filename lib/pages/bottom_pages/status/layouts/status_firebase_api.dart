@@ -75,6 +75,7 @@ class StatusFirebaseApi {
         }
       }
     });
+
     appCtrl.storage.write(session.statusList, statusData);
     log("statusData : $statusData");
 

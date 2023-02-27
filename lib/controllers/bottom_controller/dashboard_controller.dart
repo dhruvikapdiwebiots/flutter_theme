@@ -69,16 +69,17 @@ class DashboardController extends GetxController
 
   //on tap select
   onTapSelect(val) async {
-
     selectedIndex = val;
 
     update();
   }
 
   onChange(val) async {
-
     selectedIndex = val;
-
+    if (val == 1) {
+      statusCtrl.update();
+      statusCtrl.update();
+    }
     update();
   }
 
@@ -97,7 +98,24 @@ class DashboardController extends GetxController
       update();
     });
     user = appCtrl.storage.read(session.user);
+    await FirebaseFirestore.instance
+        .collection(collectionName.users)
+        .get()
+        .then((value) {
+      value.docs.asMap().entries.forEach((user) {
+        appCtrl.contactList.asMap().entries.forEach((element) {
+          if (user.value.data()["phone"] ==
+              phoneNumberExtension(element.value.phones[0].number.toString())) {
+            appCtrl.userContactList.add(element.value);
+          }
+          appCtrl.update();
+        });
+      });
+      log("DASHBOARD : ${appCtrl.userContactList.length}");
+    });
 
+    appCtrl.update();
+    statusCtrl.update();
     update();
     super.onReady();
   }
@@ -116,8 +134,11 @@ class DashboardController extends GetxController
   void onInit() {
     // TODO: implement onInit
     contactCtrl.onInit();
+    statusCtrl.onReady();
     messageCtrl.onReady();
     statusCtrl.onReady();
+
+    statusCtrl.update();
     super.onInit();
   }
 }
