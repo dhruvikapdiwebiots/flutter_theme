@@ -1,4 +1,5 @@
 
+import 'dart:developer';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart';
@@ -27,16 +28,18 @@ class _DashboardState extends State<Dashboard>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+
     if (state == AppLifecycleState.resumed) {
       firebaseCtrl.setIsActive();
     } else {
+
       firebaseCtrl.setLastSeen();
     }
-   // firebaseCtrl.statusDeleteAfter24Hours();
-    dashboardCtrl.connectivitySubscription =
-        dashboardCtrl.connectivity.onConnectivityChanged.listen((event) {
-      dashboardCtrl.updateConnectionStatus(event);
-    });
+
+    log("DDDD : $state}");
+   //firebaseCtrl.statusDeleteAfter24Hours();
+
+
   }
 
   @override

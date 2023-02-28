@@ -39,13 +39,15 @@ class OtpController extends GetxController {
           .update({'status': "Online", "pushToken": token, "isActive": true});
       log('check : ${appCtrl.storage.read(session.isIntro)}');
       Get.toNamed(routeName.dashboard);
-      final permissionHandelCtrl = Get.isRegistered<PermissionHandlerController>()
-          ? Get.find<PermissionHandlerController>()
-          : Get.put(PermissionHandlerController());
-      appCtrl. contactList = await permissionHandelCtrl.getContact();
+      final permissionHandelCtrl =
+          Get.isRegistered<PermissionHandlerController>()
+              ? Get.find<PermissionHandlerController>()
+              : Get.put(PermissionHandlerController());
+      appCtrl.contactList = await permissionHandelCtrl.getContact();
+      appCtrl.storage.write(session.contactList, appCtrl.contactList);
       appCtrl.update();
+      log("OTP : ${appCtrl.contactList}");
     });
-
   }
 
   //show toast
@@ -119,10 +121,11 @@ class OtpController extends GetxController {
         try {
           FirebaseFirestore.instance
               .collection(collectionName.users)
-              .where("phone", isEqualTo: mobileNumber).limit(1)
+              .where("phone", isEqualTo: mobileNumber)
+              .limit(1)
               .get()
               .then((value) async {
-                log("check : ${value.docs.isEmpty}");
+            log("check : ${value.docs.isEmpty}");
             if (value.docs.isNotEmpty) {
               log("check : ${value.docs[0].data()}");
               if (value.docs[0].data()["name"] == "") {
@@ -191,7 +194,10 @@ class OtpController extends GetxController {
     try {
       final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
       firebaseMessaging.getToken().then((token) async {
-        await FirebaseFirestore.instance.collection(collectionName.users).doc(user.uid).set({
+        await FirebaseFirestore.instance
+            .collection(collectionName.users)
+            .doc(user.uid)
+            .set({
           'chattingWith': null,
           'id': user.uid,
           'image': user.photoURL ?? "",
@@ -202,7 +208,7 @@ class OtpController extends GetxController {
           "phone": mobileNumber,
           "email": user.email,
           "deviceName": appCtrl.deviceName,
-          "isActive":true,
+          "isActive": true,
           "device": appCtrl.device,
           "statusDesc": "Hello, I am using Chatter"
         }).catchError((err) {

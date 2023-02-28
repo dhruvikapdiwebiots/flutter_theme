@@ -1,8 +1,11 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:light_compressor/light_compressor.dart' as light;
+
 
 class PickerController extends GetxController {
   XFile? imageFile;
@@ -15,11 +18,10 @@ class PickerController extends GetxController {
 // GET IMAGE FROM GALLERY
   Future getImage(source) async {
     final ImagePicker picker = ImagePicker();
-    imageFile = (await picker.pickImage(source: source))!;
+    imageFile = (await picker.pickImage(source: source, imageQuality: 30))!;
     if (imageFile != null) {
       final croppedFile = await ImageCropper().cropImage(
         sourcePath: imageFile!.path,
-        compressFormat: ImageCompressFormat.jpg,
         compressQuality: 100,
         uiSettings: [
           AndroidUiSettings(
@@ -34,23 +36,61 @@ class PickerController extends GetxController {
         ],
       );
       if (croppedFile != null) {
-        image = File(croppedFile.path);
-      }
+        File compressedFile = await FlutterNativeImage.compressImage(
+            croppedFile.path,
+            quality: 30,
+            targetWidth: 600,
+            targetHeight: 300,
+            percentage: 20);
+        update();
 
-      update();
-      log("image : $image");
+        log("image : ${compressedFile.lengthSync()}");
+
+        image = File(compressedFile.path);
+        if (image!.lengthSync() / 1000000 > 60) {
+          image = null;
+          snackBar(
+              "Image Should be less than ${image!.lengthSync() / 1000000 > 60}");
+        }
+      }
+      log("image1 : $image");
+      log("image1 : ${image!.lengthSync() / 1000000 > 60}");
+
       Get.forceAppUpdate();
     }
   }
 
+
+
 // GET VIDEO FROM GALLERY
   Future getVideo(source) async {
+    appCtrl.isLoading = true;
+    update();
+    final light.LightCompressor lightCompressor = light.LightCompressor();
     final ImagePicker picker = ImagePicker();
-    videoFile = (await picker.pickVideo(source: source))!;
+    videoFile = (await picker.pickVideo(
+      source: source,
+    ))!;
     if (videoFile != null) {
+      log("videoFile!.path : ${videoFile!.path}");
+      final dynamic response = await lightCompressor.compressVideo(
+        path: videoFile!.path,
+        videoQuality: light.VideoQuality.very_low,
+        isMinBitrateCheckEnabled: false,
+        video: light.Video(videoName: videoFile!.name),
+        android: light.AndroidConfig(
+            isSharedStorage: true, saveAt: light.SaveAt.Movies),
+        ios: light.IOSConfig(saveInGallery: false),
+      );
+
       video = File(videoFile!.path);
+      if (response is light.OnSuccess) {
+        log("videoFile!.path 1: ${getVideoSize(file: File(response.destinationPath))}}");
+        video = File(response.destinationPath);
+      }
+      appCtrl.isLoading = false;
+      appCtrl.update();
       update();
-      log("getV : $video");
     }
     Get.forceAppUpdate();
   }
@@ -163,5 +203,4 @@ class PickerController extends GetxController {
     imageUrl = downloadUrl;
     return imageUrl!;
   }
-
 }

@@ -299,6 +299,11 @@ class GroupChatMessageController extends GetxController {
       isLoading = false;
       videoFile = null;
       videoUrl = "";
+      pickerCtrl.videoFile = null;
+
+      pickerCtrl.video = null;
+      update();
+      pickerCtrl.update();
       update();
       listScrollController.animateTo(0.0,
           duration: const Duration(milliseconds: 300), curve: Curves.easeOut);

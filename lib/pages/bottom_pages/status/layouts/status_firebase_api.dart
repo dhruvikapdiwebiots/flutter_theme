@@ -64,7 +64,7 @@ class StatusFirebaseApi {
     List<Status> statusData = [];
     statusesSnapshot.docs.asMap().entries.forEach((element) {
       int i = contacts.indexWhere((contactList) => phoneNumberExtension(contactList.phones[0].number.toString()) ==element.value.data()["phoneNumber"]);
-      log("i :$i" );
+      debugPrint("i :$i" );
       if(i >0){
         if (element.value.data()["uid"] != user["id"]) {
           Status tempStatus =

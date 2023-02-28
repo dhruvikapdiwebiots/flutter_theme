@@ -26,7 +26,7 @@ class _MessageState extends State<Message>
     } else {
       firebaseCtrl.setLastSeen();
     }
-    //firebaseCtrl.statusDeleteAfter24Hours();
+   // firebaseCtrl.statusDeleteAfter24Hours();
     messageCtrl.getMessage();
   }
 

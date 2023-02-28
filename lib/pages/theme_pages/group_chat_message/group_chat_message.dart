@@ -57,9 +57,11 @@ class _GroupChatMessageState extends State<GroupChatMessage>
                   appBar: GroupChatMessageAppBar(
                     name: chatCtrl.pName,
                     image: chatCtrl.groupImage,
-                    videoTap: () async{
-                      await chatCtrl.permissionHandelCtrl.getCameraMicrophonePermissions().then((value) {
-                        if(value == true){
+                    videoTap: () async {
+                      await chatCtrl.permissionHandelCtrl
+                          .getCameraMicrophonePermissions()
+                          .then((value) {
+                        if (value == true) {
                           chatCtrl.audioAndVideoCall(true);
                         }
                       });
@@ -70,7 +72,14 @@ class _GroupChatMessageState extends State<GroupChatMessage>
                     //body layout
                     const GroupChatBody(),
                     // Loading
-                    if (chatCtrl.isLoading) CommonLoader(isLoading: chatCtrl.isLoading,)
+                    if (chatCtrl.isLoading)
+                      CommonLoader(
+                        isLoading: chatCtrl.isLoading,
+                      ),
+
+                    GetBuilder<AppController>(builder: (appCtrl) {
+                      return CommonLoader(isLoading: appCtrl.isLoading);
+                    })
                   ]))),
         ),
       );

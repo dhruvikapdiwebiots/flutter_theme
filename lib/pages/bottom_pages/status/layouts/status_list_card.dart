@@ -23,15 +23,19 @@ class StatusListCard extends StatelessWidget {
                 style: AppCss.poppinsblack14.textColor(appCtrl.appTheme.txt)),
             const VSpace(Sizes.s10),
             Row(children: [
-              if (DateFormat("dd/MM/yyyy").format(statusCtrl.date) ==
-                  DateFormat('dd/MM/yyyy').format(
-                      DateTime.fromMillisecondsSinceEpoch(
-                          int.parse(snapshot!.createdAt!))))
-                Text("Today, ",
-                    style: AppCss.poppinsMedium12
-                        .textColor(appCtrl.appTheme.grey)),
               Text(
-                  "Yesterday, ${DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(int.parse(snapshot!.createdAt!)))}",
+                  DateFormat("dd/MM/yyyy").format(statusCtrl.date) ==
+                          DateFormat('dd/MM/yyyy').format(
+                              DateTime.fromMillisecondsSinceEpoch(
+                                  int.parse(snapshot!.createdAt!)))
+                      ? "Today, "
+                      : "Yesterday, ",
+                  style:
+                      AppCss.poppinsMedium12.textColor(appCtrl.appTheme.grey)),
+              Text(
+                  DateFormat('HH:mm a').format(
+                      DateTime.fromMillisecondsSinceEpoch(
+                          int.parse(snapshot!.createdAt!))),
                   style:
                       AppCss.poppinsMedium12.textColor(appCtrl.appTheme.grey)),
             ])

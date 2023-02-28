@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 import '../../../../../config.dart';
@@ -25,6 +27,7 @@ class _SenderMessageState extends State<SenderMessage> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ChatController>(builder: (chatCtrl) {
+      log("tyep : ${widget.document!["content"]}");
       return Stack(
         children: [
           Container(

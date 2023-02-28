@@ -143,8 +143,10 @@ class PermissionHandlerController extends GetxController {
     if (permissionStatus) {
 
       contacts = await getAllContacts();
+      appCtrl.storage.write(session.contactList, contacts);
+      appCtrl.update();
     }
-    log("contacts : $contacts");
+   debugPrint("GET contacts : $contacts");
     return contacts;
   }
 

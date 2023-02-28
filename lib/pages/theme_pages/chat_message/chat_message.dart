@@ -51,17 +51,21 @@ class _ChatState extends State<Chat>
                               ? true
                               : false
                           : false,
-                      callTap: () async{
-                        await chatCtrl.permissionHandelCtrl.getCameraMicrophonePermissions().then((value) {
-                          if(value == true){
+                      callTap: () async {
+                        await chatCtrl.permissionHandelCtrl
+                            .getCameraMicrophonePermissions()
+                            .then((value) {
+                          if (value == true) {
                             chatCtrl.audioVideoCallTap(false);
                           }
                         });
                       },
-                      videoTap: ()async{
-                        await chatCtrl.permissionHandelCtrl.getCameraMicrophonePermissions().then((value) {
+                      videoTap: () async {
+                        await chatCtrl.permissionHandelCtrl
+                            .getCameraMicrophonePermissions()
+                            .then((value) {
                           log("value : $value");
-                          if(value == true){
+                          if (value == true) {
                             log("message");
                             chatCtrl.audioVideoCallTap(true);
                           }
@@ -80,11 +84,15 @@ class _ChatState extends State<Chat>
                             const InputBox()
                           ]),
                           // Loading
-                    if(chatCtrl.isLoading)
-                           CommonLoader(isLoading: chatCtrl.isLoading,)
+                          if (chatCtrl.isLoading)
+                            CommonLoader(isLoading: chatCtrl.isLoading),
+                          GetBuilder<AppController>(builder: (appCtrl) {
+                            return CommonLoader(isLoading: appCtrl.isLoading);
+                          })
                         ])
                       : Center(
-                          child: CommonButton(title: fonts.invite.tr, onTap: () {}),
+                          child: CommonButton(
+                              title: fonts.invite.tr, onTap: () {}),
                         ))),
         ),
       );

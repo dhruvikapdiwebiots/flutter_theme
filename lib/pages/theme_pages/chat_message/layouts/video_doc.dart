@@ -40,46 +40,55 @@ class _VideoDocState extends State<VideoDoc> {
           if (snapshot.connectionState == ConnectionState.done) {
             // If the VideoPlayerController has finished initialization, use
             // the data it provides to limit the aspect ratio of the video.
-            return Stack(
-              alignment: Alignment.bottomRight,
-              children: [
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    AspectRatio(
-                      aspectRatio: videoController!.value.aspectRatio,
-                      // Use the VideoPlayer widget to display the video.
-                      child: VideoPlayer(videoController!),
-                    ).height(Sizes.s250).clipRRect(all: AppRadius.r8),
-                    IconButton(
-                        icon: Icon(
-                                videoController!.value.isPlaying
-                                    ? Icons.pause
-                                    : Icons.play_arrow,
-                                color: appCtrl.appTheme.whiteColor)
-                            .marginAll(Insets.i3)
-                            .decorated(
-                                color: appCtrl.appTheme.secondary,
-                                shape: BoxShape.circle),
-                        onPressed: () {
-                          if (videoController!.value.isPlaying) {
-                            videoController!.pause();
-                          } else {
-                            // If the video is paused, play it.
-                            videoController!.play();
-                          }
-                          setState(() {});
-                        }),
+            return InkWell(
+              onLongPress: () {
+                showDialog(
+                  context: Get.context!,
+                  builder: (BuildContext context) => chatCtrl
+                      .buildPopupDialog(context, widget.document!),
+                );
+              },
+              child: Stack(
+                alignment: Alignment.bottomRight,
+                children: [
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      AspectRatio(
+                        aspectRatio: videoController!.value.aspectRatio,
+                        // Use the VideoPlayer widget to display the video.
+                        child: VideoPlayer(videoController!),
+                      ).height(Sizes.s250).clipRRect(all: AppRadius.r8),
+                      IconButton(
+                          icon: Icon(
+                                  videoController!.value.isPlaying
+                                      ? Icons.pause
+                                      : Icons.play_arrow,
+                                  color: appCtrl.appTheme.whiteColor)
+                              .marginAll(Insets.i3)
+                              .decorated(
+                                  color: appCtrl.appTheme.secondary,
+                                  shape: BoxShape.circle),
+                          onPressed: () {
+                            if (videoController!.value.isPlaying) {
+                              videoController!.pause();
+                            } else {
+                              // If the video is paused, play it.
+                              videoController!.play();
+                            }
+                            setState(() {});
+                          }),
 
-                  ],
-                ),
-                Text(DateFormat('HH:mm a').format(
-                    DateTime.fromMillisecondsSinceEpoch(
-                        int.parse(widget.document!['timestamp']))),style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.whiteColor),).marginAll(Insets.i10)
-              ],
-            ).paddingSymmetric(horizontal: Insets.i8,vertical: Insets.i8).inkWell(onTap: (){
-              launchUrl(Uri.parse(widget.document!["content"]));
-            });
+                    ],
+                  ),
+                  Text(DateFormat('HH:mm a').format(
+                      DateTime.fromMillisecondsSinceEpoch(
+                          int.parse(widget.document!['timestamp']))),style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.whiteColor),).marginAll(Insets.i10)
+                ],
+              ).paddingSymmetric(horizontal: Insets.i8,vertical: Insets.i8).inkWell(onTap: (){
+                launchUrl(Uri.parse(widget.document!["content"]));
+              }),
+            );
           } else {
             // If the VideoPlayerController is still initializing, show a
             // loading spinner.

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math' as math;
 import 'package:flutter_contacts/flutter_contacts.dart';
 import '../config.dart';
@@ -91,3 +92,26 @@ double smoothStep(double edge0, double edge1, double amount) {
 const double alphaOff = 0;
 const double alphaOn = 1;
 const int animDuration = 300;
+
+
+String formatBytes(int bytes, int decimals) {
+  if (bytes <= 0) {
+    return '0 B';
+  }
+  const List<String> suffixes = <String>[
+    'B',
+    'KB',
+    'MB',
+    'GB',
+    'TB',
+    'PB',
+    'EB',
+    'ZB',
+  ];
+  final int i = (math.log(bytes / 100) / math.log(1024)).floor();
+  return '${(bytes / math.pow(1024, i)).toStringAsFixed(decimals)} ${suffixes[i]}';
+}
+
+
+String getVideoSize({required File file}) =>
+    formatBytes(file.lengthSync(), 2);

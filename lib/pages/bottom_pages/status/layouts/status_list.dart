@@ -18,6 +18,7 @@ class _StatusListLayoutState extends State<StatusListLayout> {
     return GetBuilder<StatusController>(builder: (statusCtrl) {
       return GetBuilder<AppController>(
         builder: (appCtrl) {
+          debugPrint("appCtrl.userContactList : ${appCtrl.userContactList}");
           return SizedBox(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height - 50,
@@ -29,9 +30,9 @@ class _StatusListLayoutState extends State<StatusListLayout> {
                 builder: (context, snapshot) {
                   log("has : ${snapshot.hasData}");
                   if (!snapshot.hasData) {
-                    return Container();
+                    return const Center(child:  CircularProgressIndicator());
                   } else {
-                    log("snapshot : ${snapshot.data}");
+                    debugPrint("snapshot : ${snapshot.data}");
                     statusCtrl.status =  StatusFirebaseApi().getStatusUserList(appCtrl.userContactList,snapshot.data!);
                     return ListView.builder(
                       itemCount: statusCtrl.status.length,

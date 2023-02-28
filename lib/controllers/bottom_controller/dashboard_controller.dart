@@ -11,6 +11,7 @@ class DashboardController extends GetxController
   int selectedPopTap = 0;
   TabController? controller;
   late int iconCount = 0;
+  Timer? timer;
   List<Contact> contacts = [];
   List bottomList = [];
   dynamic user;
@@ -76,17 +77,13 @@ class DashboardController extends GetxController
 
   onChange(val) async {
     selectedIndex = val;
-    if (val == 1) {
-      statusCtrl.update();
-      statusCtrl.update();
-    }
     update();
   }
 
   @override
   void onReady() async {
     // TODO: implement onReady
-
+    await Future.delayed(Durations.ms150);
     bottomList = appArray.bottomList;
     actionList = appArray.actionList;
     statusAction = appArray.statusAction;
@@ -98,26 +95,37 @@ class DashboardController extends GetxController
       update();
     });
     user = appCtrl.storage.read(session.user);
-    await FirebaseFirestore.instance
-        .collection(collectionName.users)
-        .get()
-        .then((value) {
-      value.docs.asMap().entries.forEach((user) {
-        appCtrl.contactList.asMap().entries.forEach((element) {
-          if (user.value.data()["phone"] ==
-              phoneNumberExtension(element.value.phones[0].number.toString())) {
-            appCtrl.userContactList.add(element.value);
-          }
-          appCtrl.update();
-        });
-      });
-      log("DASHBOARD : ${appCtrl.userContactList.length}");
-    });
+    log("CONTACT DAS : ${appCtrl.contactList}");
 
     appCtrl.update();
     statusCtrl.update();
     update();
+    checkContactList();
     super.onReady();
+  }
+
+  checkContactList()async{
+    await FirebaseFirestore.instance
+        .collection(collectionName.users)
+        .get()
+        .then((value) {
+          log("appCtrl.contactList : ${appCtrl.contactList}");
+      value.docs.asMap().entries.forEach((user) {
+        appCtrl.contactList.asMap().entries.forEach((element) {
+          if(element.value.phones.isNotEmpty) {
+            if (user.value.data()["phone"] ==
+                phoneNumberExtension(
+                    element.value.phones[0].number.toString())) {
+              appCtrl.userContactList.add(element.value);
+            }
+          }
+          appCtrl.update();
+        });
+      });
+
+    });
+    update();
+
   }
 
   popupMenuTap(value) {
@@ -131,13 +139,44 @@ class DashboardController extends GetxController
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    timer!.cancel();
+    super.dispose();
+  }
+
+  @override
   void onInit() {
     // TODO: implement onInit
     contactCtrl.onInit();
     statusCtrl.onReady();
     messageCtrl.onReady();
     statusCtrl.onReady();
+    timer = Timer.periodic(const Duration(milliseconds: 2), (timers) {
 
+      if(appCtrl.contactList.isNotEmpty){
+        if(appCtrl.userContactList.isEmpty){
+          checkContactList();
+        }else{
+          timer!.cancel();
+          update();
+        }
+      }else{
+        List data = appCtrl.storage.read(session.contactList) ?? [];
+        data.asMap().entries.map((e) {
+          appCtrl.contactList.add(Contact.fromJson(e.value));
+        });
+        if(appCtrl.contactList.isNotEmpty){
+          if(appCtrl.userContactList.isEmpty){
+            checkContactList();
+          }else{
+            timer!.cancel();
+            update();
+          }
+        }
+      }
+    });
+    update();
     statusCtrl.update();
     super.onInit();
   }

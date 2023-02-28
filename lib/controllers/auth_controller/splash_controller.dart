@@ -42,28 +42,22 @@ class SplashController extends GetxController {
     } else {
       Get.offAllNamed(routeName.dashboard);
     }
-    log("SPLASH : ${appCtrl.contactList}");
+
+    List data = appCtrl.storage.read(session.contactList) ?? [];
+    data.asMap().entries.map((e) {
+      appCtrl.contactList.add(Contact.fromJson(e.value));
+    });
+
     if(appCtrl.contactList.isEmpty){
       final permissionHandelCtrl = Get.isRegistered<PermissionHandlerController>()
           ? Get.find<PermissionHandlerController>()
           : Get.put(PermissionHandlerController());
-      appCtrl. contactList = await permissionHandelCtrl.getContact();
-      appCtrl.update();
+      appCtrl.contactList = await permissionHandelCtrl.getContact();
     }
-    FirebaseFirestore.instance.collection(collectionName.users).get().then((value) {
-      value.docs.asMap().entries.forEach((user) {
-        appCtrl.contactList.asMap().entries.forEach((element) {
-          if(user.value.data()["phone"] == phoneNumberExtension(element.value.phones[0].number.toString())){
-            appCtrl.userContactList.add(element.value);
-          }
-          appCtrl.update();
-          Get.forceAppUpdate();
-        });
-      });
-      log("SPLASH 1 : ${appCtrl.userContactList}");
-    });
+
     appCtrl.update();
     Get.forceAppUpdate();
+    log("SPLASH : ${appCtrl.contactList}");
   }
 
   //check whether user login or not
