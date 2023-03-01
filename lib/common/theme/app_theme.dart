@@ -115,7 +115,7 @@ class AppTheme {
           chatBgColor: const Color(0xFFECF1F4),
           error: Colors.red,
           borderGray: const Color(0xFFE6E8EA),
-          blackColor: Colors.black,
+          blackColor: const Color(0xFF010D21),
           lightBlackColor: const Color(0xFF586780),
           redColor: Colors.red,
           lightGray: const Color(0xFFF2F2F2),
