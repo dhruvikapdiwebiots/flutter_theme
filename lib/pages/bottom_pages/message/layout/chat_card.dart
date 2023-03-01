@@ -42,7 +42,7 @@ class _ChatCardState extends State<ChatCard> {
                   : message.isNotEmpty
                       ? ListView.builder(
                           shrinkWrap: true,
-                          padding: const EdgeInsets.all(10.0),
+                          padding: const EdgeInsets.symmetric(vertical: Insets.i20,horizontal: Insets.i10),
                           itemBuilder: (context, index) {
                             return LoadUser(
                                 document: message[index],

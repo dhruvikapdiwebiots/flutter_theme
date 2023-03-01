@@ -1,3 +1,4 @@
+import 'package:flutter_theme/widgets/common_extension.dart';
 import 'package:intl/intl.dart';
 import '../../../../config.dart';
 
@@ -20,20 +21,13 @@ class GroupMessageCard extends StatelessWidget {
             return Container();
           } else {
             return StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection("users")
-                    .doc(document!["senderId"])
-                    .snapshots(),
-                builder: (context, userSnapShot) {
-                  if (userSnapShot.hasData) {
-                    return Container(
-                        decoration: BoxDecoration(
-                            border: Border(
-                                bottom: BorderSide(
-                                    color: appCtrl.appTheme.lightGreyColor))),
-                        margin:
-                            const EdgeInsets.symmetric(horizontal: Insets.i5),
-                        child: ListTile(
+                    stream: FirebaseFirestore.instance
+                        .collection("users")
+                        .doc(document!["senderId"])
+                        .snapshots(),
+                    builder: (context, userSnapShot) {
+                      if (userSnapShot.hasData) {
+                        return ListTile(
                             onTap: () {
                               Get.toNamed(routeName.groupChatMessage,
                                   arguments: snapshot.data);
@@ -46,7 +40,7 @@ class GroupMessageCard extends StatelessWidget {
                                     DateTime.fromMillisecondsSinceEpoch(
                                         int.parse(document!['updateStamp']))),
                                 style: AppCss.poppinsMedium12
-                                    .textColor(appCtrl.appTheme.grey)),
+                                    .textColor(appCtrl.appTheme.txtColor)),
                             title: Text(snapshot.data!["name"],
                                 style: AppCss.poppinsblack16
                                     .textColor(appCtrl.appTheme.blackColor)),
@@ -56,11 +50,14 @@ class GroupMessageCard extends StatelessWidget {
                                     name: userSnapShot.data!["name"],
                                     document: document,
                                     hasData: userSnapShot.hasData)
-                                : Container()));
-                  } else {
-                    return Container();
-                  }
-                });
+                                : Container());
+                      } else {
+                        return Container();
+                      }
+                    })
+                .paddingSymmetric(horizontal: Insets.i15, vertical: Insets.i5)
+                .commonDecoration()
+                .marginSymmetric(horizontal: Insets.i10);
           }
         });
   }

@@ -36,10 +36,6 @@ class _StatusListLayoutState extends State<StatusListLayout> {
                     if(appCtrl.userContactList.isNotEmpty) {
                       statusCtrl.status = StatusFirebaseApi().getStatusUserList(
                           appCtrl.userContactList, snapshot.data!);
-                    }else{
-                      final dashboardCtrl = Get.find<DashboardController>();
-                      dashboardCtrl.checkContactList();
-                      dashboardCtrl.update();
                     }
                     return ListView.builder(
                       itemCount: statusCtrl.status.length,

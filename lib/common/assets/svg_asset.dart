@@ -10,5 +10,8 @@ class SvgAssets{
   final String search = 'assets/svg/search.svg';
   final String more = 'assets/svg/more.svg';
   final String menu = 'assets/svg/menu.svg';
+  final String chat = 'assets/svg/chat.svg';
+  final String status = 'assets/svg/story.svg';
+  final String call = 'assets/svg/call.svg';
   /*final String twitter = "assets/common/svg/twitter.svg";*/
 }

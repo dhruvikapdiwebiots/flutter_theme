@@ -12,9 +12,9 @@ class AppArray{
 
   //bottom list
   var bottomList = [
-    {'icon': Icons.message, 'title': "chats"},
-    {'icon': Icons.image, 'title': "status"},
-    {'icon': Icons.image, 'title': "calls"},
+    {'icon': svgAssets.more, 'title': "chats"},
+    {'icon': svgAssets.status, 'title': "status"},
+    {'icon': svgAssets.call, 'title': "calls"},
   ];
 
   //action list

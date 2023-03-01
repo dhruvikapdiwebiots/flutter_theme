@@ -14,13 +14,13 @@ class LoadUser extends StatelessWidget {
     if (document!["isGroup"] == false && document!["isBroadcast"] == false ) {
       if (document!["senderId"] == currentUserId ) {
         return   ReceiverMessageCard(
-            document: document, currentUserId: currentUserId, blockBy: blockBy);
+            document: document, currentUserId: currentUserId, blockBy: blockBy).marginOnly(bottom: Insets.i12);
       } else {
         return MessageCard(
           blockBy: blockBy,
           document: document,
           currentUserId: currentUserId
-        );
+        ).marginOnly(bottom: Insets.i12);
       }
     } else if (document!["isGroup"] == true) {
       List user = document!["receiverId"];
@@ -30,7 +30,7 @@ class LoadUser extends StatelessWidget {
           ? GroupMessageCard(
               document: document,
               currentUserId: currentUserId,
-            )
+            ).marginOnly(bottom: Insets.i12)
           : Container();
     } else if (document!["isBroadcast"] == true ) {
 
@@ -38,9 +38,9 @@ class LoadUser extends StatelessWidget {
           ? BroadCastMessageCard(
               document: document,
               currentUserId: currentUserId,
-            )
+            ).marginOnly(bottom: Insets.i12)
           :  MessageCard(
-          document: document, currentUserId: currentUserId, blockBy: blockBy);
+          document: document, currentUserId: currentUserId, blockBy: blockBy).marginOnly(bottom: Insets.i12);
     } else{
       return Container();
     }

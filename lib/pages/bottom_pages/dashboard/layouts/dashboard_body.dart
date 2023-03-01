@@ -19,16 +19,54 @@ class DashboardBody extends StatelessWidget {
                   appBar: AppBar(
                     backgroundColor: appCtrl.appTheme.bgColor,
                     automaticallyImplyLeading: false,
-                    leading: SvgPicture.asset(svgAssets.menu)
-                        .paddingAll(Insets.i10)
+                    leadingWidth: Sizes.s80,
+                    leading: SvgPicture.asset(svgAssets.menu, height: Sizes.s20)
+                        .paddingAll(Insets.i8)
                         .decorated(
-                            color: appCtrl.appTheme.white,boxShadow: [BoxShadow(offset: Offset(0,2),blurRadius: 15,color: appCtrl.appTheme.lightGray)],
-                            borderRadius: BorderRadius.circular(AppRadius.r10)).marginAll( Insets.i10),
+                            color: appCtrl.appTheme.white,
+                            boxShadow: [
+                              const BoxShadow(
+                                  offset: Offset(0, 4),
+                                  blurRadius: 15,
+                                  color: Color.fromRGBO(0, 0, 0, 0.08))
+                            ],
+                            borderRadius: BorderRadius.circular(AppRadius.r10))
+                        .marginSymmetric(
+                            horizontal: Insets.i20, vertical: Insets.i10),
                     elevation: 0,
-                    actions: const [],
+                    actions: [
+                      SvgPicture.asset(svgAssets.search, height: Sizes.s20)
+                          .paddingAll(Insets.i12)
+                          .decorated(
+                              color: appCtrl.appTheme.white,
+                              boxShadow: [
+                                const BoxShadow(
+                                    offset: Offset(0, 2),
+                                    blurRadius: 15,
+                                    color: Color.fromRGBO(0, 0, 0, 0.08))
+                              ],
+                              borderRadius:
+                                  BorderRadius.circular(AppRadius.r10))
+                          .marginSymmetric(vertical: Insets.i5),
+                      SvgPicture.asset(svgAssets.more, height: Sizes.s20)
+                          .paddingAll(Insets.i12)
+                          .decorated(
+                              color: appCtrl.appTheme.white,
+                              boxShadow: [
+                                const BoxShadow(
+                                    offset: Offset(0, 2),
+                                    blurRadius: 15,
+                                    color: Color.fromRGBO(0, 0, 0, 0.08))
+                              ],
+                              borderRadius:
+                                  BorderRadius.circular(AppRadius.r10))
+                          .marginSymmetric(
+                              vertical: Insets.i5, horizontal: Insets.i15),
+                    ],
+                    centerTitle: true,
                     title: Text(fonts.chatify.tr,
-                        style: AppCss.poppinsblack16
-                            .textColor(appCtrl.appTheme.white)),
+                        style: AppCss.poppinsSemiBold16
+                            .textColor(appCtrl.appTheme.primary)),
                     bottom: const DashboardTab(),
                   ),
                   body: TabBarView(

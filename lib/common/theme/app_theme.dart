@@ -21,6 +21,7 @@ class AppTheme {
   Color lightPrimary;
   Color greenColor;
   Color bgColor;
+  Color txtColor;
 
   //Extra Colors
   Color grey;
@@ -87,6 +88,7 @@ class AppTheme {
     required this.orangeColor,
     required this.tealColor,
     required this.blueColor,
+    required this.txtColor,
   });
 
   /// fromType factory constructor
@@ -96,7 +98,7 @@ class AppTheme {
         return AppTheme(
           isDark: false,
           txt: const Color(0xFF000E08),
-          primary: const Color(0xFF3467B8),
+          primary: const Color(0xFF3164BD),
           lightPrimary: const Color(0xFF2958A3),
           splashPrimary: Colors.white,
           secondary: const Color(0xFF6EBAE7),
@@ -130,13 +132,14 @@ class AppTheme {
           tealColor: Colors.teal,
           blueColor: Colors.blue,
           bgColor:const Color(0xFFFDFDFD),
+          txtColor:const Color(0xFF999EA6),
         );
 
       case ThemeType.dark:
         return AppTheme(
           isDark: true,
           txt: Colors.white,
-          primary: Colors.black,
+          primary: const Color(0xFF3164BD),
           lightPrimary: Colors.black12,
           splashPrimary: const Color(0xFF3467B8),
           secondary: const Color(0xFF6EBAE7),
@@ -170,6 +173,7 @@ class AppTheme {
           tealColor: Colors.teal,
           blueColor: Colors.blue,
           bgColor: Colors.black,
+          txtColor:const Color(0xFF999EA6),
         );
     }
   }

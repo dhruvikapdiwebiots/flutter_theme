@@ -40,7 +40,7 @@ class _MessageState extends State<Message>
         },
         child: Scaffold(
             key: messageCtrl.scaffoldKey,
-            backgroundColor: appCtrl.appTheme.whiteColor,
+            backgroundColor: appCtrl.appTheme.bgColor,
             floatingActionButton: FloatingActionButton.extended(
               onPressed: () =>   Get.to(() => ContactList(),transition: Transition.downToUp,),
               backgroundColor: appCtrl.appTheme.primary,
