@@ -37,7 +37,7 @@ class _DashboardState extends State<Dashboard>
     }
 
     log("DDDD : $state}");
-   //firebaseCtrl.statusDeleteAfter24Hours();
+   firebaseCtrl.statusDeleteAfter24Hours();
 
 
   }

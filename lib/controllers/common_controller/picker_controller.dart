@@ -194,13 +194,18 @@ class PickerController extends GetxController {
   }
 
   Future<String> uploadImage(File file, {String? fileNameText}) async {
-    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    Reference reference =
-        FirebaseStorage.instance.ref().child(fileNameText ?? fileName);
-    UploadTask uploadTask = reference.putFile(file);
-    TaskSnapshot snap = await uploadTask;
-    String downloadUrl = await snap.ref.getDownloadURL();
-    imageUrl = downloadUrl;
-    return imageUrl!;
+   try{
+     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+     Reference reference =
+     FirebaseStorage.instance.ref().child(fileNameText ?? fileName);
+     UploadTask uploadTask = reference.putFile(file);
+     TaskSnapshot snap = await uploadTask;
+     String downloadUrl = await snap.ref.getDownloadURL();
+     imageUrl = downloadUrl;
+     return imageUrl!;
+   }on FirebaseException catch (e){
+     log("FIREBASE : ${e.message}");
+     return "";
+   }
   }
 }

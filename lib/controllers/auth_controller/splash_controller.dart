@@ -43,18 +43,6 @@ class SplashController extends GetxController {
       Get.offAllNamed(routeName.dashboard);
     }
 
-    List data = appCtrl.storage.read(session.contactList) ?? [];
-    data.asMap().entries.map((e) {
-      appCtrl.contactList.add(Contact.fromJson(e.value));
-    });
-
-    if(appCtrl.contactList.isEmpty){
-      final permissionHandelCtrl = Get.isRegistered<PermissionHandlerController>()
-          ? Get.find<PermissionHandlerController>()
-          : Get.put(PermissionHandlerController());
-      appCtrl.contactList = await permissionHandelCtrl.getContact();
-    }
-
     appCtrl.update();
     Get.forceAppUpdate();
     log("SPLASH : ${appCtrl.contactList}");

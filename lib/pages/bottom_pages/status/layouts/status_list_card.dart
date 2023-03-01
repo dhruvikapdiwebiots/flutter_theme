@@ -28,8 +28,8 @@ class StatusListCard extends StatelessWidget {
                           DateFormat('dd/MM/yyyy').format(
                               DateTime.fromMillisecondsSinceEpoch(
                                   int.parse(snapshot!.createdAt!)))
-                      ? "Today, "
-                      : "Yesterday, ",
+                      ? fonts.today.tr
+                      : fonts.yesterday.tr,
                   style:
                       AppCss.poppinsMedium12.textColor(appCtrl.appTheme.grey)),
               Text(

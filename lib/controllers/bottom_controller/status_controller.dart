@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 import 'package:flutter_theme/config.dart';
 
@@ -52,9 +51,13 @@ class StatusController extends GetxController {
     isLoading = true;
     update();
     imageUrl = await pickerCtrl.uploadImage(file);
-    update();
-    log("imageUrl : $imageUrl");
-    await StatusFirebaseApi().addStatus(imageUrl, statusType.name);
+    if(imageUrl != "") {
+      update();
+      debugPrint("imageUrl : $imageUrl");
+      await StatusFirebaseApi().addStatus(imageUrl, statusType.name);
+    }else{
+      showToast("Error while Uploading Image");
+    }
     isLoading = false;
     update();
   }

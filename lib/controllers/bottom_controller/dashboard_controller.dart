@@ -56,10 +56,6 @@ class DashboardController extends GetxController
       return;
     }
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-
     return updateConnectionStatus(result);
   }
 
@@ -95,8 +91,6 @@ class DashboardController extends GetxController
       update();
     });
     user = appCtrl.storage.read(session.user);
-    log("CONTACT DAS : ${appCtrl.contactList}");
-
     appCtrl.update();
     statusCtrl.update();
     update();
@@ -110,6 +104,7 @@ class DashboardController extends GetxController
         .get()
         .then((value) {
           log("appCtrl.contactList : ${appCtrl.contactList}");
+
       value.docs.asMap().entries.forEach((user) {
         appCtrl.contactList.asMap().entries.forEach((element) {
           if(element.value.phones.isNotEmpty) {
@@ -152,31 +147,7 @@ class DashboardController extends GetxController
     statusCtrl.onReady();
     messageCtrl.onReady();
     statusCtrl.onReady();
-    timer = Timer.periodic(const Duration(milliseconds: 2), (timers) {
 
-      if(appCtrl.contactList.isNotEmpty){
-        if(appCtrl.userContactList.isEmpty){
-          checkContactList();
-        }else{
-          timer!.cancel();
-          update();
-        }
-      }else{
-        List data = appCtrl.storage.read(session.contactList) ?? [];
-        data.asMap().entries.map((e) {
-          appCtrl.contactList.add(Contact.fromJson(e.value));
-        });
-        if(appCtrl.contactList.isNotEmpty){
-          if(appCtrl.userContactList.isEmpty){
-            checkContactList();
-          }else{
-            timer!.cancel();
-            update();
-          }
-        }
-      }
-    });
-    update();
     statusCtrl.update();
     super.onInit();
   }

@@ -6,18 +6,22 @@ class CommonLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      child: isLoading
-          ? Container(
+    return GetBuilder<AppController>(
+      builder: (appCtrl) {
+        return Positioned(
+          child: isLoading
+              ? Container(
 height: MediaQuery.of(context).size.height,
-        color: appCtrl.appTheme.blackColor.withOpacity(.3),
-        child: Center(
-          child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(
-                  appCtrl.appTheme.primary)),
-        ),
-      )
-          : Container(),
+            color: appCtrl.appTheme.blackColor.withOpacity(.3),
+            child: Center(
+              child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                      appCtrl.appTheme.primary)),
+            ),
+          )
+              : Container(),
+        );
+      }
     );
   }
 }

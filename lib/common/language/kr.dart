@@ -114,4 +114,8 @@ final dynamic kr = {
   "deleteConfirmation":
       "계정을 삭제하시겠습니까? 삭제하면 모든 데이터가 손실됩니다.",
   "ok": "확인",
+  "rtl": "RTL",
+  "areYouSureToDelete": "이 메시지를 삭제하시겠습니까?",
+  "today": "오늘, ",
+  "yesterday": "어제, ",
 };

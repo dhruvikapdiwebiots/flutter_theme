@@ -118,4 +118,8 @@ final dynamic ar = {
   "deleteConfirmation":
       "هل انت متأكد انك تريد حذف حسابك؟ بعد الحذف ستفقد جميع بياناتك.",
   "ok": "موافق",
+  "rtl": "RTL",
+  "areYouSureToDelete": "هل أنت متأكد أنك تريد حذف هذه الرسالة؟",
+  "today": "اليوم، ",
+  "yesterday": "أمس، ",
 };

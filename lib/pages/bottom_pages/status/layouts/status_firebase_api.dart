@@ -2,10 +2,9 @@ import 'dart:developer';
 
 import '../../../../config.dart';
 
-
 class StatusFirebaseApi {
   //add status
-  addStatus(imageUrl,statusType,{statusText,statusBgColor}) async {
+  addStatus(imageUrl, statusType, {statusText, statusBgColor}) async {
     var user = appCtrl.storage.read(session.user);
     List<PhotoUrl> statusImageUrls = [];
 
@@ -18,13 +17,12 @@ class StatusFirebaseApi {
       Status status = Status.fromJson(statusesSnapshot.docs[0].data());
       statusImageUrls = status.photoUrl!;
       var data = {
-        "image":statusType == StatusType.text.name ? "": imageUrl!,
+        "image": statusType == StatusType.text.name ? "" : imageUrl!,
         "timestamp": DateTime.now().millisecondsSinceEpoch.toString(),
         "isExpired": false,
-        "statusType":statusType,
+        "statusType": statusType,
         "statusText": statusText,
         "statusBgColor": statusBgColor,
-
       };
 
       statusImageUrls.add(PhotoUrl.fromJson(data));
@@ -32,14 +30,18 @@ class StatusFirebaseApi {
           .collection(collectionName.status)
           .doc(statusesSnapshot.docs[0].id)
           .update(
-              {'photoUrl': statusImageUrls.map((e) => e.toJson()).toList()});
+              {'photoUrl': statusImageUrls.map((e) => e.toJson()).toList()}).then((value) {
+        final statusCtrl = Get.find<StatusController>();
+        statusCtrl.isLoading = false;
+        statusCtrl.update();
+      });
       return;
     } else {
       var data = {
-        "image":statusType == StatusType.text.name ? "": imageUrl!,
+        "image": statusType == StatusType.text.name ? "" : imageUrl!,
         "timestamp": DateTime.now().millisecondsSinceEpoch.toString(),
         "isExpired": false,
-        "statusType":statusType,
+        "statusType": statusType,
         "statusText": statusText,
         "statusBgColor": statusBgColor,
       };
@@ -55,21 +57,33 @@ class StatusFirebaseApi {
         uid: user["id"],
         isSeenByOwn: false);
 
-    await FirebaseFirestore.instance.collection(collectionName.status).add(status.toJson());
+    await FirebaseFirestore.instance
+        .collection(collectionName.status)
+        .add(status.toJson()).then((value) {
+          final statusCtrl = Get.find<StatusController>();
+          statusCtrl.isLoading = false;
+          statusCtrl.update();
+    });
   }
 
   //get status list
-  List<Status> getStatusUserList(List<Contact> contacts,QuerySnapshot<Map<String, dynamic>> statusesSnapshot)  {
+  List<Status> getStatusUserList(List<Contact> contacts,
+      QuerySnapshot<Map<String, dynamic>> statusesSnapshot) {
     var user = appCtrl.storage.read(session.user);
     List<Status> statusData = [];
     statusesSnapshot.docs.asMap().entries.forEach((element) {
-      int i = contacts.indexWhere((contactList) => phoneNumberExtension(contactList.phones[0].number.toString()) ==element.value.data()["phoneNumber"]);
-      debugPrint("i :$i" );
-      if(i >0){
+      int i = contacts.indexWhere((contactList) {
+        if(contactList.phones.isNotEmpty) {
+          return (contactList.phones.isNotEmpty);
+        }else{
+          return false;
+        }
+      });
+      debugPrint("i :$i");
+      if (i > 0) {
         if (element.value.data()["uid"] != user["id"]) {
-          Status tempStatus =
-          Status.fromJson(element.value.data());
-          if(!statusData.contains(tempStatus)) {
+          Status tempStatus = Status.fromJson(element.value.data());
+          if (!statusData.contains(tempStatus)) {
             statusData.add(tempStatus);
           }
         }

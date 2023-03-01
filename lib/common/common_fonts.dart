@@ -106,5 +106,7 @@ class Fonts{
   final ok = "ok";
   final areYouSureToDelete = "areYouSureToDelete";
   final rtl = "rtl";
+  final yesterday = "yesterday";
+  final today = "today";
   String unblockUser(val) => "unblockUser".trParams({'pName':val});
 }

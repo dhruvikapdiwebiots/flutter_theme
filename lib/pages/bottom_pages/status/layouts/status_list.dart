@@ -28,12 +28,19 @@ class _StatusListLayoutState extends State<StatusListLayout> {
                     .orderBy("createdAt", descending: true,).limit(15)
                     .snapshots(),
                 builder: (context, snapshot) {
-                  log("has : ${snapshot.hasData}");
+
                   if (!snapshot.hasData) {
-                    return const Center(child:  CircularProgressIndicator());
+                    return Container();
                   } else {
                     debugPrint("snapshot : ${snapshot.data}");
-                    statusCtrl.status =  StatusFirebaseApi().getStatusUserList(appCtrl.userContactList,snapshot.data!);
+                    if(appCtrl.userContactList.isNotEmpty) {
+                      statusCtrl.status = StatusFirebaseApi().getStatusUserList(
+                          appCtrl.userContactList, snapshot.data!);
+                    }else{
+                      final dashboardCtrl = Get.find<DashboardController>();
+                      dashboardCtrl.checkContactList();
+                      dashboardCtrl.update();
+                    }
                     return ListView.builder(
                       itemCount: statusCtrl.status.length,
                       shrinkWrap: true,

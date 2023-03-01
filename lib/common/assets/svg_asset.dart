@@ -7,5 +7,8 @@ class SvgAssets{
   final String speaker = 'assets/svg/speaker.svg';
   final String speaker1 = 'assets/svg/speaker1.svg';
   final String pause = 'assets/svg/pause.svg';
+  final String search = 'assets/svg/search.svg';
+  final String more = 'assets/svg/more.svg';
+  final String menu = 'assets/svg/menu.svg';
   /*final String twitter = "assets/common/svg/twitter.svg";*/
 }

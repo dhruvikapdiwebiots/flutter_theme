@@ -120,4 +120,6 @@ final dynamic en = {
   "ok": "Ok",
   "rtl": "RTL",
   "areYouSureToDelete": "Are you sure you want to delete this message?",
+  "today": "Today, ",
+  "yesterday": "Yesterday, ",
 };

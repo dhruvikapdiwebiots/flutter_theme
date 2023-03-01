@@ -20,6 +20,7 @@ class AppTheme {
   Color darkRedColor;
   Color lightPrimary;
   Color greenColor;
+  Color bgColor;
 
   //Extra Colors
   Color grey;
@@ -58,6 +59,7 @@ class AppTheme {
     required this.darkRedColor,
     required this.lightPrimary,
     required this.greenColor,
+    required this.bgColor,
     //Extra
     required this.grey,
     required this.gray,
@@ -127,6 +129,7 @@ class AppTheme {
           orangeColor: Colors.orange,
           tealColor: Colors.teal,
           blueColor: Colors.blue,
+          bgColor:const Color(0xFFFDFDFD),
         );
 
       case ThemeType.dark:
@@ -166,6 +169,7 @@ class AppTheme {
           orangeColor: Colors.orange,
           tealColor: Colors.teal,
           blueColor: Colors.blue,
+          bgColor: Colors.black,
         );
     }
   }

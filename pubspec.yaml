@@ -87,7 +87,7 @@ dependencies:
   flutter_contacts: ^1.1.5+1
   intl_phone_number_input: ^0.7.1
   wechat_assets_picker: ^8.3.1+1
-  connectivity_plus: ^3.0.2
+  connectivity_plus: ^3.0.3
   pinput: ^2.2.23
   animated_text_kit: ^4.2.2
   image_cropper: ^3.0.1

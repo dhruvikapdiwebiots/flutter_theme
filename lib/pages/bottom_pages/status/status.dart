@@ -25,7 +25,7 @@ class _StatusListState extends State<StatusList>
     } else {
       firebaseCtrl.setLastSeen();
     }
-  // firebaseCtrl.statusDeleteAfter24Hours();
+    firebaseCtrl.statusDeleteAfter24Hours();
   }
 
   @override
@@ -40,26 +40,31 @@ class _StatusListState extends State<StatusList>
             backgroundColor: appCtrl.appTheme.whiteColor,
             floatingActionButton: const StatusFloatingButton(),
             body: SafeArea(
-                child: SingleChildScrollView(
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    //current user status
-                    CurrentUserStatus(
-                            statusCtrl: statusCtrl,
-                            currentUserId: statusCtrl.user != null
-                                ? statusCtrl.user["phone"]
-                                : "")
-                        .marginSymmetric(vertical: Insets.i10),
-                    const Divider(),
-                    const VSpace(Sizes.s15),
-                    Text(fonts.recentUpdates.tr,
-                        style: AppCss.poppinsblack14
-                            .textColor(appCtrl.appTheme.txt)),
-                    const VSpace(Sizes.s10),
-                    //all contacts user status list
-                    const StatusListLayout(),
-                  ]).paddingAll(Insets.i10),
+                child: Stack(
+              children: [
+                SingleChildScrollView(
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        //current user status
+                        CurrentUserStatus(
+                                currentUserId: statusCtrl.user != null
+                                    ? statusCtrl.user["phone"]
+                                    : "")
+                            .marginSymmetric(vertical: Insets.i10),
+                        const Divider(),
+                        const VSpace(Sizes.s15),
+                        Text(fonts.recentUpdates.tr,
+                            style: AppCss.poppinsblack14
+                                .textColor(appCtrl.appTheme.txt)),
+                        const VSpace(Sizes.s10),
+                        //all contacts user status list
+                        const StatusListLayout(),
+                      ]).paddingAll(Insets.i10),
+                ),
+                if (statusCtrl.isLoading)
+                  CommonLoader(isLoading: statusCtrl.isLoading)
+              ],
             ))),
       );
     });
