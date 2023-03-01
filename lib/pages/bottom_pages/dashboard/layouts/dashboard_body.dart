@@ -22,8 +22,8 @@ class DashboardBody extends StatelessWidget {
                     leading: SvgPicture.asset(svgAssets.menu)
                         .paddingAll(Insets.i10)
                         .decorated(
-                            color: appCtrl.appTheme.white,
-                            borderRadius: BorderRadius.circular(AppRadius.r10)),
+                            color: appCtrl.appTheme.white,boxShadow: [BoxShadow(offset: Offset(0,2),blurRadius: 15,color: appCtrl.appTheme.lightGray)],
+                            borderRadius: BorderRadius.circular(AppRadius.r10)).marginAll( Insets.i10),
                     elevation: 0,
                     actions: const [],
                     title: Text(fonts.chatify.tr,
