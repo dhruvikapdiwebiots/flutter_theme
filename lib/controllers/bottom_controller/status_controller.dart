@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter_theme/config.dart';
 
@@ -60,6 +61,18 @@ class StatusController extends GetxController {
     }
     isLoading = false;
     update();
+  }
+
+  //status list
+
+  List statusListWidget(
+      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+    List statusList = [];
+    log("snapshot.data!.docs[a] : ${snapshot.data!.docs.length}");
+    for (int a = 0; a < snapshot.data!.docs.length; a++) {
+      statusList.add(snapshot.data!.docs[a].data());
+    }
+    return statusList;
   }
 
 }

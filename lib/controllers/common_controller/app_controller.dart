@@ -10,6 +10,7 @@ class AppController extends GetxController {
   final storage = GetStorage();
   List<Contact> contactList = [];
   List<Contact> userContactList = [];
+  List firebaseContact =[];
   AppTheme get appTheme => _appTheme;
   int selectedIndex = 0;
   bool isTheme = false;

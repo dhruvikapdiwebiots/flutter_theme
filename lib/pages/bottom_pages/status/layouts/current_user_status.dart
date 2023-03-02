@@ -16,6 +16,7 @@ class CurrentUserStatus extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<StatusController>(
       builder: (statusCtrl) {
+        log("statusCtrl.currentUserId : ${statusCtrl.currentUserId}");
         return StreamBuilder(
             stream: FirebaseFirestore.instance
                 .collection(collectionName.users).doc(statusCtrl.currentUserId).collection(collectionName.status)

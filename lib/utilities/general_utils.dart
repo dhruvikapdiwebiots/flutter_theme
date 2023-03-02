@@ -146,7 +146,7 @@ int getUnseenMessagesNumber(
 
 bool checkUserExist(phone) {
   bool isExist = false;
-  log("appCtrl.userContactList : ${appCtrl.userContactList}");
+  log("{appCtrl.userContactList.length: ${appCtrl.userContactList.length}");
   var contain = appCtrl.userContactList.where((element) {
     return element.phones.isNotEmpty ? phoneNumberExtension(
         element.phones[0].number.toString()) == phone : false;

@@ -23,13 +23,14 @@ class CurrentUserEmptyStatus extends StatelessWidget {
           if (snapshot.hasData) {
             return ListTile(
                 onTap: onTap,
-
+horizontalTitleGap: 10,
                 title: Text((snapshot.data!).docs[0]["name"],style: AppCss.poppinsBold14.textColor(appCtrl.appTheme.blackColor),),
                 subtitle: Text("Tap to add status update",style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.txtColor)),
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: Insets.i12),
                 leading: Stack(children: [
                   CommonImage(
+                    isStatusPage: true,
                     image: "",
                     name: (snapshot.data!).docs[0]["name"],
                   ),
@@ -51,7 +52,7 @@ class CurrentUserEmptyStatus extends StatelessWidget {
                               shape: BoxShape.circle),
                     ),
                   ),
-                ]).width(Sizes.s46));
+                ]).width(Sizes.s50 ));
           } else {
             return Container();
           }

@@ -3,8 +3,8 @@ import 'package:flutter_theme/config.dart';
 
 class CommonImage extends StatelessWidget {
   final String? image, name;
-
-  const CommonImage({Key? key, this.image, this.name}) : super(key: key);
+final bool isStatusPage;
+  const CommonImage({Key? key, this.image, this.name,this.isStatusPage = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,8 +12,8 @@ class CommonImage extends StatelessWidget {
         ? CachedNetworkImage(
             imageUrl: image!,
             imageBuilder: (context, imageProvider) => Container(
-                  height: Sizes.s45,
-                  width: Sizes.s45,
+                  height: isStatusPage ? Sizes.s50 :Sizes.s45,
+                  width: isStatusPage ? Sizes.s50 :Sizes.s45,
                   alignment: Alignment.center,
                   decoration: ShapeDecoration(
                       color: appCtrl.appTheme.contactBgGray,
@@ -22,11 +22,11 @@ class CommonImage extends StatelessWidget {
                             cornerRadius: 12, cornerSmoothing: 1),
                       ),
                       image: DecorationImage(
-                          fit: BoxFit.fitWidth, image: NetworkImage('$image'))),
+                          fit: BoxFit.fill, image: NetworkImage('$image'))),
                 ),
             placeholder: (context, url) => Container(
-                  height: Sizes.s45,
-                  width: Sizes.s45,
+                  height: isStatusPage ? Sizes.s50 :Sizes.s45,
+                  width: isStatusPage ? Sizes.s50 :Sizes.s45,
                   alignment: Alignment.center,
                   decoration: ShapeDecoration(
                       color: (colors.toList()..shuffle()).first,
@@ -47,8 +47,8 @@ class CommonImage extends StatelessWidget {
                           .textColor(appCtrl.appTheme.white)),
                 ),
             errorWidget: (context, url, error) => Container(
-                  height: Sizes.s45,
-                  width: Sizes.s45,
+                  height: isStatusPage ? Sizes.s50 :Sizes.s45,
+                  width: isStatusPage ? Sizes.s50 :Sizes.s45,
                   alignment: Alignment.center,
                   decoration: ShapeDecoration(
                       color: (colors.toList()..shuffle()).first,
@@ -70,8 +70,8 @@ class CommonImage extends StatelessWidget {
                   ),
                 ))
         : Container(
-            height: Sizes.s45,
-            width: Sizes.s45,
+            height: isStatusPage ? Sizes.s50 :Sizes.s45,
+            width: isStatusPage ? Sizes.s50 :Sizes.s45,
             alignment: Alignment.center,
             decoration: ShapeDecoration(
                 color: (colors.toList()..shuffle()).first,

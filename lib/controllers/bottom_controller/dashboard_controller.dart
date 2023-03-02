@@ -125,6 +125,7 @@ class DashboardController extends GetxController
                 phoneNumberExtension(
                     element.value.phones[0].number.toString())) {
               appCtrl.userContactList.add(element.value);
+              appCtrl.firebaseContact.add(user.value);
             }
           }
           appCtrl.update();
@@ -159,7 +160,6 @@ class DashboardController extends GetxController
     statusCtrl.onReady();
     messageCtrl.onReady();
     statusCtrl.onReady();
-
     statusCtrl.update();
     super.onInit();
   }

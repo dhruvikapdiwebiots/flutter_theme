@@ -65,7 +65,7 @@ class _StatusListState extends State<StatusList>
                         const VSpace(Sizes.s10),
                         //all contacts user status list
                         const StatusListLayout(),
-                      ]).paddingAll(Insets.i10),
+                      ]).paddingSymmetric(horizontal: Insets.i10),
                 ),
                 if (statusCtrl.isLoading)
                   CommonLoader(isLoading: statusCtrl.isLoading)
