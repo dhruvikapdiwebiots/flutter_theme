@@ -12,10 +12,11 @@ class DashboardTab extends StatelessWidget with PreferredSizeWidget {
               unselectedLabelColor: appCtrl.appTheme.txtColor,
               indicatorSize: TabBarIndicatorSize.label,
               padding: EdgeInsets.zero,
-              labelStyle: AppCss.poppinsMedium14,
+              unselectedLabelStyle: AppCss.poppinsMedium16.textColor(appCtrl.appTheme.txtColor),
+              labelStyle: AppCss.poppinsBold16.textColor(appCtrl.appTheme.primary),
               indicatorPadding: EdgeInsets.zero,
               labelPadding: EdgeInsets.zero,
-              indicatorWeight: 3,
+              indicatorWeight: 2,
               indicatorColor: appCtrl.appTheme.primary,
               onTap: (val) {
                 dashboardCtrl.onTapSelect(val);
@@ -31,10 +32,8 @@ class DashboardTab extends StatelessWidget with PreferredSizeWidget {
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              SvgPicture.asset(e.value["icon"].toString(),
-                                  color: dashboardCtrl.selectedIndex == e.key
-                                      ? appCtrl.appTheme.primary
-                                      : appCtrl.appTheme.txtColor),
+                              SvgPicture.asset(dashboardCtrl.selectedIndex == e.key
+                                  ?e.value["iconSelected"].toString() : e.value["icon"].toString()),
                               const HSpace(Sizes.s8),
                               Text(trans(e.value["title"]))
                             ]))))

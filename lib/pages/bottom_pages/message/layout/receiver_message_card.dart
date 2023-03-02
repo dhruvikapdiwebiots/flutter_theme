@@ -24,6 +24,7 @@ class ReceiverMessageCard extends StatelessWidget {
             if (!snapshot.hasData) {
               return Container();
             } else {
+
               return ListTile(
                   onTap: () {
                     UserContactModel userContact = UserContactModel(
@@ -38,11 +39,13 @@ class ReceiverMessageCard extends StatelessWidget {
                     };
                     Get.toNamed(routeName.chat, arguments: data);
                   },
+                  horizontalTitleGap: 12,
                   contentPadding: EdgeInsets.zero,
                   leading:ImageLayout(id: document!["receiverId"]),
-                  trailing: TrailingLayout(document: document,currentUserId: currentUserId),
+                  
+                  trailing: TrailingLayout(document: document,currentUserId: currentUserId).width(Sizes.s55),
                   title: Text(snapshot.data!["name"],
-                      style: AppCss.poppinsblack16
+                      style: AppCss.poppinsblack14
                           .textColor(appCtrl.appTheme.blackColor)),
                   subtitle: document!["lastMessage"] != null
                       ? SubTitleLayout(document: document,name: snapshot.data!["name"],blockBy: blockBy,)

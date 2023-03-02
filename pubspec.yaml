@@ -92,6 +92,7 @@ dependencies:
   animated_text_kit: ^4.2.2
   image_cropper: ^3.0.1
   giphy_get: ^3.2.0
+  figma_squircle: ^0.5.3
   agora_rtc_engine: ^6.1.0
   wakelock: ^0.6.2
   bubble: ^1.2.1

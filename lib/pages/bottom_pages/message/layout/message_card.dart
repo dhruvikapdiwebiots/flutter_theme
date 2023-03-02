@@ -34,12 +34,13 @@ class MessageCard extends StatelessWidget {
                       };
                       Get.toNamed(routeName.chat, arguments: data);
                     },
+                horizontalTitleGap: 10,
                     contentPadding: EdgeInsets.zero,
                     leading: ImageLayout(id: document!["senderId"]),
                     trailing: TrailingLayout(
                         currentUserId: currentUserId, document: document),
                     title: Text(snapshot.data!["name"],
-                        style: AppCss.poppinsblack16
+                        style: AppCss.poppinsblack14
                             .textColor(appCtrl.appTheme.blackColor)),
                     subtitle: document!["lastMessage"] != null
                         ? document!["lastMessage"].contains(".gif")

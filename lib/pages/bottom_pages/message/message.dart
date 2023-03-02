@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_theme/config.dart';
 
 class Message extends StatefulWidget {
@@ -33,7 +34,7 @@ class _MessageState extends State<Message>
   @override
   Widget build(BuildContext context) {
     return GetBuilder<MessageController>(builder: (_) {
-      return  NotificationListener<OverscrollIndicatorNotification>(
+      return NotificationListener<OverscrollIndicatorNotification>(
         onNotification: (OverscrollIndicatorNotification overscroll) {
           overscroll.disallowIndicator();
           return false;
@@ -41,14 +42,26 @@ class _MessageState extends State<Message>
         child: Scaffold(
             key: messageCtrl.scaffoldKey,
             backgroundColor: appCtrl.appTheme.bgColor,
-            floatingActionButton: FloatingActionButton.extended(
-              onPressed: () =>   Get.to(() => ContactList(),transition: Transition.downToUp,),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () => Get.to(
+                () => ContactList(),
+                transition: Transition.downToUp,
+              ),
               backgroundColor: appCtrl.appTheme.primary,
-
-              label:  Text(fonts.newChat.tr,style: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.whiteColor)),
-              icon:  Icon(Icons.message,color: appCtrl.appTheme.whiteColor),
+              child: Container(
+                width: Sizes.s52,
+                height: Sizes.s52,
+                padding: const EdgeInsets.all(Insets.i8),
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: RadialGradient(colors: [
+                      appCtrl.appTheme.lightPrimary,
+                      appCtrl.appTheme.primary
+                    ])),
+                child: SvgPicture.asset(svgAssets.add,height: Sizes.s15),
+              ),
             ),
-            body:const ChatCard()),
+            body: const ChatCard()),
       );
     });
   }

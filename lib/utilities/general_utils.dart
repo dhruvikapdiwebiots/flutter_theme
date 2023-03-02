@@ -1,5 +1,7 @@
+import 'dart:developer';
 import 'dart:io';
 import 'dart:math' as math;
+import 'package:dartx/dartx_io.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import '../config.dart';
 
@@ -32,10 +34,11 @@ extension StringCasingExtension on String {
   String toCapitalized() =>
       length > 0 ? '${this[0].toUpperCase()}${substring(1).toLowerCase()}' : '';
 
-  String toTitleCase() => replaceAll(RegExp(' +'), ' ')
-      .split(' ')
-      .map((str) => str.toCapitalized())
-      .join(' ');
+  String toTitleCase() =>
+      replaceAll(RegExp(' +'), ' ')
+          .split(' ')
+          .map((str) => str.toCapitalized())
+          .join(' ');
 }
 
 //phone number split
@@ -58,9 +61,9 @@ String phoneNumberExtension(phoneNumber) {
   return phone;
 }
 
-Future<List<Contact>>  getAllContacts() async {
+Future<List<Contact>> getAllContacts() async {
   var contacts = (await FlutterContacts.getContacts(
-      withPhoto: true, withProperties: true,withThumbnail: true));
+      withPhoto: true, withProperties: true, withThumbnail: true));
   return contacts;
 }
 
@@ -109,9 +112,50 @@ String formatBytes(int bytes, int decimals) {
     'ZB',
   ];
   final int i = (math.log(bytes / 100) / math.log(1024)).floor();
-  return '${(bytes / math.pow(1024, i)).toStringAsFixed(decimals)} ${suffixes[i]}';
+  return '${(bytes / math.pow(1024, i)).toStringAsFixed(
+      decimals)} ${suffixes[i]}';
 }
 
 
 String getVideoSize({required File file}) =>
     formatBytes(file.lengthSync(), 2);
+
+
+final List colors = [
+  const Color(0xffF98BAE),
+  const Color(0xff72CCCF),
+  const Color(0xffF4ABC4),
+  const Color(0xff346751),
+  const Color(0xffFFC947),
+  const Color(0xff3282B8),
+];
+
+int getUnseenMessagesNumber(
+    List<QueryDocumentSnapshot<Map<String, dynamic>>> items) {
+  int counter = 0;
+  items
+      .asMap()
+      .entries
+      .forEach((element) {
+    if (!element.value.data()["isSeen"]) {
+      counter++;
+    }
+  });
+  return counter;
+}
+
+bool checkUserExist(phone) {
+  bool isExist = false;
+  log("appCtrl.userContactList : ${appCtrl.userContactList}");
+  var contain = appCtrl.userContactList.where((element) {
+    return element.phones.isNotEmpty ? phoneNumberExtension(
+        element.phones[0].number.toString()) == phone : false;
+  });
+  log("contain : $contain");
+  if (contain.isNotEmpty) {
+    isExist = true;
+  } else {
+    isExist = false;
+  }
+  return isExist;
+}

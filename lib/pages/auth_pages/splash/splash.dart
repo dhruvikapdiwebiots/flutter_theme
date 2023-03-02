@@ -1,37 +1,20 @@
-  import 'package:animated_text_kit/animated_text_kit.dart';
-
 import '../../../config.dart';
 
 class Splash extends StatelessWidget {
   final splashCtrl = Get.put(SplashController());
-   Splash({Key? key}) : super(key: key);
+
+  Splash({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<SplashController>(
-      builder: (_) {
-        return Scaffold(
-            backgroundColor: appCtrl.appTheme.whiteColor,
-            body: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                     imageAssets.splashIcon, // replace your Splashscreen icon
-                      height: Sizes.s160, //keep height according to requirement
-                      width: Sizes.s160 //keep width according to requirement
-                    ),
-                    const VSpace(Sizes.s15),
-                    AnimatedTextKit(
-                      animatedTexts: [
-                        TyperAnimatedText(fonts.chatify.tr.toUpperCase(),textStyle: AppCss.poppinsblack24.textColor(appCtrl.appTheme.txt))
-                      ],
-                      onTap: () {
-                      },
-                    ),
-                  ],
-                )));
-      }
-    );
+    return GetBuilder<SplashController>(builder: (_) {
+      return Scaffold(
+          backgroundColor: appCtrl.appTheme.primary,
+          body: Center(
+              child: Image.asset(
+            imageAssets.splashIcon, // replace your Splashscreen icon
+            width: Sizes.s210,
+          )));
+    });
   }
 }

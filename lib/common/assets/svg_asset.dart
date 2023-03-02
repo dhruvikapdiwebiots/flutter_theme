@@ -11,7 +11,15 @@ class SvgAssets{
   final String more = 'assets/svg/more.svg';
   final String menu = 'assets/svg/menu.svg';
   final String chat = 'assets/svg/chat.svg';
+  final String chatFilled = 'assets/svg/chatFilled.svg';
   final String status = 'assets/svg/story.svg';
+  final String storyFilled = 'assets/svg/storyFilled.svg';
   final String call = 'assets/svg/call.svg';
+  final String callFilled = 'assets/svg/callFilled.svg';
+  final String add = 'assets/svg/add.svg';
+  final String callAdd = 'assets/svg/callAdd.svg';
+  final String camera = 'assets/svg/camera.svg';
+  final String edit = 'assets/svg/edit.svg';
+  final String videoCallFilled = 'assets/svg/video.svg';
   /*final String twitter = "assets/common/svg/twitter.svg";*/
 }

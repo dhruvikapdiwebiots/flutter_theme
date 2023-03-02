@@ -32,9 +32,10 @@ class GroupMessageCard extends StatelessWidget {
                               Get.toNamed(routeName.groupChatMessage,
                                   arguments: snapshot.data);
                             },
+                            horizontalTitleGap: 12,
                             contentPadding: EdgeInsets.zero,
                             leading:
-                                CommonImage(image: (snapshot.data!)["image"]),
+                                CommonImage(image: (snapshot.data!)["image"],name: (snapshot.data!)["name"],),
                             trailing: Text(
                                 DateFormat('HH:mm a').format(
                                     DateTime.fromMillisecondsSinceEpoch(
@@ -42,7 +43,7 @@ class GroupMessageCard extends StatelessWidget {
                                 style: AppCss.poppinsMedium12
                                     .textColor(appCtrl.appTheme.txtColor)),
                             title: Text(snapshot.data!["name"],
-                                style: AppCss.poppinsblack16
+                                style: AppCss.poppinsblack14
                                     .textColor(appCtrl.appTheme.blackColor)),
                             subtitle: document!["lastMessage"] != null
                                 ? GroupCardSubTitle(
@@ -55,7 +56,7 @@ class GroupMessageCard extends StatelessWidget {
                         return Container();
                       }
                     })
-                .paddingSymmetric(horizontal: Insets.i15, vertical: Insets.i5)
+                .paddingSymmetric(horizontal: Insets.i15, vertical: Insets.i2)
                 .commonDecoration()
                 .marginSymmetric(horizontal: Insets.i10);
           }

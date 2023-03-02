@@ -1,9 +1,15 @@
+import 'dart:developer';
+
+import 'package:figma_squircle/figma_squircle.dart';
+
 import '../../../../config.dart';
 
 class ImageLayout extends StatelessWidget {
   final String? id;
+  final bool isLastSeen;
 
-  const ImageLayout({Key? key, this.id}) : super(key: key);
+  const ImageLayout({Key? key, this.id, this.isLastSeen = true})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,31 +23,72 @@ class ImageLayout extends StatelessWidget {
             if (!snapshot.data!.docs.isNotEmpty) {
               return Stack(
                 children: [
-                  Image.asset(
-                    imageAssets.user,
-                    color: appCtrl.appTheme.whiteColor,
-                  ).paddingAll(Insets.i15).decorated(
-                      color: appCtrl.appTheme.grey.withOpacity(.4),
-                      borderRadius: BorderRadius.circular(AppRadius.r8)),
-                  Icon(Icons.circle,color: appCtrl.appTheme.txtColor,)
+                  Container(
+                      decoration: ShapeDecoration(
+                          color: appCtrl.appTheme.grey.withOpacity(.4),
+                          shape: SmoothRectangleBorder(
+                              borderRadius: SmoothBorderRadius(
+                                  cornerRadius: 12, cornerSmoothing: 1))),
+                      child: Image.asset(
+                        imageAssets.user,
+                        height: Sizes.s45,
+                        width: Sizes.s45,
+                        color: appCtrl.appTheme.whiteColor,
+                      ).paddingAll(Insets.i15)),
+                  if (isLastSeen)
+                    if ((snapshot.data!).docs[0]["status"] != "Offline")
+                      Positioned(
+                        right: 3,
+                        bottom: 10,
+                        child: Align(
+                            alignment: Alignment.bottomRight,
+                            child: Icon(Icons.circle,
+                                    color: appCtrl.appTheme.greenColor,
+                                    size: Sizes.s12)
+                                .paddingAll(Insets.i2)
+                                .decorated(
+                                    color: appCtrl.appTheme.whiteColor,
+                                    shape: BoxShape.circle)),
+                      )
                 ],
               );
             } else {
               return Stack(
-                alignment: Alignment.bottomRight,
                 children: [
-                  CommonImage(image: (snapshot.data!).docs[0]["image"]),
-                  Positioned(right: -3,child: Icon(Icons.circle,color: appCtrl.appTheme.txtColor,))
+                  CommonImage(
+                      image: (snapshot.data!).docs[0]["image"],
+                      name: (snapshot.data!).docs[0]["name"]),
+                  if (isLastSeen)
+                    Positioned(
+                      right: -2,
+                      bottom: 0,
+                      child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: Icon(Icons.circle,
+                                  color: appCtrl.appTheme.greenColor,
+                                  size: Sizes.s12)
+                              .paddingAll(Insets.i2)
+                              .decorated(
+                                  color: appCtrl.appTheme.whiteColor,
+                                  shape: BoxShape.circle)),
+                    )
                 ],
-              ).height(Sizes.s55).width(Sizes.s55).backgroundColor(Colors.cyan);
+              );
             }
           } else {
-            return Image.asset(
-              imageAssets.user,
-              color: appCtrl.appTheme.whiteColor,
-            ).paddingAll(Insets.i15).decorated(
-                color: appCtrl.appTheme.grey.withOpacity(.4),
-                borderRadius: BorderRadius.circular(AppRadius.r8));
+            return Container(
+              decoration: ShapeDecoration(
+                  color: appCtrl.appTheme.grey.withOpacity(.4),
+                  shape: SmoothRectangleBorder(
+                      borderRadius: SmoothBorderRadius(
+                          cornerRadius: 12, cornerSmoothing: 1))),
+              child: Image.asset(
+                imageAssets.user,
+                height: Sizes.s45,
+                width: Sizes.s45,
+                color: appCtrl.appTheme.whiteColor,
+              ).paddingAll(Insets.i15),
+            );
           }
         });
   }

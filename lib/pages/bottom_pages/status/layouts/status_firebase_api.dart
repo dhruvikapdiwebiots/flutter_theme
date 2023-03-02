@@ -27,10 +27,14 @@ class StatusFirebaseApi {
 
       statusImageUrls.add(PhotoUrl.fromJson(data));
       await FirebaseFirestore.instance
+          .collection(collectionName.users)
+          .doc(user["id"])
           .collection(collectionName.status)
           .doc(statusesSnapshot.docs[0].id)
-          .update(
-              {'photoUrl': statusImageUrls.map((e) => e.toJson()).toList()}).then((value) {
+          .update({
+        'photoUrl': statusImageUrls.map((e) => e.toJson()).toList(),
+        "updateAt": DateTime.now().millisecondsSinceEpoch.toString()
+      }).then((value) {
         final statusCtrl = Get.find<StatusController>();
         statusCtrl.isLoading = false;
         statusCtrl.update();
@@ -53,16 +57,20 @@ class StatusFirebaseApi {
         phoneNumber: user["phone"],
         photoUrl: statusImageUrls,
         createdAt: DateTime.now().millisecondsSinceEpoch.toString(),
+        updateAt: DateTime.now().millisecondsSinceEpoch.toString(),
         profilePic: user["image"],
         uid: user["id"],
         isSeenByOwn: false);
 
     await FirebaseFirestore.instance
+        .collection(collectionName.users)
+        .doc(user["id"])
         .collection(collectionName.status)
-        .add(status.toJson()).then((value) {
-          final statusCtrl = Get.find<StatusController>();
-          statusCtrl.isLoading = false;
-          statusCtrl.update();
+        .add(status.toJson())
+        .then((value) {
+      final statusCtrl = Get.find<StatusController>();
+      statusCtrl.isLoading = false;
+      statusCtrl.update();
     });
   }
 
@@ -73,9 +81,9 @@ class StatusFirebaseApi {
     List<Status> statusData = [];
     statusesSnapshot.docs.asMap().entries.forEach((element) {
       int i = contacts.indexWhere((contactList) {
-        if(contactList.phones.isNotEmpty) {
+        if (contactList.phones.isNotEmpty) {
           return (contactList.phones.isNotEmpty);
-        }else{
+        } else {
           return false;
         }
       });

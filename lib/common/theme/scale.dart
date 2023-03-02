@@ -54,6 +54,7 @@ class AppRadius{
   static const double r6 = 6 * scale;
   static const double r8 = 8 * scale;
   static const double r10 = 10 * scale;
+  static const double r12 = 12 * scale;
   static const double r15 = 15 * scale;
   static const double r18 = 18 * scale;
   static const double r20 = 20 * scale;
@@ -120,6 +121,7 @@ class Sizes {
   static const double s40 = 40 * scale;
   static const double s42 = 42 * scale;
   static const double s45 = 45 * scale;
+  static const double s46 = 46 * scale;
   static const double s48 = 48 * scale;
   static const double s50 = 50 * scale;
   static const double s52 = 52 * scale;

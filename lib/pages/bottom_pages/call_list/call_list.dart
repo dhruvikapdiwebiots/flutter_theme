@@ -13,6 +13,22 @@ class CallList extends StatelessWidget {
     return GetBuilder<CallListController>(builder: (_) {
       return Scaffold(
         backgroundColor: appCtrl.appTheme.whiteColor,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          backgroundColor: appCtrl.appTheme.primary,
+          child: Container(
+            width: Sizes.s52,
+            height: Sizes.s52,
+            padding: const EdgeInsets.all(Insets.i12),
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(colors: [
+                  appCtrl.appTheme.lightPrimary,
+                  appCtrl.appTheme.primary
+                ])),
+            child: SvgPicture.asset(svgAssets.callAdd,height: Sizes.s15),
+          ),
+        ),
         body: StreamBuilder(
             stream: FirebaseFirestore.instance
                 .collection(collectionName.calls)
@@ -21,23 +37,26 @@ class CallList extends StatelessWidget {
                 .orderBy("timestamp", descending: true)
                 .snapshots(),
             builder: (context, snapshot) {
-              log("dsds : ${snapshot.hasData}");
+
               if (!snapshot.hasData) {
-                log("snapshot.hasData : ${snapshot.hasData}");
+
                 return Container(
                     margin: const EdgeInsets.only(
                         bottom: Insets.i10, left: Insets.i5, right: Insets.i5));
               } else {
                 return ListView.builder(
                   shrinkWrap: true,
+                  padding: const EdgeInsets.symmetric(vertical: Insets.i10),
                   itemBuilder: (context, index) {
                     return Column(
                       children: [
                         ListTile(
                           dense: true,
+                          horizontalTitleGap:12,
                           contentPadding: const EdgeInsets.symmetric(
                               horizontal: Insets.i15, vertical: Insets.i4),
                           leading: ImageLayout(
+                            isLastSeen: false,
                               id: snapshot.data!.docs[index].data()["id"] ==
                                       callListCtrl.user["id"]
                                   ? snapshot.data!.docs[index]
@@ -104,25 +123,25 @@ class CallList extends StatelessWidget {
                                 ),
                                 const HSpace(Sizes.s5),
                                 Text(
-                                    DateFormat('MMMM dd, HH:mm a').format(
+                                    DateFormat('dd/MM/yy, HH:mm a').format(
                                         DateTime.fromMillisecondsSinceEpoch(
                                             int.parse(snapshot.data!.docs[index]
                                                 .data()["timestamp"]
                                                 .toString()))),
                                     style: AppCss.poppinsMedium12
-                                        .textColor(appCtrl.appTheme.accent))
+                                        .textColor(appCtrl.appTheme.statusTxtColor))
                               ]),
-                          trailing: Icon(
+                          trailing: SvgPicture.asset(
                               snapshot.data!.docs[index].data()["isVideoCall"]
-                                  ? Icons.video_camera_back
-                                  : Icons.call,
+                                  ? svgAssets.videoCallFilled
+                                  : svgAssets.callFilled,
                               color: appCtrl.appTheme.primary),
                         ),
-                        Divider(
-                          color: appCtrl.appTheme.lightGrey1Color,
+                        const Divider(
+                          color: Color.fromRGBO(49, 100, 189, .1),
                           endIndent: Insets.i15,
                           indent: Insets.i15,
-                          height: 1,
+                          height: 2,thickness: 1,
                         )
                       ],
                     );

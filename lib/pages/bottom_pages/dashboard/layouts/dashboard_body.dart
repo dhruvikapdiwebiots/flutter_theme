@@ -20,53 +20,46 @@ class DashboardBody extends StatelessWidget {
                     backgroundColor: appCtrl.appTheme.bgColor,
                     automaticallyImplyLeading: false,
                     leadingWidth: Sizes.s80,
-                    leading: SvgPicture.asset(svgAssets.menu, height: Sizes.s20)
-                        .paddingAll(Insets.i8)
-                        .decorated(
-                            color: appCtrl.appTheme.white,
-                            boxShadow: [
-                              const BoxShadow(
-                                  offset: Offset(0, 4),
-                                  blurRadius: 15,
-                                  color: Color.fromRGBO(0, 0, 0, 0.08))
-                            ],
-                            borderRadius: BorderRadius.circular(AppRadius.r10))
-                        .marginSymmetric(
-                            horizontal: Insets.i20, vertical: Insets.i10),
+                    toolbarHeight: 80,
                     elevation: 0,
                     actions: [
                       SvgPicture.asset(svgAssets.search, height: Sizes.s20)
-                          .paddingAll(Insets.i12)
+                          .paddingAll(Insets.i10)
                           .decorated(
                               color: appCtrl.appTheme.white,
                               boxShadow: [
                                 const BoxShadow(
                                     offset: Offset(0, 2),
-                                    blurRadius: 15,
+                                    blurRadius: 5,
+                                    spreadRadius: 1,
                                     color: Color.fromRGBO(0, 0, 0, 0.08))
                               ],
                               borderRadius:
                                   BorderRadius.circular(AppRadius.r10))
-                          .marginSymmetric(vertical: Insets.i5),
+                          .marginSymmetric(vertical: Insets.i5)
+                          .paddingSymmetric(vertical: Insets.i14),
                       SvgPicture.asset(svgAssets.more, height: Sizes.s20)
-                          .paddingAll(Insets.i12)
+                          .paddingAll(Insets.i10)
                           .decorated(
                               color: appCtrl.appTheme.white,
                               boxShadow: [
                                 const BoxShadow(
                                     offset: Offset(0, 2),
-                                    blurRadius: 15,
+                                    blurRadius: 5,
+                                    spreadRadius: 1,
                                     color: Color.fromRGBO(0, 0, 0, 0.08))
                               ],
                               borderRadius:
                                   BorderRadius.circular(AppRadius.r10))
                           .marginSymmetric(
-                              vertical: Insets.i5, horizontal: Insets.i15),
+                              vertical: Insets.i5, horizontal: Insets.i15)
+                          .paddingSymmetric(vertical: Insets.i14),
                     ],
-                    centerTitle: true,
-                    title: Text(fonts.chatify.tr,
-                        style: AppCss.poppinsSemiBold16
-                            .textColor(appCtrl.appTheme.primary)),
+                    title: Image.asset(
+                      imageAssets.logo,
+                      height: Sizes.s30,
+                      fit: BoxFit.fill,
+                    ).paddingOnly(top: Insets.i10),
                     bottom: const DashboardTab(),
                   ),
                   body: TabBarView(

@@ -18,13 +18,12 @@ class CurrentUserStatus extends StatelessWidget {
       builder: (statusCtrl) {
         return StreamBuilder(
             stream: FirebaseFirestore.instance
-                .collection('status')
-                .where("phoneNumber", isEqualTo: currentUserId)
+                .collection(collectionName.users).doc(statusCtrl.currentUserId).collection(collectionName.status)
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.data != null) {
                 if (!snapshot.data!.docs.isNotEmpty) {
-                  return CurrentUserEmptyStatus(onTap: () async {
+                  return CurrentUserEmptyStatus(currentUserId:currentUserId,onTap: () async {
                     final List<AssetEntity>? result =
                     await AssetPicker.pickAssets(
                       context,
@@ -77,7 +76,7 @@ class CurrentUserStatus extends StatelessWidget {
                   return StatusLayout(snapshot: snapshot);
                 }
               } else {
-                return CurrentUserEmptyStatus(onTap: () async {
+                return CurrentUserEmptyStatus(currentUserId: currentUserId,onTap: () async {
                   final List<AssetEntity>? result =
                   await AssetPicker.pickAssets(
                     context,

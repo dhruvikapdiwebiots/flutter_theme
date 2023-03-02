@@ -73,6 +73,7 @@ class DashboardController extends GetxController
 
   onChange(val) async {
     selectedIndex = val;
+
     update();
   }
 
@@ -94,20 +95,32 @@ class DashboardController extends GetxController
     appCtrl.update();
     statusCtrl.update();
     update();
+    await checkPermission();
     checkContactList();
     super.onReady();
   }
 
-  checkContactList()async{
+  checkPermission() async {
+    bool permissionStatus =
+        await statusCtrl.permissionHandelCtrl.permissionGranted();
+    if (permissionStatus) {
+      contacts = await getAllContacts();
+      appCtrl.contactList = contacts;
+      appCtrl.storage.write(session.contactList, contacts);
+      appCtrl.update();
+    }
+  }
+
+  checkContactList() async {
     await FirebaseFirestore.instance
         .collection(collectionName.users)
         .get()
         .then((value) {
-          log("appCtrl.contactList : ${appCtrl.contactList}");
+      log("appCtrl.contactList : ${appCtrl.contactList}");
 
       value.docs.asMap().entries.forEach((user) {
         appCtrl.contactList.asMap().entries.forEach((element) {
-          if(element.value.phones.isNotEmpty) {
+          if (element.value.phones.isNotEmpty) {
             if (user.value.data()["phone"] ==
                 phoneNumberExtension(
                     element.value.phones[0].number.toString())) {
@@ -117,10 +130,9 @@ class DashboardController extends GetxController
           appCtrl.update();
         });
       });
-
     });
+    log("appCtrl.userContactList : ${appCtrl.userContactList}");
     update();
-
   }
 
   popupMenuTap(value) {

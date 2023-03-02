@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_theme/config.dart';
 
 class CallListController extends GetxController {
@@ -12,6 +14,7 @@ class CallListController extends GetxController {
     settingList = appArray.settingList;
     user = appCtrl.storage.read(session.user) ?? "";
     update();
+   // callList();
     super.onReady();
   }
 
@@ -20,5 +23,28 @@ class CallListController extends GetxController {
 
     Get.toNamed(routeName.editProfile,
         arguments: {"resultData": user, "isPhoneLogin": false});
+  }
+
+  callList()async{
+    int count= 0;
+    FirebaseFirestore.instance.collection(collectionName.users).get().then((value) {
+      if(value.docs.isNotEmpty){
+       value.docs.asMap().entries.forEach((e) {
+
+         FirebaseFirestore.instance
+             .collection(collectionName.calls)
+             .doc(e.value.id)
+             .collection(collectionName.collectionCallHistory)
+             .get().then((value) {
+
+           count = count + value.docs.length;
+           update();
+           log("COUNT : $count");
+         });
+       });
+      }
+
+    });
+
   }
 }

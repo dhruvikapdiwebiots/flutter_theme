@@ -5,6 +5,7 @@ class Status {
   String? phoneNumber;
   List<PhotoUrl>? photoUrl;
   String? createdAt;
+  String? updateAt;
   String? profilePic;
   bool? isSeenByOwn;
 
@@ -14,6 +15,7 @@ class Status {
         this.phoneNumber,
         this.photoUrl,
         this.createdAt,
+        this.updateAt,
         this.profilePic,
         this.isSeenByOwn});
 
@@ -22,6 +24,7 @@ class Status {
     username = json['username'];
     phoneNumber = json['phoneNumber'];
     createdAt = json['createdAt'];
+    updateAt = json['updateAt'];
     profilePic = json['profilePic'];
     isSeenByOwn = json['isSeenByOwn'];
     if (json['photoUrl'] != null) {
@@ -38,6 +41,7 @@ class Status {
     data['username'] = username;
     data['phoneNumber'] = phoneNumber;
     data['createdAt'] = createdAt;
+    data['updateAt'] = updateAt;
     data['profilePic'] = profilePic;
     data['isSeenByOwn'] = isSeenByOwn;
     if (photoUrl != null) {

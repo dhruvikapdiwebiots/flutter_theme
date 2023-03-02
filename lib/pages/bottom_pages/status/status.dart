@@ -52,11 +52,16 @@ class _StatusListState extends State<StatusList>
                                     ? statusCtrl.user["phone"]
                                     : "")
                             .marginSymmetric(vertical: Insets.i10),
-                        const Divider(),
-                        const VSpace(Sizes.s15),
-                        Text(fonts.recentUpdates.tr,
-                            style: AppCss.poppinsblack14
-                                .textColor(appCtrl.appTheme.txt)),
+                        const VSpace(Sizes.s5),
+                        Row(
+                          children: [
+                            Text(fonts.recentUpdates.tr,
+                                style: AppCss.poppinsblack16
+                                    .textColor(appCtrl.appTheme.txtColor)),
+                            const HSpace(Sizes.s12),
+                            Expanded(child: Divider(color: appCtrl.appTheme.primary.withOpacity(.2),thickness: 1,))
+                          ],
+                        ).paddingSymmetric(horizontal: Insets.i12 ),
                         const VSpace(Sizes.s10),
                         //all contacts user status list
                         const StatusListLayout(),
