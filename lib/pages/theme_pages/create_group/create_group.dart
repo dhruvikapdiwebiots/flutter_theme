@@ -18,6 +18,7 @@ class GroupChat extends StatelessWidget {
             onWillPop: () async {
               groupChatCtrl.selectedContact = [];
               groupChatCtrl.update();
+              Get.back();
               return true;
             },
             child: Scaffold(

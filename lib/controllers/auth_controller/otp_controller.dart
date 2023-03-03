@@ -39,14 +39,7 @@ class OtpController extends GetxController {
           .update({'status': "Online", "pushToken": token, "isActive": true});
       log('check : ${appCtrl.storage.read(session.isIntro)}');
       Get.toNamed(routeName.dashboard);
-      final permissionHandelCtrl =
-          Get.isRegistered<PermissionHandlerController>()
-              ? Get.find<PermissionHandlerController>()
-              : Get.put(PermissionHandlerController());
-      appCtrl.contactList = await permissionHandelCtrl.getContact();
-      appCtrl.storage.write(session.contactList, appCtrl.contactList);
-      appCtrl.update();
-      log("OTP : ${appCtrl.contactList}");
+
     });
   }
 

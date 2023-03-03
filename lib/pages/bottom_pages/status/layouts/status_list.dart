@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+
 import 'package:flutter_theme/pages/bottom_pages/status/layouts/status_list_card.dart';
 
 import '../../../../config.dart';
@@ -16,14 +17,13 @@ class _StatusListLayoutState extends State<StatusListLayout> {
   Widget build(BuildContext context) {
     return GetBuilder<StatusController>(builder: (statusCtrl) {
       return GetBuilder<AppController>(builder: (appCtrl) {
-        debugPrint(
-            "appCtrl.userContactList : ${appCtrl.userContactList.length}");
+log("USER : ${statusCtrl.user["id"]}");
         return SizedBox(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height - 50,
             child: Column(children: [
               ...appCtrl.firebaseContact.asMap().entries.map((e) {
-                return StreamBuilder(
+                return  StreamBuilder(
                     stream: FirebaseFirestore.instance
                         .collection(collectionName.users)
                         .doc(e.value["id"])

@@ -41,6 +41,6 @@ class GroupCardSubTitle extends StatelessWidget {
             style: AppCss.poppinsMedium12
                 .textColor(appCtrl.appTheme.txtColor)
                 .textHeight(1.2)
-                .letterSpace(.2));
+                .letterSpace(.2)).width(Sizes.s170);
   }
 }

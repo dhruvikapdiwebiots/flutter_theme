@@ -28,58 +28,66 @@ class CreateGroupController extends GetxController {
   Future<void> refreshContacts() async {
     isLoading = true;
     update();
-    contacts = await permissionHandelCtrl.getContact();
     user = appCtrl.storage.read(session.user) ?? "";
     log("contacts : ${contacts!.length}");
     update();
     if (user != "") {
       log("contacts1");
-      getFirebaseContact(contacts!);
+      getFirebaseContact();
     }
   }
 
   //get firebase register contact list
-  getFirebaseContact(List<Contact> contacts) async {
+  getFirebaseContact() async {
     contactList = [];
+    log("appCtrl.connnn : ${appCtrl.contactList}");
     update();
     Get.forceAppUpdate();
-    contacts.asMap().entries.forEach((contact) {
-      if (contact.value.phones.isNotEmpty) {
-        if (user["phone"] !=
-            phoneNumberExtension(contact.value.phones[0].number.toString())) {
-          counter ++;
-          contactList = [];
-
-          update();
-          Get.forceAppUpdate();
-          FirebaseFirestore.instance
-              .collection(collectionName.users)
-              .where("phone",
-                  isEqualTo: phoneNumberExtension(
-                      contact.value.phones[0].number.toString()))
-              .get()
-              .then((value) {
-            if (value.docs.isNotEmpty) {
-              log("coub : $counter");
-              if (value.docs[0].data()["isActive"] == true) {
-                if (!contactList.contains(value.docs[0].data())) {
-                  contactList.add(value.docs[0].data());
-                }else{
-                  contactList.remove(value.docs[0].data());
-                }
-              }
-            }
+    if(appCtrl.userContactList.isEmpty){
+      final dashboardCtrl = Get.find<DashboardController>();
+      dashboardCtrl.checkContactList();
+      getFirebaseContact();
+    }else {
+      appCtrl.userContactList
+          .asMap()
+          .entries
+          .forEach((contact) {
+        if (contact.value.phones.isNotEmpty) {
+          if (user["phone"] !=
+              phoneNumberExtension(contact.value.phones[0].number.toString())) {
+            counter ++;
+            contactList = [];
 
             update();
             Get.forceAppUpdate();
+            FirebaseFirestore.instance
+                .collection(collectionName.users)
+                .where("phone",
+                isEqualTo: phoneNumberExtension(
+                    contact.value.phones[0].number.toString()))
+                .get()
+                .then((value) {
+              if (value.docs.isNotEmpty) {
+                log("coub : $counter");
+                if (value.docs[0].data()["isActive"] == true) {
+                  if (!contactList.contains(value.docs[0].data())) {
+                    contactList.add(value.docs[0].data());
+                  } else {
+                    contactList.remove(value.docs[0].data());
+                  }
+                }
+              }
 
-          });
-          update();
+              update();
+              Get.forceAppUpdate();
+            });
+            update();
+          }
         }
 
-      }
-      update();
-    });
+        update();
+      });
+    }
 
     isLoading = false;
     update();

@@ -73,7 +73,12 @@ class DashboardController extends GetxController
 
   onChange(val) async {
     selectedIndex = val;
-
+    if (val == 1) {
+      if (appCtrl.contactList.isEmpty) {
+        await checkPermission();
+        checkContactList();
+      }
+    }
     update();
   }
 
@@ -95,14 +100,15 @@ class DashboardController extends GetxController
     appCtrl.update();
     statusCtrl.update();
     update();
-    await checkPermission();
-    checkContactList();
+
+    //checkContactList();
     super.onReady();
   }
 
   checkPermission() async {
     bool permissionStatus =
         await statusCtrl.permissionHandelCtrl.permissionGranted();
+    log("permissionStatus 1: $permissionStatus");
     if (permissionStatus) {
       contacts = await getAllContacts();
       appCtrl.contactList = contacts;
@@ -112,26 +118,34 @@ class DashboardController extends GetxController
   }
 
   checkContactList() async {
+    appCtrl.userContactList = [];
+    appCtrl.firebaseContact = [];
+    appCtrl.update();
+    log("appCtrl.contactList : ${appCtrl.firebaseContact}");
     await FirebaseFirestore.instance
         .collection(collectionName.users)
         .get()
-        .then((value) {
+        .then((value) async {
       log("appCtrl.contactList : ${appCtrl.contactList}");
-
-      value.docs.asMap().entries.forEach((user) {
-        appCtrl.contactList.asMap().entries.forEach((element) {
-          if (element.value.phones.isNotEmpty) {
-            if (user.value.data()["phone"] ==
-                phoneNumberExtension(
-                    element.value.phones[0].number.toString())) {
-              appCtrl.userContactList.add(element.value);
-              appCtrl.firebaseContact.add(user.value);
-            }
+      if (appCtrl.contactList.isNotEmpty) {
+        value.docs.asMap().entries.forEach((users) {
+          if (users.value["phone"] != user["phone"]) {
+            appCtrl.contactList.asMap().entries.forEach((element) {
+              if (element.value.phones.isNotEmpty) {
+                if (users.value.data()["phone"] ==
+                    phoneNumberExtension(
+                        element.value.phones[0].number.toString())) {
+                  appCtrl.userContactList.add(element.value);
+                  appCtrl.firebaseContact.add(users.value);
+                }
+              }
+            });
           }
           appCtrl.update();
         });
-      });
+      }
     });
+
     log("appCtrl.userContactList : ${appCtrl.userContactList}");
     update();
   }
@@ -162,5 +176,28 @@ class DashboardController extends GetxController
     statusCtrl.onReady();
     statusCtrl.update();
     super.onInit();
+  }
+
+  onMenuItemSelected(int value) {
+    log("value : $value");
+    selectedPopTap = value;
+    update();
+
+    if (value == 0) {
+      log("SELECT : $selectedPopTap");
+      final groupChatCtrl = Get.isRegistered<CreateGroupController>()
+          ? Get.find<CreateGroupController>()
+          : Get.put(CreateGroupController());
+      groupChatCtrl.isGroup = false;
+      if (groupChatCtrl.contacts != null || groupChatCtrl.contactList.isEmpty) {
+        groupChatCtrl.contactList = [];
+        groupChatCtrl.contacts = [];
+
+        groupChatCtrl.refreshContacts();
+      }
+      Get.back();
+      Get.toNamed(routeName.groupChat, arguments: false);
+
+    }
   }
 }

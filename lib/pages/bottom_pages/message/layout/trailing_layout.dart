@@ -17,13 +17,14 @@ class TrailingLayout extends StatelessWidget {
     return GetBuilder<MessageController>(builder: (msgCtrl) {
       return Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
                 DateFormat('HH:mm a').format(
                     DateTime.fromMillisecondsSinceEpoch(
                         int.parse(document!['updateStamp']))),
                 style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.grey)),
-            if (currentUserId == document!["receiverId"])
+             (currentUserId == document!["receiverId"])?
               StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection(collectionName.messages)
@@ -38,6 +39,7 @@ class TrailingLayout extends StatelessWidget {
                           : Container(
                               height: Sizes.s20,
                               width: Sizes.s20,alignment: Alignment.center,
+                              margin: const EdgeInsets.only(top: Insets.i5),
                               decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   gradient: RadialGradient(
@@ -54,8 +56,8 @@ class TrailingLayout extends StatelessWidget {
                     } else {
                       return Container();
                     }
-                  })
-          ]);
+                  }) :Container()
+          ]).marginOnly(top: Insets.i8);
     });
   }
 }

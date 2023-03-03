@@ -27,36 +27,50 @@ class GroupMessageCard extends StatelessWidget {
                         .snapshots(),
                     builder: (context, userSnapShot) {
                       if (userSnapShot.hasData) {
-                        return ListTile(
-                            onTap: () {
-                              Get.toNamed(routeName.groupChatMessage,
-                                  arguments: snapshot.data);
-                            },
-                            horizontalTitleGap: 12,
-                            contentPadding: EdgeInsets.zero,
-                            leading:
+
+                        return Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
                                 CommonImage(image: (snapshot.data!)["image"],name: (snapshot.data!)["name"],),
-                            trailing: Text(
+                                const HSpace(Sizes.s12),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(snapshot.data!["name"],
+                                        style: AppCss.poppinsblack14
+                                            .textColor(appCtrl.appTheme.blackColor)),
+                                    const VSpace(Sizes.s5),
+                                    document!["lastMessage"] != null
+                                        ? GroupCardSubTitle(
+                                        currentUserId: currentUserId,
+                                        name: userSnapShot.data!["name"],
+                                        document: document,
+                                        hasData: userSnapShot.hasData)
+                                        : Container(height: Sizes.s15,)
+                                  ],
+                                ),
+                              ],
+                            ),
+                            Text(
                                 DateFormat('HH:mm a').format(
                                     DateTime.fromMillisecondsSinceEpoch(
                                         int.parse(document!['updateStamp']))),
                                 style: AppCss.poppinsMedium12
-                                    .textColor(appCtrl.appTheme.txtColor)),
-                            title: Text(snapshot.data!["name"],
-                                style: AppCss.poppinsblack14
-                                    .textColor(appCtrl.appTheme.blackColor)),
-                            subtitle: document!["lastMessage"] != null
-                                ? GroupCardSubTitle(
-                                    currentUserId: currentUserId,
-                                    name: userSnapShot.data!["name"],
-                                    document: document,
-                                    hasData: userSnapShot.hasData)
-                                : Container());
+                                    .textColor(appCtrl.appTheme.txtColor)).paddingOnly(top: Insets.i8)
+                          ],
+                        ).paddingSymmetric(vertical: Insets.i10).inkWell(onTap: () {
+                          Get.toNamed(routeName.groupChatMessage,
+                              arguments: snapshot.data);
+                        });
+
                       } else {
                         return Container();
                       }
-                    })
-                .paddingSymmetric(horizontal: Insets.i15, vertical: Insets.i2)
+                    }).width(MediaQuery.of(context).size.width)
+                .paddingSymmetric(horizontal: Insets.i15, vertical: Insets.i4)
                 .commonDecoration()
                 .marginSymmetric(horizontal: Insets.i10);
           }

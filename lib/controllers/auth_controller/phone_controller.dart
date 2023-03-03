@@ -28,19 +28,13 @@ class PhoneController extends GetxController {
   void checkValidation() async {
     if (phone.text.isNotEmpty) {
       log("number : ${phone.text == "7990261461"}");
-      if (phone.text == "7990261461") {
+      if (phone.text == "8141833594") {
         FirebaseFirestore.instance
             .collection(collectionName.users)
-            .where("phone", isEqualTo: "7990261461").limit(1)
+            .where("phone", isEqualTo: "8141833594").limit(1)
             .get()
             .then((value) async {
           if (value.docs.isNotEmpty) {
-            final permissionHandelCtrl = Get.isRegistered<PermissionHandlerController>()
-                ? Get.find<PermissionHandlerController>()
-                : Get.put(PermissionHandlerController());
-            appCtrl. contactList = await permissionHandelCtrl.getContact();
-            appCtrl.update();
-
             homeNavigation(value.docs[0].data());
           }
           log("value : ${value.docs}");

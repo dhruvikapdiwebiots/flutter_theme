@@ -25,7 +25,7 @@ class ReceiverMessageCard extends StatelessWidget {
               return Container();
             } else {
 
-              return ListTile(
+             /* return ListTile(
                   onTap: () {
                     UserContactModel userContact = UserContactModel(
                         username: snapshot.data!["name"],
@@ -49,9 +49,48 @@ class ReceiverMessageCard extends StatelessWidget {
                           .textColor(appCtrl.appTheme.blackColor)),
                   subtitle: document!["lastMessage"] != null
                       ? SubTitleLayout(document: document,name: snapshot.data!["name"],blockBy: blockBy,)
-                      : Container()) .paddingSymmetric(horizontal: Insets.i15, vertical: Insets.i5)
+                      : Container()) .paddingSymmetric(horizontal: Insets.i15,)
                   .commonDecoration()
-                  .marginSymmetric(horizontal: Insets.i10);
+                  .marginSymmetric(horizontal: Insets.i10);*/
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      CommonImage(image: (snapshot.data!)["image"],name: (snapshot.data!)["name"],),
+                      const HSpace(Sizes.s12),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(snapshot.data!["name"],
+                              style: AppCss.poppinsblack14
+                                  .textColor(appCtrl.appTheme.blackColor)),
+                          const VSpace(Sizes.s5),
+                           document!["lastMessage"] != null
+                              ? SubTitleLayout(document: document,name: snapshot.data!["name"],blockBy: blockBy,)
+                              : Container()
+                        ],
+                      ),
+                    ],
+                  ),
+                  TrailingLayout(document: document,currentUserId: currentUserId).width(Sizes.s55)
+                ],
+              ).width(MediaQuery.of(context).size.width).paddingSymmetric(horizontal: Insets.i15,vertical: Insets.i12)
+                  .commonDecoration()
+                  .marginSymmetric(horizontal: Insets.i10).inkWell(onTap: () {
+                UserContactModel userContact = UserContactModel(
+                    username: snapshot.data!["name"],
+                    uid: document!["receiverId"],
+                    phoneNumber: snapshot.data!["phone"],
+                    image: snapshot.data!["image"],
+                    isRegister: true);
+                var data = {
+                  "chatId": document!["chatId"],
+                  "data": userContact
+                };
+                Get.toNamed(routeName.chat, arguments: data);
+              });
             }
           });
     });
