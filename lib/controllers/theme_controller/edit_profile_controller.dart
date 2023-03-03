@@ -42,7 +42,6 @@ class EditProfileController extends GetxController {
   bool isLoading = false;
   bool isLoggedIn = false;
   bool isPhoneLogin = false;
-  User? currentUser;
   XFile? imageFile;
   String imageUrl = "";
   var userId = '';
@@ -72,15 +71,6 @@ class EditProfileController extends GetxController {
     FocusScope.of(context).requestFocus(nextFocus);
   }
 
-  getData() async {
-    userId = storage.read(session.id) ?? '';
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final User? user = auth.currentUser;
-    if (user == null) {
-    } else {
-      homeNavigation(userId);
-    }
-  }
 
 
   //update user

@@ -178,26 +178,49 @@ class DashboardController extends GetxController
     super.onInit();
   }
 
-  onMenuItemSelected(int value) {
+  onMenuItemSelected(int value) async {
     log("value : $value");
     selectedPopTap = value;
     update();
 
+
     if (value == 0) {
-      log("SELECT : $selectedPopTap");
-      final groupChatCtrl = Get.isRegistered<CreateGroupController>()
-          ? Get.find<CreateGroupController>()
-          : Get.put(CreateGroupController());
-      groupChatCtrl.isGroup = false;
-      if (groupChatCtrl.contacts != null || groupChatCtrl.contactList.isEmpty) {
-        groupChatCtrl.contactList = [];
-        groupChatCtrl.contacts = [];
+
+      if (appCtrl.contactList.isEmpty) {
+        await checkPermission();
+        await checkContactList();
+        final groupChatCtrl =
+        Get.isRegistered<CreateGroupController>()
+            ? Get.find<CreateGroupController>()
+            : Get.put(CreateGroupController());
+        groupChatCtrl.isGroup = false;
 
         groupChatCtrl.refreshContacts();
-      }
-      Get.back();
-      Get.toNamed(routeName.groupChat, arguments: false);
 
+        Get.back();
+        Get.toNamed(routeName.groupChat, arguments: false);
+      }else{
+        Get.toNamed(routeName.groupChat, arguments: false);
+      }
+    }else if(value ==1){
+      if (appCtrl.contactList.isEmpty) {
+        await checkPermission();
+        await checkContactList();
+        final groupChatCtrl =
+        Get.isRegistered<CreateGroupController>()
+            ? Get.find<CreateGroupController>()
+            : Get.put(CreateGroupController());
+        groupChatCtrl.isGroup = false;
+
+        groupChatCtrl.refreshContacts();
+
+        Get.back();
+        Get.toNamed(routeName.groupChat, arguments: true);
+      }else{
+        Get.toNamed(routeName.groupChat, arguments: true);
+      }
+    }else{
+      Get.toNamed(routeName.setting);
     }
   }
 }

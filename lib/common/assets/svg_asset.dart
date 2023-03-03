@@ -21,5 +21,12 @@ class SvgAssets{
   final String camera = 'assets/svg/camera.svg';
   final String edit = 'assets/svg/edit.svg';
   final String videoCallFilled = 'assets/svg/video.svg';
+  final String arrowBack = 'assets/svg/arrowBack.svg';
+  final String arrowForward = 'assets/svg/arrowForward.svg';
+  final String language = 'assets/svg/language.svg';
+  final String rtl = 'assets/svg/rtl.svg';
+  final String sun = 'assets/svg/sun.svg';
+  final String trash = 'assets/svg/trash.svg';
+  final String logout = 'assets/svg/logout.svg';
   /*final String twitter = "assets/common/svg/twitter.svg";*/
 }

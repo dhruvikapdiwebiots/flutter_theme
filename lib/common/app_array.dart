@@ -40,8 +40,10 @@ class AppArray{
 
   //setting list
   var settingList = [
-    {'icon': Icons.message, 'title': "chats"},
-    {'icon': Icons.delete_forever, 'title': "deleteAccount"},
-    {'icon': Icons.logout, 'title': "logout"},
+    {'title': "language","icon" : svgAssets.language},
+    {'title': "rtl","icon" : svgAssets.rtl},
+    {'title': "theme","icon" : svgAssets.sun},
+    {'title': "deleteAccount","icon" : svgAssets.trash},
+    {'title': "logout","icon" : svgAssets.logout},
   ];
 }

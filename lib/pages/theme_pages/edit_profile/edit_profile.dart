@@ -1,4 +1,5 @@
 import 'package:flutter_theme/config.dart';
+import 'package:flutter_theme/widgets/common_app_bar.dart';
 
 class EditProfile extends StatelessWidget {
   final editCtrl = Get.put(EditProfileController());
@@ -11,18 +12,8 @@ class EditProfile extends StatelessWidget {
       return AgoraToken(
         scaffold: PickupLayout(
           scaffold: Scaffold(
-            backgroundColor: appCtrl.appTheme.whiteColor,
-            appBar: AppBar(
-                automaticallyImplyLeading: false,
-                leading:
-                    Icon(Icons.arrow_back, color: appCtrl.appTheme.whiteColor)
-                        .inkWell(onTap: () => Get.back()),
-                backgroundColor: appCtrl.appTheme.primary,
-                title: Text(
-                  fonts.saveProfile.tr,
-                  style: AppCss.poppinsblack16
-                      .textColor(appCtrl.appTheme.whiteColor),
-                )),
+            backgroundColor: appCtrl.appTheme.bgColor,
+            appBar: CommonAppBar(text: fonts.saveProfile.tr),
             body: editCtrl.isLoading
                 ? CommonLoader(isLoading: editCtrl.isLoading)
                     .height(MediaQuery.of(context).size.height)

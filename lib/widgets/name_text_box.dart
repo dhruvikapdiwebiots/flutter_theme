@@ -5,7 +5,7 @@ class NameTextBox extends StatelessWidget {
   final FocusNode? nameFocus;
   final bool? nameValidation;
   final ValueChanged<String>? onFieldSubmitted;
-  final InputBorder? border;
+
   final Widget? suffixIcon;
 
   const NameTextBox(
@@ -13,7 +13,6 @@ class NameTextBox extends StatelessWidget {
         this.nameText,
         this.suffixIcon,
         this.nameFocus,
-        this.border,
         this.nameValidation,
         this.onFieldSubmitted})
       : super(key: key);
@@ -24,8 +23,11 @@ class NameTextBox extends StatelessWidget {
         controller: nameText,
         textInputAction: TextInputAction.next,
         keyboardType: TextInputType.text,
+
         focusNode: nameFocus,
-        border: border,
+        border: OutlineInputBorder(borderSide: BorderSide.none,borderRadius: BorderRadius.circular(AppRadius.r8)),
+        filled: true,
+        fillColor: const Color.fromRGBO(153, 158, 166, .1),
         validator: (val){
           if(val!.isEmpty){
             return fonts.nameError.tr;
@@ -35,7 +37,7 @@ class NameTextBox extends StatelessWidget {
         },
         suffixIcon: suffixIcon,
         errorText: nameValidation! ? fonts.nameError.tr : null,
-        labelText: fonts.name.tr,
+contentPadding: const EdgeInsets.symmetric(horizontal: Insets.i16,vertical: Insets.i16),
         onFieldSubmitted: onFieldSubmitted);
   }
 }

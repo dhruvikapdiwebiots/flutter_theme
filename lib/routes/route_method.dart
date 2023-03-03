@@ -28,7 +28,6 @@ class AppRoute {
     GetPage(name: _routeName.groupChatMessage, page: () =>const GroupChatMessage()),
     GetPage(name: _routeName.confirmationScreen, page: () =>const ConfirmStatusScreen()),
     GetPage(name: _routeName.statusView, page: () =>const StatusScreenView()),
-    GetPage(name: _routeName.otherSetting, page: () =>const OtherSetting()),
     GetPage(name: _routeName.broadcastChat, page: () =>const BroadcastChat()),
     GetPage(name: _routeName.videoCall, page: () => const VideoCall()),
     GetPage(name: _routeName.audioCall, page: () => const AudioCall()),

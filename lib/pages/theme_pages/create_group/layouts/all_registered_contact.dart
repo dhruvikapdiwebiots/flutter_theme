@@ -4,7 +4,9 @@ class AllRegisteredContact extends StatelessWidget {
   final GestureTapCallback? onTap;
   final bool? isExist;
   final dynamic data;
-  const AllRegisteredContact({Key? key,this.onTap,this.data,this.isExist}) : super(key: key);
+
+  const AllRegisteredContact({Key? key, this.onTap, this.data, this.isExist})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,35 +14,14 @@ class AllRegisteredContact extends StatelessWidget {
       onTap: onTap,
       trailing: Container(
           decoration: BoxDecoration(
-            border: Border.all(
-                color: appCtrl.appTheme.borderGray,
-                width: 1),
+            border: Border.all(color: appCtrl.appTheme.borderGray, width: 1),
             borderRadius: BorderRadius.circular(5),
           ),
           child: Icon(
-            isExist!
-                ? Icons.check
-                : null,
+            isExist! ? Icons.check : null,
             size: 19.0,
           )),
-      leading: CachedNetworkImage(
-          imageUrl:   data["image"],
-          imageBuilder: (context, imageProvider) => CircleAvatar(
-            backgroundColor:appCtrl.appTheme.contactBgGray,
-
-          radius: Sizes.s28,
-            backgroundImage:
-            NetworkImage(data["image"]),
-          ),
-          placeholder: (context, url) => const CircularProgressIndicator(strokeWidth: 2,).width(Sizes.s20).height(Sizes.s20).paddingAll(Insets.i15).decorated(
-              color: appCtrl.appTheme.grey.withOpacity(.4),
-              shape: BoxShape.circle),
-          errorWidget: (context, url, error) => Image.asset(
-            imageAssets.user,
-            color: appCtrl.appTheme.whiteColor,
-          ).paddingAll(Insets.i15).decorated(
-              color: appCtrl.appTheme.grey.withOpacity(.4),
-              shape: BoxShape.circle)),
+      leading: CommonImage(image: data["image"], name: data["name"]),
       title: Text(data["name"] ?? ""),
       subtitle: Text(data["statusDesc"] ?? ""),
     );

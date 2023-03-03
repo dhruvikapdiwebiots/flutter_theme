@@ -20,6 +20,7 @@ class CommonTextBox extends StatelessWidget {
   final int? maxLength;
   final GestureTapCallback? onTap;
   final ValueChanged<String>? onChanged;
+  final EdgeInsetsGeometry? contentPadding;
 
   const CommonTextBox(
       {Key? key,
@@ -41,7 +42,7 @@ class CommonTextBox extends StatelessWidget {
       this.onTap,
       this.onFieldSubmitted,
       this.onChanged,
-      this.filled = false})
+      this.filled = false,this.contentPadding})
       : super(key: key);
 
   @override
@@ -77,7 +78,7 @@ class CommonTextBox extends StatelessWidget {
               disabledBorder: border ?? inputBorder,
               enabledBorder: border ?? inputBorder,
 
-              contentPadding:
+              contentPadding: contentPadding??
                   const EdgeInsets.fromLTRB(Insets.i20, 0.0, Insets.i20, 0.0),
               prefixIcon: prefixIcon,
               suffixIcon: suffixIcon));

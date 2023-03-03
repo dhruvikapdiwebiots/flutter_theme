@@ -58,6 +58,7 @@ class AppCss {
   static TextStyle get poppinsMedium20 => poppins.medium.size(FontSizes.f20);
   static TextStyle get poppinsMedium18 => poppins.medium.size(FontSizes.f18);
   static TextStyle get poppinsMedium16 => poppins.medium.size(FontSizes.f16);
+  static TextStyle get poppinsMedium15 => poppins.medium.size(FontSizes.f15);
   static TextStyle get poppinsMedium14 => poppins.medium.size(FontSizes.f14);
   static TextStyle get poppinsMedium12 => poppins.medium.size(FontSizes.f12);
   static TextStyle get poppinsMedium10 => poppins.medium.size(FontSizes.f10);
@@ -72,5 +73,7 @@ class AppCss {
 
 
   static TextStyle get poppinsLight16 => poppins.light.size(FontSizes.f16);
+  static TextStyle get poppinsLight14 => poppins.light.size(FontSizes.f14);
+  static TextStyle get poppinsLight12 => poppins.light.size(FontSizes.f12);
 
 }
