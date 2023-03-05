@@ -6,10 +6,10 @@
 
 #import "GeneratedPluginRegistrant.h"
 
-#if __has_include(<advance_pdf_viewer/FlutterPluginPdfViewerPlugin.h>)
-#import <advance_pdf_viewer/FlutterPluginPdfViewerPlugin.h>
+#if __has_include(<advance_pdf_viewer_fork/FlutterPluginPdfViewerPlugin.h>)
+#import <advance_pdf_viewer_fork/FlutterPluginPdfViewerPlugin.h>
 #else
-@import advance_pdf_viewer;
+@import advance_pdf_viewer_fork;
 #endif
 
 #if __has_include(<agora_rtc_engine/AgoraRtcNgPlugin.h>)

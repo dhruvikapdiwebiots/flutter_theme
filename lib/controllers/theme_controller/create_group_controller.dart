@@ -42,38 +42,12 @@ class CreateGroupController extends GetxController {
     contactList = [];
     update();
     Get.forceAppUpdate();
-log("CONTACTLIST3: ${appCtrl.contactList}");
-    appCtrl.contactList.asMap().entries.forEach((contact) {
-      if (contact.value.phones.isNotEmpty) {
-        if (user["phone"] !=
-            phoneNumberExtension(contact.value.phones[0].number.toString())) {
-          counter++;
-          contactList = [];
-
-          update();
-          Get.forceAppUpdate();
-          FirebaseFirestore.instance
-              .collection(collectionName.users)
-              .where("phone",
-                  isEqualTo: phoneNumberExtension(
-                      contact.value.phones[0].number.toString()))
-              .get()
-              .then((value) {
-            if (value.docs.isNotEmpty) {
-              log("coub : $counter");
-              if (value.docs[0].data()["isActive"] == true) {
-                if (!contactList.contains(value.docs[0].data())) {
-                  contactList.add(value.docs[0].data());
-                } else {
-                  contactList.remove(value.docs[0].data());
-                }
-              }
-            }
-
-            update();
-            Get.forceAppUpdate();
-          });
-          update();
+    appCtrl.firebaseContact.asMap().entries.forEach((contact) {
+      if (contact.value["isActive"] == true) {
+        if (!contactList.contains(contact.value)) {
+          contactList.add(contact.value);
+        } else {
+          contactList.remove(contact.value);
         }
       }
 

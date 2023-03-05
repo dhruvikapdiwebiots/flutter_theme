@@ -61,8 +61,8 @@ class StatusListCard extends StatelessWidget {
           leading: DottedBorder(
             color: appCtrl.appTheme.primary,
             padding: const EdgeInsets.all(Insets.i2),
-
-            borderType: BorderType.RRect,strokeCap: StrokeCap.round,
+            borderType: BorderType.RRect,
+            strokeCap: StrokeCap.round,
             radius: const SmoothRadius(
               cornerRadius: 15,
               cornerSmoothing: 1,
@@ -111,7 +111,8 @@ class StatusListCard extends StatelessWidget {
                               .statusType ==
                           StatusType.image.name
                       ? CommonImage(
-                          isStatusPage: true,
+                          height: Sizes.s50,
+                          width: Sizes.s50,
                           image: snapshot!
                               .photoUrl![snapshot!.photoUrl!.length - 1].image
                               .toString(),

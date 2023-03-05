@@ -3,8 +3,15 @@ import 'package:flutter_theme/config.dart';
 
 class CommonImage extends StatelessWidget {
   final String? image, name;
-final bool isStatusPage,isProfile;
-  const CommonImage({Key? key, this.image, this.name,this.isStatusPage = false,this.isProfile = false}) : super(key: key);
+  final double height, width;
+
+  const CommonImage(
+      {Key? key,
+      this.image,
+      this.name,
+      this.width = Sizes.s45,
+      this.height = Sizes.s45})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,8 +19,8 @@ final bool isStatusPage,isProfile;
         ? CachedNetworkImage(
             imageUrl: image!,
             imageBuilder: (context, imageProvider) => Container(
-                  height: isProfile ? Sizes.s55 : isStatusPage ? Sizes.s50 : Sizes.s45,
-                  width: isProfile ? Sizes.s55 : isStatusPage ? Sizes.s50 :Sizes.s45,
+                  height: height,
+                  width: width,
                   alignment: Alignment.center,
                   decoration: ShapeDecoration(
                       color: appCtrl.appTheme.contactBgGray,
@@ -25,8 +32,8 @@ final bool isStatusPage,isProfile;
                           fit: BoxFit.fill, image: NetworkImage('$image'))),
                 ),
             placeholder: (context, url) => Container(
-                  height:isProfile ? Sizes.s55: isStatusPage ? Sizes.s50 :Sizes.s45,
-                  width: isProfile ? Sizes.s55:isStatusPage ? Sizes.s50 :Sizes.s45,
+                  height: height,
+                  width: width,
                   alignment: Alignment.center,
                   decoration: ShapeDecoration(
                       color: (colors.toList()..shuffle()).first,
@@ -47,8 +54,8 @@ final bool isStatusPage,isProfile;
                           .textColor(appCtrl.appTheme.white)),
                 ),
             errorWidget: (context, url, error) => Container(
-                  height:isProfile ? Sizes.s55: isStatusPage ? Sizes.s50 :Sizes.s45,
-                  width: isProfile ? Sizes.s55:isStatusPage ? Sizes.s50 :Sizes.s45,
+                  height: height,
+                  width: width,
                   alignment: Alignment.center,
                   decoration: ShapeDecoration(
                       color: (colors.toList()..shuffle()).first,
@@ -70,8 +77,8 @@ final bool isStatusPage,isProfile;
                   ),
                 ))
         : Container(
-            height:isProfile ? Sizes.s55: isStatusPage ? Sizes.s50 :Sizes.s45,
-            width:isProfile ? Sizes.s55: isStatusPage ? Sizes.s50 :Sizes.s45,
+            height: height,
+            width: width,
             alignment: Alignment.center,
             decoration: ShapeDecoration(
                 color: (colors.toList()..shuffle()).first,

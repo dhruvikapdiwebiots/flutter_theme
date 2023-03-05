@@ -28,7 +28,7 @@ class Setting extends StatelessWidget {
                                 child: CommonImage(
                                     image: settingCtrl.user["image"],
                                     name: settingCtrl.user["name"],
-                                    isProfile: true),
+                                    height: Sizes.s55,width: Sizes.s55,),
                               ),
                               const HSpace(Sizes.s12),
                               Column(

@@ -1,4 +1,4 @@
-
+import 'package:figma_squircle/figma_squircle.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../../config.dart';
@@ -15,59 +15,58 @@ class Content extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onLongPress: onLongPress,
-
-      child: Stack(
-        alignment: Alignment.topRight,
-        children: [
-          Container(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: Insets.i15, vertical: Insets.i10),
-              width: Sizes.s220,
-              decoration: BoxDecoration(
-                  color: appCtrl.isTheme ? appCtrl.appTheme.white :appCtrl.appTheme.primary,
-                  borderRadius: const BorderRadius.only(
-                      bottomRight: Radius.circular(Insets.i8),
-                      topLeft: Radius.circular(Insets.i8),
-                      bottomLeft: Radius.circular(Insets.i8))),
+        onLongPress: onLongPress,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Container(
+                padding: const EdgeInsets.symmetric(horizontal:Insets.i12,vertical: Insets.i14),
+                width: Sizes.s230,
+                decoration: ShapeDecoration(
+                  color: appCtrl.appTheme.primary,
+                  shape: const SmoothRectangleBorder(
+                      borderRadius: SmoothBorderRadius.only(
+                          topLeft: SmoothRadius(
+                            cornerRadius: 20,
+                            cornerSmoothing: .5,
+                          ),
+                          topRight: SmoothRadius(
+                            cornerRadius: 20,
+                            cornerSmoothing: 0.4,
+                          ),
+                          bottomLeft: SmoothRadius(
+                            cornerRadius: 20,
+                            cornerSmoothing: .5,
+                          ))),
+                ),
+                child: Text(document!['content'],
+                    style: AppCss.poppinsMedium14
+                        .textColor(appCtrl.appTheme.whiteColor)
+                        .letterSpace(.2)
+                        .textHeight(1.2))),
+            const VSpace(Sizes.s2),
+            IntrinsicHeight(
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Expanded(
-                    child: Text(document!['content'],
-                        style: AppCss.poppinsMedium14
-                            .textColor(appCtrl.appTheme.whiteColor)
-                            .letterSpace(.2)
-                            .textHeight(1.2)),
+                  if (!isBroadcast)
+                    Icon(Icons.done_all_outlined,
+                        size: Sizes.s15,
+                        color: document!['isSeen'] == false
+                            ? appCtrl.appTheme.primary
+                            : appCtrl.appTheme.whiteColor),
+                  const HSpace(Sizes.s5),
+                  Text(
+                    DateFormat('HH:mm a').format(
+                        DateTime.fromMillisecondsSinceEpoch(
+                            int.parse(document!['timestamp']))),
+                    style: AppCss.poppinsMedium12
+                        .textColor(appCtrl.appTheme.txtColor),
                   ),
-                  const HSpace(Sizes.s8),
-                  Row(
-                    children: [
-                      Text(
-                        DateFormat('HH:mm a').format(
-                            DateTime.fromMillisecondsSinceEpoch(
-                                int.parse(document!['timestamp']))),
-                        style: AppCss.poppinsMedium12
-                            .textColor(appCtrl.appTheme.whiteColor),
-                      ),
-                      const HSpace(Sizes.s5),
-                      if(!isBroadcast)
-                      Icon(Icons.done_all_outlined,
-                          size: Sizes.s15,
-                          color: document!['isSeen'] == true
-                              ? appCtrl.appTheme.secondary
-                              : appCtrl.appTheme.whiteColor)
-                    ],
-                  )
                 ],
-              )),
-          CustomPaint(painter: CustomShape(appCtrl.appTheme.primary)),
-        ],
-      ).marginSymmetric(vertical: Insets.i5,horizontal: Insets.i15)
-    );
+              ),
+            )
+          ],
+        ).marginSymmetric(vertical: Insets.i5, horizontal: Insets.i15));
   }
 }
-
-

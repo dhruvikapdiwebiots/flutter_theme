@@ -102,7 +102,7 @@ class _GroupSenderMessageState extends State<GroupSenderMessage> {
                       ? PdfLayout(
                           isGroup: true,
                           document: widget.document,
-                          pdfViewerKey: _pdfViewerKey,
+
                           onLongPress: () {
                             showDialog(
                                 context: Get.context!,

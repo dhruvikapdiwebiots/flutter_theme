@@ -30,7 +30,8 @@ horizontalTitleGap: 10,
                     const EdgeInsets.symmetric(horizontal: Insets.i12),
                 leading: Stack(children: [
                   CommonImage(
-                    isStatusPage: true,
+                    height: Sizes.s50,
+                    width: Sizes.s50,
                     image: "",
                     name: (snapshot.data!).docs[0]["name"],
                   ),

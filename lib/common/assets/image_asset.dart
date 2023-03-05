@@ -9,7 +9,6 @@ class ImageAssets{
   final String back = 'assets/images/back.png';
   final String user = 'assets/images/user.png';
   final String user1 = 'assets/images/user1.png';
-  final String pdf = 'assets/images/pdf.png';
   final String xlsx = 'assets/images/xlsx.png';
   final String docx = 'assets/images/docx.png';
   final String jpg = 'assets/images/jpg.png';

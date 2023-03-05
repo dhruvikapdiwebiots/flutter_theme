@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:figma_squircle/figma_squircle.dart';
 import 'package:intl/intl.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
@@ -22,11 +23,11 @@ class SenderImage extends StatelessWidget {
           var openResult = 'Unknown';
           var dio = Dio();
           var tempDir = await getExternalStorageDirectory();
-    DateTime now = DateTime.now();
+          DateTime now = DateTime.now();
           var filePath = tempDir!.path +
               (document!['content'].contains("-BREAK-")
                   ? document!['content'].split("-BREAK-")[0]
-                  : (document!['content'] + now.microsecondsSinceEpoch));
+                  : (document!['content']));
           final response = await dio.download(
               document!['content'].contains("-BREAK-")
                   ? document!['content'].split("-BREAK-")[1]
@@ -38,54 +39,66 @@ class SenderImage extends StatelessWidget {
 
           openResult = "type=${result.type}  message=${result.message}";
           log("openResult : $openResult");
-          OpenFilex.open(filePath);
         },
-        child: Stack(alignment: Alignment.bottomRight, children: [
-          Material(
-            borderRadius: BorderRadius.circular(AppRadius.r8),
-            clipBehavior: Clip.hardEdge,
-            child: CachedNetworkImage(
-              placeholder: (context, url) => Container(
-                  width: Sizes.s220,
-                  height: Sizes.s200,
-                  decoration: BoxDecoration(
-                    color: appCtrl.appTheme.accent,
-                    borderRadius: BorderRadius.circular(AppRadius.r8),
-                  ),
-                  child: Container()),
-              imageUrl: document!['content'],
-              width: Sizes.s200,
-              height: Sizes.s200,
-              fit: BoxFit.cover,
-            ),
-          ),
-          Row(
-            children: [
-              Text(
-                DateFormat('HH:mm a').format(
-                    DateTime.fromMillisecondsSinceEpoch(
-                        int.parse(document!['timestamp']))),
-                style:
-                    AppCss.poppinsBold12.textColor(appCtrl.appTheme.whiteColor),
-              ),
-              const HSpace(Sizes.s5),
-              Icon(Icons.done_all_outlined,
-                  size: Sizes.s15,
-                  color: document!['isSeen'] == true
-                      ? appCtrl.appTheme.secondary
-                      : appCtrl.appTheme.white)
-            ],
-          )
-              .marginSymmetric(horizontal: Insets.i10, vertical: Insets.i10)
-              .boxShadow(
-                  blurRadius: 15.0,
-                  color: appCtrl.appTheme.blackColor.withOpacity(.25),
-                  offset: const Offset(-2, 2))
-        ])
-            .paddingAll(Insets.i5)
-            .decorated(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: Insets.i10),
+              decoration: ShapeDecoration(
                 color: appCtrl.appTheme.primary,
-                borderRadius: BorderRadius.circular(AppRadius.r8))
-            .marginSymmetric(vertical: Insets.i10, horizontal: Insets.i15));
+                shape: const SmoothRectangleBorder(
+                    borderRadius: SmoothBorderRadius.only(
+                        topLeft: SmoothRadius(
+                          cornerRadius: 20,
+                          cornerSmoothing: .5,
+                        ),
+                        topRight: SmoothRadius(
+                          cornerRadius: 20,
+                          cornerSmoothing: 0.4,
+                        ),
+                        bottomLeft: SmoothRadius(
+                          cornerRadius: 20,
+                          cornerSmoothing: .5,
+                        ))),
+              ),
+              child: Material(
+                borderRadius: BorderRadius.circular(AppRadius.r8),
+                clipBehavior: Clip.hardEdge,
+                child: CachedNetworkImage(
+                  placeholder: (context, url) => Container(
+                      width: Sizes.s160,
+                      height: Sizes.s150,
+                      decoration: BoxDecoration(
+                        color: appCtrl.appTheme.accent,
+                        borderRadius: BorderRadius.circular(AppRadius.r8),
+                      ),
+                      child: Container()),
+                  imageUrl: document!['content'],
+                  width: Sizes.s160,
+                  height: Sizes.s150,
+                  fit: BoxFit.cover,
+                ),
+              ).paddingAll(Insets.i12),
+            ),
+            Row(
+              children: [
+                Icon(Icons.done_all_outlined,
+                    size: Sizes.s15,
+                    color: document!['isSeen'] == true
+                        ? appCtrl.appTheme.secondary
+                        : appCtrl.appTheme.txtColor),
+                const HSpace(Sizes.s5),
+                Text(
+                  DateFormat('HH:mm a').format(
+                      DateTime.fromMillisecondsSinceEpoch(
+                          int.parse(document!['timestamp']))),
+                  style: AppCss.poppinsMedium12
+                      .textColor(appCtrl.appTheme.txtColor),
+                ),
+              ],
+            ).marginSymmetric(horizontal: Insets.i15, vertical: Insets.i10)
+          ],
+        ));
   }
 }

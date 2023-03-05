@@ -71,6 +71,7 @@ class ChatController extends GetxController {
   getChatData() async {
     log("chatId : $chatId");
     if (chatId != "0") {
+      seenMessage();
       await FirebaseFirestore.instance
           .collection(collectionName.users)
           .doc(userData["id"])
@@ -120,24 +121,23 @@ class ChatController extends GetxController {
 
   //seen all message
   seenMessage() async {
-    if (userData["id"] == pId) {
-      await FirebaseFirestore.instance
-          .collection(collectionName.messages)
-          .doc(chatId)
-          .collection(collectionName.chat)
-          .where("isSeen", isEqualTo: false)
-          .get()
-          .then((value) {
-        for (var i = 0; i < value.docs.length; i++) {
-          FirebaseFirestore.instance
-              .collection(collectionName.messages)
-              .doc(chatId)
-              .collection(collectionName.chat)
-              .doc(value.docs[i].id)
-              .update({"isSeen": true});
-        }
-      });
-    }
+    await FirebaseFirestore.instance
+        .collection(collectionName.messages)
+        .doc(chatId)
+        .collection(collectionName.chat)
+        .where("sender", isEqualTo: userData["id"])
+        .get()
+        .then((value) {
+          value.docs.asMap().entries.forEach((element) {
+            FirebaseFirestore.instance
+                .collection(collectionName.messages)
+                .doc(chatId)
+                .collection(collectionName.chat)
+                .doc(element.value.id)
+                .update({"isSeen": true});
+          });
+
+    });
 
     FirebaseFirestore.instance
         .collection(collectionName.users)

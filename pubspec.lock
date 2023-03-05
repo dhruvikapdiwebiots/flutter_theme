@@ -9,14 +9,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.12"
-  advance_pdf_viewer:
+  advance_pdf_viewer_fork:
     dependency: "direct main"
     description:
-      name: advance_pdf_viewer
-      sha256: "0263dd0a9e1314937d63db64fcc7e8f3b0a1d96da7a07849e2de31f195393e0c"
+      name: advance_pdf_viewer_fork
+      sha256: b011f30fd73e909a54719335dc20824a33e88a52f728c926ca6b9dcfb9100e45
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.0"
   agora_rtc_engine:
     dependency: "direct main"
     description:

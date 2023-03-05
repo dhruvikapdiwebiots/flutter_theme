@@ -17,7 +17,7 @@ class BroadcastSenderMessage extends StatefulWidget {
 }
 
 class _BroadcastSenderMessage extends State<BroadcastSenderMessage> {
-  final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
+
   double progress = 0;
 
   // Track if the PDF was downloaded here.
@@ -163,7 +163,6 @@ class _BroadcastSenderMessage extends State<BroadcastSenderMessage> {
                                   chatCtrl.buildPopupDialog(
                                       context, widget.document!));
                         },
-                        pdfViewerKey: _pdfViewerKey,
                       )
                           : (widget.document!["content"].contains(".doc"))
                           ? DocxLayout(

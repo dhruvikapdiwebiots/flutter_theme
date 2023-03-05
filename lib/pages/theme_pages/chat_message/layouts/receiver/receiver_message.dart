@@ -14,7 +14,6 @@ class ReceiverMessage extends StatefulWidget {
 }
 
 class _ReceiverMessageState extends State<ReceiverMessage> {
-  final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +90,6 @@ class _ReceiverMessageState extends State<ReceiverMessage> {
                     ? PdfLayout(
                         isReceiver: true,
                         document: widget.document,
-                        pdfViewerKey: _pdfViewerKey,
                         onLongPress: () {
                           showDialog(
                               context: Get.context!,

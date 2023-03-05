@@ -33,8 +33,8 @@ class UserLastSeen extends StatelessWidget {
                             ['lastSeen'])))
                         : snapshot.data!.docs[0]["status"],
                     textAlign: TextAlign.center,
-                    style: AppCss.poppinsMedium14
-                        .textColor(appCtrl.isTheme ? appCtrl.appTheme.white: appCtrl.appTheme.whiteColor),
+                    style: AppCss.poppinsLight14
+                        .textColor(appCtrl.appTheme.txtColor),
                   );
                 }
               } else {

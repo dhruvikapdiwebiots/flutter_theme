@@ -1,6 +1,4 @@
-import 'dart:developer';
 
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 import '../../../../../config.dart';
 
@@ -15,7 +13,7 @@ class SenderMessage extends StatefulWidget {
 }
 
 class _SenderMessageState extends State<SenderMessage> {
-  final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
+
   double progress = 0;
 
   // Track if the PDF was downloaded here.
@@ -27,7 +25,6 @@ class _SenderMessageState extends State<SenderMessage> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ChatController>(builder: (chatCtrl) {
-      log("tyep : ${widget.document!["content"]}");
       return Stack(
         children: [
           Container(
@@ -107,7 +104,7 @@ class _SenderMessageState extends State<SenderMessage> {
                                         chatCtrl.buildPopupDialog(
                                             context, widget.document!));
                               },
-                              pdfViewerKey: _pdfViewerKey,
+
                             )
                           : (widget.document!["content"].contains(".doc"))
                               ? DocxLayout(

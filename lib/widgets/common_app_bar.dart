@@ -9,10 +9,12 @@ class CommonAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+
       backgroundColor: appCtrl.appTheme.bgColor,
       automaticallyImplyLeading: false,
       leadingWidth: Sizes.s80,
-      toolbarHeight: 80,
+      titleSpacing: 0,
+      toolbarHeight: Sizes.s80,
       elevation: 0,
       leading:const BackIcon(),
       centerTitle: true,
@@ -23,5 +25,5 @@ class CommonAppBar extends StatelessWidget with PreferredSizeWidget {
     );
   }
   @override
-  Size get preferredSize => const Size.fromHeight(80);
+  Size get preferredSize => const Size.fromHeight(Sizes.s80);
 }

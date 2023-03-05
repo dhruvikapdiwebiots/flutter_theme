@@ -94,7 +94,6 @@ class _GroupReceiverMessageState extends State<GroupReceiverMessage> {
                         isReceiver: true,
                         isGroup: true,
                         document: widget.document,
-                        pdfViewerKey: _pdfViewerKey,
                         onLongPress: () {
                           showDialog(
                               context: Get.context!,

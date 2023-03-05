@@ -31,8 +31,8 @@ class ContactListController extends GetxController {
     update();
 
     var user = appCtrl.storage.read(session.user);
-    if (storageContact.isNotEmpty) {
-      storageContact
+    if (appCtrl.contactList.isNotEmpty) {
+      appCtrl.contactList
           .where((c) => c.phones.isNotEmpty)
           .forEach((Contact p) async {
         if (p.phones.isNotEmpty) {

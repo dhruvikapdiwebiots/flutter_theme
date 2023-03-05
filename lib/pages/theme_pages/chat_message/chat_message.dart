@@ -45,6 +45,7 @@ class _ChatState extends State<Chat>
               onWillPop: chatCtrl.onBackPress,
               child: Scaffold(
                   appBar: ChatMessageAppBar(
+                      userId: chatCtrl.userData["id"],
                       name: chatCtrl.pName,
                       isBlock: chatCtrl.isBlock
                           ? chatCtrl.blockBy == chatCtrl.userData["id"]
@@ -72,28 +73,23 @@ class _ChatState extends State<Chat>
                         });
                       },
                       moreTap: () => chatCtrl.blockUser()),
-                  backgroundColor: appCtrl.appTheme.chatBgColor,
-                  body: chatCtrl.isUserAvailable
-                      ? Stack(children: <Widget>[
-                          Column(children: <Widget>[
-                            // List of messages
-                            const MessageBox(),
-                            // Sticker
-                            Container(),
-                            // Input content
-                            const InputBox()
-                          ]),
-                          // Loading
-                          if (chatCtrl.isLoading)
-                            CommonLoader(isLoading: chatCtrl.isLoading),
-                          GetBuilder<AppController>(builder: (appCtrl) {
-                            return CommonLoader(isLoading: appCtrl.isLoading);
-                          })
-                        ])
-                      : Center(
-                          child: CommonButton(
-                              title: fonts.invite.tr, onTap: () {}),
-                        ))),
+                  backgroundColor: appCtrl.appTheme.whiteColor,
+                  body: Stack(children: <Widget>[
+                    Column(children: <Widget>[
+                      // List of messages
+                      const MessageBox(),
+                      // Sticker
+                      Container(),
+                      // Input content
+                      const InputBox()
+                    ]),
+                    // Loading
+                    if (chatCtrl.isLoading)
+                      CommonLoader(isLoading: chatCtrl.isLoading),
+                    GetBuilder<AppController>(builder: (appCtrl) {
+                      return CommonLoader(isLoading: appCtrl.isLoading);
+                    })
+                  ]))),
         ),
       );
     });

@@ -94,7 +94,8 @@ class _StatusLayoutState extends State<StatusLayout> {
           ["statusType"] ==
               StatusType.image.name
               ? CommonImage(
-              isStatusPage: true,
+
+              height: Sizes.s50,width: Sizes.s50,
               image: (widget.snapshot!.data!)
                   .docs[0]["photoUrl"]
               [(widget.snapshot!.data!).docs[0]["photoUrl"].length - 1]

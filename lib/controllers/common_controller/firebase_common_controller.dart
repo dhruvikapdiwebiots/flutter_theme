@@ -65,9 +65,8 @@ class FirebaseCommonController extends GetxController {
   statusDeleteAfter24Hours() async {
     var user = appCtrl.storage.read(session.user) ?? "";
     if (user != "") {
-      FirebaseFirestore.instance
+      FirebaseFirestore.instance.collection(collectionName.users).doc(user["id"])
           .collection(collectionName.status)
-          .where("uid", isEqualTo: user["id"])
           .get()
           .then((value) async {
         if (value.docs.isNotEmpty) {
@@ -76,16 +75,15 @@ class FirebaseCommonController extends GetxController {
             List<PhotoUrl> photoUrl = list;
 
             if (photoUrl.isEmpty) {
-              FirebaseFirestore.instance
+              FirebaseFirestore.instance.collection(collectionName.users).doc(user["id"])
                   .collection(collectionName.status)
                   .doc(value.docs[0].id)
                   .delete();
             } else {
-              var statusesSnapshot = await FirebaseFirestore.instance
+              var statusesSnapshot = await  FirebaseFirestore.instance.collection(collectionName.users).doc(user["id"])
                   .collection(collectionName.status)
-                  .where('uid', isEqualTo: user["id"])
                   .get();
-              await FirebaseFirestore.instance
+              await  FirebaseFirestore.instance.collection(collectionName.users).doc(user["id"])
                   .collection(collectionName.status)
                   .doc(statusesSnapshot.docs[0].id)
                   .update(

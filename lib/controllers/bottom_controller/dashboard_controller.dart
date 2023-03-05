@@ -196,10 +196,13 @@ class DashboardController extends GetxController
         groupChatCtrl.isGroup = false;
 
         groupChatCtrl.refreshContacts();
-
-        Get.back();
         Get.toNamed(routeName.groupChat, arguments: false);
       }else{
+        final groupChatCtrl =  Get.isRegistered<CreateGroupController>()
+            ? Get.find<CreateGroupController>()
+            : Get.put(CreateGroupController());
+        groupChatCtrl.isGroup = false;
+        groupChatCtrl.getFirebaseContact();
         Get.toNamed(routeName.groupChat, arguments: false);
       }
     }else if(value ==1){

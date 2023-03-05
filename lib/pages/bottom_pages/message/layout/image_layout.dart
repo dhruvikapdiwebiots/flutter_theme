@@ -6,9 +6,9 @@ import '../../../../config.dart';
 
 class ImageLayout extends StatelessWidget {
   final String? id;
-  final bool isLastSeen;
+  final bool isLastSeen,isImageLayout ;
 
-  const ImageLayout({Key? key, this.id, this.isLastSeen = true})
+  const ImageLayout({Key? key, this.id, this.isLastSeen = true,this.isImageLayout = false })
       : super(key: key);
 
   @override
@@ -31,8 +31,8 @@ class ImageLayout extends StatelessWidget {
                                   cornerRadius: 12, cornerSmoothing: 1))),
                       child: Image.asset(
                         imageAssets.user,
-                        height: Sizes.s45,
-                        width: Sizes.s45,
+                        height: isImageLayout ?Sizes.s40 : Sizes.s45,
+                        width:isImageLayout ?Sizes.s40 :  Sizes.s45,
                         color: appCtrl.appTheme.whiteColor,
                       ).paddingAll(Insets.i15)),
                   if (isLastSeen)
@@ -56,6 +56,8 @@ class ImageLayout extends StatelessWidget {
               return Stack(
                 children: [
                   CommonImage(
+                      height: isImageLayout ?Sizes.s40 : Sizes.s45,
+                      width:isImageLayout ?Sizes.s40 :  Sizes.s45,
                       image: (snapshot.data!).docs[0]["image"],
                       name: (snapshot.data!).docs[0]["name"]),
                   if (isLastSeen)
@@ -84,8 +86,8 @@ class ImageLayout extends StatelessWidget {
                           cornerRadius: 12, cornerSmoothing: 1))),
               child: Image.asset(
                 imageAssets.user,
-                height: Sizes.s45,
-                width: Sizes.s45,
+                height: isImageLayout ?Sizes.s40 : Sizes.s45,
+                width:isImageLayout ?Sizes.s40 :  Sizes.s45,
                 color: appCtrl.appTheme.whiteColor,
               ).paddingAll(Insets.i15),
             );
