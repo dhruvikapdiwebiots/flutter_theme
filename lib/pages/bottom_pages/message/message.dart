@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter_theme/config.dart';
 
 class Message extends StatefulWidget {
@@ -43,10 +43,13 @@ class _MessageState extends State<Message>
             key: messageCtrl.scaffoldKey,
             backgroundColor: appCtrl.appTheme.bgColor,
             floatingActionButton: FloatingActionButton(
-              onPressed: () => Get.to(
-                () => ContactList(),
-                transition: Transition.downToUp,
-              ),
+              onPressed: ()async {
+
+                Get.to(
+                      () => ContactList(),
+                  transition: Transition.downToUp,
+                );
+              },
               backgroundColor: appCtrl.appTheme.primary,
               child: Container(
                 width: Sizes.s52,

@@ -29,7 +29,6 @@ class ContactListController extends GetxController {
     unRegisterContactList = [];
     storageContact = await permissionHandelCtrl.getContact();
     update();
-
     var user = appCtrl.storage.read(session.user);
     if (appCtrl.contactList.isNotEmpty) {
       appCtrl.contactList
@@ -40,7 +39,8 @@ class ContactListController extends GetxController {
           String phone = phoneNumberExtension(p.phones[0].number);
           await FirebaseFirestore.instance
               .collection(collectionName.users)
-              .where("phone", isEqualTo: phone).limit(1)
+              .where("phone", isEqualTo: phone)
+              .limit(1)
               .get()
               .then((value) {
             if (value.docs.isNotEmpty) {
@@ -84,6 +84,10 @@ class ContactListController extends GetxController {
           update();
         }
       });
+    } else {
+      final dashboardCtrl = Get.find<DashboardController>();
+      await dashboardCtrl.checkContactList();
+      fetchPage(0);
     }
     registerContactList = [];
 
@@ -118,7 +122,6 @@ class ContactListController extends GetxController {
     log("counter : $counter");
     update();
   }
-
 
   //search contact list
   searchList(pageKey, search) async {

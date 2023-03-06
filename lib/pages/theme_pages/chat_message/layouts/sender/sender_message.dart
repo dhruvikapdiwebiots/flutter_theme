@@ -1,5 +1,7 @@
 
 
+import 'dart:developer';
+
 import '../../../../../config.dart';
 
 class SenderMessage extends StatefulWidget {
@@ -25,6 +27,7 @@ class _SenderMessageState extends State<SenderMessage> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ChatController>(builder: (chatCtrl) {
+      log("CONTENT : ${widget.document!["content"] }");
       return Stack(
         children: [
           Container(

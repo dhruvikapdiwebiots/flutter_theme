@@ -51,6 +51,7 @@ class ChatController extends GetxController {
     userData = appCtrl.storage.read(session.user);
     var data = Get.arguments;
     log("data : $data");
+    log("userData : ${userData["id"]}");
     if (data == "No User") {
       isUserAvailable = false;
     } else {
@@ -70,20 +71,20 @@ class ChatController extends GetxController {
   //get chat data
   getChatData() async {
     log("chatId : $chatId");
-    if (chatId != "0") {
-      seenMessage();
+    if(chatId != "0"){
       await FirebaseFirestore.instance
           .collection(collectionName.users)
           .doc(userData["id"])
-          .collection(collectionName.chats)
-          .where("chatId", isEqualTo: chatId)
+          .collection(collectionName.chats).where("chatId",isEqualTo: chatId)
           .get()
           .then((value) {
-        log("allData : ${value.docs}");
+        log("allData : ${value.docs[0].data()}");
+        allData = value.docs[0].data();
         update();
-        seenMessage();
+
       });
     }
+    seenMessage();
     await FirebaseFirestore.instance
         .collection(collectionName.users)
         .doc(pId)
@@ -121,23 +122,28 @@ class ChatController extends GetxController {
 
   //seen all message
   seenMessage() async {
-    await FirebaseFirestore.instance
-        .collection(collectionName.messages)
-        .doc(chatId)
-        .collection(collectionName.chat)
-        .where("sender", isEqualTo: userData["id"])
-        .get()
-        .then((value) {
-          value.docs.asMap().entries.forEach((element) {
-            FirebaseFirestore.instance
-                .collection(collectionName.messages)
-                .doc(chatId)
-                .collection(collectionName.chat)
-                .doc(element.value.id)
-                .update({"isSeen": true});
-          });
 
-    });
+    if(allData["senderId"] != userData["id"]) {
+      await FirebaseFirestore.instance
+          .collection(collectionName.messages)
+          .doc(chatId)
+          .collection(collectionName.chat)
+          .where("sender", isEqualTo: pId)
+          .get()
+          .then((value) {
+        value.docs
+            .asMap()
+            .entries
+            .forEach((element) {
+          FirebaseFirestore.instance
+              .collection(collectionName.messages)
+              .doc(chatId)
+              .collection(collectionName.chat)
+              .doc(element.value.id)
+              .update({"isSeen": true});
+        });
+      });
+    }
 
     FirebaseFirestore.instance
         .collection(collectionName.users)
@@ -150,23 +156,6 @@ class ChatController extends GetxController {
         FirebaseFirestore.instance
             .collection(collectionName.users)
             .doc(userData["id"])
-            .collection(collectionName.chats)
-            .doc(value.docs[0].id)
-            .update({"isSeen": true});
-      }
-    });
-
-    FirebaseFirestore.instance
-        .collection(collectionName.users)
-        .doc(pId)
-        .collection(collectionName.chats)
-        .where("chatId", isEqualTo: chatId)
-        .get()
-        .then((value) {
-      if (value.docs.isNotEmpty) {
-        FirebaseFirestore.instance
-            .collection(collectionName.users)
-            .doc(pId)
             .collection(collectionName.chats)
             .doc(value.docs[0].id)
             .update({"isSeen": true});
@@ -236,12 +225,13 @@ class ChatController extends GetxController {
 
   //block user
   blockUser() async {
+    log("VLOCK");
     DateTime now = DateTime.now();
     String? newChatId =
         chatId == "0" ? now.microsecondsSinceEpoch.toString() : chatId;
     chatId = newChatId;
     update();
-    if (isBlock) {
+    if (allData["isBlock"] == true) {
       FirebaseFirestore.instance
           .collection(collectionName.messages)
           .doc(newChatId)
@@ -252,18 +242,19 @@ class ChatController extends GetxController {
         'content': "You unblock this contact",
         "chatId": newChatId,
         'type': MessageType.messageType.name,
-        "isBlock": true,
+        "isBlock": false,
         "blockBy": userData["id"],
-        "blockUserId": pId,
+        "blockUserId": "",
         'messageType': "sender",
         'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
       });
+
       await ChatMessageApi().saveMessageInUserCollection(
           userData["id"],
           pId,
           newChatId,
           "You unblock this contact",
-          isBlock: true,
+          isBlock: false,
           userData["id"]);
     } else {
       FirebaseFirestore.instance
@@ -291,6 +282,7 @@ class ChatController extends GetxController {
           isBlock: true,
           userData["id"]);
     }
+    getChatData();
   }
 
 // UPLOAD SELECTED IMAGE TO FIREBASE

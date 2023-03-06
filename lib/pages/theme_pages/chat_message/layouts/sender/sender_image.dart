@@ -44,7 +44,7 @@ class SenderImage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Container(
-              margin: EdgeInsets.symmetric(horizontal: Insets.i10),
+              margin: const EdgeInsets.symmetric(horizontal: Insets.i10,),
               decoration: ShapeDecoration(
                 color: appCtrl.appTheme.primary,
                 shape: const SmoothRectangleBorder(
@@ -62,24 +62,31 @@ class SenderImage extends StatelessWidget {
                           cornerSmoothing: .5,
                         ))),
               ),
-              child: Material(
-                borderRadius: BorderRadius.circular(AppRadius.r8),
+              child: ClipSmoothRect(
                 clipBehavior: Clip.hardEdge,
-                child: CachedNetworkImage(
-                  placeholder: (context, url) => Container(
-                      width: Sizes.s160,
-                      height: Sizes.s150,
-                      decoration: BoxDecoration(
-                        color: appCtrl.appTheme.accent,
-                        borderRadius: BorderRadius.circular(AppRadius.r8),
-                      ),
-                      child: Container()),
-                  imageUrl: document!['content'],
-                  width: Sizes.s160,
-                  height: Sizes.s150,
-                  fit: BoxFit.cover,
+                radius: SmoothBorderRadius(
+                  cornerRadius: 20,
+                  cornerSmoothing: 1,
                 ),
-              ).paddingAll(Insets.i12),
+                child: Material(
+                  borderRadius: SmoothBorderRadius(cornerRadius: 20,cornerSmoothing: 1),
+                  clipBehavior: Clip.hardEdge,
+                  child: CachedNetworkImage(
+                    placeholder: (context, url) => Container(
+                        width: Sizes.s160,
+                        height: Sizes.s150,
+                        decoration: BoxDecoration(
+                          color: appCtrl.appTheme.accent,
+                          borderRadius: BorderRadius.circular(AppRadius.r8),
+                        ),
+                        child: Container()),
+                    imageUrl: document!['content'],
+                    width: Sizes.s160,
+                    height: Sizes.s150,
+                    fit: BoxFit.cover,
+                  ),
+                ).paddingAll(Insets.i10),
+              ),
             ),
             Row(
               children: [
@@ -97,7 +104,7 @@ class SenderImage extends StatelessWidget {
                       .textColor(appCtrl.appTheme.txtColor),
                 ),
               ],
-            ).marginSymmetric(horizontal: Insets.i15, vertical: Insets.i10)
+            ).marginSymmetric(horizontal: Insets.i8, vertical: Insets.i8)
           ],
         ));
   }

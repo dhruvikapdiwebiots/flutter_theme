@@ -8,6 +8,9 @@ class Otp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<OtpController>(builder: (_) {
+
+
+
       return Scaffold(
         backgroundColor: appCtrl.appTheme.whiteColor,
         body: Stack(
@@ -36,6 +39,7 @@ class Otp extends StatelessWidget {
                     ),
                     const VSpace(Sizes.s15),
                     const OtpBody(),
+
                     const VSpace(Sizes.s15),
                   ],
                 ),

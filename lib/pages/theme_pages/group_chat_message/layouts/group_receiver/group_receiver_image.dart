@@ -13,49 +13,71 @@ class GroupReceiverImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
         onPressed: onLongPress,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(document!['senderName'],
-                style:
-                    AppCss.poppinsMedium14.textColor(appCtrl.appTheme.primary)),
-            const VSpace(Sizes.s10),
-            Stack(
-              alignment: Alignment.bottomRight,
-              children: [
-                Material(
-                  borderRadius: BorderRadius.circular(AppRadius.r8),
+
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Container(
+
+          decoration: ShapeDecoration(
+            color: appCtrl.appTheme.chatSecondaryColor,
+            shape: const SmoothRectangleBorder(
+                borderRadius: SmoothBorderRadius.only(
+                    topLeft: SmoothRadius(
+                      cornerRadius: 20,
+                      cornerSmoothing: .5,
+                    ),
+                    topRight: SmoothRadius(
+                      cornerRadius: 20,
+                      cornerSmoothing: 0.4,
+                    ),
+                    bottomRight: SmoothRadius(
+                      cornerRadius: 20,
+                      cornerSmoothing: .5,
+                    ))),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(document!['senderName'],
+                  style:
+                  AppCss.poppinsSemiBold12.textColor(appCtrl.appTheme.txtColor)).paddingOnly(left:Insets.i12,right: Insets.i12,top: Insets.i12,bottom: Insets.i10),
+              ClipSmoothRect(
+                clipBehavior: Clip.hardEdge,
+                radius: SmoothBorderRadius(
+                  cornerRadius: 20,
+                  cornerSmoothing: 1,
+                ),
+                child: Material(
+                  borderRadius: SmoothBorderRadius(cornerRadius: 20,cornerSmoothing: 1),
                   clipBehavior: Clip.hardEdge,
                   child: CachedNetworkImage(
                     placeholder: (context, url) => Container(
-                        width: Sizes.s220,
-                        height: Sizes.s200,
-                        padding: const EdgeInsets.all(70.0),
+                        width: Sizes.s160,
+                        height: Sizes.s150,
                         decoration: BoxDecoration(
                           color: appCtrl.appTheme.accent,
-                          borderRadius: const BorderRadius.only(
-                              topRight: Radius.circular(Insets.i20),
-                              bottomLeft: Radius.circular(Insets.i20),
-                              bottomRight: Radius.circular(Insets.i20)),
+                          borderRadius: BorderRadius.circular(AppRadius.r8),
                         ),
                         child: Container()),
                     imageUrl: document!['content'],
-                    width: Sizes.s200,
-                    height: Sizes.s200,
+                    width: Sizes.s160,
+                    height: Sizes.s150,
                     fit: BoxFit.cover,
                   ),
-                ),
-                Text(
-                  DateFormat('HH:mm a').format(
-                      DateTime.fromMillisecondsSinceEpoch(
-                          int.parse(document!['timestamp']))),
-                  style: AppCss.poppinsBold12
-                      .textColor(appCtrl.appTheme.whiteColor),
-                ).marginSymmetric(horizontal: Insets.i10, vertical: Insets.i10).boxShadow( blurRadius: 15.0,
-                    color: appCtrl.appTheme.blackColor.withOpacity(.25),offset:const Offset(-2, 2))
-              ],
-            ),
-          ],
-        ));
+                ).paddingSymmetric(horizontal:Insets.i10).paddingOnly(bottom: Insets.i12)
+              ),
+            ],
+          ),
+        ),
+        Text(
+          DateFormat('HH:mm a').format(
+              DateTime.fromMillisecondsSinceEpoch(
+                  int.parse(document!['timestamp']))),
+          style: AppCss.poppinsMedium12
+              .textColor(appCtrl.appTheme.txtColor),
+        ).marginSymmetric(horizontal: Insets.i5, vertical: Insets.i8)
+      ],
+    ),);
   }
 }

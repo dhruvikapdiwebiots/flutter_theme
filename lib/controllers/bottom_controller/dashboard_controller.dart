@@ -100,7 +100,8 @@ class DashboardController extends GetxController
     appCtrl.update();
     statusCtrl.update();
     update();
-
+    await Future.delayed(Durations.s3);
+    checkPermission();
     //checkContactList();
     super.onReady();
   }
@@ -114,6 +115,7 @@ class DashboardController extends GetxController
       appCtrl.contactList = contacts;
       appCtrl.storage.write(session.contactList, contacts);
       appCtrl.update();
+      log("PERR : ${appCtrl.contactList.length}");
     }
   }
 
@@ -150,16 +152,6 @@ class DashboardController extends GetxController
     update();
   }
 
-  popupMenuTap(value) {
-    if (selectedPopTap == 0) {
-      Get.toNamed(routeName.groupChat, arguments: false);
-    } else if (selectedPopTap == 1) {
-      Get.toNamed(routeName.groupChat, arguments: true);
-    } else if (selectedPopTap == 2) {
-      Get.toNamed(routeName.setting);
-    }
-  }
-
   @override
   void dispose() {
     // TODO: implement dispose
@@ -185,8 +177,9 @@ class DashboardController extends GetxController
 
 
     if (value == 0) {
-
+    log("CONTACT LIST IS EMPTY : ${appCtrl.contactList.isEmpty}");
       if (appCtrl.contactList.isEmpty) {
+        Get.toNamed(routeName.groupChat, arguments: false);
         await checkPermission();
         await checkContactList();
         final groupChatCtrl =
@@ -202,8 +195,11 @@ class DashboardController extends GetxController
             ? Get.find<CreateGroupController>()
             : Get.put(CreateGroupController());
         groupChatCtrl.isGroup = false;
-        groupChatCtrl.getFirebaseContact();
+        if(groupChatCtrl.contactList.isEmpty){
+          groupChatCtrl.getFirebaseContact();
+        }
         Get.toNamed(routeName.groupChat, arguments: false);
+
       }
     }else if(value ==1){
       if (appCtrl.contactList.isEmpty) {

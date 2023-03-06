@@ -67,7 +67,7 @@ class _GroupChatMessageState extends State<GroupChatMessage>
                       });
                     },
                   ),
-                  backgroundColor: appCtrl.appTheme.chatBgColor,
+                  backgroundColor: appCtrl.appTheme.whiteColor,
                   body: Stack(children: <Widget>[
                     //body layout
                     const GroupChatBody(),

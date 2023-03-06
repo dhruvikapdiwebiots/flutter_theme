@@ -9,7 +9,7 @@ export 'package:file_picker/file_picker.dart';
 export 'package:url_launcher/url_launcher.dart';
 export 'package:geolocator/geolocator.dart';
 export 'package:flutter_contacts/contact.dart';
-
+export 'package:figma_squircle/figma_squircle.dart';
 
 
 

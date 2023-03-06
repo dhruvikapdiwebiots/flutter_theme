@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter_theme/config.dart';
@@ -5,19 +6,39 @@ import 'package:flutter_theme/config.dart';
 class OtpController extends GetxController {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final focusNode = FocusNode();
-
+  Duration myDuration = Duration(seconds: 60);
   TextEditingController otp = TextEditingController();
   double val = 0;
-  bool isCodeSent = false, isLoading = false;
+  bool isCodeSent = false, isLoading = false, isCountDown = true;
   String? verificationCode, mobileNumber, dialCodeVal;
   bool isValid = false;
+  Timer? countdownTimer;
 
   @override
   void onReady() {
     // TODO: implement onReady
     mobileNumber = Get.arguments;
+
     update();
     super.onReady();
+  }
+
+  void startTimer() {
+    countdownTimer =
+        Timer.periodic(Duration(seconds: 1), (_) => setCountDown());
+  }
+
+  void setCountDown() {
+    final reduceSecondsBy = 1;
+    final seconds = myDuration.inSeconds - reduceSecondsBy;
+    if (seconds < 0) {
+      isCountDown = false;
+      countdownTimer!.cancel();
+
+    } else {
+      myDuration = Duration(seconds: seconds);
+    }
+    update();
   }
 
 // Dismiss KEYBOARD
@@ -73,6 +94,7 @@ class OtpController extends GetxController {
     codeSent(String verificationId, [int? forceResendingToken]) async {
       verificationCode = verificationId;
       log("codeSent : $verificationCode");
+      startTimer();
       update();
     }
 

@@ -25,21 +25,32 @@ class GroupContactLayout extends StatelessWidget {
           alignment: isReceiver ? Alignment.topLeft : Alignment.topRight,
           children: [
             Container(
-                decoration: BoxDecoration(
-                    color: isReceiver
-                        ? appCtrl.appTheme.white
-                        : appCtrl.appTheme.primary,
-                    borderRadius: BorderRadius.only(
-                        bottomLeft: const Radius.circular(AppRadius.r8),
-                        bottomRight: const Radius.circular(AppRadius.r8),
-                        topLeft: isReceiver
-                            ? const Radius.circular(0)
-                            : const Radius.circular(AppRadius.r8),
-                        topRight: isReceiver
-                            ? const Radius.circular(AppRadius.r8)
-                            : const Radius.circular(0))),
+              margin: EdgeInsets.symmetric(horizontal: Insets.i5),
+                decoration: ShapeDecoration(
+                  color:isReceiver
+                      ? const Color.fromRGBO(153, 158, 166, 0.1)
+                      : appCtrl.appTheme.primary,
+                  shape: SmoothRectangleBorder(
+                      borderRadius: SmoothBorderRadius.only(
+                          topLeft: const SmoothRadius(
+                            cornerRadius: 20,
+                            cornerSmoothing: .5,
+                          ),
+                          topRight: const SmoothRadius(
+                            cornerRadius: 20,
+                            cornerSmoothing: 0.4,
+                          ),
+                          bottomLeft: SmoothRadius(
+                            cornerRadius:isReceiver ? 0 : 20,
+                            cornerSmoothing: .5,
+                          ),
+                          bottomRight: SmoothRadius(
+                            cornerRadius:isReceiver ? 20 : 0,
+                            cornerSmoothing: .5,
+                          ))),
+                ),
                 width: Sizes.s250,
-                height: isReceiver ?Sizes.s150 : Sizes.s120,
+                height: isReceiver ?Sizes.s150 : Sizes.s110,
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
@@ -62,14 +73,7 @@ class GroupContactLayout extends StatelessWidget {
                                 document: document,
                                 isReceiver: isReceiver,
                               ).marginOnly(top: Insets.i5),
-                              Text(
-                                DateFormat('HH:mm a').format(
-                                    DateTime.fromMillisecondsSinceEpoch(
-                                        int.parse(document!['timestamp']))),
-                                style: AppCss.poppinsMedium12.textColor(isReceiver
-                                    ? appCtrl.appTheme.primary
-                                    : appCtrl.appTheme.whiteColor),
-                              ).marginSymmetric(horizontal: Insets.i10),
+
                             ],
                           )
                         ],
@@ -132,25 +136,9 @@ class GroupContactLayout extends StatelessWidget {
                             ))
                           ]))
                     ])),
-            CustomPaint(
-                painter: CustomShape(isReceiver
-                    ? appCtrl.appTheme.whiteColor
-                    : appCtrl.appTheme.primary)),
           ],
         )
-            .decorated(
-                color: isReceiver
-                    ? appCtrl.appTheme.whiteColor
-                    : appCtrl.appTheme.primary,
-                borderRadius: BorderRadius.only(
-                    bottomRight: const Radius.circular(Insets.i8),
-                    topRight: isReceiver
-                        ? const Radius.circular(Insets.i8)
-                        : const Radius.circular(0),
-                    topLeft: isReceiver
-                        ? const Radius.circular(0)
-                        : const Radius.circular(Insets.i8),
-                    bottomLeft: const Radius.circular(Insets.i8)))
+
             .marginSymmetric(horizontal: Insets.i10, vertical: Insets.i10));
   }
 }

@@ -36,8 +36,6 @@ class _PdfLayoutState extends State<PdfLayout> {
   PDFDocument? doc;
   bool downloading = false;
   var progressString = "";
-  var file;
-
   @override
   void initState() {
     // TODO: implement initState
@@ -46,9 +44,11 @@ class _PdfLayoutState extends State<PdfLayout> {
   }
 
   getData() async {
+    log("LINK : ${widget.document!['content'].split("-BREAK-")[1]}");
     doc = await PDFDocument.fromURL(
         widget.document!['content'].split("-BREAK-")[1].toString());
     setState(() {});
+    log("DOC : $doc");
   }
 
   @override
@@ -117,6 +117,7 @@ class _PdfLayoutState extends State<PdfLayout> {
                                   : appCtrl.appTheme.whiteColor)
                               .textHeight(1.2)),
                       const VSpace(Sizes.s5),
+                      if(doc != null)
                       Row(children: [
                         Text(
                           "${doc!.count.toString()} Page",

@@ -24,6 +24,7 @@ class AppTheme {
   Color txtColor;
   Color statusTxtColor;
   Color profileSettingColor;
+  Color chatSecondaryColor;
 
   //Extra Colors
   Color grey;
@@ -93,6 +94,7 @@ class AppTheme {
     required this.txtColor,
     required this.statusTxtColor,
     required this.profileSettingColor,
+    required this.chatSecondaryColor,
   });
 
   /// fromType factory constructor
@@ -139,6 +141,7 @@ class AppTheme {
           txtColor:const Color(0xFF999EA6),
           statusTxtColor:const Color(0xFF7A8AA3),
           profileSettingColor:const Color(0xFFF3F4F4),
+          chatSecondaryColor:const Color.fromRGBO(153, 158, 166, 0.1),
         );
 
       case ThemeType.dark:
@@ -182,6 +185,7 @@ class AppTheme {
           txtColor:const Color(0xFF999EA6),
           statusTxtColor:const Color(0xFF7A8AA3),
           profileSettingColor:const Color(0xFFF3F4F4),
+          chatSecondaryColor:const Color.fromRGBO(153, 158, 166, 0.1),
         );
     }
   }

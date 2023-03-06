@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter_theme/pages/bottom_pages/status/layouts/status_list_card.dart';
 
+
 import '../../../../config.dart';
 
 class StatusListLayout extends StatefulWidget {
@@ -17,11 +18,11 @@ class _StatusListLayoutState extends State<StatusListLayout> {
   Widget build(BuildContext context) {
     return GetBuilder<StatusController>(builder: (statusCtrl) {
       return GetBuilder<AppController>(builder: (appCtrl) {
-log("USER : ${statusCtrl.user["id"]}");
+log("USER : ${appCtrl.firebaseContact}");
         return SizedBox(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height - 50,
-            child: Column(children: [
+            child: appCtrl.firebaseContact.isEmpty ?  CommonEmptyLayout(gif: gifAssets.status,title: fonts.emptyStatusTitle.tr,desc: fonts.emptyStatusDesc.tr,):  Column(children: [
               ...appCtrl.firebaseContact.asMap().entries.map((e) {
                 return  StreamBuilder(
                     stream: FirebaseFirestore.instance
@@ -32,8 +33,11 @@ log("USER : ${statusCtrl.user["id"]}");
                         .limit(15)
                         .snapshots(),
                     builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return Container();
+
+                      if(snapshot.hasError){
+                        return CommonEmptyLayout(gif: gifAssets.status,title: fonts.emptyStatusTitle.tr,desc: fonts.emptyStatusDesc,);
+                      }else if (!snapshot.hasData) {
+                        return  Container();
                       } else {
                         List<Status> statusList = [];
                         List status = statusCtrl.statusListWidget(snapshot);

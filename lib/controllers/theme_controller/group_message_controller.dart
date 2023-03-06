@@ -59,6 +59,7 @@ class GroupChatMessageController extends GetxController {
 //get group data
   getPeerStatus() {
     nameList = "";
+    nameList = null;
     FirebaseFirestore.instance
         .collection(collectionName.groups)
         .doc(pId)
@@ -66,18 +67,7 @@ class GroupChatMessageController extends GetxController {
         .then((value) {
       if (value.exists) {
         List receiver = pData["users"];
-        nameList = null;
-        for (var i = 0; i < receiver.length; i++) {
-          if (nameList != null && nameList != "") {
-            if (receiver[i]["name"] != user["name"]) {
-              nameList = "$nameList, ${receiver[i]["name"]}";
-            }
-          } else {
-            if (receiver[i]["name"] != user["name"]) {
-              nameList = receiver[i]["name"];
-            }
-          }
-        }
+        nameList = (receiver.length -1).toString();
       }
 
       update();

@@ -11,48 +11,65 @@ class ReceiverImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppRadius.r10),
+    return InkWell(
+      onLongPress: onLongPress,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Container(
 
-      ),
-      child: InkWell(
-          onLongPress: onLongPress,
-          child: Stack(
-            alignment: Alignment.bottomRight,
-            children: [
-              Material(
-                borderRadius: BorderRadius.circular(AppRadius.r8),
-                clipBehavior: Clip.hardEdge,
-                child: CachedNetworkImage(
-                  placeholder: (context, url) => Container(
-                      width: Sizes.s220,
-                      height: Sizes.s200,
-                      decoration: BoxDecoration(
-                        color: appCtrl.appTheme.accent,
-                        borderRadius: BorderRadius.circular(AppRadius.r8),
+            decoration: ShapeDecoration(
+              color: appCtrl.appTheme.chatSecondaryColor,
+              shape: const SmoothRectangleBorder(
+                  borderRadius: SmoothBorderRadius.only(
+                      topLeft: SmoothRadius(
+                        cornerRadius: 20,
+                        cornerSmoothing: .5,
                       ),
-                      child: Container()),
-                  imageUrl: document!['content'],
-                  width: Sizes.s200,
-                  height: Sizes.s200,
-                  fit: BoxFit.cover,
+                      topRight: SmoothRadius(
+                        cornerRadius: 20,
+                        cornerSmoothing: 0.4,
+                      ),
+                      bottomRight: SmoothRadius(
+                        cornerRadius: 20,
+                        cornerSmoothing: .5,
+                      ))),
+            ),
+            child:ClipSmoothRect(
+                clipBehavior: Clip.hardEdge,
+                radius: SmoothBorderRadius(
+                  cornerRadius: 20,
+                  cornerSmoothing: 1,
                 ),
-              ),
-              Text(
-                DateFormat('HH:mm a').format(
-                    DateTime.fromMillisecondsSinceEpoch(
-                        int.parse(document!['timestamp']))),
-                style:
-                    AppCss.poppinsBold12.textColor(appCtrl.appTheme.whiteColor),
-              )
-                  .marginSymmetric(horizontal: Insets.i10, vertical: Insets.i10)
-                  .boxShadow(
-                      blurRadius: 15.0,
-                      color: appCtrl.appTheme.blackColor.withOpacity(.25),
-                      offset: const Offset(-2, 2))
-            ],
-          ).paddingAll(Insets.i5).decorated(color: appCtrl.appTheme.whiteColor,borderRadius: BorderRadius.circular(AppRadius.r8)).marginSymmetric(vertical: Insets.i10)),
+                child: Material(
+                  borderRadius: SmoothBorderRadius(cornerRadius: 20,cornerSmoothing: 1),
+                  clipBehavior: Clip.hardEdge,
+                  child: CachedNetworkImage(
+                    placeholder: (context, url) => Container(
+                        width: Sizes.s160,
+                        height: Sizes.s150,
+                        decoration: BoxDecoration(
+                          color: appCtrl.appTheme.accent,
+                          borderRadius: BorderRadius.circular(AppRadius.r8),
+                        ),
+                        child: Container()),
+                    imageUrl: document!['content'],
+                    width: Sizes.s160,
+                    height: Sizes.s150,
+                    fit: BoxFit.cover,
+                  ),
+                ).paddingSymmetric(horizontal:Insets.i10).paddingOnly(bottom: Insets.i12)
+            )
+          ),
+          Text(
+            DateFormat('HH:mm a').format(
+                DateTime.fromMillisecondsSinceEpoch(
+                    int.parse(document!['timestamp']))),
+            style: AppCss.poppinsMedium12
+                .textColor(appCtrl.appTheme.txtColor),
+          ).marginSymmetric(horizontal: Insets.i5, vertical: Insets.i8)
+        ],
+      ),
     );
   }
 }

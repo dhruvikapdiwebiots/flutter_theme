@@ -13,6 +13,7 @@ class ImageLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log("IO : $id;");
     return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection(collectionName.users)
@@ -79,6 +80,8 @@ class ImageLayout extends StatelessWidget {
             }
           } else {
             return Container(
+              height: isImageLayout ?Sizes.s40 : Sizes.s45,
+              width:isImageLayout ?Sizes.s40 :  Sizes.s45,
               decoration: ShapeDecoration(
                   color: appCtrl.appTheme.grey.withOpacity(.4),
                   shape: SmoothRectangleBorder(

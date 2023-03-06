@@ -21,41 +21,48 @@ class LocationLayout extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       onLongPress: onLongPress,
-      child: Stack(
-        alignment: isReceiver ? Alignment.topLeft: Alignment.topRight,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Image.asset(
-                imageAssets.map,
-                height: Sizes.s150,
-              ).clipRRect(all: AppRadius.r10),
-              const VSpace(Sizes.s10),
-              Text(
-                DateFormat('HH:mm a').format(
-                    DateTime.fromMillisecondsSinceEpoch(
-                        int.parse(document!['timestamp']))),
-                style: AppCss.poppinsMedium12
-                    .textColor(isReceiver ? appCtrl.appTheme.lightBlackColor: appCtrl.appTheme.whiteColor),
-              )
-            ],
-          ).paddingAll( Insets.i5),
-          CustomPaint(painter: CustomShape(isReceiver ? appCtrl.appTheme.whiteColor:appCtrl.appTheme.primary)),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: Insets.i8),
+            decoration: ShapeDecoration(
+              color: appCtrl.appTheme.primary,
+              shape: const SmoothRectangleBorder(
+                  borderRadius: SmoothBorderRadius.only(
+                      topLeft: SmoothRadius(
+                        cornerRadius: 20,
+                        cornerSmoothing: .5,
+                      ),
+                      topRight: SmoothRadius(
+                        cornerRadius: 20,
+                        cornerSmoothing: 0.4,
+                      ),
+                      bottomLeft: SmoothRadius(
+                        cornerRadius: 20,
+                        cornerSmoothing: .5,
+                      ))),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Image.asset(
+                  imageAssets.map,
+                  height: Sizes.s150,
+                ).clipRRect(all: AppRadius.r20),
+              ],
+            ).paddingAll( Insets.i5)
+          ),
+          const VSpace(Sizes.s5),
+          Text(
+            DateFormat('HH:mm a').format(
+                DateTime.fromMillisecondsSinceEpoch(
+                    int.parse(document!['timestamp']))),
+            style: AppCss.poppinsMedium12
+                .textColor(appCtrl.appTheme.txtColor),
+          ).marginSymmetric(horizontal: Insets.i8)
         ],
-      )
-          .decorated(
-              color: isReceiver ? appCtrl.appTheme.whiteColor  :appCtrl.appTheme.primary,
-          borderRadius: BorderRadius.only(
-              bottomRight: const Radius.circular(Insets.i8),
-              topRight: isReceiver
-                  ? const Radius.circular(Insets.i8)
-                  : const Radius.circular(0),
-              topLeft: isReceiver
-                  ? const Radius.circular(0)
-                  : const Radius.circular(Insets.i8),
-              bottomLeft: const Radius.circular(Insets.i8)))
-          .paddingSymmetric(horizontal: Insets.i8),
+      ),
     );
   }
 }

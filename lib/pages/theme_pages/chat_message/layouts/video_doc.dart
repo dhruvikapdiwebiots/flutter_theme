@@ -92,9 +92,7 @@ class _VideoDocState extends State<VideoDoc> {
           } else {
             // If the VideoPlayerController is still initializing, show a
             // loading spinner.
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return Container();
           }
         },
       );

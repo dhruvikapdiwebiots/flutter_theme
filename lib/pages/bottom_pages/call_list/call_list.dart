@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter_theme/config.dart';
+import 'package:flutter_theme/widgets/common_empty_layout.dart';
 import 'package:intl/intl.dart';
 
 class CallList extends StatelessWidget {
@@ -26,7 +27,7 @@ class CallList extends StatelessWidget {
                   appCtrl.appTheme.lightPrimary,
                   appCtrl.appTheme.primary
                 ])),
-            child: SvgPicture.asset(svgAssets.callAdd,height: Sizes.s15),
+            child: SvgPicture.asset(svgAssets.callAdd, height: Sizes.s15),
           ),
         ),
         body: StreamBuilder(
@@ -37,9 +38,9 @@ class CallList extends StatelessWidget {
                 .orderBy("timestamp", descending: true)
                 .snapshots(),
             builder: (context, snapshot) {
-
-              if (!snapshot.hasData) {
-
+              if (snapshot.hasError) {
+                return CommonEmptyLayout(gif: gifAssets.call,title: fonts.emptyCallTitle.tr,desc: fonts.emptyCallDesc.tr,);
+              } else if (!snapshot.hasData) {
                 return Container(
                     margin: const EdgeInsets.only(
                         bottom: Insets.i10, left: Insets.i5, right: Insets.i5));
@@ -52,11 +53,11 @@ class CallList extends StatelessWidget {
                       children: [
                         ListTile(
                           dense: true,
-                          horizontalTitleGap:12,
+                          horizontalTitleGap: 12,
                           contentPadding: const EdgeInsets.symmetric(
                               horizontal: Insets.i15, vertical: Insets.i4),
                           leading: ImageLayout(
-                            isLastSeen: false,
+                              isLastSeen: false,
                               id: snapshot.data!.docs[index].data()["id"] ==
                                       callListCtrl.user["id"]
                                   ? snapshot.data!.docs[index]
@@ -128,8 +129,8 @@ class CallList extends StatelessWidget {
                                             int.parse(snapshot.data!.docs[index]
                                                 .data()["timestamp"]
                                                 .toString()))),
-                                    style: AppCss.poppinsMedium12
-                                        .textColor(appCtrl.appTheme.statusTxtColor))
+                                    style: AppCss.poppinsMedium12.textColor(
+                                        appCtrl.appTheme.statusTxtColor))
                               ]),
                           trailing: SvgPicture.asset(
                               snapshot.data!.docs[index].data()["isVideoCall"]
@@ -141,7 +142,8 @@ class CallList extends StatelessWidget {
                           color: Color.fromRGBO(49, 100, 189, .1),
                           endIndent: Insets.i15,
                           indent: Insets.i15,
-                          height: 2,thickness: 1,
+                          height: 2,
+                          thickness: 1,
                         )
                       ],
                     );

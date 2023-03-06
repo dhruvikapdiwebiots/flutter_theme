@@ -8,6 +8,10 @@ class OtpBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<OtpController>(builder: (otpCtrl) {
+      String strDigits(int n) => n.toString().padLeft(2, '0');
+      final hours = strDigits(otpCtrl.myDuration.inHours.remainder(24));
+      final minutes = strDigits(otpCtrl.myDuration.inMinutes.remainder(60));
+      final seconds = strDigits(otpCtrl.myDuration.inSeconds.remainder(60));
       return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
@@ -36,6 +40,15 @@ class OtpBody extends StatelessWidget {
                 style: AppCss.poppinsMedium18
                     .textColor(appCtrl.appTheme.whiteColor)),
             const VSpace(Sizes.s25),
+            if (otpCtrl.isCountDown)
+              Text(
+                '$hours:$minutes:$seconds',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontSize: 50),
+              ),
+            const VSpace(Sizes.s15),
             RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(

@@ -24,7 +24,6 @@ class _GroupSenderMessageState extends State<GroupSenderMessage> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<GroupChatMessageController>(builder: (chatCtrl) {
-      log("tyep : ${widget.document!["content"]}");
       return Container(
           margin: const EdgeInsets.only(bottom: 2.0),
           child: Column(

@@ -17,17 +17,17 @@ minVerticalPadding: 0,
           leading: CachedNetworkImage(
               imageUrl: document!['content'].split('-BREAK-')[2],
               imageBuilder: (context, imageProvider) => CircleAvatar(
-                    backgroundColor: appCtrl.appTheme.contactBgGray,
+                    backgroundColor: isReceiver?appCtrl.appTheme.txtColor : appCtrl.appTheme.contactBgGray,
                     radius: AppRadius.r22,
                     backgroundImage: NetworkImage(
                         '${document!['content'].split('-BREAK-')[2]}'),
                   ),
               placeholder: (context, url) => CircleAvatar(
-                  backgroundColor: appCtrl.appTheme.contactBgGray,
+                  backgroundColor: isReceiver?appCtrl.appTheme.txtColor : appCtrl.appTheme.contactBgGray,
                   radius: AppRadius.r22,
                   child: Icon(Icons.people, color: appCtrl.appTheme.contactGray)),
               errorWidget: (context, url, error) => CircleAvatar(
-                  backgroundColor: appCtrl.appTheme.contactBgGray,
+                  backgroundColor: isReceiver?appCtrl.appTheme.txtColor : appCtrl.appTheme.contactBgGray,
                   radius: AppRadius.r22,
                   child:
                       Icon(Icons.people, color: appCtrl.appTheme.contactGray))),

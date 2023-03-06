@@ -24,61 +24,68 @@ class GroupLocationLayout extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       onLongPress: onLongPress,
-      child: Stack(
-        alignment: isReceiver ? Alignment.topLeft : Alignment.topRight,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (isReceiver)
-                if (document!["sender"] != currentUserId)
-                  Text(document!['senderName'],
-                          style: AppCss.poppinsMedium14
-                              .textColor( isReceiver ? appCtrl.appTheme.primary : appCtrl.appTheme.whiteColor))
-                      .alignment(Alignment.bottomLeft)
-                      .paddingAll(Insets.i5),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Image.asset(
-                    imageAssets.map,
-                    height: Sizes.s150,
-                  ).clipRRect(all: AppRadius.r10),
-                  const VSpace(Sizes.s10),
-                  Text(
-
-                    DateFormat('HH:mm a').format(
-                        DateTime.fromMillisecondsSinceEpoch(
-                            int.parse(document!['timestamp']))),
-                    textAlign: TextAlign.end,
-                    style: AppCss.poppinsMedium12.textColor(isReceiver
-                        ? appCtrl.appTheme.lightBlackColor
-                        : appCtrl.appTheme.whiteColor),
-                  ),
-                ],
-              )
-            ],
-          ).paddingAll(Insets.i5),
-          CustomPaint(
-              painter: CustomShape(isReceiver
-                  ? appCtrl.appTheme.whiteColor
-                  : appCtrl.appTheme.primary)),
-        ],
-      )
-          .decorated(
-              color: isReceiver
+          Container(
+            decoration: ShapeDecoration(
+              color:isReceiver
                   ? appCtrl.appTheme.whiteColor
                   : appCtrl.appTheme.primary,
-              borderRadius: BorderRadius.only(
-                  bottomRight: const Radius.circular(Insets.i8),
-                  topRight: isReceiver
-                      ? const Radius.circular(Insets.i8)
-                      : const Radius.circular(0),
-                  topLeft: isReceiver
-                      ? const Radius.circular(0)
-                      : const Radius.circular(Insets.i8),
-                  bottomLeft: const Radius.circular(Insets.i8)))
-          .paddingSymmetric(horizontal: Insets.i8),
+              shape: SmoothRectangleBorder(
+                  borderRadius: SmoothBorderRadius.only(
+                      topLeft: const SmoothRadius(
+                        cornerRadius: 20,
+                        cornerSmoothing: .5,
+                      ),
+                      topRight: const SmoothRadius(
+                        cornerRadius: 20,
+                        cornerSmoothing: 0.4,
+                      ),
+                      bottomLeft: SmoothRadius(
+                        cornerRadius:isReceiver ? 0 : 20,
+                        cornerSmoothing: .5,
+                      ),
+                      bottomRight: SmoothRadius(
+                        cornerRadius:isReceiver ? 20 : 0,
+                        cornerSmoothing: .5,
+                      ))),
+            ),
+            child: Stack(
+              alignment: isReceiver ? Alignment.topLeft : Alignment.topRight,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (isReceiver)
+                      if (document!["sender"] != currentUserId)
+                        Text(document!['senderName'],
+                                style: AppCss.poppinsMedium14
+                                    .textColor( isReceiver ? appCtrl.appTheme.primary : appCtrl.appTheme.whiteColor))
+                            .alignment(Alignment.bottomLeft)
+                            .paddingAll(Insets.i5),
+                    Image.asset(
+                      imageAssets.map,
+                      height: Sizes.s150,
+                    ).clipRRect(all: AppRadius.r10)
+                  ],
+                ).paddingAll(Insets.i5).marginSymmetric(vertical: Insets.i10),
+              ],
+            )
+
+                .paddingSymmetric(horizontal: Insets.i8),
+          ),
+          const VSpace(Sizes.s10),
+          Text(
+
+            DateFormat('HH:mm a').format(
+                DateTime.fromMillisecondsSinceEpoch(
+                    int.parse(document!['timestamp']))),
+            textAlign: TextAlign.end,
+            style: AppCss.poppinsMedium12.textColor( appCtrl.appTheme.txtColor),
+          ),
+        ],
+      ).marginSymmetric(horizontal: Insets.i10),
     );
   }
 }

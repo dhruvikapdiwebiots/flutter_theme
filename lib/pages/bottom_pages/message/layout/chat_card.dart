@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:flutter_theme/widgets/common_empty_layout.dart';
+
 import '../../../../config.dart';
 
 class ChatCard extends StatefulWidget {
@@ -20,11 +22,17 @@ class _ChatCardState extends State<ChatCard> {
               .collection(collectionName.users)
               .doc(messageCtrl.currentUserId)
               .collection(collectionName.chats)
-              .orderBy("updateStamp", descending: true,).limit(15)
+              .orderBy("updateStamp", descending: true)
+              .limit(15)
               .snapshots(),
           builder: (context, snapshot) {
-            log("has : ${snapshot.hasData}");
-            if (!snapshot.hasData) {
+            log("has : ${snapshot.hasError}");
+            if (snapshot.hasError) {
+              return CommonEmptyLayout(
+                  gif: gifAssets.message,
+                  title: fonts.emptyMessageTitle.tr,
+                  desc: fonts.emptyMessageDesc.tr);
+            } else if (!snapshot.hasData) {
               return Center(
                   child: CircularProgressIndicator(
                 valueColor:
@@ -42,7 +50,8 @@ class _ChatCardState extends State<ChatCard> {
                   : message.isNotEmpty
                       ? ListView.builder(
                           shrinkWrap: true,
-                          padding: const EdgeInsets.symmetric(vertical: Insets.i20,horizontal: Insets.i10),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: Insets.i20, horizontal: Insets.i10),
                           itemBuilder: (context, index) {
                             return LoadUser(
                                 document: message[index],
@@ -51,9 +60,10 @@ class _ChatCardState extends State<ChatCard> {
                           },
                           itemCount: message.length,
                         )
-                      : Center(
-                          child: Image.asset(imageAssets.noChat,
-                              height: Sizes.s250));
+                      : CommonEmptyLayout(
+                          gif: gifAssets.message,
+                          title: fonts.emptyMessageTitle.tr,
+                          desc: fonts.emptyMessageDesc.tr);
             }
           });
     });

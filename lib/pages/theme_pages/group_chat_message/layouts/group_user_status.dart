@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import '../../../../config.dart';
 
 class GroupUserLastSeen extends StatelessWidget {
@@ -13,30 +15,23 @@ class GroupUserLastSeen extends StatelessWidget {
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return snapshot.data!.data()!["status"] != ""
+              log("TOTAL : ${snapshot.data!.data()!["users"]}");
+              List userList = snapshot.data!.data()!["users"];
+              return snapshot.data!.data()!["users"] != ""
                   ? Text(
-                      snapshot.data!
-                              .data()!["status"]
-                              .contains(chatCtrl.user["name"])
-                          ? chatCtrl.nameList
-                          : snapshot.data!.data()!["status"],
+                      "${(userList.length - 1).toString()} ${fonts.people.tr}",
                       textAlign: TextAlign.center,
-                      style: AppCss.poppinsMedium12
-                          .textColor(appCtrl.appTheme.whiteColor),
+                      style: AppCss.poppinsMedium14
+                          .textColor(appCtrl.appTheme.txtColor),
                     )
                   : Text(
-                      chatCtrl.nameList ?? "",
+                      chatCtrl.nameList!.length.toString(),
                       textAlign: TextAlign.center,
-                      style: AppCss.poppinsMedium12
-                          .textColor(appCtrl.appTheme.whiteColor),
+                      style: AppCss.poppinsMedium14
+                          .textColor(appCtrl.appTheme.txtColor),
                     );
             } else {
-              return Text(
-                chatCtrl.nameList ?? "",
-                textAlign: TextAlign.center,
-                style: AppCss.poppinsMedium12
-                    .textColor(appCtrl.appTheme.whiteColor),
-              );
+              return Container();
             }
           });
     });

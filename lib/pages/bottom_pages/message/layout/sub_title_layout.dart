@@ -39,7 +39,7 @@ class SubTitleLayout extends StatelessWidget {
                 : document!["lastMessage"],
             style: AppCss.poppinsMedium12
                 .textColor(appCtrl.appTheme.grey).textHeight(1.2),
-            overflow: TextOverflow.ellipsis).width(Sizes.s170),
+            overflow: TextOverflow.ellipsis).width(Sizes.s150),
       ],
     );
   }

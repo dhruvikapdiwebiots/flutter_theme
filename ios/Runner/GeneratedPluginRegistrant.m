@@ -60,6 +60,12 @@
 @import device_info_plus;
 #endif
 
+#if __has_include(<emoji_picker_flutter/EmojiPickerFlutterPlugin.h>)
+#import <emoji_picker_flutter/EmojiPickerFlutterPlugin.h>
+#else
+@import emoji_picker_flutter;
+#endif
+
 #if __has_include(<file_picker/FilePickerPlugin.h>)
 #import <file_picker/FilePickerPlugin.h>
 #else
@@ -276,6 +282,7 @@
   [FLTFirebaseFirestorePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseFirestorePlugin"]];
   [ConnectivityPlusPlugin registerWithRegistrar:[registry registrarForPlugin:@"ConnectivityPlusPlugin"]];
   [FLTDeviceInfoPlusPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTDeviceInfoPlusPlugin"]];
+  [EmojiPickerFlutterPlugin registerWithRegistrar:[registry registrarForPlugin:@"EmojiPickerFlutterPlugin"]];
   [FilePickerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FilePickerPlugin"]];
   [FLTFirebaseAuthPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseAuthPlugin"]];
   [FLTFirebaseCorePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseCorePlugin"]];

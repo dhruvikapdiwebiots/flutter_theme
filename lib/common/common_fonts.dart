@@ -108,5 +108,12 @@ class Fonts{
   final rtl = "rtl";
   final yesterday = "yesterday";
   final today = "today";
+  final emptyMessageTitle = "emptyMessageTitle";
+  final emptyMessageDesc = "emptyMessageDesc";
+  final emptyStatusTitle = "emptyStatusTitle";
+  final emptyStatusDesc = "emptyStatusDesc";
+  final emptyCallTitle = "emptyCallTitle";
+  final emptyCallDesc = "emptyCallDesc";
+  final people = "people";
   String unblockUser(val) => "unblockUser".trParams({'pName':val});
 }

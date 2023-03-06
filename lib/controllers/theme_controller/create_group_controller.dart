@@ -41,13 +41,43 @@ class CreateGroupController extends GetxController {
   getFirebaseContact() async {
     contactList = [];
     update();
+    user = appCtrl.storage.read(session.user) ?? "";
+
+    update();
     Get.forceAppUpdate();
-    appCtrl.firebaseContact.asMap().entries.forEach((contact) {
-      if (contact.value["isActive"] == true) {
-        if (!contactList.contains(contact.value)) {
-          contactList.add(contact.value);
-        } else {
-          contactList.remove(contact.value);
+    log("AVAILABLE : ${appCtrl.contactList.length}");
+    appCtrl.contactList.asMap().entries.forEach((contact) {
+
+      if (contact.value.phones.isNotEmpty) {
+        if (user["phone"] !=
+            phoneNumberExtension(contact.value.phones[0].number.toString())) {
+          counter++;
+          contactList = [];
+
+          update();
+          Get.forceAppUpdate();
+          FirebaseFirestore.instance
+              .collection(collectionName.users)
+              .where("phone",
+                  isEqualTo: phoneNumberExtension(
+                      contact.value.phones[0].number.toString()))
+              .get()
+              .then((value) {
+            if (value.docs.isNotEmpty) {
+
+              if (value.docs[0].data()["isActive"] == true) {
+                if (!contactList.contains(value.docs[0].data())) {
+                  contactList.add(value.docs[0].data());
+                } else {
+                  contactList.remove(value.docs[0].data());
+                }
+              }
+            }
+
+            update();
+            Get.forceAppUpdate();
+          });
+          update();
         }
       }
 

@@ -39,19 +39,20 @@ class _ChatState extends State<Chat>
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ChatController>(builder: (_) {
+
       return AgoraToken(
         scaffold: PickupLayout(
           scaffold: WillPopScope(
               onWillPop: chatCtrl.onBackPress,
-              child: Scaffold(
+              child: chatCtrl.userData != null ? Scaffold(
                   appBar: ChatMessageAppBar(
-                      userId: chatCtrl.userData["id"],
+                      userId: chatCtrl.pId,
                       name: chatCtrl.pName,
-                      isBlock: chatCtrl.isBlock
-                          ? chatCtrl.blockBy == chatCtrl.userData["id"]
+                      isBlock:   chatCtrl.allData!=null ? chatCtrl.allData["isBlock"]
+                          ? chatCtrl.allData["blockUserId"] == chatCtrl.userData["id"]
                               ? true
                               : false
-                          : false,
+                          : false:false,
                       callTap: () async {
                         await chatCtrl.permissionHandelCtrl
                             .getCameraMicrophonePermissions()
@@ -89,7 +90,9 @@ class _ChatState extends State<Chat>
                     GetBuilder<AppController>(builder: (appCtrl) {
                       return CommonLoader(isLoading: appCtrl.isLoading);
                     })
-                  ]))),
+                  ])):const Scaffold(
+
+              )),
         ),
       );
     });

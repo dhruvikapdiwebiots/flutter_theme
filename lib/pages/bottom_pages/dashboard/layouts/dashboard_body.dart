@@ -39,48 +39,48 @@ class DashboardBody extends StatelessWidget {
                               ],
                               borderRadius:
                                   BorderRadius.circular(AppRadius.r10))
-                          .marginSymmetric(vertical: Insets.i5)
-                          .paddingSymmetric(vertical: Insets.i14),
-                      PopupMenuButton(
-                        color: appCtrl.appTheme.whiteColor,
-                        padding: EdgeInsets.zero,
-                        icon:
-                            SvgPicture.asset(svgAssets.more, height: Sizes.s20),
-                        onSelected: (result){
-                         dashboardCtrl.onMenuItemSelected(result);
-                        },
-                        offset: Offset(0.0, appBarHeight),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppRadius.r8),
-                        ),
-                        itemBuilder: (ctx) => dashboardCtrl.selectedIndex == 0
-                            ? [
-                                _buildPopupMenuItem(fonts.broadCast.tr,
-                                    Icons.search,0),
-                                _buildPopupMenuItem(fonts.create.tr,
-                                    Icons.upload, 1),
-                                _buildPopupMenuItem(fonts.setting.tr,
-                                    Icons.copy,2),
-                              ]
-                            : [
-                                _buildPopupMenuItem(fonts.setting.tr,
-                                    Icons.copy, 2),
-                              ],
+                          .marginSymmetric(vertical: Insets.i18),
+                      SizedBox(
+                        width:Sizes.s62,
+                        child: PopupMenuButton(
+                          color: appCtrl.appTheme.whiteColor,
+                          padding: EdgeInsets.zero,
+
+                          icon:
+                              SvgPicture.asset(svgAssets.more, height: Sizes.s20,fit: BoxFit.fill,),
+                          onSelected: (result){
+                           dashboardCtrl.onMenuItemSelected(result);
+                          },
+                          offset: Offset(0.0, appBarHeight),iconSize: Sizes.s20,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(AppRadius.r8),
+                          ),
+                          itemBuilder: (ctx) => dashboardCtrl.selectedIndex == 0
+                              ? [
+                                  _buildPopupMenuItem(fonts.broadCast.tr,
+                                      Icons.search,0),
+                                  _buildPopupMenuItem(fonts.create.tr,
+                                      Icons.upload, 1),
+                                  _buildPopupMenuItem(fonts.setting.tr,
+                                      Icons.copy,2),
+                                ]
+                              : [
+                                  _buildPopupMenuItem(fonts.setting.tr,
+                                      Icons.copy, 2),
+                                ],
+                        ) .decorated(
+                            color: appCtrl.appTheme.white,
+                            boxShadow: [
+                              const BoxShadow(
+                                  offset: Offset(0, 2),
+                                  blurRadius: 5,
+                                  spreadRadius: 1,
+                                  color: Color.fromRGBO(0, 0, 0, 0.08))
+                            ],
+                            borderRadius:
+                            BorderRadius.circular(AppRadius.r10)).marginSymmetric(vertical: Insets.i18,horizontal: Insets.i10),
                       )
-                          .decorated(
-                              color: appCtrl.appTheme.white,
-                              boxShadow: [
-                                const BoxShadow(
-                                    offset: Offset(0, 2),
-                                    blurRadius: 5,
-                                    spreadRadius: 1,
-                                    color: Color.fromRGBO(0, 0, 0, 0.08))
-                              ],
-                              borderRadius:
-                                  BorderRadius.circular(AppRadius.r10))
-                          .marginSymmetric(
-                              vertical: Insets.i5, horizontal: Insets.i15)
-                          .paddingSymmetric(vertical: Insets.i14)
+
                     ],
                     title: Image.asset(
                       imageAssets.logo,

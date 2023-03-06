@@ -52,7 +52,7 @@ class GroupVideoDocState extends State<GroupVideoDoc> {
                 alignment: Alignment.bottomRight,
                 children: [
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       if (widget.isReceiver)
                         if (widget.document!["sender"] != widget.currentUserId)
@@ -67,14 +67,15 @@ class GroupVideoDocState extends State<GroupVideoDoc> {
                         // Use the VideoPlayer widget to display the video.
                         child: VideoPlayer(videoController!),
                       ).height(Sizes.s250),
+                      const VSpace(Sizes.s5),
+                      Text(DateFormat('HH:mm a').format(
+                          DateTime.fromMillisecondsSinceEpoch(
+                              int.parse(widget.document!['timestamp']))),style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.txtColor),)
                     ],
                   ),
-                  Text(DateFormat('HH:mm a').format(
-                      DateTime.fromMillisecondsSinceEpoch(
-                          int.parse(widget.document!['timestamp']))),style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.whiteColor),).boxShadow( blurRadius: 15.0,
-                      color: appCtrl.appTheme.blackColor.withOpacity(.25),offset:const Offset(-2, 2)).marginAll(Insets.i10)
+
                 ],
-              ).marginSymmetric(vertical: Insets.i5,horizontal: Insets.i5).inkWell(onTap: (){
+              ).marginSymmetric(vertical: Insets.i5,horizontal: Insets.i10).inkWell(onTap: (){
                 launchUrl(Uri.parse(widget.document!["content"].split("-BREAK-")[1]));
               }),
             );

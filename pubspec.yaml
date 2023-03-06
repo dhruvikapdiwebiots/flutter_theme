@@ -106,6 +106,8 @@ dependencies:
   dotted_border: ^2.0.0+3
   light_compressor: ^2.0.1
   smooth_corner: ^1.1.0
+  extended_text_field: ^11.0.1
+  emoji_picker_flutter: ^1.5.2
 
 
 
