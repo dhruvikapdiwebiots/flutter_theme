@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
 import 'dart:math' as math;
-import 'package:dartx/dartx_io.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import '../config.dart';
 
@@ -146,12 +145,11 @@ int getUnseenMessagesNumber(
 
 bool checkUserExist(phone) {
   bool isExist = false;
-  log("{appCtrl.userContactList.length: ${appCtrl.userContactList.length}");
+  log("{userContactList.length: ${appCtrl.userContactList.length}");
   var contain = appCtrl.userContactList.where((element) {
     return element.phones.isNotEmpty ? phoneNumberExtension(
         element.phones[0].number.toString()) == phone : false;
   });
-  log("contain : $contain");
   if (contain.isNotEmpty) {
     isExist = true;
   } else {
@@ -159,3 +157,20 @@ bool checkUserExist(phone) {
   }
   return isExist;
 }
+
+
+typedef StringCallback = void Function(String);
+typedef VoidCallBack = void Function();
+typedef DoubleCallBack = void Function(double, double);
+typedef VoidCallBackWithFuture = Future<void> Function();
+typedef StringsCallBack = void Function(String emoji, String messageId);
+typedef StringWithReturnWidget = Widget Function(String separator);
+typedef DragUpdateDetailsCallback = void Function(DragUpdateDetails);
+
+const String heart = "\u{2764}";
+const String faceWithTears = "\u{1F602}";
+const String disappointedFace = "\u{1F625}";
+const String angryFace = "\u{1F621}";
+const String astonishedFace = "\u{1F632}";
+const String thumbsUp = "\u{1F44D}";
+

@@ -74,11 +74,11 @@ class ReceiverContent extends StatelessWidget {
                   borderRadius: SmoothBorderRadius.only(
                       topLeft: SmoothRadius(
                         cornerRadius: 20,
-                        cornerSmoothing: .5,
+                        cornerSmoothing: .5
                       ),
                       topRight: SmoothRadius(
                         cornerRadius: 20,
-                        cornerSmoothing: 0.4,
+                        cornerSmoothing: 0.4
                       ),
                       bottomRight: SmoothRadius(
                         cornerRadius: 20,

@@ -1,12 +1,6 @@
 import 'dart:developer';
-import 'dart:math' as math;
-import 'dart:io';
-import 'package:http/http.dart' as http;
-
 import 'package:advance_pdf_viewer_fork/advance_pdf_viewer_fork.dart';
 import 'package:dio/dio.dart';
-import 'package:figma_squircle/figma_squircle.dart';
-import 'package:flutter_theme/widgets/pdf_viewer_layout.dart';
 import 'package:intl/intl.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
@@ -120,7 +114,7 @@ class _PdfLayoutState extends State<PdfLayout> {
                       if(doc != null)
                       Row(children: [
                         Text(
-                          "${doc!.count.toString()} Page",
+                          "${doc!.count.toString()} Page | PDF",
                           style: AppCss.poppinsMedium12.textColor(
                               widget.isReceiver
                                   ? appCtrl.appTheme.txtColor
@@ -154,22 +148,21 @@ class _PdfLayoutState extends State<PdfLayout> {
       )
     ]).marginSymmetric(horizontal: Insets.i10, vertical: Insets.i5).inkWell(
         onTap: () async {
-      var openResult = 'Unknown';
-      var dio = Dio();
-      var tempDir = await getExternalStorageDirectory();
 
-      var filePath =
-          tempDir!.path + widget.document!['content'].split("-BREAK-")[0];
+          var openResult = 'Unknown';
+          var dio = Dio();
+          var tempDir = await getExternalStorageDirectory();
 
-      final response = await dio.download(
-          widget.document!['content'].split("-BREAK-")[1], filePath);
-      log("response : ${response.statusCode}");
+          var filePath = tempDir!.path +  widget.document!['content'].split("-BREAK-")[0];
+          final response = await dio.download(widget.document!['content'].split("-BREAK-")[1],filePath);
+          log("response : ${response.statusCode}");
 
-      final result = await OpenFilex.open(filePath);
+          final result = await OpenFilex.open(filePath);
 
-      openResult = "type=${result.type}  message=${result.message}";
-      log("openResult : $openResult");
-      OpenFilex.open(filePath);
+          openResult = "type=${result.type}  message=${result.message}";
+          log("openResult : $openResult");
+          OpenFilex.open(filePath);
+
     });
   }
 }

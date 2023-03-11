@@ -777,4 +777,29 @@ extension StyledWidget on Widget {
           ),
         ),
   );
+
+  Widget onLongPress({GestureLongPressCallback? onLogPress}) => Material(
+    color: appCtrl.appTheme.transparentColor,
+    child: Theme(
+      data: Theme.of(Get.context!).copyWith(
+        splashColor: appCtrl.appTheme.transparentColor,
+        highlightColor: appCtrl.appTheme.transparentColor,
+        hoverColor: appCtrl.appTheme.transparentColor,
+        splashFactory: NoSplash.splashFactory,
+      ),
+      child: InkWell(
+        onLongPress: onLogPress,
+        highlightColor: appCtrl.appTheme.transparentColor,
+        splashFactory: NoSplash.splashFactory,
+        overlayColor:  MaterialStateProperty.resolveWith<Color>(
+              (Set<MaterialState> states) {
+            return appCtrl.appTheme.transparentColor;
+          },
+        ),
+        hoverColor: appCtrl.appTheme.transparentColor,
+        splashColor: appCtrl.appTheme.transparentColor,
+        child: this,
+      ),
+    ),
+  );
 }

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:dartx/dartx_io.dart';
 import 'package:flutter_theme/config.dart';
+import 'package:flutter_theme/widgets/reaction_pop_up/reaction_pop_up.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ChatController extends GetxController {
@@ -31,6 +32,10 @@ class ChatController extends GetxController {
   File? image;
   File? video;
   bool isLoading = false;
+  bool enableReactionPopup = false;
+  bool showPopUp = false;
+  final GlobalKey<ReactionPopupState> reactionPopupKey = GlobalKey();
+
   bool typing = false, isBlock = false;
   final pickerCtrl = Get.isRegistered<PickerController>()
       ? Get.find<PickerController>()
@@ -71,17 +76,17 @@ class ChatController extends GetxController {
   //get chat data
   getChatData() async {
     log("chatId : $chatId");
-    if(chatId != "0"){
+    if (chatId != "0") {
       await FirebaseFirestore.instance
           .collection(collectionName.users)
           .doc(userData["id"])
-          .collection(collectionName.chats).where("chatId",isEqualTo: chatId)
+          .collection(collectionName.chats)
+          .where("chatId", isEqualTo: chatId)
           .get()
           .then((value) {
         log("allData : ${value.docs[0].data()}");
         allData = value.docs[0].data();
         update();
-
       });
     }
     seenMessage();
@@ -103,7 +108,6 @@ class ChatController extends GetxController {
 
     await ChatMessageApi()
         .audioAndVideoCallApi(toData: pData, isVideoCall: isVideoCall);
-
   }
 
   //update typing status
@@ -122,8 +126,7 @@ class ChatController extends GetxController {
 
   //seen all message
   seenMessage() async {
-
-    if(allData["senderId"] != userData["id"]) {
+    if (allData["senderId"] != userData["id"]) {
       await FirebaseFirestore.instance
           .collection(collectionName.messages)
           .doc(chatId)
@@ -131,10 +134,7 @@ class ChatController extends GetxController {
           .where("sender", isEqualTo: pId)
           .get()
           .then((value) {
-        value.docs
-            .asMap()
-            .entries
-            .forEach((element) {
+        value.docs.asMap().entries.forEach((element) {
           FirebaseFirestore.instance
               .collection(collectionName.messages)
               .doc(chatId)
@@ -553,18 +553,39 @@ class ChatController extends GetxController {
 
 // BUILD ITEM MESSAGE BOX FOR RECEIVER AND SENDER BOX DESIGN
   Widget buildItem(int index, document) {
+
     if (document['sender'] == userData["id"]) {
       return SenderMessage(
         document: document,
         index: index,
-      );
+      ).onLongPress(onLogPress: () {
+        enableReactionPopup = true;
+        showPopUp = true;
+        update();
+        log("enable : $enableReactionPopup");
+        /* showDialog(
+          context: Get.context!,
+          builder: (BuildContext context) =>
+              buildPopupDialog(context, document!),
+        );*/
+      });
     } else {
       // RECEIVER MESSAGE
       return document["type"] == MessageType.messageType.name
           ? Container()
           : document["isBlock"]
               ? Container()
-              : ReceiverMessage(document: document, index: index);
+              : ReceiverMessage(document: document, index: index).onLongPress(
+                  onLogPress: () {
+                  enableReactionPopup = true;
+                  showPopUp = true;
+                  update();
+                  /* showDialog(
+          context: Get.context!,
+          builder: (BuildContext context) =>
+              buildPopupDialog(context, document!),
+        );*/
+                });
     }
   }
 

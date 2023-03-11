@@ -35,5 +35,6 @@ class SvgAssets{
   final String audio = 'assets/svg/audio.svg';
   final String gif = 'assets/svg/gif.svg';
   final String send = 'assets/svg/send.svg';
+  final String docx = 'assets/svg/docx.svg';
   /*final String twitter = "assets/common/svg/twitter.svg";*/
 }

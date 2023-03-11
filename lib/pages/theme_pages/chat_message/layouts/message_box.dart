@@ -1,3 +1,6 @@
+import 'package:flutter_theme/widgets/reaction_pop_up/reaction_config.dart';
+import 'package:flutter_theme/widgets/reaction_pop_up/reaction_pop_up.dart';
+
 import '../../../../config.dart';
 
 class MessageBox extends StatelessWidget {
@@ -30,8 +33,10 @@ class MessageBox extends StatelessWidget {
                     chatCtrl.message = (snapshot.data!);
                     return ListView.builder(
                         padding: const EdgeInsets.all(10.0),
-                        itemBuilder: (context, index) => chatCtrl.buildItem(
-                            index, (snapshot.data!).docs[index]),
+                        itemBuilder: (context, index){
+                          return chatCtrl.buildItem(
+                              index, (snapshot.data!).docs[index]);
+                        },
                         itemCount: (snapshot.data!).docs.length,
                         reverse: true,
                         controller: chatCtrl.listScrollController);

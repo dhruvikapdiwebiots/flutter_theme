@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter_theme/config.dart';
+import 'package:flutter_theme/widgets/reaction_pop_up/reaction_config.dart';
+import 'package:flutter_theme/widgets/reaction_pop_up/reaction_pop_up.dart';
 
 class Chat extends StatefulWidget {
   const Chat({Key? key}) : super(key: key);
@@ -39,60 +41,85 @@ class _ChatState extends State<Chat>
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ChatController>(builder: (_) {
-
       return AgoraToken(
         scaffold: PickupLayout(
           scaffold: WillPopScope(
               onWillPop: chatCtrl.onBackPress,
-              child: chatCtrl.userData != null ? Scaffold(
-                  appBar: ChatMessageAppBar(
-                      userId: chatCtrl.pId,
-                      name: chatCtrl.pName,
-                      isBlock:   chatCtrl.allData!=null ? chatCtrl.allData["isBlock"]
-                          ? chatCtrl.allData["blockUserId"] == chatCtrl.userData["id"]
-                              ? true
-                              : false
-                          : false:false,
-                      callTap: () async {
-                        await chatCtrl.permissionHandelCtrl
-                            .getCameraMicrophonePermissions()
-                            .then((value) {
-                          if (value == true) {
-                            chatCtrl.audioVideoCallTap(false);
-                          }
-                        });
-                      },
-                      videoTap: () async {
-                        await chatCtrl.permissionHandelCtrl
-                            .getCameraMicrophonePermissions()
-                            .then((value) {
-                          log("value : $value");
-                          if (value == true) {
-                            log("message");
-                            chatCtrl.audioVideoCallTap(true);
-                          }
-                        });
-                      },
-                      moreTap: () => chatCtrl.blockUser()),
-                  backgroundColor: appCtrl.appTheme.whiteColor,
-                  body: Stack(children: <Widget>[
-                    Column(children: <Widget>[
-                      // List of messages
-                      const MessageBox(),
-                      // Sticker
-                      Container(),
-                      // Input content
-                      const InputBox()
-                    ]),
-                    // Loading
-                    if (chatCtrl.isLoading)
-                      CommonLoader(isLoading: chatCtrl.isLoading),
-                    GetBuilder<AppController>(builder: (appCtrl) {
-                      return CommonLoader(isLoading: appCtrl.isLoading);
-                    })
-                  ])):const Scaffold(
-
-              )),
+              child: chatCtrl.userData != null
+                  ? Scaffold(
+                      appBar: ChatMessageAppBar(
+                          userId: chatCtrl.pId,
+                          name: chatCtrl.pName,
+                          isBlock: chatCtrl.allData != null
+                              ? chatCtrl.allData["isBlock"]
+                                  ? chatCtrl.allData["blockUserId"] ==
+                                          chatCtrl.userData["id"]
+                                      ? true
+                                      : false
+                                  : false
+                              : false,
+                          callTap: () async {
+                            await chatCtrl.permissionHandelCtrl
+                                .getCameraMicrophonePermissions()
+                                .then((value) {
+                              if (value == true) {
+                                chatCtrl.audioVideoCallTap(false);
+                              }
+                            });
+                          },
+                          videoTap: () async {
+                            await chatCtrl.permissionHandelCtrl
+                                .getCameraMicrophonePermissions()
+                                .then((value) {
+                              log("value : $value");
+                              if (value == true) {
+                                log("message");
+                                chatCtrl.audioVideoCallTap(true);
+                              }
+                            });
+                          },
+                          moreTap: () => chatCtrl.blockUser()),
+                      backgroundColor: appCtrl.appTheme.whiteColor,
+                      body: Stack(children: <Widget>[
+                        Column(children: <Widget>[
+                          // List of messages
+                          Expanded(
+                            child: Stack(
+                              children: [
+                                const MessageBox(),
+                                if (chatCtrl.enableReactionPopup )
+                                  ReactionPopup(
+                                    key: chatCtrl.reactionPopupKey,
+                                    reactionPopupConfig:
+                                        ReactionPopupConfiguration(
+                                      shadow: BoxShadow(
+                                        color: Colors.grey.shade400,
+                                        blurRadius: 20,
+                                      ),
+                                    ),
+                                    showPopUp: chatCtrl.showPopUp,
+                                  ),
+                              ],
+                            ),
+                          ),
+                          // Sticker
+                          Container(),
+                          // Input content
+                          const InputBox()
+                        ]).inkWell(onTap: () {
+                          chatCtrl.enableReactionPopup = false;
+                          chatCtrl.showPopUp = false;
+                          chatCtrl.update();
+                          log("chatCtrl.enableReactionPopup : ${chatCtrl.enableReactionPopup}");
+                        }),
+                        // Loading
+                        if (chatCtrl.isLoading)
+                          CommonLoader(isLoading: chatCtrl.isLoading),
+                        GetBuilder<AppController>(builder: (appCtrl) {
+                          return CommonLoader(isLoading: appCtrl.isLoading);
+                        })
+                      ]))
+                  : const Scaffold()),
         ),
       );
     });
