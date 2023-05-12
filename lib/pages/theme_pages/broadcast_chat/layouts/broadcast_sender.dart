@@ -94,13 +94,13 @@ class _BroadcastSenderMessage extends State<BroadcastSenderMessage> {
                     if (widget.document!["type"] == MessageType.text.name)
                     // Text
                       Content(
-                          onLongPress: () {
+                         /* onLongPress: () {
                             showDialog(
                               context: Get.context!,
                               builder: (BuildContext context) => chatCtrl
                                   .buildPopupDialog(context, widget.document!),
                             );
-                          },
+                          },*/
                           document: widget.document),
                     if (widget.document!["type"] == MessageType.image.name)
                       SenderImage(

@@ -37,8 +37,9 @@ class _PickupLayoutState extends State<PickupLayout>
     });
 
     controller!.repeat();
+    log("cameras : $cameras");
     if(cameras.isNotEmpty) {
-      cameraController = CameraController(cameras[1], ResolutionPreset.max);
+      cameraController = CameraController(cameras.length ==1 ?cameras[0] : cameras[1], ResolutionPreset.max);
       log("cameraController : $cameraController");
       cameraController!.initialize().then((_) {
         if (!mounted) {

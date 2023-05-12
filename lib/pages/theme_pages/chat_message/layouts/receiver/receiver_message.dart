@@ -6,8 +6,8 @@ import '../../../../../config.dart';
 class ReceiverMessage extends StatefulWidget {
   final dynamic document;
   final int? index;
-
-  const ReceiverMessage({Key? key, this.index, this.document})
+  final String? docId;
+  const ReceiverMessage({Key? key, this.index, this.document,this.docId})
       : super(key: key);
 
   @override

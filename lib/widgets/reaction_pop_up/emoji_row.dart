@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_theme/widgets/reaction_pop_up/emoji_picker_widget.dart';
 import 'package:flutter_theme/widgets/reaction_pop_up/reaction_config.dart';
 
@@ -42,7 +44,7 @@ class EmojiRow extends StatelessWidget {
                 onTap: () => onEmojiTap(emojiList[index]),
                 child: Text(
                   emojiList[index],
-                  style: TextStyle(fontSize: size ?? 28),
+                  style: const TextStyle(fontSize: FontSizes.f16),
                 ),
               ),
             ),
@@ -53,7 +55,7 @@ class EmojiRow extends StatelessWidget {
           icon: Icon(
             Icons.add,
             color: Colors.grey.shade600,
-            size: size ?? 28,
+            size: 28,
           ),
           onPressed: () => _showBottomSheet(context),
         ),
@@ -65,6 +67,7 @@ class EmojiRow extends StatelessWidget {
     context: context,
     builder: (context) => EmojiPickerWidget(onSelected: (emoji) {
       Navigator.pop(context);
+      log("emoji : $emoji");
       onEmojiTap(emoji);
     }),
   );

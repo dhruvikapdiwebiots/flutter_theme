@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:figma_squircle/figma_squircle.dart';
 import 'package:intl/intl.dart';
 
@@ -6,10 +8,14 @@ import '../../../../../config.dart';
 class Content extends StatelessWidget {
   final dynamic document;
   final GestureLongPressCallback? onLongPress;
-  final bool isBroadcast;
+  final bool isBroadcast, isLongPressEnable;
 
   const Content(
-      {Key? key, this.document, this.onLongPress, this.isBroadcast = false})
+      {Key? key,
+      this.document,
+      this.onLongPress,
+      this.isBroadcast = false,
+      this.isLongPressEnable = false})
       : super(key: key);
 
   @override

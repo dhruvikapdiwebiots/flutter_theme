@@ -35,7 +35,7 @@ class MessageBox extends StatelessWidget {
                         padding: const EdgeInsets.all(10.0),
                         itemBuilder: (context, index){
                           return chatCtrl.buildItem(
-                              index, (snapshot.data!).docs[index]);
+                              index, (snapshot.data!).docs[index],snapshot.data!.docs[index].id);
                         },
                         itemCount: (snapshot.data!).docs.length,
                         reverse: true,

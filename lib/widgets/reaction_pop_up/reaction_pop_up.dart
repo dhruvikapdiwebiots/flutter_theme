@@ -91,7 +91,7 @@ class ReactionPopupState extends State<ReactionPopup>
               reactionPopupConfig: reactionPopupConfig,
               child: _reactionPopupRow,
             )
-                : Container(
+                : AnimatedContainer(duration: Duration(seconds: 2),
               constraints: BoxConstraints(
                   maxWidth: reactionPopupConfig?.maxWidth ?? 350),
               margin: reactionPopupConfig?.margin ??
@@ -132,6 +132,19 @@ class ReactionPopupState extends State<ReactionPopup>
     emojiConfiguration: reactionPopupConfig?.emojiConfig,
   );
 
+
+  void refreshWidget({
+    required String message,
+    required double xCoordinate,
+    required double yCoordinate,
+  }) {
+    setState(() {
+      log("_xCoordinate : $_xCoordinate");
+      message = message;
+      _xCoordinate = xCoordinate;
+      _yCoordinate = yCoordinate;
+    });
+  }
 
   @override
   void dispose() {

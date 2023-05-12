@@ -83,25 +83,7 @@ class _ChatState extends State<Chat>
                       body: Stack(children: <Widget>[
                         Column(children: <Widget>[
                           // List of messages
-                          Expanded(
-                            child: Stack(
-                              children: [
-                                const MessageBox(),
-                                if (chatCtrl.enableReactionPopup )
-                                  ReactionPopup(
-                                    key: chatCtrl.reactionPopupKey,
-                                    reactionPopupConfig:
-                                        ReactionPopupConfiguration(
-                                      shadow: BoxShadow(
-                                        color: Colors.grey.shade400,
-                                        blurRadius: 20,
-                                      ),
-                                    ),
-                                    showPopUp: chatCtrl.showPopUp,
-                                  ),
-                              ],
-                            ),
-                          ),
+                          const MessageBox(),
                           // Sticker
                           Container(),
                           // Input content
