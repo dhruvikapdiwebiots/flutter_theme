@@ -33,6 +33,7 @@ class AppTheme {
   Color white;
   Color whiteColor;
   Color blackColor;
+  Color chatAppBarColor;
   Color lightBlackColor;
   Color redColor;
   Color textColor;
@@ -51,6 +52,7 @@ class AppTheme {
   Color orangeColor;
   Color tealColor;
   Color blueColor;
+  Color emojiShadowColor;
 
   /// Default constructor
   AppTheme({
@@ -71,6 +73,7 @@ class AppTheme {
     required this.white,
     required this.whiteColor,
     required this.blackColor,
+    required this.chatAppBarColor,
     required this.lightBlackColor,
     required this.redColor,
     required this.textColor,
@@ -95,6 +98,7 @@ class AppTheme {
     required this.statusTxtColor,
     required this.profileSettingColor,
     required this.chatSecondaryColor,
+    required this.emojiShadowColor,
   });
 
   /// fromType factory constructor
@@ -122,6 +126,7 @@ class AppTheme {
           error: Colors.red,
           borderGray: const Color(0xFFE6E8EA),
           blackColor: const Color(0xFF010D21),
+          chatAppBarColor: Colors.white,
           lightBlackColor: const Color(0xFF586780),
           redColor: Colors.red,
           lightGray: const Color(0xFFF2F2F2),
@@ -142,6 +147,7 @@ class AppTheme {
           statusTxtColor:const Color(0xFF7A8AA3),
           profileSettingColor:const Color(0xFFF3F4F4),
           chatSecondaryColor:const Color.fromRGBO(153, 158, 166, 0.1),
+          emojiShadowColor:const Color.fromRGBO(78, 160, 247, 0.12),
         );
 
       case ThemeType.dark:
@@ -158,8 +164,9 @@ class AppTheme {
           darkGray: const Color(0xFFE8E8E8),
           darkRedColor: const Color(0xFFFF4E59),
           white: Colors.white,
-          whiteColor: Colors.black,
+          whiteColor:const Color(0xFF132037),
           blackColor: Colors.white,
+          chatAppBarColor: const Color(0xFF010D21),
           lightBlackColor:Colors.white,
           redColor: Colors.red,
           textColor: const Color(0xFF636363),
@@ -181,11 +188,12 @@ class AppTheme {
           orangeColor: Colors.orange,
           tealColor: Colors.teal,
           blueColor: Colors.blue,
-          bgColor: Colors.black,
+          bgColor: const Color(0xFF010D21),
           txtColor:const Color(0xFF999EA6),
           statusTxtColor:const Color(0xFF7A8AA3),
           profileSettingColor:const Color(0xFFF3F4F4),
           chatSecondaryColor:const Color.fromRGBO(153, 158, 166, 0.1),
+          emojiShadowColor:const Color.fromRGBO(78, 160, 247, 0.12),
         );
     }
   }

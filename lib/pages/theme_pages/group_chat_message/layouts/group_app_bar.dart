@@ -21,7 +21,7 @@ class GroupChatMessageAppBar extends StatelessWidget with PreferredSizeWidget {
         toolbarHeight: Sizes.s90,
         titleSpacing: 0,
         leading: SvgPicture.asset(
-            appCtrl.isRTL ? svgAssets.arrowForward : svgAssets.arrowBack,
+            appCtrl.isRTL ? svgAssets.arrowForward : svgAssets.arrowBack,color: appCtrl.appTheme.blackColor,
             height: Sizes.s18)
             .paddingAll(Insets.i10)
             .decorated(
@@ -37,10 +37,10 @@ class GroupChatMessageAppBar extends StatelessWidget with PreferredSizeWidget {
             .marginOnly(right: Insets.i10, top: Insets.i22, bottom: Insets.i22,left: Insets.i20)
             .inkWell(onTap: () => Get.back()),
         actions: [
-          SvgPicture.asset(svgAssets.video, height: Sizes.s20)
+          SvgPicture.asset(svgAssets.video, height: Sizes.s20,color: appCtrl.appTheme.blackColor)
               .paddingAll(Insets.i10)
               .decorated(
-              color: appCtrl.appTheme.white,
+              color: appCtrl.appTheme.whiteColor,
               boxShadow: [
                 const BoxShadow(
                     offset: Offset(0, 2),
@@ -51,10 +51,10 @@ class GroupChatMessageAppBar extends StatelessWidget with PreferredSizeWidget {
               borderRadius: BorderRadius.circular(AppRadius.r10))
               .marginSymmetric(vertical: Insets.i22)
               .inkWell(onTap: videoTap),
-          SvgPicture.asset(svgAssets.search, height: Sizes.s20)
+          SvgPicture.asset(svgAssets.search, height: Sizes.s20,color: appCtrl.appTheme.blackColor)
               .paddingAll(Insets.i10)
               .decorated(
-              color: appCtrl.appTheme.white,
+              color: appCtrl.appTheme.whiteColor,
               boxShadow: [
                 const BoxShadow(
                     offset: Offset(0, 2),

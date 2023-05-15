@@ -5,8 +5,10 @@ import '../../../../config.dart';
 
 class VideoDoc extends StatefulWidget {
   final dynamic document;
-
-  const VideoDoc({Key? key, this.document}) : super(key: key);
+final  bool isBroadcast,isReceiver;
+  final GestureTapCallback? onTap;
+  final VoidCallback? onLongPress;
+  const VideoDoc({Key? key, this.document,this.isBroadcast = false,this.isReceiver = false,this.onTap,this.onLongPress}) : super(key: key);
 
   @override
   State<VideoDoc> createState() => _VideoDocState();
@@ -41,53 +43,68 @@ class _VideoDocState extends State<VideoDoc> {
             // If the VideoPlayerController has finished initialization, use
             // the data it provides to limit the aspect ratio of the video.
             return InkWell(
-              onLongPress: () {
-                showDialog(
-                  context: Get.context!,
-                  builder: (BuildContext context) => chatCtrl
-                      .buildPopupDialog(context, widget.document!),
-                );
-              },
-              child: Stack(
-                alignment: Alignment.bottomRight,
+              onLongPress: widget.onLongPress,
+              onTap: widget.onTap,
+              child: Column(
+crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Stack(
-                    alignment: Alignment.center,
+                    clipBehavior: Clip.none,
                     children: [
-                      AspectRatio(
-                        aspectRatio: videoController!.value.aspectRatio,
-                        // Use the VideoPlayer widget to display the video.
-                        child: VideoPlayer(videoController!),
-                      ).height(Sizes.s250).clipRRect(all: AppRadius.r8),
-                      IconButton(
-                          icon: Icon(
-                                  videoController!.value.isPlaying
-                                      ? Icons.pause
-                                      : Icons.play_arrow,
-                                  color: appCtrl.appTheme.whiteColor)
-                              .marginAll(Insets.i3)
-                              .decorated(
-                                  color: appCtrl.appTheme.secondary,
-                                  shape: BoxShape.circle),
-                          onPressed: () {
-                            if (videoController!.value.isPlaying) {
-                              videoController!.pause();
-                            } else {
-                              // If the video is paused, play it.
-                              videoController!.play();
-                            }
-                            setState(() {});
-                          }),
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          AspectRatio(
+                            aspectRatio: videoController!.value.aspectRatio,
+                            // Use the VideoPlayer widget to display the video.
+                            child: VideoPlayer(videoController!),
+                          ).height(Sizes.s250).clipRRect(all: AppRadius.r8),
+                          IconButton(
+                              icon: Icon(
+                                      videoController!.value.isPlaying
+                                          ? Icons.pause
+                                          : Icons.play_arrow,
+                                      color: appCtrl.appTheme.whiteColor)
+                                  .marginAll(Insets.i3)
+                                  .decorated(
+                                      color: appCtrl.appTheme.secondary,
+                                      shape: BoxShape.circle),
+                              onPressed: () {
+                                if (videoController!.value.isPlaying) {
+                                  videoController!.pause();
+                                } else {
+                                  // If the video is paused, play it.
+                                  videoController!.play();
+                                }
+                                setState(() {});
+                              }),
 
+                        ],
+                      ),
+                      if (widget.document!.data().toString().contains('emoji'))
+                        EmojiLayout(emoji: widget.document!["emoji"]),
                     ],
                   ),
-                  Text(DateFormat('HH:mm a').format(
-                      DateTime.fromMillisecondsSinceEpoch(
-                          int.parse(widget.document!['timestamp']))),style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.whiteColor),).marginAll(Insets.i10)
+
+                  const VSpace(Sizes.s2),
+                  IntrinsicHeight(
+                      child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                        if (!widget.isBroadcast && !widget.isReceiver)
+                          Icon(Icons.done_all_outlined,
+                              size: Sizes.s15,
+                              color: widget.document!['isSeen'] == false
+                                  ? appCtrl.appTheme.primary
+                                  : appCtrl.appTheme.gray),
+                        const HSpace(Sizes.s5),
+                        Text(
+                            DateFormat('HH:mm a').format(
+                                DateTime.fromMillisecondsSinceEpoch(
+                                    int.parse(widget.document!['timestamp']))),
+                            style:
+                            AppCss.poppinsMedium12.textColor(appCtrl.appTheme.txtColor))
+                      ]))
                 ],
-              ).paddingSymmetric(horizontal: Insets.i8,vertical: Insets.i8).inkWell(onTap: (){
-                launchUrl(Uri.parse(widget.document!["content"]));
-              }),
+              ).paddingSymmetric(horizontal: Insets.i8,vertical: Insets.i8).inkWell(onTap: widget.onTap),
             );
           } else {
             // If the VideoPlayerController is still initializing, show a

@@ -11,8 +11,7 @@ class RegisterUser extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
-        MessageFirebaseApi()
-            .saveContact(userContactModel, userContactModel!.isRegister);
+        MessageFirebaseApi().saveContact(userContactModel!);
       },
       leading: userContactModel!.isRegister!
           ? CachedNetworkImage(
@@ -55,7 +54,7 @@ class RegisterUser extends StatelessWidget {
                           : userContactModel!.username![0],
                       style: AppCss.poppinsMedium12
                           .textColor(appCtrl.appTheme.whiteColor))),
-      title: Text(userContactModel!.username! ),
+      title: Text(userContactModel!.username!),
       subtitle: Text(userContactModel!.description ?? ""),
       trailing: !userContactModel!.isRegister!
           ? Icon(

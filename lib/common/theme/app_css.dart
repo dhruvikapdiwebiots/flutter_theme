@@ -60,6 +60,7 @@ class AppCss {
   static TextStyle get poppinsMedium16 => poppins.medium.size(FontSizes.f16);
   static TextStyle get poppinsMedium15 => poppins.medium.size(FontSizes.f15);
   static TextStyle get poppinsMedium14 => poppins.medium.size(FontSizes.f14);
+  static TextStyle get poppinsMedium13 => poppins.medium.size(FontSizes.f13);
   static TextStyle get poppinsMedium12 => poppins.medium.size(FontSizes.f12);
   static TextStyle get poppinsMedium10 => poppins.medium.size(FontSizes.f10);
   static TextStyle get poppinsMedium8 => poppins.medium.size(FontSizes.f8);

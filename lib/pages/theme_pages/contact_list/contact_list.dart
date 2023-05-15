@@ -152,11 +152,7 @@ class ContactList extends StatelessWidget {
                                                         MessageFirebaseApi()
                                                             .saveContact(
                                                                 item.userTitle![
-                                                                    index],
-                                                                item
-                                                                    .userTitle![
-                                                                        index]
-                                                                    .isRegister);
+                                                                    index]);
                                                       },
                                                       leading:
                                                           item.userTitle![index]

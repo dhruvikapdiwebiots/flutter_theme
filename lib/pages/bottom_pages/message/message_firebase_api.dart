@@ -1,6 +1,8 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:contacts_service/contacts_service.dart' as service;
+
 import '../../../config.dart';
 
 class MessageFirebaseApi {
@@ -62,10 +64,24 @@ class MessageFirebaseApi {
   }
 
   //check contact in firebase and if not exists
-  saveContact(value, isRegister) async {
+  saveContact(UserContactModel userModel) async {
+    bool isRegister = false;
+
+
+    await FirebaseFirestore.instance.collection(collectionName.users).where("phone",isEqualTo: userModel.phoneNumber).limit(1).get().then((value) {
+      if(value.docs.isNotEmpty){
+        isRegister = true;
+        userModel.uid = value.docs[0].id;
+      }else{
+        isRegister = false;
+      }
+    });
+
+
     final data = appCtrl.storage.read(session.user);
     currentUserId = data["id"];
-    UserContactModel userContact = value;
+
+    UserContactModel userContact = userModel;
     if (isRegister) {
       log("val: ${userContact.uid}");
       await FirebaseFirestore.instance
@@ -100,16 +116,14 @@ class MessageFirebaseApi {
         }
       });
     } else {
-      if (Platform.isAndroid) {
-        final uri = Uri(
-          scheme: "sms",
-          path: userContact.phoneNumber,
-          queryParameters: <String, String>{
-            'body': Uri.encodeComponent('Download the ChatBox App'),
-          },
-        );
-        await launchUrl(uri);
+      String telephoneUrl = "tel:${userModel.phoneNumber}";
+
+      if (await canLaunchUrl(Uri.parse(telephoneUrl))) {
+        await launchUrl(Uri.parse(telephoneUrl));
+      } else {
+        throw "Can't phone that number.";
       }
+
     }
   }
 

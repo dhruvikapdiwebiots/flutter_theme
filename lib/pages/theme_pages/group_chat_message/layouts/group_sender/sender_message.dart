@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-
+import 'package:flutter_theme/pages/theme_pages/group_chat_message/group_on_tap_function_class.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 import '../../../../../config.dart';
@@ -8,10 +8,10 @@ import '../../../../../config.dart';
 class GroupSenderMessage extends StatefulWidget {
   final DocumentSnapshot? document;
   final int? index;
-  final String? currentUserId;
+  final String? currentUserId, docId;
 
   const GroupSenderMessage(
-      {Key? key, this.document, this.index, this.currentUserId})
+      {Key? key, this.document, this.index, this.currentUserId, this.docId})
       : super(key: key);
 
   @override
@@ -24,160 +24,155 @@ class _GroupSenderMessageState extends State<GroupSenderMessage> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<GroupChatMessageController>(builder: (chatCtrl) {
-      return Container(
-          margin: const EdgeInsets.only(bottom: 2.0),
-          child: Column(
-            children: <Widget>[
-              Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
-                if (widget.document!["type"] == MessageType.text.name)
-                  // Text
-                  GroupContent(
-                      onLongPress: () {
-                        showDialog(
-                          context: Get.context!,
-                          builder: (BuildContext context) => chatCtrl
-                              .buildPopupDialog(context, widget.document!),
-                        );
-                      },
-                      document: widget.document),
-                if (widget.document!["type"] == MessageType.image.name)
-                  GroupSenderImage(
-                      document: widget.document,
-                      onLongPress: () {
-                        showDialog(
-                          context: Get.context!,
-                          builder: (BuildContext context) => chatCtrl
-                              .buildPopupDialog(context, widget.document!),
-                        );
-                      }),
-                if (widget.document!["type"] == MessageType.contact.name)
-                  GroupContactLayout(
-                      currentUserId: widget.currentUserId,
-                      onLongPress: () {
-                        showDialog(
-                          context: Get.context!,
-                          builder: (BuildContext context) => chatCtrl
-                              .buildPopupDialog(context, widget.document!),
-                        );
-                      },
-                      document: widget.document),
-                if (widget.document!["type"] == MessageType.location.name)
-                  GroupLocationLayout(
-                      document: widget.document,
-                      currentUserId: chatCtrl.id,
-                      onLongPress: () {
-                        showDialog(
-                          context: Get.context!,
-                          builder: (BuildContext context) => chatCtrl
-                              .buildPopupDialog(context, widget.document!),
-                        );
-                      },
-                      onTap: () {
-                        launchUrl(Uri.parse(widget.document!["content"]));
-                      }),
-                if (widget.document!["type"] == MessageType.video.name)
-                  GroupVideoDoc(
-                      currentUserId: widget.currentUserId,
-                      document: widget.document,
-                      onLongPress: () {
-                        showDialog(
-                          context: Get.context!,
-                          builder: (BuildContext context) => chatCtrl
-                              .buildPopupDialog(context, widget.document!),
-                        );
-                      }),
-                if (widget.document!["type"] == MessageType.audio.name)
-                  GroupAudioDoc(
-                      currentUserId: widget.currentUserId,
-                      document: widget.document,
-                      onLongPress: () {
-                        showDialog(
-                            context: Get.context!,
-                            builder: (BuildContext context) => chatCtrl
-                                .buildPopupDialog(context, widget.document!));
-                      }),
-                if (widget.document!["type"] == MessageType.doc.name)
-                  (widget.document!["content"].contains(".pdf"))
-                      ? PdfLayout(
-                          isGroup: true,
-                          document: widget.document,
-
-                          onLongPress: () {
-                            showDialog(
-                                context: Get.context!,
-                                builder: (BuildContext context) =>
-                                    chatCtrl.buildPopupDialog(
-                                        context, widget.document!));
-                          })
-                      : (widget.document!["content"].contains(".doc"))
-                          ? DocxLayout(
+      return Stack(
+        alignment: Alignment.topLeft,
+        children: [
+          Container(
+              color: chatCtrl.selectedIndexId.contains(widget.docId)
+                  ? appCtrl.appTheme.lightGray
+                  : appCtrl.appTheme.bgColor,
+              margin: const EdgeInsets.only(bottom: 2.0),
+              padding: EdgeInsets.only(
+                  top: chatCtrl.selectedIndexId.contains(widget.docId)
+                      ? Insets.i20
+                      : 0,
+                  left: Insets.i10,
+                  right: Insets.i10),
+              child: Column(
+                children: <Widget>[
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        if (widget.document!["type"] == MessageType.text.name)
+                          // Text
+                          GroupContent(
+                              onTap: () => GroupOnTapFunctionCall()
+                                  .contentTap(chatCtrl, widget.docId),
+                              onLongPress: () =>
+                                  chatCtrl.onLongPressFunction(widget.docId),
+                              document: widget.document),
+                        if (widget.document!["type"] == MessageType.image.name)
+                          GroupSenderImage(
+                              onPressed: () => GroupOnTapFunctionCall()
+                                  .imageTap(
+                                      chatCtrl, widget.docId, widget.document),
+                              document: widget.document,
+                              onLongPress: () =>
+                                  chatCtrl.onLongPressFunction(widget.docId)),
+                        if (widget.document!["type"] ==
+                            MessageType.contact.name)
+                          GroupContactLayout(
+                              currentUserId: widget.currentUserId,
+                              onLongPress: () =>
+                                  chatCtrl.onLongPressFunction(widget.docId),
+                              onTap: () => GroupOnTapFunctionCall()
+                                  .contentTap(chatCtrl, widget.docId),
+                              document: widget.document),
+                        if (widget.document!["type"] ==
+                            MessageType.location.name)
+                          GroupLocationLayout(
+                              document: widget.document,
+                              currentUserId: chatCtrl.id,
+                              onLongPress: () =>
+                                  chatCtrl.onLongPressFunction(widget.docId),
+                              onTap: () => GroupOnTapFunctionCall().locationTap(
+                                  chatCtrl, widget.docId, widget.document)),
+                        if (widget.document!["type"] == MessageType.video.name)
+                          GroupVideoDoc(
                               currentUserId: widget.currentUserId,
                               document: widget.document,
-                              isGroup: true,
-                              onLongPress: () {
-                                showDialog(
-                                    context: Get.context!,
-                                    builder: (BuildContext context) =>
-                                        chatCtrl.buildPopupDialog(
-                                            context, widget.document!));
-                              })
-                          : (widget.document!["content"].contains(".xlsx"))
-                              ? ExcelLayout(
-                                  currentUserId: widget.currentUserId,
+                              onLongPress: () =>
+                                  chatCtrl.onLongPressFunction(widget.docId),
+                              onTap: () => GroupOnTapFunctionCall().locationTap(
+                                  chatCtrl, widget.docId, widget.document)),
+                        if (widget.document!["type"] == MessageType.audio.name)
+                          GroupAudioDoc(
+                              currentUserId: widget.currentUserId,
+                              document: widget.document,
+                              onLongPress: () =>
+                                  chatCtrl.onLongPressFunction(widget.docId),
+                              onTap: () => GroupOnTapFunctionCall()
+                                  .contentTap(chatCtrl, widget.docId)),
+                        if (widget.document!["type"] == MessageType.doc.name)
+                          (widget.document!["content"].contains(".pdf"))
+                              ? PdfLayout(
                                   isGroup: true,
-                                  onLongPress: () {
-                                    showDialog(
-                                        context: Get.context!,
-                                        builder: (BuildContext context) =>
-                                            chatCtrl.buildPopupDialog(
-                                                context, widget.document!));
-                                  },
                                   document: widget.document,
-                                )
-                              : (widget.document!["content"].contains(".jpg") ||
-                                      widget.document!["content"]
-                                          .contains(".png") ||
-                                      widget.document!["content"]
-                                          .contains(".heic") ||
-                                      widget.document!["content"]
-                                          .contains(".jpeg"))
-                                  ? DocImageLayout(
+                                  onLongPress: () => chatCtrl
+                                      .onLongPressFunction(widget.docId),
+                                  onTap: () => GroupOnTapFunctionCall().pdfTap(
+                                      chatCtrl, widget.docId, widget.document))
+                              : (widget.document!["content"].contains(".doc"))
+                                  ? DocxLayout(
                                       currentUserId: widget.currentUserId,
-                                      isGroup: true,
                                       document: widget.document,
-                                      onLongPress: () {
-                                        showDialog(
-                                            context: Get.context!,
-                                            builder: (BuildContext context) =>
-                                                chatCtrl.buildPopupDialog(
-                                                    context, widget.document!));
-                                      })
-                                  : Container(),
-                if (widget.document!["type"] == MessageType.gif.name)
-                    GifLayout(
-                        currentUserId: widget.currentUserId,
-                        isGroup: true,
-                        document: widget.document,
-                        onLongPress: () {
-                          showDialog(
-                              context: Get.context!,
-                              builder: (BuildContext context) => chatCtrl
-                                  .buildPopupDialog(context, widget.document!));
-                        })
-              ]),
-              if (widget.document!["type"] == MessageType.messageType.name)
-                Align(
-                  alignment: Alignment.center,
-                  child: Text(widget.document!["content"])
-                      .paddingSymmetric(
-                          horizontal: Insets.i8, vertical: Insets.i10)
-                      .decorated(
-                          color: appCtrl.appTheme.primary.withOpacity(.2),
-                          borderRadius: BorderRadius.circular(AppRadius.r8))
-                      .alignment(Alignment.center),
-                ).paddingOnly(bottom: Insets.i8)
-            ],
-          ));
+                                      isGroup: true,
+                                      onLongPress: () => chatCtrl
+                                          .onLongPressFunction(widget.docId),
+                                      onTap: () => GroupOnTapFunctionCall()
+                                          .docTap(chatCtrl, widget.docId,
+                                              widget.document))
+                                  : (widget.document!["content"]
+                                          .contains(".xlsx"))
+                                      ? ExcelLayout(
+                                          currentUserId: widget.currentUserId,
+                                          isGroup: true,
+                                          onLongPress: () =>
+                                              chatCtrl.onLongPressFunction(
+                                                  widget.docId),
+                                          onTap: () => GroupOnTapFunctionCall()
+                                              .excelTap(chatCtrl, widget.docId,
+                                                  widget.document),
+                                          document: widget.document,
+                                        )
+                                      : (widget.document!["content"]
+                                                  .contains(".jpg") ||
+                                              widget.document!["content"]
+                                                  .contains(".png") ||
+                                              widget.document!["content"]
+                                                  .contains(".heic") ||
+                                              widget.document!["content"]
+                                                  .contains(".jpeg"))
+                                          ? DocImageLayout(currentUserId: widget.currentUserId, isGroup: true, document: widget.document, onLongPress: () => chatCtrl.onLongPressFunction(widget.docId), onTap: () => GroupOnTapFunctionCall().docImageTap(chatCtrl, widget.docId, widget.document))
+                                          : Container(),
+                        if (widget.document!["type"] == MessageType.gif.name)
+                          GifLayout(
+                              currentUserId: widget.currentUserId,
+                              isGroup: true,
+                              document: widget.document,
+                              onLongPress: () =>
+                                  chatCtrl.onLongPressFunction(widget.docId),
+                              onTap: () => GroupOnTapFunctionCall()
+                                  .contentTap(chatCtrl, widget.docId))
+                      ]),
+                  if (widget.document!["type"] == MessageType.messageType.name)
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(widget.document!["content"])
+                          .paddingSymmetric(
+                              horizontal: Insets.i8, vertical: Insets.i10)
+                          .decorated(
+                              color: appCtrl.appTheme.primary.withOpacity(.2),
+                              borderRadius: BorderRadius.circular(AppRadius.r8))
+                          .alignment(Alignment.center),
+                    ).paddingOnly(bottom: Insets.i8)
+                ],
+              )),
+          if (chatCtrl.enableReactionPopup &&
+              chatCtrl.selectedIndexId.contains(widget.docId))
+            SizedBox(
+                width: MediaQuery.of(Get.context!).size.width,
+                height: Sizes.s35,
+                child: ReactionPopup(
+                  reactionPopupConfig: ReactionPopupConfiguration(
+                      shadow: BoxShadow(
+                          color: Colors.grey.shade400, blurRadius: 20)),
+                  onEmojiTap: (val) => GroupOnTapFunctionCall()
+                      .onEmojiSelect(chatCtrl, widget.docId, val),
+                  showPopUp: chatCtrl.showPopUp,
+                ))
+        ],
+      );
     });
   }
 }

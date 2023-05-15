@@ -84,7 +84,7 @@ class StatusFloatingButton extends StatelessWidget {
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     gradient: RadialGradient(colors: [
-                      appCtrl.appTheme.lightPrimary,
+                      appCtrl.isTheme ? appCtrl.appTheme.primary.withOpacity(.8):  appCtrl.appTheme.lightPrimary,
                       appCtrl.appTheme.primary
                     ])),
                 child: SvgPicture.asset(svgAssets.camera,height: Sizes.s15),

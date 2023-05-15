@@ -1,13 +1,12 @@
-
 import 'package:flutter_theme/pages/theme_pages/chat_message/layouts/receiver_image.dart';
 import '../../../../../config.dart';
 
 class GroupReceiverMessage extends StatefulWidget {
   final DocumentSnapshot? document;
-
+final String? docId;
   final int? index;
 
-  const GroupReceiverMessage({Key? key, this.index, this.document})
+  const GroupReceiverMessage({Key? key, this.index, this.document,this.docId})
       : super(key: key);
 
   @override
@@ -15,21 +14,20 @@ class GroupReceiverMessage extends StatefulWidget {
 }
 
 class _GroupReceiverMessageState extends State<GroupReceiverMessage> {
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<GroupChatMessageController>(builder: (chatCtrl) {
-
       return Container(
         margin: const EdgeInsets.only(bottom: 10.0),
         child: Row(
           children: [
-            ReceiverChatImage(id: widget.document!["sender"],),
+            ReceiverChatImage(
+              id: widget.document!["sender"],
+            ),
             Column(children: <Widget>[
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-
                   // MESSAGE BOX FOR TEXT
                   if (widget.document!["type"] == MessageType.text.name)
                     GroupReceiverContent(
@@ -72,16 +70,15 @@ class _GroupReceiverMessageState extends State<GroupReceiverMessage> {
                         }),
                   if (widget.document!["type"] == MessageType.video.name)
                     GroupVideoDoc(
-                      isReceiver: true,
-                      currentUserId: chatCtrl.user["id"],
-                      document: widget.document,
-                      onLongPress: () {
-                        showDialog(
-                            context: Get.context!,
-                            builder: (BuildContext context) => chatCtrl
-                                .buildPopupDialog(context, widget.document!));
-                      }
-                    ),
+                        isReceiver: true,
+                        currentUserId: chatCtrl.user["id"],
+                        document: widget.document,
+                        onLongPress: () {
+                          showDialog(
+                              context: Get.context!,
+                              builder: (BuildContext context) => chatCtrl
+                                  .buildPopupDialog(context, widget.document!));
+                        }),
                   if (widget.document!["type"] == MessageType.audio.name)
                     GroupAudioDoc(
                         isReceiver: true,
@@ -102,8 +99,9 @@ class _GroupReceiverMessageState extends State<GroupReceiverMessage> {
                             onLongPress: () {
                               showDialog(
                                   context: Get.context!,
-                                  builder: (BuildContext context) => chatCtrl
-                                      .buildPopupDialog(context, widget.document!));
+                                  builder: (BuildContext context) =>
+                                      chatCtrl.buildPopupDialog(
+                                          context, widget.document!));
                             })
                         : (widget.document!["content"].contains(".doc"))
                             ? DocxLayout(
@@ -117,23 +115,42 @@ class _GroupReceiverMessageState extends State<GroupReceiverMessage> {
                                           chatCtrl.buildPopupDialog(
                                               context, widget.document!));
                                 })
-                            : (widget.document!["content"].contains(".jpg") ||
-                                    widget.document!["content"].contains(".png") ||
-                                    widget.document!["content"].contains(".heic") ||
-                                    widget.document!["content"].contains(".jpeg"))
-                                ? DocImageLayout(
+                            : (widget.document!["content"].contains(".xlsx"))
+                                ? ExcelLayout(
                                     currentUserId: chatCtrl.user["id"],
-                                    isGroup: true,
                                     isReceiver: true,
-                                    document: widget.document,
+                                    isGroup: true,
                                     onLongPress: () {
                                       showDialog(
                                           context: Get.context!,
                                           builder: (BuildContext context) =>
                                               chatCtrl.buildPopupDialog(
                                                   context, widget.document!));
-                                    })
-                                : Container(),
+                                    },
+                                    document: widget.document,
+                                  )
+                                : (widget.document!["content"]
+                                            .contains(".jpg") ||
+                                        widget.document!["content"]
+                                            .contains(".png") ||
+                                        widget.document!["content"]
+                                            .contains(".heic") ||
+                                        widget.document!["content"]
+                                            .contains(".jpeg"))
+                                    ? DocImageLayout(
+                                        currentUserId: chatCtrl.user["id"],
+                                        isGroup: true,
+                                        isReceiver: true,
+                                        document: widget.document,
+                                        onLongPress: () {
+                                          showDialog(
+                                              context: Get.context!,
+                                              builder: (BuildContext context) =>
+                                                  chatCtrl.buildPopupDialog(
+                                                      context,
+                                                      widget.document!));
+                                        })
+                                    : Container(),
 
                   if (widget.document!["type"] == MessageType.gif.name)
                     GifLayout(
@@ -147,14 +164,14 @@ class _GroupReceiverMessageState extends State<GroupReceiverMessage> {
                               builder: (BuildContext context) => chatCtrl
                                   .buildPopupDialog(context, widget.document!));
                         })
-
                 ],
               ),
               if (widget.document!["type"] == MessageType.messageType.name)
                 Align(
                   alignment: Alignment.center,
                   child: Text(widget.document!["content"])
-                      .paddingSymmetric(horizontal: Insets.i8, vertical: Insets.i10)
+                      .paddingSymmetric(
+                          horizontal: Insets.i8, vertical: Insets.i10)
                       .decorated(
                           color: appCtrl.appTheme.primary.withOpacity(.2),
                           borderRadius: BorderRadius.circular(AppRadius.r8))

@@ -22,9 +22,9 @@ class GroupMessageBox extends StatelessWidget {
                   } else {
                     chatCtrl.message = (snapshot.data!).docs;
                     return  ListView.builder(
-                      padding: const EdgeInsets.all(10.0),
+
                       itemBuilder: (context, index) => chatCtrl.buildItem(
-                          index, (snapshot.data!).docs[index]),
+                          index, (snapshot.data!).docs[index],(snapshot.data!).docs[index].id).marginOnly(bottom: Insets.i18),
                       itemCount: (snapshot.data!).docs.length,
                       reverse: true,
                       controller: chatCtrl.listScrollController,

@@ -32,43 +32,47 @@ class EmojiRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final emojiList = emojiConfiguration?.emojiList ?? _emojiUnicodes;
     final size = emojiConfiguration?.size;
-    return Row(
-      children: [
-        Expanded(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: List.generate(
-              emojiList.length,
-                  (index) => GestureDetector(
-                onTap: () => onEmojiTap(emojiList[index]),
-                child: Text(
-                  emojiList[index],
-                  style: const TextStyle(fontSize: FontSizes.f16),
-                ),
-              ),
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: List.generate(
+                    emojiList.length,
+                    (index) => GestureDetector(
+                        onTap: (){
+                          onEmojiTap(emojiList[index]);
+                          log("CHECK `:${emojiList[index]}");
+                        },
+                        child: Text(
+                          emojiList[index],
+                          style: const TextStyle(fontSize: FontSizes.f16),
+                        )))),
+          ),
+          InkWell(
+            child: Icon(
+              Icons.add,
+              color: Colors.grey.shade600,
+              size: 18,
             ),
-          ),
-        ),
-        IconButton(
-          constraints: const BoxConstraints(),
-          icon: Icon(
-            Icons.add,
-            color: Colors.grey.shade600,
-            size: 28,
-          ),
-          onPressed: () => _showBottomSheet(context),
-        ),
-      ],
+            onTap: () => _showBottomSheet(context),
+          ).paddingAll(Insets.i2).decorated(
+              color: appCtrl.appTheme.lightGray, shape: BoxShape.circle)
+        ],
+      ),
     );
   }
 
   void _showBottomSheet(BuildContext context) => showModalBottomSheet<void>(
-    context: context,
-    builder: (context) => EmojiPickerWidget(onSelected: (emoji) {
-      Navigator.pop(context);
-      log("emoji : $emoji");
-      onEmojiTap(emoji);
-    }),
-  );
+        context: context,
+        builder: (context) => EmojiPickerWidget(onSelected: (emoji) {
+          Navigator.pop(context);
+          log("emoji : ${emoji.codeUnits}");
+          log("emoji : ${emoji.characters}");
+          onEmojiTap(emoji);
+        }),
+      );
 }

@@ -36,7 +36,6 @@ class ChatController extends GetxController {
   bool enableReactionPopup = false;
   bool showPopUp = false;
   List selectedIndexId = [];
-  final GlobalKey<ReactionPopupState> reactionPopupKey = GlobalKey();
 
   bool typing = false, isBlock = false;
   final pickerCtrl = Get.isRegistered<PickerController>()
@@ -128,6 +127,9 @@ class ChatController extends GetxController {
 
   //seen all message
   seenMessage() async {
+    log("ALL : $allData");
+    log("userData : $userData");
+    log("c : $pId");
     if (allData["senderId"] != userData["id"]) {
       await FirebaseFirestore.instance
           .collection(collectionName.messages)
@@ -555,15 +557,15 @@ class ChatController extends GetxController {
 
 // BUILD ITEM MESSAGE BOX FOR RECEIVER AND SENDER BOX DESIGN
   Widget buildItem(int index, document, documentId) {
-
     if (document['sender'] == userData["id"]) {
       return SenderMessage(
         document: document,
-
-        index: index,docId: documentId,
+        index: index,
+        docId: documentId,
       ).inkWell(onTap: () {
         enableReactionPopup = false;
         showPopUp = false;
+        selectedIndexId = [];
         update();
         log("enable : $enableReactionPopup");
       });
@@ -573,16 +575,14 @@ class ChatController extends GetxController {
           ? Container()
           : document["isBlock"]
               ? Container()
-              : ReceiverMessage(document: document, index: index,docId: documentId).onLongPress(
-                  onLogPress: () {
+              : ReceiverMessage(
+                      document: document, index: index, docId: documentId)
+                  .inkWell(onTap: () {
                   enableReactionPopup = false;
-                  showPopUp = true;
+                  showPopUp = false;
+                  selectedIndexId = [];
                   update();
-                  /* showDialog(
-          context: Get.context!,
-          builder: (BuildContext context) =>
-              buildPopupDialog(context, document!),
-        );*/
+                  log("enable : $enableReactionPopup");
                 });
     }
   }
@@ -597,8 +597,25 @@ class ChatController extends GetxController {
     Get.back();
     return Future.value(false);
   }
-}
 
+  //ON LONG PRESS
+  onLongPressFunction(docId) {
+    showPopUp = true;
+    enableReactionPopup = true;
+
+    if (!selectedIndexId
+        .contains(docId)) {
+      if (showPopUp == false) {
+        selectedIndexId.add(docId);
+      } else {
+        selectedIndexId = [];
+        selectedIndexId.add(docId);
+      }
+      update();
+    }
+    update();
+  }
+}
 
 class FeatureActiveConfig {
   const FeatureActiveConfig({

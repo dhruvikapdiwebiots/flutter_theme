@@ -10,6 +10,7 @@ export 'package:flutter_svg/flutter_svg.dart';
 export 'utilities/index.dart';
 export 'common/theme/index.dart';
 export '../../common/config.dart';
+export 'package:flutter_theme/widgets/emoji_layout.dart';
 export 'common/language/index.dart';
 export '../../routes/index.dart';
 export 'extensions/spacing.dart';

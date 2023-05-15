@@ -11,90 +11,68 @@ import '../../../../../config.dart';
 class SenderImage extends StatelessWidget {
   final dynamic document;
   final VoidCallback? onPressed, onLongPress;
+  final bool isBroadcast;
 
-  const SenderImage({Key? key, this.document, this.onPressed, this.onLongPress})
+  const SenderImage({Key? key, this.document, this.onPressed, this.onLongPress,this.isBroadcast =false})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
         onLongPress: onLongPress,
-        onTap: () async {
-          var openResult = 'Unknown';
-          var dio = Dio();
-          var tempDir = await getExternalStorageDirectory();
-          DateTime now = DateTime.now();
-          var filePath = tempDir!.path +
-              (document!['content'].contains("-BREAK-")
-                  ? document!['content'].split("-BREAK-")[0]
-                  : (document!['content']));
-          final response = await dio.download(
-              document!['content'].contains("-BREAK-")
-                  ? document!['content'].split("-BREAK-")[1]
-                  : document!['content'],
-              filePath);
-          log("response : ${response.statusCode}");
-
-          final result = await OpenFilex.open(filePath);
-
-          openResult = "type=${result.type}  message=${result.message}";
-          log("openResult : $openResult");
-        },
+        onTap:onPressed,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: Insets.i10,),
-              decoration: ShapeDecoration(
-                color: appCtrl.appTheme.primary,
-                shape: const SmoothRectangleBorder(
-                    borderRadius: SmoothBorderRadius.only(
-                        topLeft: SmoothRadius(
-                          cornerRadius: 20,
-                          cornerSmoothing: .5,
-                        ),
-                        topRight: SmoothRadius(
-                          cornerRadius: 20,
-                          cornerSmoothing: 0.4,
-                        ),
-                        bottomLeft: SmoothRadius(
-                          cornerRadius: 20,
-                          cornerSmoothing: .5,
-                        ))),
-              ),
-              child: ClipSmoothRect(
-                clipBehavior: Clip.hardEdge,
-                radius: SmoothBorderRadius(
-                  cornerRadius: 20,
-                  cornerSmoothing: 1,
-                ),
-                child: Material(
-                  borderRadius: SmoothBorderRadius(cornerRadius: 20,cornerSmoothing: 1),
-                  clipBehavior: Clip.hardEdge,
-                  child: CachedNetworkImage(
-                    placeholder: (context, url) => Container(
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: Insets.i10,),
+                  decoration: ShapeDecoration(
+                    color: appCtrl.appTheme.primary,
+                    shape:  SmoothRectangleBorder(
+                        borderRadius:SmoothBorderRadius(cornerRadius: 20,cornerSmoothing: 1)),
+                  ),
+                  child: ClipSmoothRect(
+                    clipBehavior: Clip.hardEdge,
+                    radius: SmoothBorderRadius(
+                      cornerRadius: 20,
+                      cornerSmoothing: 1,
+                    ),
+                    child: Material(
+                      borderRadius: SmoothBorderRadius(cornerRadius: 15,cornerSmoothing: 1),
+                      clipBehavior: Clip.hardEdge,
+                      child: CachedNetworkImage(
+                        placeholder: (context, url) => Container(
+                            width: Sizes.s160,
+                            height: Sizes.s150,
+                            decoration: ShapeDecoration(
+                              color: appCtrl.appTheme.accent,
+                              shape:  SmoothRectangleBorder(
+                                  borderRadius:SmoothBorderRadius(cornerRadius: 10,cornerSmoothing: 1)),
+                            ),
+                            child: Container()),
+                        imageUrl: document!['content'],
                         width: Sizes.s160,
                         height: Sizes.s150,
-                        decoration: BoxDecoration(
-                          color: appCtrl.appTheme.accent,
-                          borderRadius: BorderRadius.circular(AppRadius.r8),
-                        ),
-                        child: Container()),
-                    imageUrl: document!['content'],
-                    width: Sizes.s160,
-                    height: Sizes.s150,
-                    fit: BoxFit.cover,
+                        fit: BoxFit.cover,
+                      ),
+                    ).paddingAll(Insets.i10),
                   ),
-                ).paddingAll(Insets.i10),
-              ),
+                ),
+                if (document!.data().toString().contains('emoji'))
+                  EmojiLayout(emoji: document!["emoji"])
+              ],
             ),
             Row(
               children: [
-                Icon(Icons.done_all_outlined,
-                    size: Sizes.s15,
-                    color: document!['isSeen'] == true
-                        ? appCtrl.appTheme.secondary
-                        : appCtrl.appTheme.txtColor),
+                if (!isBroadcast)
+                  Icon(Icons.done_all_outlined,
+                      size: Sizes.s15,
+                      color: document!['isSeen'] == false
+                          ? appCtrl.appTheme.primary
+                          : appCtrl.appTheme.gray),
                 const HSpace(Sizes.s5),
                 Text(
                   DateFormat('HH:mm a').format(
@@ -102,9 +80,9 @@ class SenderImage extends StatelessWidget {
                           int.parse(document!['timestamp']))),
                   style: AppCss.poppinsMedium12
                       .textColor(appCtrl.appTheme.txtColor),
-                ),
+                )
               ],
-            ).marginSymmetric(horizontal: Insets.i8, vertical: Insets.i8)
+            ).marginSymmetric(horizontal: Insets.i8, vertical: Insets.i4)
           ],
         ));
   }

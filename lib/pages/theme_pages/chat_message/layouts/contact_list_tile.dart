@@ -36,6 +36,6 @@ minVerticalPadding: 0,
             maxLines: 1,
             style: AppCss.poppinsblack14.textColor(isReceiver
                 ? appCtrl.appTheme.primary
-                : appCtrl.appTheme.whiteColor)));
+                : appCtrl.appTheme.white)));
   }
 }

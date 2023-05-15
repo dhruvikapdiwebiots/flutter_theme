@@ -5,14 +5,16 @@ import '../../../../config.dart';
 class GifLayout extends StatelessWidget {
   final dynamic document;
   final GestureLongPressCallback? onLongPress;
+  final GestureTapCallback? onTap;
   final bool isReceiver,isGroup;
   final String? currentUserId;
-  const GifLayout({Key? key,this.document,this.onLongPress, this.isReceiver = false, this.isGroup = false,this.currentUserId}) : super(key: key);
+  const GifLayout({Key? key,this.document,this.onLongPress, this.isReceiver = false, this.isGroup = false,this.currentUserId,this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
         onLongPress: onLongPress,
+        onTap: onTap,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

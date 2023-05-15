@@ -58,7 +58,7 @@ class _MessageState extends State<Message>
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     gradient: RadialGradient(colors: [
-                      appCtrl.appTheme.lightPrimary,
+                    appCtrl.isTheme ? appCtrl.appTheme.primary.withOpacity(.8):  appCtrl.appTheme.lightPrimary,
                       appCtrl.appTheme.primary
                     ])),
                 child: SvgPicture.asset(svgAssets.add,height: Sizes.s15),

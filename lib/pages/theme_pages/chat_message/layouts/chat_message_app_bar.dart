@@ -27,7 +27,7 @@ class ChatMessageAppBar extends StatelessWidget with PreferredSizeWidget {
     return GetBuilder<ChatController>(
       builder: (chatCtrl) {
         return AppBar(
-            backgroundColor: appCtrl.appTheme.whiteColor,
+            backgroundColor: appCtrl.appTheme.chatAppBarColor,
             shadowColor: const Color.fromRGBO(49, 100, 189, 0.08),
             bottomOpacity: 0.0,
             shape: SmoothRectangleBorder(
@@ -38,7 +38,7 @@ class ChatMessageAppBar extends StatelessWidget with PreferredSizeWidget {
             toolbarHeight: Sizes.s90,
             titleSpacing: 0,
             leading: SvgPicture.asset(
-                    appCtrl.isRTL ? svgAssets.arrowForward : svgAssets.arrowBack,
+                    appCtrl.isRTL ? svgAssets.arrowForward : svgAssets.arrowBack,color: appCtrl.appTheme.blackColor,
                     height: Sizes.s18)
                 .paddingAll(Insets.i10)
                 .decorated(
@@ -54,10 +54,10 @@ class ChatMessageAppBar extends StatelessWidget with PreferredSizeWidget {
                 .marginOnly(right: Insets.i10, top: Insets.i22, bottom: Insets.i22,left: Insets.i20)
                 .inkWell(onTap: () => Get.back()),
             actions: [
-              SvgPicture.asset(svgAssets.video, height: Sizes.s20)
+              SvgPicture.asset(svgAssets.video, height: Sizes.s20,color: appCtrl.appTheme.blackColor,)
                   .paddingAll(Insets.i10)
                   .decorated(
-                      color: appCtrl.appTheme.white,
+                      color: appCtrl.appTheme.whiteColor,
                       boxShadow: [
                         const BoxShadow(
                             offset: Offset(0, 2),
@@ -68,10 +68,10 @@ class ChatMessageAppBar extends StatelessWidget with PreferredSizeWidget {
                       borderRadius: BorderRadius.circular(AppRadius.r10))
                   .marginSymmetric(vertical: Insets.i22)
                   .inkWell(onTap: videoTap),
-              SvgPicture.asset(svgAssets.search, height: Sizes.s20)
+              SvgPicture.asset(svgAssets.search, height: Sizes.s20,color: appCtrl.appTheme.blackColor,)
                   .paddingAll(Insets.i10)
                   .decorated(
-                      color: appCtrl.appTheme.white,
+                      color: appCtrl.appTheme.whiteColor,
                       boxShadow: [
                         const BoxShadow(
                             offset: Offset(0, 2),
@@ -99,11 +99,11 @@ class ChatMessageAppBar extends StatelessWidget with PreferredSizeWidget {
                   _buildPopupMenuItem(isBlock ? fonts.block.tr : fonts.unblock.tr,
                       isBlock ? svgAssets.unBlock : svgAssets.block, 2),
                 ],
-                child: SvgPicture.asset(svgAssets.more, height: Sizes.s22)
+                child: SvgPicture.asset(svgAssets.more, height: Sizes.s22,color: appCtrl.appTheme.blackColor,)
                     .paddingAll(Insets.i10),
               )
                   .decorated(
-                      color: appCtrl.appTheme.white,
+                      color: appCtrl.appTheme.whiteColor,
                       boxShadow: [
                         const BoxShadow(
                             offset: Offset(0, 2),

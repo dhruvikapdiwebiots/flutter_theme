@@ -167,10 +167,10 @@ typedef StringsCallBack = void Function(String emoji, String messageId);
 typedef StringWithReturnWidget = Widget Function(String separator);
 typedef DragUpdateDetailsCallback = void Function(DragUpdateDetails);
 
-const String heart = "\u{2764}";
-const String faceWithTears = "\u{1F602}";
-const String disappointedFace = "\u{1F625}";
-const String angryFace = "\u{1F621}";
-const String astonishedFace = "\u{1F632}";
-const String thumbsUp = "\u{1F44D}";
+const String heart = "❤";
+const String faceWithTears = "😂";
+const String disappointedFace = "😥";
+const String angryFace = "😡";
+const String astonishedFace = "😲";
+const String thumbsUp = "👍";
 

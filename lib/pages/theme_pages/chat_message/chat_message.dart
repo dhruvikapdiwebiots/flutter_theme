@@ -1,8 +1,6 @@
 import 'dart:developer';
 
 import 'package:flutter_theme/config.dart';
-import 'package:flutter_theme/widgets/reaction_pop_up/reaction_config.dart';
-import 'package:flutter_theme/widgets/reaction_pop_up/reaction_pop_up.dart';
 
 class Chat extends StatefulWidget {
   const Chat({Key? key}) : super(key: key);
@@ -79,7 +77,7 @@ class _ChatState extends State<Chat>
                             });
                           },
                           moreTap: () => chatCtrl.blockUser()),
-                      backgroundColor: appCtrl.appTheme.whiteColor,
+                      backgroundColor: appCtrl.appTheme.bgColor,
                       body: Stack(children: <Widget>[
                         Column(children: <Widget>[
                           // List of messages

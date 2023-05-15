@@ -36,6 +36,9 @@ class GroupChatMessageController extends GetxController {
   TextEditingController textEditingController = TextEditingController();
   ScrollController listScrollController = ScrollController();
   FocusNode focusNode = FocusNode();
+  bool enableReactionPopup = false;
+  bool showPopUp = false;
+  List selectedIndexId = [];
 
   @override
   void onReady() {
@@ -67,7 +70,7 @@ class GroupChatMessageController extends GetxController {
         .then((value) {
       if (value.exists) {
         List receiver = pData["users"];
-        nameList = (receiver.length -1).toString();
+        nameList = (receiver.length - 1).toString();
       }
 
       update();
@@ -89,7 +92,6 @@ class GroupChatMessageController extends GetxController {
 
   //document share
   documentShare() async {
-
     pickerCtrl.dismissKeyboard();
     Get.back();
     FilePickerResult? result = await FilePicker.platform.pickFiles();
@@ -309,21 +311,30 @@ class GroupChatMessageController extends GetxController {
   }
 
 // BUILD ITEM MESSAGE BOX FOR RECEIVER AND SENDER BOX DESIGN
-  Widget buildItem(int index, DocumentSnapshot document) {
-    return Column(
-      children: [
-        (document['sender'] == user["id"])
-            ? GroupSenderMessage(
-                document: document,
-                index: index,
-                currentUserId: user["id"],
-              )
-            :
-            // RECEIVER MESSAGE
-
-            GroupReceiverMessage(document: document, index: index)
-      ],
-    );
+  Widget buildItem(int index, DocumentSnapshot document,docId) {
+    return Column(children: [
+      (document['sender'] == user["id"])
+          ? GroupSenderMessage(
+              document: document,
+              docId: docId,
+              index: index,
+              currentUserId: user["id"],
+            ).inkWell(onTap: () {
+              enableReactionPopup = false;
+              showPopUp = false;
+              selectedIndexId = [];
+              update();
+            })
+          :
+          // RECEIVER MESSAGE
+          GroupReceiverMessage(document: document, index: index, docId: docId,).inkWell(
+              onTap: () {
+              enableReactionPopup = false;
+              showPopUp = false;
+              selectedIndexId = [];
+              update();
+            })
+    ]);
   }
 
   //group call
@@ -337,7 +348,6 @@ class GroupChatMessageController extends GetxController {
       List receiver = pData["users"];
 
       receiver.asMap().entries.forEach((element) {
-
         FirebaseFirestore.instance
             .collection(collectionName.users)
             .doc(element.value["id"])
@@ -354,7 +364,8 @@ class GroupChatMessageController extends GetxController {
               callerToken: userData["pushToken"],
               receiverToken: snap.data()!["pushToken"],
               channelId: channelId,
-              isVideoCall: isVideoCall,receiver: receiver);
+              isVideoCall: isVideoCall,
+              receiver: receiver);
 
           await FirebaseFirestore.instance
               .collection(collectionName.calls)
@@ -374,7 +385,6 @@ class GroupChatMessageController extends GetxController {
             "channelId": channelId,
             "isVideoCall": isVideoCall,
           }).then((value) async {
-
             await FirebaseFirestore.instance
                 .collection(collectionName.calls)
                 .doc(call.receiverId)
@@ -393,7 +403,6 @@ class GroupChatMessageController extends GetxController {
               "channelId": channelId,
               "isVideoCall": isVideoCall
             }).then((value) async {
-
               call.hasDialled = true;
               if (isVideoCall == false) {
                 firebaseCtrl.sendNotification(
@@ -432,7 +441,7 @@ class GroupChatMessageController extends GetxController {
       });
     } on FirebaseException catch (e) {
       // Caught an exception from Firebase.
-  log.log("err :$e");
+      log.log("err :$e");
     }
   }
 
@@ -441,5 +450,23 @@ class GroupChatMessageController extends GetxController {
     firebaseCtrl.groupTypingStatus(pId, documentId, false);
     Get.back();
     return Future.value(false);
+  }
+
+  //ON LONG PRESS
+  onLongPressFunction(docId) {
+    showPopUp = true;
+    enableReactionPopup = true;
+
+    if (!selectedIndexId
+        .contains(docId)) {
+      if (showPopUp == false) {
+        selectedIndexId.add(docId);
+      } else {
+        selectedIndexId = [];
+        selectedIndexId.add(docId);
+      }
+      update();
+    }
+    update();
   }
 }

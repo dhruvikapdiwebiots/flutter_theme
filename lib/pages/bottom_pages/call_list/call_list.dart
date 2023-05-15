@@ -13,7 +13,7 @@ class CallList extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<CallListController>(builder: (_) {
       return Scaffold(
-        backgroundColor: appCtrl.appTheme.whiteColor,
+        backgroundColor: appCtrl.appTheme.bgColor,
         floatingActionButton: FloatingActionButton(
           onPressed: () {},
           backgroundColor: appCtrl.appTheme.primary,
@@ -24,7 +24,7 @@ class CallList extends StatelessWidget {
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: RadialGradient(colors: [
-                  appCtrl.appTheme.lightPrimary,
+                  appCtrl.isTheme ? appCtrl.appTheme.primary.withOpacity(.8):  appCtrl.appTheme.lightPrimary,
                   appCtrl.appTheme.primary
                 ])),
             child: SvgPicture.asset(svgAssets.callAdd, height: Sizes.s15),

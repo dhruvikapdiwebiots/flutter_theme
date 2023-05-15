@@ -129,6 +129,7 @@ class _BroadcastSenderMessage extends State<BroadcastSenderMessage> {
                           .paddingSymmetric(vertical: Insets.i8),
                     if (widget.document!["type"] == MessageType.location.name)
                       LocationLayout(
+                        isBroadcast: true,
                           document: widget.document,
                           onLongPress: () {
                             showDialog(
@@ -141,9 +142,10 @@ class _BroadcastSenderMessage extends State<BroadcastSenderMessage> {
                             launchUrl(Uri.parse(widget.document!["content"]));
                           }),
                     if (widget.document!["type"] == MessageType.video.name)
-                      VideoDoc(document: widget.document),
+                      VideoDoc(document: widget.document,isBroadcast: true,),
                     if (widget.document!["type"] == MessageType.audio.name)
                       AudioDoc(
+                        isBroadcast: true,
                           document: widget.document,
                           onLongPress: () {
                             showDialog(
@@ -155,6 +157,7 @@ class _BroadcastSenderMessage extends State<BroadcastSenderMessage> {
                     if (widget.document!["type"] == MessageType.doc.name)
                       (widget.document!["content"].contains(".pdf"))
                           ? PdfLayout(
+                        isBroadcast: true,
                         document: widget.document,
                         onLongPress: () {
                           showDialog(
@@ -166,6 +169,7 @@ class _BroadcastSenderMessage extends State<BroadcastSenderMessage> {
                       )
                           : (widget.document!["content"].contains(".doc"))
                           ? DocxLayout(
+                        isBroadcast: true,
                           document: widget.document,
                           onLongPress: () {
                             showDialog(
@@ -176,6 +180,7 @@ class _BroadcastSenderMessage extends State<BroadcastSenderMessage> {
                           })
                           : (widget.document!["content"].contains(".xlsx"))
                           ? ExcelLayout(
+                        isBroadcast: true,
                         onLongPress: () {
                           showDialog(
                               context: Get.context!,

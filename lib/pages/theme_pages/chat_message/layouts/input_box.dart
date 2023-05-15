@@ -70,7 +70,7 @@ class InputBox extends StatelessWidget {
                         vertical: Insets.i10, horizontal: Insets.i2),
                     decoration: ShapeDecoration(
                         gradient: RadialGradient(colors: [
-                          appCtrl.appTheme.lightPrimary,
+                       appCtrl.isTheme? appCtrl.appTheme.primary.withOpacity(.8):   appCtrl.appTheme.lightPrimary,
                           appCtrl.appTheme.primary
                         ]),
                         shape: SmoothRectangleBorder(

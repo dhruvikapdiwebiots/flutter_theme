@@ -26,10 +26,10 @@ class DashboardBody extends StatelessWidget {
                     toolbarHeight: 80,
                     elevation: 0,
                     actions: [
-                      SvgPicture.asset(svgAssets.search, height: Sizes.s20)
+                      SvgPicture.asset(svgAssets.search, height: Sizes.s20,color: appCtrl.appTheme.blackColor,)
                           .paddingAll(Insets.i10)
                           .decorated(
-                              color: appCtrl.appTheme.white,
+                              color: appCtrl.appTheme.whiteColor,
                               boxShadow: [
                                 const BoxShadow(
                                     offset: Offset(0, 2),
@@ -47,7 +47,7 @@ class DashboardBody extends StatelessWidget {
                           padding: EdgeInsets.zero,
 
                           icon:
-                              SvgPicture.asset(svgAssets.more, height: Sizes.s20,fit: BoxFit.fill,),
+                              SvgPicture.asset(svgAssets.more, height: Sizes.s20,fit: BoxFit.fill,color: appCtrl.appTheme.blackColor,),
                           onSelected: (result){
                            dashboardCtrl.onMenuItemSelected(result);
                           },
@@ -69,7 +69,7 @@ class DashboardBody extends StatelessWidget {
                                       Icons.copy, 2),
                                 ],
                         ) .decorated(
-                            color: appCtrl.appTheme.white,
+                            color: appCtrl.appTheme.whiteColor,
                             boxShadow: [
                               const BoxShadow(
                                   offset: Offset(0, 2),
@@ -91,6 +91,7 @@ class DashboardBody extends StatelessWidget {
                   ),
                   body: TabBarView(
                     controller: dashboardCtrl.controller,
+
                     children: dashboardCtrl.widgetOptions,
                   )));
     });

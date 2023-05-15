@@ -10,15 +10,16 @@ import '../../config.dart';
 class ReactionPopup extends StatefulWidget {
   const ReactionPopup({
     Key? key,
-    this.reactionPopupConfig,
+    this.reactionPopupConfig,this.onEmojiTap,
     required this.showPopUp,
+
   }) : super(key: key);
 
   /// Provides configuration of reaction pop-up appearance.
   final ReactionPopupConfiguration? reactionPopupConfig;
 
   /// Provides call back when user taps on reaction pop-up.
-
+  final StringCallback? onEmojiTap;
   /// Represents should pop-up show or not.
   final bool showPopUp;
 
@@ -66,57 +67,48 @@ class ReactionPopupState extends State<ReactionPopup>
   @override
   Widget build(BuildContext context) {
     final deviceWidth = MediaQuery.of(context).size.width;
-    final toolTipWidth = deviceWidth > 450 ? 450 : deviceWidth;
     if (showPopUp) {
       _animationController.forward();
     } else {
       _animationController.reverse();
     }
     return showPopUp
-        ? Positioned(
-      top: _yCoordinate,
-      left: _xCoordinate + toolTipWidth > deviceWidth
-          ? deviceWidth - toolTipWidth
-          : _xCoordinate - (toolTipWidth / 2) < 0
-          ? 0
-          : _xCoordinate - (toolTipWidth / 2),
-      child: SizedBox(
-        width: deviceWidth > 450 ? 450 : deviceWidth,
-        child: AnimatedBuilder(
-          animation: _scaleAnimation,
-          builder: (context, child) => Transform.scale(
-            scale: _scaleAnimation.value,
-            child: reactionPopupConfig?.showGlassMorphismEffect ?? false
-                ? GlassMorphismReactionPopup(
-              reactionPopupConfig: reactionPopupConfig,
-              child: _reactionPopupRow,
-            )
-                : AnimatedContainer(duration: Duration(seconds: 2),
-              constraints: BoxConstraints(
-                  maxWidth: reactionPopupConfig?.maxWidth ?? 350),
-              margin: reactionPopupConfig?.margin ??
-                  const EdgeInsets.symmetric(horizontal: 25),
-              padding: reactionPopupConfig?.padding ??
-                  const EdgeInsets.symmetric(
-                    vertical: 6,
-                    horizontal: 14,
-                  ),
-              decoration: BoxDecoration(
-                color: reactionPopupConfig?.backgroundColor ??
-                    Colors.white,
-                borderRadius: BorderRadius.circular(30),
-                boxShadow: [
-                  reactionPopupConfig?.shadow ??
-                      BoxShadow(
-                        color: Colors.grey.shade400,
-                        blurRadius: 8,
-                        spreadRadius: -2,
-                        offset: const Offset(0, 8),
-                      )
-                ],
-              ),
-              child: _reactionPopupRow,
+        ? SizedBox(
+      width: deviceWidth > 450 ? 450 : deviceWidth,
+      child: AnimatedBuilder(
+        animation: _scaleAnimation,
+        builder: (context, child) => Transform.scale(
+          scale: _scaleAnimation.value,
+          child: reactionPopupConfig?.showGlassMorphismEffect ?? false
+              ? GlassMorphismReactionPopup(
+            reactionPopupConfig: reactionPopupConfig,
+            child: _reactionPopupRow,
+          )
+              : AnimatedContainer(duration: const Duration(seconds: 2),
+            constraints: BoxConstraints(
+                maxWidth: reactionPopupConfig?.maxWidth ?? 350,maxHeight: reactionPopupConfig?.maxWidth ??  35),
+            margin: reactionPopupConfig?.margin ??
+                const EdgeInsets.symmetric(horizontal: 25),
+            padding: reactionPopupConfig?.padding ??
+                const EdgeInsets.symmetric(
+                  vertical: 6,
+                  horizontal: 14,
+                ),
+            decoration: BoxDecoration(
+              color: reactionPopupConfig?.backgroundColor ??
+                  Colors.white,
+              borderRadius: BorderRadius.circular(30),
+              boxShadow: [
+                reactionPopupConfig?.shadow ??
+                    BoxShadow(
+                      color: Colors.grey.shade400,
+                      blurRadius: 8,
+                      spreadRadius: -2,
+                      offset: const Offset(0, 8),
+                    )
+              ],
             ),
+            child: _reactionPopupRow,
           ),
         ),
       ),
@@ -125,10 +117,7 @@ class ReactionPopupState extends State<ReactionPopup>
   }
 
   Widget get _reactionPopupRow => EmojiRow(
-    onEmojiTap: (emoji) {
-
-      log("emoji : $emoji");
-    },
+    onEmojiTap:(p0) => widget.onEmojiTap!(p0),
     emojiConfiguration: reactionPopupConfig?.emojiConfig,
   );
 

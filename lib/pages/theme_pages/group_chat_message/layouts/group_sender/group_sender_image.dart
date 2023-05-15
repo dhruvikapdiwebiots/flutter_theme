@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:intl/intl.dart';
 
 import '../../../../../config.dart';
@@ -12,37 +14,62 @@ class GroupSenderImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    log("IMAG : ${document!.data().toString().contains('emoji')}");
     return InkWell(
         onLongPress: onLongPress,
         onTap: onPressed,
-        child: Stack(alignment: Alignment.bottomRight, children: [
-          Material(
-            borderRadius: BorderRadius.circular(AppRadius.r8),
-            clipBehavior: Clip.hardEdge,
-            child: CachedNetworkImage(
-              placeholder: (context, url) => Container(
-                  width: Sizes.s220,
-                  height: Sizes.s200,
-                  decoration: BoxDecoration(
-                    color: appCtrl.appTheme.accent,
-                    borderRadius: BorderRadius.circular(AppRadius.r8),
-                  ),
-                  child: Container()),
-              imageUrl: document!['content'],
-              width: Sizes.s200,
-              height: Sizes.s200,
-              fit: BoxFit.cover,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Container(
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: Insets.i10,
+                    ),
+                    decoration: ShapeDecoration(
+                        color: appCtrl.appTheme.primary,
+                        shape: SmoothRectangleBorder(
+                            borderRadius: SmoothBorderRadius(
+                                cornerRadius: 20, cornerSmoothing: 1))),
+                    child: ClipSmoothRect(
+                        clipBehavior: Clip.hardEdge,
+                        radius: SmoothBorderRadius(
+                            cornerRadius: 20, cornerSmoothing: 1),
+                        child: Material(
+                                borderRadius: SmoothBorderRadius(
+                                    cornerRadius: 15, cornerSmoothing: 1),
+                                clipBehavior: Clip.hardEdge,
+                                child: CachedNetworkImage(
+                                    placeholder: (context, url) => Container(
+                                        width: Sizes.s160,
+                                        height: Sizes.s150,
+                                        decoration: ShapeDecoration(
+                                            color: appCtrl.appTheme.accent,
+                                            shape: SmoothRectangleBorder(
+                                                borderRadius:
+                                                    SmoothBorderRadius(
+                                                        cornerRadius: 10,
+                                                        cornerSmoothing: 1))),
+                                        child: Container()),
+                                    imageUrl: document!['content'],
+                                    width: Sizes.s160,
+                                    height: Sizes.s150,
+                                    fit: BoxFit.cover))
+                            .paddingAll(Insets.i10))),
+                if (document!.data().toString().contains('emoji'))
+                  EmojiLayout(emoji: document!["emoji"])
+              ],
             ),
-          ),
-          Text(
+            const VSpace(Sizes.s2),
+            Text(
               DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(
                   int.parse(document!['timestamp']))),
               style:
-              AppCss.poppinsBold12.textColor(appCtrl.appTheme.whiteColor)
-          ).marginSymmetric(horizontal: Insets.i10, vertical: Insets.i10).boxShadow( blurRadius: 15.0,
-              color: appCtrl.appTheme.blackColor.withOpacity(.25),offset:const Offset(-2, 2))
-        ]).paddingAll(Insets.i5).decorated(color: appCtrl.appTheme.primary,borderRadius: BorderRadius.circular(AppRadius.r8)).marginSymmetric(vertical: Insets.i10,horizontal: Insets.i15)
-    );
+                  AppCss.poppinsMedium12.textColor(appCtrl.appTheme.txtColor),
+            ).marginOnly(right: Insets.i12)
+          ],
+        ));
   }
 }

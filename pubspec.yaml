@@ -85,6 +85,7 @@ dependencies:
   #camera: ^0.10.0+4
   device_info_plus: ^8.0.0
   flutter_contacts: ^1.1.5+1
+  contacts_service: ^0.6.3
   intl_phone_number_input: ^0.7.1
   wechat_assets_picker: ^8.3.1+1
   connectivity_plus: ^3.0.3

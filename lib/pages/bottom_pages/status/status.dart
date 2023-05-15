@@ -37,7 +37,7 @@ class _StatusListState extends State<StatusList>
           return false;
         },
         child: Scaffold(
-            backgroundColor: appCtrl.appTheme.whiteColor,
+            backgroundColor: appCtrl.appTheme.bgColor,
             floatingActionButton: const StatusFloatingButton(),
             body: SafeArea(
                 child: Stack(

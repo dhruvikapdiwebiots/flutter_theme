@@ -5,45 +5,74 @@ import '../../../../../config.dart';
 class GroupContent extends StatelessWidget {
   final DocumentSnapshot? document;
   final GestureLongPressCallback? onLongPress;
-
+final GestureTapCallback? onTap;
   const GroupContent(
-      {Key? key, this.document, this.onLongPress})
+      {Key? key, this.document, this.onLongPress,this.onTap})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
         onLongPress: onLongPress,
+        onTap: onTap,
 
         child:Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Container(
-                padding: const EdgeInsets.symmetric(horizontal:Insets.i12,vertical: Insets.i14),
-                width: Sizes.s230,
-                decoration: ShapeDecoration(
-                  color: appCtrl.appTheme.primary,
-                  shape: const SmoothRectangleBorder(
-                      borderRadius: SmoothBorderRadius.only(
-                          topLeft: SmoothRadius(
-                            cornerRadius: 20,
-                            cornerSmoothing: .5,
-                          ),
-                          topRight: SmoothRadius(
-                            cornerRadius: 20,
-                            cornerSmoothing: 0.4,
-                          ),
-                          bottomLeft: SmoothRadius(
-                            cornerRadius: 20,
-                            cornerSmoothing: .5,
-                          ))),
-                ),
-                child: Text(document!['content'],
-                    style: AppCss.poppinsMedium14
-                        .textColor(appCtrl.appTheme.whiteColor)
-                        .letterSpace(.2)
-                        .textHeight(1.2))),
-            const VSpace(Sizes.s3),
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                document!['content'].length > 40
+                    ? Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: Insets.i12, vertical: Insets.i14),
+                    width: Sizes.s280,
+                    decoration: ShapeDecoration(
+                      color: appCtrl.appTheme.primary,
+                      shape: const SmoothRectangleBorder(
+                          borderRadius: SmoothBorderRadius.only(
+                              topLeft: SmoothRadius(
+                                  cornerRadius: 20, cornerSmoothing: 1),
+                              topRight: SmoothRadius(
+                                  cornerRadius: 20, cornerSmoothing: 1),
+                              bottomLeft: SmoothRadius(
+                                  cornerRadius: 20, cornerSmoothing: 1))),
+                    ),
+                    child: Text(document!['content'],
+                        overflow: TextOverflow.clip,
+                        style: AppCss.poppinsMedium13
+                            .textColor(appCtrl.appTheme.white)
+                            .letterSpace(.2)
+                            .textHeight(1.2)))
+                    : Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: Insets.i12, vertical: Insets.i14),
+                    decoration: ShapeDecoration(
+                        color: appCtrl.appTheme.primary,
+                        shape: const SmoothRectangleBorder(
+                            borderRadius: SmoothBorderRadius.only(
+                                topLeft: SmoothRadius(
+                                  cornerRadius: 20,
+                                  cornerSmoothing: 1,
+                                ),
+                                topRight: SmoothRadius(
+                                  cornerRadius: 20,
+                                  cornerSmoothing: 1,
+                                ),
+                                bottomLeft: SmoothRadius(
+                                    cornerRadius: 20,
+                                    cornerSmoothing: 1)))),
+                    child: Text(document!['content'],
+                        overflow: TextOverflow.clip,
+                        style: AppCss.poppinsMedium13
+                            .textColor(appCtrl.appTheme.white)
+                            .letterSpace(.2)
+                            .textHeight(1.2))),
+                if (document!.data().toString().contains('emoji'))
+                  EmojiLayout(emoji: document!["emoji"])
+              ],
+            ),
+            const VSpace(Sizes.s2),
 
             Text(
               DateFormat('HH:mm a').format(
@@ -53,7 +82,7 @@ class GroupContent extends StatelessWidget {
                   .textColor(appCtrl.appTheme.txtColor),
             )
           ],
-        ).marginSymmetric(vertical: Insets.i10, horizontal: Insets.i15)
+        ).marginSymmetric(horizontal: Insets.i15)
     );
   }
 }

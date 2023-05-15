@@ -15,7 +15,7 @@ class CommonImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return image != ""
+    return image != "" && image != null
         ? CachedNetworkImage(
             imageUrl: image!,
             imageBuilder: (context, imageProvider) => Container(
