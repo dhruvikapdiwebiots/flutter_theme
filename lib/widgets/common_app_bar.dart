@@ -2,9 +2,10 @@ import 'package:flutter_theme/widgets/back_icon.dart';
 
 import '../config.dart';
 
-class CommonAppBar extends StatelessWidget with PreferredSizeWidget {
+class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? text;
-  const CommonAppBar({Key? key,this.text}) : super(key: key);
+  final bool isBack;
+  const CommonAppBar({Key? key,this.text,this.isBack =true}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,7 @@ class CommonAppBar extends StatelessWidget with PreferredSizeWidget {
       titleSpacing: 0,
       toolbarHeight: Sizes.s80,
       elevation: 0,
-      leading:const BackIcon(),
+      leading: isBack?const BackIcon(): Container(),
       centerTitle: true,
       title: Text(text!,
           style: AppCss.poppinsSemiBold16

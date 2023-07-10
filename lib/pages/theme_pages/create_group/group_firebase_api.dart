@@ -1,8 +1,12 @@
 import 'dart:developer';
 
 import 'package:flutter_theme/config.dart';
+import 'package:encrypt/encrypt.dart' as encrypt;
 
 class GroupFirebaseApi {
+
+  late encrypt.Encrypter cryptor;
+  final iv = encrypt.IV.fromLength(8);
 
   //create group
   createGroup(CreateGroupController groupCtrl) async {
@@ -39,6 +43,14 @@ class GroupFirebaseApi {
       'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
     });
 
+    final key = encrypt.Key.fromUtf8('my 32 length key................');
+    final iv = encrypt.IV.fromLength(16);
+
+    final encrypter = encrypt.Encrypter(encrypt.AES(key));
+
+    final encrypted = encrypter.encrypt("${user["name"]} created this group", iv: iv).base64;
+
+
     FirebaseFirestore.instance
         .collection(collectionName.groupMessage)
         .doc(id)
@@ -47,7 +59,7 @@ class GroupFirebaseApi {
       'sender': user["id"],
       'senderName': user["name"],
       'receiver': groupCtrl.selectedContact,
-      'content': "${user["name"]} created this group",
+      'content': encrypted,
       "groupId": id,
       'type': MessageType.messageType.name,
       'messageType': "sender",
@@ -71,7 +83,7 @@ class GroupFirebaseApi {
           "senderId": user["id"],
           'chatId': "",
           'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-          "lastMessage": "${user["name"]} created this group",
+          "lastMessage": encrypted,
           "isGroup": true,
           "isBlock": false,
           "isBroadcast": false,
@@ -79,6 +91,7 @@ class GroupFirebaseApi {
           "isOneToOne": false,
           "blockBy": "",
           "blockUserId": "",
+          "name":groupCtrl.txtGroupName.text,
           "groupId": id,
           "updateStamp": DateTime.now().millisecondsSinceEpoch.toString()
         });
@@ -94,9 +107,24 @@ class GroupFirebaseApi {
 
     });
   log("back");
+  dynamic messageData;
   log("back : $arg");
     Get.back();
     Get.back();
-    Get.toNamed(routeName.groupChatMessage, arguments: arg);
+    FirebaseFirestore.instance
+        .collection(collectionName.users)
+        .doc(userData["id"])
+        .collection(collectionName.chats).where("groupId" ,isEqualTo: id).get().then((value){
+          if(value.docs.isNotEmpty){
+            messageData = value.docs[0].data();
+          }
+    }).then((value) {
+      var data ={
+        "message":messageData,
+        "groupData":arg
+      };
+      Get.toNamed(routeName.groupChatMessage, arguments: data);
+    });
+
   }
 }

@@ -26,7 +26,7 @@ class EditProfileController extends GetxController {
 
 
   final storage = GetStorage();
-  var loggedIn = false;
+  var debugPrintgedIn = false;
 
   bool passwordValidation = false;
   bool passEye = true;
@@ -76,7 +76,7 @@ class EditProfileController extends GetxController {
   //update user
   updateUserData() async {
     isLoading = true;
-    log("imageUrl : $imageUrl");
+    debugPrint("imageUrl : $imageUrl");
     update();
     Get.forceAppUpdate();
     final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
@@ -108,18 +108,20 @@ class EditProfileController extends GetxController {
                   "isActive":true
                 })
                 .then((result) async {
-              log("new USer true");
+              debugPrint("new USer true");
               FirebaseFirestore.instance.collection(collectionName.users)
                   .doc(user["id"])
                   .get()
                   .then((value) async {
                 await storage.write("id", user["id"]);
                 await storage.write(session.user, value.data());
+                appCtrl.user = value.data();
+                appCtrl.update();
               });
 
-              Get.offAllNamed(routeName.dashboard);
+              Get.toNamed(routeName.dashboard);
             }).catchError((onError) {
-              log("onError");
+              debugPrint("onError");
             });
           }
         });
@@ -142,16 +144,18 @@ class EditProfileController extends GetxController {
                 "pushToken": token,
                 "isActive":true
               }).then((result) async {
-            log("new USer true");
+            debugPrint("new USer true");
             FirebaseFirestore.instance.collection(collectionName.users).doc(user["id"])
                 .get()
                 .then((value) async {
               await storage.write(session.id, user["id"]);
               await storage.write(session.user, value.data());
+              appCtrl.user = value.data();
+              appCtrl.update();
             });
-            Get.offAllNamed(routeName.dashboard);
+            Get.toNamed(routeName.dashboard);
           }).catchError((onError) {
-            log("onError");
+            debugPrint("onError");
           });
         });
       }
@@ -171,6 +175,7 @@ class EditProfileController extends GetxController {
     emailText.text = user["email"] ?? "";
     phoneText.text = user["phone"] ?? "";
     statusText.text = user["statusDesc"] ?? "";
+    imageUrl = user["image"] ?? "";
     update();
     super.onReady();
   }
@@ -179,7 +184,7 @@ class EditProfileController extends GetxController {
   Future getImage(source) async {
     final ImagePicker picker = ImagePicker();
     imageFile = (await picker.pickImage(source: source))!;
-    log("imageFile : $imageFile");
+    debugPrint("imageFile : $imageFile");
     if (imageFile != null) {
       update();
       uploadFile();
@@ -192,17 +197,17 @@ class EditProfileController extends GetxController {
     update();
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     Reference reference = FirebaseStorage.instance.ref().child(fileName);
-    log("reference : $reference");
+    debugPrint("reference : $reference");
     var file = File(imageFile!.path);
     UploadTask uploadTask = reference.putFile(file);
 
     uploadTask.then((res) {
-      log("res : $res");
+      debugPrint("res : $res");
       res.ref.getDownloadURL().then((downloadUrl) async {
         user["image"] = imageUrl;
         await storage.write(session.user, user);
         imageUrl = downloadUrl;
-        log(user["id"]);
+        debugPrint(user["id"]);
         await FirebaseFirestore.instance
             .collection('users')
             .doc(user["id"])
@@ -218,7 +223,7 @@ class EditProfileController extends GetxController {
         });
         isLoading = false;
         update();
-        log(user["image"]);
+        debugPrint(user["image"]);
 
         update();
       }, onError: (err) {

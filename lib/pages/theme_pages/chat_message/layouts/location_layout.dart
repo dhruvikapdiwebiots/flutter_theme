@@ -55,6 +55,11 @@ class LocationLayout extends StatelessWidget {
           const VSpace(Sizes.s2),
           IntrinsicHeight(
               child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                if (document!.data().toString().contains('isFavourite'))
+                  if(appCtrl.user["id"] == document["favouriteId"])
+                  Icon(Icons.star,
+                      color: appCtrl.appTheme.txtColor, size: Sizes.s10),
+                const HSpace(Sizes.s3),
             if (!isBroadcast && !isReceiver)
               Icon(Icons.done_all_outlined,
                   size: Sizes.s15,

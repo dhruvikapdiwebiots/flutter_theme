@@ -2,6 +2,11 @@ import 'package:giphy_get/giphy_get.dart';
 
 import '../../../../config.dart';
 
+
+import 'package:giphy_get/giphy_get.dart';
+
+import '../../../../config.dart';
+
 class InputBox extends StatelessWidget {
   const InputBox({Key? key}) : super(key: key);
 
@@ -56,8 +61,29 @@ class InputBox extends StatelessWidget {
             ).inkWell(
                 onTap: () => chatCtrl.audioRecording(context, "audio", 0)),
             SvgPicture.asset(svgAssets.gif)
-                .inkWell(onTap: () => chatCtrl.shareMedia(context))
-                .marginSymmetric(horizontal: Insets.i20),
+                .inkWell(onTap: () => chatCtrl.shareMedia(context)).marginSymmetric(horizontal: Insets.i7)
+               ,
+            InkWell(
+                child:  Icon(Icons.gif_box_outlined, color: appCtrl.appTheme.primary),
+                onTap: () async {
+                  GiphyGif? gif = await GiphyGet.getGif(
+                    tabColor: appCtrl.appTheme.primary,
+                    context: context,
+
+                    apiKey: appCtrl.userAppSettingsVal!.gifAPI!, //YOUR API KEY HERE
+                    lang: GiphyLanguage.english,
+                  );
+                  if (gif != null) {
+                    chatCtrl.onSendMessage(
+                        gif.images!.original!.url, MessageType.gif);
+                  }
+                },
+               ).marginOnly( right: appCtrl.isRTL || appCtrl.languageVal == "ar"
+                ? 0
+                : Insets.i6,
+                left: appCtrl.isRTL || appCtrl.languageVal == "ar"
+                    ? Insets.i6
+                    : 0),
             Container(
                     margin: EdgeInsets.only(
                         right: appCtrl.isRTL || appCtrl.languageVal == "ar"

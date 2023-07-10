@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import '../../../../config.dart';
 
 class AllRegisteredContact extends StatelessWidget {
@@ -10,6 +12,7 @@ class AllRegisteredContact extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log("data : $data}");
     return ListTile(
       onTap: onTap,
       trailing: Container(

@@ -11,61 +11,23 @@ class PopUpAction extends StatelessWidget {
       return dashboardCtrl.selectedIndex == 0
           ? PopupMenuButton(
               color: appCtrl.appTheme.whiteColor,
-              icon: Icon(Icons.more_vert, color: appCtrl.appTheme.white),
-              itemBuilder: (context) {
-                return [
-                  ...dashboardCtrl.actionList
-                      .asMap()
-                      .entries
-                      .map((e) => PopupMenuItem<int>(
-                            value: 0,
-                            onTap: () {
-                              log("message : ${e.key}");
-                            },
-                            child: Text(
-                              trans(e.value["title"]),
-                              style: AppCss.poppinsMedium14
-                                  .textColor(appCtrl.appTheme.blackColor),
-                            ).inkWell(onTap: () {
-                              dashboardCtrl.selectedPopTap = e.key;
-                              Get.back();
-                              if (e.value["title"] == "newBroadCast") {
-                                final groupChatCtrl =
-                                    Get.isRegistered<CreateGroupController>()
-                                        ? Get.find<CreateGroupController>()
-                                        : Get.put(CreateGroupController());
-                                groupChatCtrl.isGroup = false;
-                                if(groupChatCtrl.contacts != null || groupChatCtrl.contactList.isEmpty) {
-                                  groupChatCtrl.contactList = [];
-                                  groupChatCtrl.contacts = [];
-
-                                  groupChatCtrl.refreshContacts();
-                                }
-                                Get.toNamed(routeName.groupChat,
-                                    arguments: false);
-                              } else if (e.value["title"] == "newGroup") {
-                                final groupChatCtrl =
-                                    Get.isRegistered<CreateGroupController>()
-                                        ? Get.find<CreateGroupController>()
-                                        : Get.put(CreateGroupController());
-                                groupChatCtrl.isGroup = true;
-                                if(groupChatCtrl.contacts != null || groupChatCtrl.contactList.isEmpty) {
-                                  groupChatCtrl.contactList = [];
-                                  groupChatCtrl.contacts = [];
-                                  groupChatCtrl.refreshContacts();
-                                }
-                                groupChatCtrl.update();
-                                Get.toNamed(routeName.groupChat,
-                                    arguments: true);
-                              } else {
-                                Get.toNamed(routeName.setting);
-                              }
-                              dashboardCtrl.update();
-                            }),
-                          ))
-                      .toList(),
-                ];
-              },
+              padding: EdgeInsets.zero,
+              iconSize: Sizes.s20,
+              onSelected: (result) async {},
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppRadius.r8)),
+              itemBuilder: (ctx) => [
+                if (appCtrl.usageControlsVal!.allowCreatingBroadcast!)
+                  _buildPopupMenuItem("newBroadCast", 0),
+                if (appCtrl.usageControlsVal!.allowCreatingGroup!)
+                  _buildPopupMenuItem("newGroup", 1),
+                _buildPopupMenuItem("setting", 2),
+              ],
+              child: SvgPicture.asset(
+                svgAssets.more,
+                height: Sizes.s22,
+                color: appCtrl.appTheme.blackColor,
+              ).paddingAll(Insets.i10),
             )
           : dashboardCtrl.selectedIndex == 1
               ? PopupMenuButton(
@@ -139,5 +101,20 @@ class PopUpAction extends StatelessWidget {
                   },
                 );
     });
+  }
+
+  PopupMenuItem _buildPopupMenuItem(String title, int position) {
+    return PopupMenuItem(
+      value: position,
+      child: Row(
+        children: [
+          Text(
+            title,
+            style:
+                AppCss.poppinsMedium14.textColor(appCtrl.appTheme.blackColor),
+          )
+        ],
+      ),
+    );
   }
 }

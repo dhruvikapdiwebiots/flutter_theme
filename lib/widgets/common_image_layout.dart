@@ -1,5 +1,7 @@
-import 'package:figma_squircle/figma_squircle.dart';
+import 'dart:developer';
+
 import 'package:flutter_theme/config.dart';
+import 'package:flutter_theme/widgets/common_photo_view.dart';
 
 class CommonImage extends StatelessWidget {
   final String? image, name;
@@ -15,6 +17,7 @@ class CommonImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return image != "" && image != null
         ? CachedNetworkImage(
             imageUrl: image!,
@@ -30,13 +33,15 @@ class CommonImage extends StatelessWidget {
                       ),
                       image: DecorationImage(
                           fit: BoxFit.fill, image: NetworkImage('$image'))),
-                ),
+                ).inkWell(onTap: (){
+                  Get.to(CommonPhotoView(image: image));
+            }),
             placeholder: (context, url) => Container(
                   height: height,
                   width: width,
                   alignment: Alignment.center,
                   decoration: ShapeDecoration(
-                      color: (colors.toList()..shuffle()).first,
+                      color: const Color(0xff3282B8),
                       shape: SmoothRectangleBorder(
                         borderRadius: SmoothBorderRadius(
                             cornerRadius: 12, cornerSmoothing: 1),
@@ -44,12 +49,12 @@ class CommonImage extends StatelessWidget {
                       image: DecorationImage(
                           fit: BoxFit.fitWidth, image: NetworkImage('$image'))),
                   child: Text(
-                      name!.length > 2
+                      name != null ?  name!.length > 2
                           ? name!
                               .replaceAll(" ", "")
                               .substring(0, 2)
                               .toUpperCase()
-                          : name![0],
+                          : name![0] : "C",
                       style: AppCss.poppinsblack16
                           .textColor(appCtrl.appTheme.white)),
                 ),
@@ -58,7 +63,7 @@ class CommonImage extends StatelessWidget {
                   width: width,
                   alignment: Alignment.center,
                   decoration: ShapeDecoration(
-                      color: (colors.toList()..shuffle()).first,
+                      color: const Color(0xff3282B8),
                       shape: SmoothRectangleBorder(
                         borderRadius: SmoothBorderRadius(
                             cornerRadius: 12, cornerSmoothing: 1),
@@ -81,15 +86,15 @@ class CommonImage extends StatelessWidget {
             width: width,
             alignment: Alignment.center,
             decoration: ShapeDecoration(
-                color: (colors.toList()..shuffle()).first,
+                color: const Color(0xff3282B8),
                 shape: SmoothRectangleBorder(
                   borderRadius:
                       SmoothBorderRadius(cornerRadius: 12, cornerSmoothing: 1),
                 )),
             child: Text(
-              name!.length > 2
+                name!= null?  name!.isNotEmpty?   name!.length > 2
                   ? name!.replaceAll(" ", "").substring(0, 2).toUpperCase()
-                  : name![0],
+                  : name![0] : "C" :"C",
               style: AppCss.poppinsblack16.textColor(appCtrl.appTheme.white),
             ),
           );

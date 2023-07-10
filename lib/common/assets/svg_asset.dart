@@ -17,6 +17,7 @@ class SvgAssets{
   final String call = 'assets/svg/call.svg';
   final String callFilled = 'assets/svg/callFilled.svg';
   final String add = 'assets/svg/add.svg';
+  final String addCircle = 'assets/svg/add-circle.svg';
   final String callAdd = 'assets/svg/callAdd.svg';
   final String camera = 'assets/svg/camera.svg';
   final String edit = 'assets/svg/edit.svg';
@@ -36,5 +37,14 @@ class SvgAssets{
   final String gif = 'assets/svg/gif.svg';
   final String send = 'assets/svg/send.svg';
   final String docx = 'assets/svg/docx.svg';
-  /*final String twitter = "assets/common/svg/twitter.svg";*/
+  final String star = 'assets/svg/star.svg';
+  final String copy = 'assets/svg/copy.svg';
+  final String info = 'assets/svg/info-circle.svg';
+  final String gallery = 'assets/svg/gallery.svg';
+  final String fingerLock = 'assets/svg/finger-circle.svg';
+  final String share = "assets/svg/share.svg";
+  final String dislike = "assets/svg/dislike.svg";
+  final String exit = "assets/svg/exit.svg";
+  final String profileAdd = "assets/svg/profileAdd.svg";
+  final String edit2 = "assets/svg/edit-2.svg";
 }

@@ -10,6 +10,9 @@ export 'package:url_launcher/url_launcher.dart';
 export 'package:geolocator/geolocator.dart';
 export 'package:flutter_contacts/contact.dart';
 export 'package:figma_squircle/figma_squircle.dart';
+export 'package:advance_pdf_viewer_fork/advance_pdf_viewer_fork.dart';
+
+export 'package:path_provider/path_provider.dart';
 
 
 

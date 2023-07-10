@@ -1,5 +1,4 @@
-import 'package:flutter_theme/widgets/common_extension.dart';
-import 'package:intl/intl.dart';
+
 import '../../../../config.dart';
 
 class GroupMessageCard extends StatelessWidget {
@@ -27,49 +26,24 @@ class GroupMessageCard extends StatelessWidget {
                         .snapshots(),
                     builder: (context, userSnapShot) {
                       if (userSnapShot.hasData) {
-
-                        return Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                CommonImage(image: (snapshot.data!)["image"],name: (snapshot.data!)["name"],),
-                                const HSpace(Sizes.s12),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(snapshot.data!["name"],
-                                        style: AppCss.poppinsblack14
-                                            .textColor(appCtrl.appTheme.blackColor)),
-                                    const VSpace(Sizes.s5),
-                                    document!["lastMessage"] != null
-                                        ? GroupCardSubTitle(
-                                        currentUserId: currentUserId,
-                                        name: userSnapShot.data!["name"],
-                                        document: document,
-                                        hasData: userSnapShot.hasData)
-                                        : Container(height: Sizes.s15,)
-                                  ],
-                                ),
-                              ],
-                            ),
-                            Text(
-                                DateFormat('HH:mm a').format(
-                                    DateTime.fromMillisecondsSinceEpoch(
-                                        int.parse(document!['updateStamp']))),
-                                style: AppCss.poppinsMedium12
-                                    .textColor(appCtrl.appTheme.txtColor)).paddingOnly(top: Insets.i8)
-                          ],
-                        ).paddingSymmetric(vertical: Insets.i10).inkWell(onTap: () {
+                        return GroupMessageCardLayout(
+                                snapshot: snapshot,
+                                document: document,
+                                currentUserId: currentUserId,
+                                userSnapShot: userSnapShot)
+                            .inkWell(onTap: () {
+                          var data = {
+                            "message": document!.data(),
+                            "groupData": snapshot.data!.data()
+                          };
                           Get.toNamed(routeName.groupChatMessage,
-                              arguments: snapshot.data);
+                              arguments: data);
                         });
-
                       } else {
                         return Container();
                       }
-                    }).width(MediaQuery.of(context).size.width)
+                    })
+                .width(MediaQuery.of(context).size.width)
                 .paddingSymmetric(horizontal: Insets.i15, vertical: Insets.i4)
                 .commonDecoration()
                 .marginSymmetric(horizontal: Insets.i10);

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_theme/config.dart';
 
 class FirebaseCommonController extends GetxController {
@@ -9,6 +10,7 @@ class FirebaseCommonController extends GetxController {
   //online status update
   void setIsActive() async {
     var user = appCtrl.storage.read(session.user) ?? "";
+    log("user : z4$user");
     if (user != "") {
       await FirebaseFirestore.instance
           .collection(collectionName.users)
@@ -62,34 +64,133 @@ class FirebaseCommonController extends GetxController {
   }
 
   //status delete after 24 hours
+  //status delete after 24 hours
   statusDeleteAfter24Hours() async {
     var user = appCtrl.storage.read(session.user) ?? "";
     if (user != "") {
-      FirebaseFirestore.instance.collection(collectionName.users).doc(user["id"])
+      FirebaseFirestore.instance
+          .collection(collectionName.users)
+          .doc(user["id"])
           .collection(collectionName.status)
           .get()
           .then((value) async {
         if (value.docs.isNotEmpty) {
           Status status = Status.fromJson(value.docs[0].data());
+          List<PhotoUrl> photoUrl = status.photoUrl!;
           await getPhotoUrl(status.photoUrl!).then((list) async {
-            List<PhotoUrl> photoUrl = list;
-
-            if (photoUrl.isEmpty) {
-              FirebaseFirestore.instance.collection(collectionName.users).doc(user["id"])
+            photoUrl = [];
+            List<PhotoUrl> photoUrls = list;
+            log("photoUrls : ${photoUrls.length}");
+            if (photoUrls.isEmpty) {
+              FirebaseFirestore.instance
+                  .collection(collectionName.users)
+                  .doc(user["id"])
                   .collection(collectionName.status)
                   .doc(value.docs[0].id)
                   .delete();
             } else {
-              var statusesSnapshot = await  FirebaseFirestore.instance.collection(collectionName.users).doc(user["id"])
-                  .collection(collectionName.status)
-                  .get();
-              await  FirebaseFirestore.instance.collection(collectionName.users).doc(user["id"])
-                  .collection(collectionName.status)
-                  .doc(statusesSnapshot.docs[0].id)
-                  .update(
-                      {'photoUrl': photoUrl.map((e) => e.toJson()).toList()});
+
+              if (photoUrls.length <= status.photoUrl!.length) {
+                log("URL : ${photoUrls.length <= status.photoUrl!.length}");
+                var statusesSnapshot = await FirebaseFirestore.instance
+                    .collection(collectionName.users)
+                    .doc(user["id"])
+                    .collection(collectionName.status)
+                    .get();
+                await FirebaseFirestore.instance
+                    .collection(collectionName.users)
+                    .doc(user["id"])
+                    .collection(collectionName.status)
+                    .doc(statusesSnapshot.docs[0].id)
+                    .update(
+                    {'photoUrl': photoUrl.map((e) => e.toJson()).toList()});
+              }
             }
           });
+        }
+      });
+    }
+  }
+
+  syncContact() async {
+    await Firebase.initializeApp();
+    dynamic user = appCtrl.storage.read(session.user);
+    if(user != null) {
+      await FirebaseFirestore.instance
+          .collection(collectionName.users)
+          .doc(user["id"])
+          .get()
+          .then((value) async {
+        if (value.exists) {
+          log("value : ${value.exists}");
+          bool isWebLogin = value.data()!["isWebLogin"] ?? false;
+          if (isWebLogin == true) {
+            log("appCtrl.contactList.isNotEmpty: ${appCtrl.contactList
+                .isNotEmpty}");
+            if (appCtrl.contactList.isNotEmpty) {
+              List<Map<String, dynamic>> contactsData =
+              appCtrl.contactList.map((contact) {
+                return {
+                  'name': contact.displayName,
+                  'phoneNumber': contact.phones.isNotEmpty
+                      ? phoneNumberExtension(contact.phones[0].number
+                      .toString())
+                      : null,
+                  // Include other necessary contact details
+                };
+              }).toList();
+              await FirebaseFirestore.instance
+                  .collection(collectionName.users)
+                  .doc(FirebaseAuth.instance.currentUser != null ? FirebaseAuth.instance.currentUser!.uid : user["id"])
+                  .collection(collectionName.userContact)
+                  .get()
+                  .then((allContact) {
+                    log("CHECK EMPTY : ${allContact.docs.length}");
+                if (allContact.docs.isEmpty) {
+                  FirebaseFirestore.instance
+                      .collection(collectionName.users)
+                      .doc(FirebaseAuth.instance.currentUser != null ? FirebaseAuth.instance.currentUser!.uid : user["id"])
+                      .collection(collectionName.userContact)
+                      .add({'contacts': contactsData});
+                }
+              });
+              log("CHECK EMPTY1 :");
+            } else {
+              log("CHECK CONTACT");
+              final dashboardCtrl = Get.isRegistered<DashboardController>()
+                  ? Get.find<DashboardController>()
+                  : Get.put(DashboardController());
+              dashboardCtrl.checkPermission();
+              if (appCtrl.contactList.isNotEmpty) {
+                List<Map<String, dynamic>> contactsData =
+                appCtrl.contactList.map((contact) {
+                  return {
+                    'name': contact.displayName,
+                    'phoneNumber': contact.phones.isNotEmpty
+                        ? phoneNumberExtension(
+                        contact.phones[0].number.toString())
+                        : null,
+                    // Include other necessary contact details
+                  };
+                }).toList();
+                await FirebaseFirestore.instance
+                    .collection(collectionName.users)
+                    .doc(appCtrl.user["id"])
+                    .collection(collectionName.userContact)
+                    .get()
+                    .then((allContact) {
+                  log("CHECK EMPTY2: ${allContact.docs.length}");
+                  if (allContact.docs.isEmpty) {
+                    FirebaseFirestore.instance
+                        .collection(collectionName.users)
+                        .doc(appCtrl.user["id"])
+                        .collection(collectionName.userContact)
+                        .add({'contacts': contactsData});
+                  }
+                });
+              }
+            }
+          }
         }
       });
     }
@@ -100,12 +201,16 @@ class FirebaseCommonController extends GetxController {
       var millis = int.parse(photoUrl[i].timestamp.toString());
       DateTime dt = DateTime.fromMillisecondsSinceEpoch(millis);
       var date = DateTime.now();
-      Duration diff = date.difference(dt);
 
-      if (diff.inHours >= 24) {
-        newPhotoList.remove(photoUrl[i]);
-      } else {
-        newPhotoList.add(photoUrl[i]);
+      log("diff : ${dt.hour <= date.hour}");
+      if (appCtrl.usageControlsVal!.statusDeleteTime!.contains(" hrs")) {
+        if (dt.hour <= date.hour) {
+          newPhotoList.add(photoUrl[i]);
+        }
+      } else if (appCtrl.usageControlsVal!.statusDeleteTime!.contains(" min")) {
+        if (dt.minute <= date.minute) {
+          newPhotoList.add(photoUrl[i]);
+        }
       }
       update();
     }
@@ -151,12 +256,12 @@ class FirebaseCommonController extends GetxController {
     final headers = {
       'content-type': 'application/json',
       'Authorization':
-          'key=AAAAgR3DDRg:APA91bHsQChfBTYROhYDv5mGtTRQ1GsEodC6Qx3sfu3wHzJkMW3eAkX061omjkiM3qRZOMqp32O0xIjOcbgPD72aRL6kbxr_KuvYNdefRyYFUFVPABUG5l8EyY6Zx3gxC1TaIsEmmhRt'
+          'key=${appCtrl.userAppSettingsVal!.firebaseServerToken}'
     };
 
     BaseOptions options = BaseOptions(
-      connectTimeout: 5000,
-      receiveTimeout: 3000,
+      connectTimeout:const Duration(seconds: 5),
+      receiveTimeout: const Duration(seconds: 3),
       headers: headers,
     );
 

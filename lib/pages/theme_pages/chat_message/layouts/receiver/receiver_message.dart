@@ -20,8 +20,8 @@ class _ReceiverMessageState extends State<ReceiverMessage> {
       return Stack(children: [
         Container(
             color: chatCtrl.selectedIndexId.contains(widget.docId)
-                ? appCtrl.appTheme.lightGray
-                : appCtrl.appTheme.bgColor,
+            ? appCtrl.appTheme.primary.withOpacity(.08)
+            : appCtrl.appTheme.transparentColor,
             margin: const EdgeInsets.only(bottom: Insets.i10),
             padding: const EdgeInsets.only(
                 bottom: Insets.i10, left: Insets.i20, right: Insets.i20),
@@ -82,7 +82,7 @@ class _ReceiverMessageState extends State<ReceiverMessage> {
                           onLongPress: () =>
                               chatCtrl.onLongPressFunction(widget.docId)),
                     if (widget.document!["type"] == MessageType.doc.name)
-                      (widget.document!["content"].contains(".pdf"))
+                      (decryptMessage(widget.document!["content"]).contains(".pdf"))
                           ? PdfLayout(
                               isReceiver: true,
                               document: widget.document,
@@ -90,7 +90,7 @@ class _ReceiverMessageState extends State<ReceiverMessage> {
                                   chatCtrl, widget.docId, widget.document),
                               onLongPress: () =>
                                   chatCtrl.onLongPressFunction(widget.docId))
-                          : (widget.document!["content"].contains(".doc"))
+                          : (decryptMessage(widget.document!["content"]).contains(".doc"))
                               ? DocxLayout(
                                   isReceiver: true,
                                   document: widget.document,
@@ -98,7 +98,7 @@ class _ReceiverMessageState extends State<ReceiverMessage> {
                                       chatCtrl, widget.docId, widget.document),
                                   onLongPress: () => chatCtrl
                                       .onLongPressFunction(widget.docId))
-                              : (widget.document!["content"].contains(".xlsx"))
+                              : (decryptMessage(widget.document!["content"]).contains(".xlsx"))
                                   ? ExcelLayout(
                                       isReceiver: true,
                                       onTap: () => OnTapFunctionCall().excelTap(
@@ -109,13 +109,13 @@ class _ReceiverMessageState extends State<ReceiverMessage> {
                                           .onLongPressFunction(widget.docId),
                                       document: widget.document,
                                     )
-                                  : (widget.document!["content"]
+                                  : (decryptMessage(widget.document!["content"])
                                               .contains(".jpg") ||
-                                          widget.document!["content"]
+                                          decryptMessage(widget.document!["content"])
                                               .contains(".png") ||
-                                          widget.document!["content"]
+                                          decryptMessage(widget.document!["content"])
                                               .contains(".heic") ||
-                                          widget.document!["content"]
+                                          decryptMessage(widget.document!["content"])
                                               .contains(".jpeg"))
                                       ? DocImageLayout(
                                           isReceiver: true,
@@ -140,7 +140,7 @@ class _ReceiverMessageState extends State<ReceiverMessage> {
                 if (widget.document!["type"] == MessageType.messageType.name)
                   Align(
                           alignment: Alignment.center,
-                          child: Text(widget.document!["content"])
+                          child: Text(decryptMessage(widget.document!["content"]))
                               .paddingSymmetric(
                                   horizontal: Insets.i8, vertical: Insets.i10)
                               .decorated(
@@ -155,8 +155,7 @@ class _ReceiverMessageState extends State<ReceiverMessage> {
         if (chatCtrl.enableReactionPopup &&
             chatCtrl.selectedIndexId.contains(widget.docId))
           SizedBox(
-              width: MediaQuery.of(Get.context!).size.width,
-              height: Sizes.s35,
+              height: Sizes.s48,
               child: ReactionPopup(
                 reactionPopupConfig: ReactionPopupConfiguration(
                     shadow:

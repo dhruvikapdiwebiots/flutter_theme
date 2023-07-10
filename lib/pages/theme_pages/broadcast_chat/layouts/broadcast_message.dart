@@ -24,7 +24,6 @@ class BroadcastMessage extends StatelessWidget {
             } else {
               chatCtrl.message = (snapshot.data!);
               return ListView.builder(
-                padding: const EdgeInsets.all(10.0),
                 itemBuilder: (context, index) => chatCtrl.buildItem(
                     index, (snapshot.data!).docs[index]),
                 itemCount: (snapshot.data!).docs.length,

@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:contacts_service/contacts_service.dart' as service;
 
 import '../../../config.dart';
 
@@ -64,7 +63,7 @@ class MessageFirebaseApi {
   }
 
   //check contact in firebase and if not exists
-  saveContact(UserContactModel userModel) async {
+  saveContact(UserContactModel userModel, {message}) async {
     bool isRegister = false;
 
 
@@ -98,7 +97,7 @@ class MessageFirebaseApi {
                 element.data()["receiverId"] == userContact.uid)
             .isNotEmpty;
         if (!isEmpty) {
-          var data = {"chatId": "0", "data": userContact};
+          var data = {"chatId": "0", "data": userContact,"message":message};
 
           Get.back();
           Get.toNamed(routeName.chat, arguments: data);
@@ -106,7 +105,7 @@ class MessageFirebaseApi {
           value.docs.asMap().entries.forEach((element) { 
             if(element.value.data()["senderId"]  == userContact.uid ||
                 element.value.data()["receiverId"] == userContact.uid){
-              var data = {"chatId": element.value.data()["chatId"], "data": userContact};
+              var data = {"chatId": element.value.data()["chatId"], "data": userContact,"message":message};
               Get.back();
               Get.toNamed(routeName.chat,arguments: data);
             }
@@ -116,22 +115,32 @@ class MessageFirebaseApi {
         }
       });
     } else {
-      String telephoneUrl = "tel:${userModel.phoneNumber}";
-
-      if (await canLaunchUrl(Uri.parse(telephoneUrl))) {
-        await launchUrl(Uri.parse(telephoneUrl));
-      } else {
-        throw "Can't phone that number.";
+      String? encodeQueryParameters(Map<String, String> params) {
+        return params.entries
+            .map((e) =>
+        '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+            .join('&');
       }
 
+      Uri smsUri = Uri(
+        scheme: 'sms',
+        path: '${userModel.phoneNumber}',
+        query: encodeQueryParameters(
+            <String, String>{'body': "Hello, let's chat with Chatify. Download the app from google play store"}),
+      );
+
+      try {
+        await launchUrl(smsUri);
+      } catch (e) {
+        throw "Can't phone that number.";
+      }
     }
   }
-
 
   //chat list
 
   List chatListWidget(
-      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+  AsyncSnapshot<dynamic> snapshot) {
     List message = [];
     for (int a = 0; a < snapshot.data!.docs.length; a++) {
       message.add(snapshot.data!.docs[a]);

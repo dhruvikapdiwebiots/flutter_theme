@@ -24,7 +24,7 @@ class TrailingLayout extends StatelessWidget {
                     DateTime.fromMillisecondsSinceEpoch(
                         int.parse(document!['updateStamp']))),
                 style: AppCss.poppinsMedium12.textColor( appCtrl.appTheme.txtColor)),
-             (currentUserId == document!["receiverId"])?
+             (currentUserId != document!["senderId"])?
               StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection(collectionName.messages)

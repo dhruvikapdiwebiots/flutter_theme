@@ -91,7 +91,8 @@ appUpdateDialog(
         ElevatedButton(
           onPressed: onCancel,
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(appCtrl.appTheme.whiteColor),
+            backgroundColor:
+                MaterialStateProperty.all<Color>(appCtrl.appTheme.whiteColor),
             elevation: MaterialStateProperty.resolveWith<double>(
               // As you said you dont need elevation. I'm returning 0 in both case
               (Set<MaterialState> states) {
@@ -104,13 +105,15 @@ appUpdateDialog(
           ),
           child: Text(
             trans('cancel'),
-            style: AppCss.poppinsSemiBold16.copyWith(color: appCtrl.appTheme.grey),
+            style:
+                AppCss.poppinsSemiBold16.copyWith(color: appCtrl.appTheme.grey),
           ),
         ),
       ElevatedButton(
         onPressed: onConfirm,
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(appCtrl.appTheme.whiteColor),
+          backgroundColor:
+              MaterialStateProperty.all<Color>(appCtrl.appTheme.whiteColor),
           elevation: MaterialStateProperty.resolveWith<double>(
             // As you said you don't need elevation. I'm returning 0 in both case
             (Set<MaterialState> states) {
@@ -163,26 +166,6 @@ deleteConfirmation(
   );
 }
 
-sendOtp() async {
-  Get.generalDialog(
-    pageBuilder: (context, anim1, anim2) {
-      return Align(
-          alignment: Alignment.center,
-          child: Container(
-              height: 250,
-              margin: const EdgeInsets.symmetric(horizontal: Insets.i10),
-              child: Container()));
-    },
-    transitionBuilder: (context, anim1, anim2, child) {
-      return SlideTransition(
-          position: Tween(begin: const Offset(0, -1), end: const Offset(0, 0))
-              .animate(anim1),
-          child: child);
-    },
-    transitionDuration: const Duration(milliseconds: 300),
-  );
-}
-
 //show error message
 showToast(error) {
   Fluttertoast.showToast(msg: error);
@@ -224,5 +207,36 @@ unblockConfirmation(pName, value, chatId, pId) async {
     },
     transitionDuration: const Duration(milliseconds: 300),
   );
+}
 
+snackBarMessengers({message, color}) {
+  ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(
+      duration: const Duration(seconds: 3),
+      content: Text(message.toString().tr,
+          style: AppCss.poppinsMedium16.textColor(appCtrl.appTheme.white)),
+      backgroundColor: color ?? appCtrl.appTheme.error));
+}
+
+accessDenied(String content, {GestureTapCallback? onTap}) {
+  Get.dialog(
+    AlertDialog(
+      title: Text(fonts.report.tr),
+      content: Text(content.tr),
+      actions: <Widget>[
+        CommonButton(
+          title: fonts.close.tr,
+          width: Sizes.s80,
+          style: AppCss.poppinsMedium16.textColor(appCtrl.appTheme.white),
+          onTap: () => Get.back(),
+        ),
+        CommonButton(
+          title: fonts.yes.tr,
+          width: Sizes.s80,
+          style: AppCss.poppinsMedium16.textColor(appCtrl.appTheme.white),
+          onTap: onTap,
+        ),
+      ],
+    ),
+    barrierDismissible: false,
+  );
 }

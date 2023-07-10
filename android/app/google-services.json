@@ -1,57 +1,34 @@
 {
   "project_info": {
-    "project_number": "554550103320",
-    "project_id": "chatter-e3d94",
-    "storage_bucket": "chatter-e3d94.appspot.com"
+    "project_number": "432304404919",
+    "project_id": "chatify-195b1",
+    "storage_bucket": "chatify-195b1.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:554550103320:android:f3d3586868091373e0626d",
+        "mobilesdk_app_id": "1:432304404919:android:239450fc5740dcb9045032",
         "android_client_info": {
           "package_name": "com.fluttertheme.flutter_theme"
         }
       },
       "oauth_client": [
         {
-          "client_id": "554550103320-pthacvpng9vmf5sjc97sfhrlangbup1u.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.fluttertheme.flutter_theme",
-            "certificate_hash": "9973eb30d1b5aa565d3539c7a4045877da6806dd"
-          }
-        },
-        {
-          "client_id": "554550103320-uvq7vl54eatiikfo9atket69rnfqkjsj.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.fluttertheme.flutter_theme",
-            "certificate_hash": "7f89249e1c270018f2181ee6ef0a0b514d1032eb"
-          }
-        },
-        {
-          "client_id": "554550103320-f113l04u2iitfak7g35b2blaaqhblks3.apps.googleusercontent.com",
+          "client_id": "432304404919-7s6rdiin4gmpc5on6p98uapkuk36bvnd.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC_Wd2pLK85Ve3DGAlAMmyu6w7rU1S9STc"
+          "current_key": "AIzaSyC8KZg3dThiLxP3BBvmjJ7Z7LYtsU6r9rQ"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "554550103320-f113l04u2iitfak7g35b2blaaqhblks3.apps.googleusercontent.com",
+              "client_id": "432304404919-7s6rdiin4gmpc5on6p98uapkuk36bvnd.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "554550103320-7hjpts1khiqahe241qp5a6q5a2j203k7.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.fluttertheme.flutterTheme"
-              }
             }
           ]
         }

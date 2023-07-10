@@ -15,11 +15,11 @@ class GroupUserLastSeen extends StatelessWidget {
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              log("TOTAL : ${snapshot.data!.data()!["users"]}");
+              log("USERID : ${chatCtrl.pId}");
               List userList = snapshot.data!.data()!["users"];
               return snapshot.data!.data()!["users"] != ""
                   ? Text(
-                      "${(userList.length - 1).toString()} ${fonts.people.tr}",
+                      "${userList.length ==1 ? 1: (userList.length - 1).toString()} ${fonts.people.tr}",
                       textAlign: TextAlign.center,
                       style: AppCss.poppinsMedium14
                           .textColor(appCtrl.appTheme.txtColor),

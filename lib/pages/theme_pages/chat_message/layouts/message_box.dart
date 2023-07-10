@@ -9,8 +9,8 @@ class MessageBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ChatController>(builder: (chatCtrl) {
-      return Flexible(
-        child: chatCtrl.chatId == null
+      return  Flexible(
+        child: chatCtrl.clearChatId.contains(chatCtrl.userData["id"]) ? Container() : chatCtrl.chatId == null
             ? Center(
                 child: CircularProgressIndicator(
                     valueColor: AlwaysStoppedAnimation<Color>(

@@ -1,6 +1,8 @@
 import 'dart:developer';
 
+//import 'package:camera/camera.dart';
 import 'package:camera/camera.dart';
+
 import '../../../config.dart';
 
 class PickupLayout extends StatefulWidget {
@@ -37,9 +39,9 @@ class _PickupLayoutState extends State<PickupLayout>
     });
 
     controller!.repeat();
-    log("cameras : $cameras");
+
     if(cameras.isNotEmpty) {
-      cameraController = CameraController(cameras.length ==1 ?cameras[0] : cameras[1], ResolutionPreset.max);
+      cameraController = CameraController(cameras.length ==1 ?cameras[0] : cameras[1], ResolutionPreset.max, imageFormatGroup: ImageFormatGroup.yuv420,);
       log("cameraController : $cameraController");
       cameraController!.initialize().then((_) {
         if (!mounted) {

@@ -18,7 +18,7 @@ final String? currentUserId;
 
 class GroupVideoDocState extends State<GroupVideoDoc> {
   VideoPlayerController? videoController;
-  late Future<void> initializeVideoPlayerFuture;
+   Future<void>? initializeVideoPlayerFuture;
   bool startedPlaying = false;
 
   @override
@@ -68,12 +68,27 @@ class GroupVideoDocState extends State<GroupVideoDoc> {
                           AspectRatio(
                             aspectRatio: videoController!.value.aspectRatio,
                             // Use the VideoPlayer widget to display the video.
-                            child: VideoPlayer(videoController!),
+                            child: VideoPlayer(videoController!)
                           ).height(Sizes.s250),
                           const VSpace(Sizes.s5),
-                          Text(DateFormat('HH:mm a').format(
-                              DateTime.fromMillisecondsSinceEpoch(
-                                  int.parse(widget.document!['timestamp']))),style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.txtColor),)
+                          IntrinsicHeight(
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if (widget.document!.data().toString().contains('isFavourite'))
+                                    if(appCtrl.user["id"] == widget.document!["favouriteId"])
+                                    Icon(Icons.star,color: appCtrl.appTheme.txtColor,size: Sizes.s10),
+                                  const HSpace(Sizes.s3),
+                                  Text(
+                                    DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(
+                                        int.parse(widget.document!['timestamp']))),
+                                    style:
+                                    AppCss.poppinsMedium12.textColor(appCtrl.appTheme.txtColor),
+                                  )
+                                ]
+                              )
+                          )
                         ],
                       ),
                       if (widget.document!.data().toString().contains('emoji'))
@@ -81,7 +96,7 @@ class GroupVideoDocState extends State<GroupVideoDoc> {
                     ],
                   ),
 
-                ],
+                ]
               ).marginSymmetric(vertical: Insets.i5,horizontal: Insets.i10).inkWell(onTap: widget.onTap),
             );
           } else {

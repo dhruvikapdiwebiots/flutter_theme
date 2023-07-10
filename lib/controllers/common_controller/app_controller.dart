@@ -2,8 +2,11 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_theme/models/user_setting_model.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../../config.dart';
+import '../../models/usage_control_model.dart';
 
 class AppController extends GetxController {
   AppTheme _appTheme = AppTheme.fromType(ThemeType.light);
@@ -14,14 +17,21 @@ class AppController extends GetxController {
   AppTheme get appTheme => _appTheme;
   int selectedIndex = 0;
   bool isTheme = false;
+  bool isBiometric = false;
   bool isRTL = false,isLoading =false;
   String languageVal = "in";
   List drawerList = [];
+  dynamic user;
   int currVal = 1;
   String deviceName = "";
   String device = "";
-  dynamic userAppSettingsVal;
-  dynamic usageControlsVal;
+  UserAppSettingModel? userAppSettingsVal;
+  AdRequest request = const AdRequest(
+    keywords: <String>['foo', 'bar'],
+    contentUrl: 'http://foo.com/bar.html',
+    nonPersonalizedAds: true,
+  );
+  UsageControlModel? usageControlsVal;
   var deviceData = <String, dynamic>{};
 
 //list of bottommost page
@@ -67,12 +77,12 @@ class AppController extends GetxController {
   }
 
   getAdminPermission() async {
-    final usageControls = await FirebaseFirestore.instance
+  /*  final usageControls = await FirebaseFirestore.instance
         .collection(collectionName.admin)
         .doc(collectionName.usageControls)
         .get();
-    log("admin : ${usageControls.data()}");
-    usageControlsVal = usageControls.data();
+    log("admin 3: ${usageControls.data()}");
+    usageControlsVal = UsageControlModel.fromJson(usageControls.data()!);
 
 
     appCtrl.storage.write(session.usageControls, usageControls.data());
@@ -81,15 +91,16 @@ class AppController extends GetxController {
         .collection(collectionName.admin)
         .doc(collectionName.userAppSettings)
         .get();
-    log("admin : ${userAppSettings.data()}");
-    userAppSettingsVal = userAppSettings.data();
+    log("admin 4: ${userAppSettings.data()}");
+    userAppSettingsVal = UserAppSettingModel.fromJson(userAppSettings.data()!);
     final agoraToken = await FirebaseFirestore.instance
         .collection(collectionName.admin)
         .doc(collectionName.agoraToken)
         .get();
  await   appCtrl.storage.write(session.agoraToken, agoraToken.data());
-    log("admin : ${agoraToken.data()}");
-    update();
+    log("admin 5: ${agoraToken.data()}");
+    log("admin 6: ${appCtrl.usageControlsVal!.statusDeleteTime!.replaceAll(" hrs", "")}");
+    update();*/
   }
 
   Future<void> initPlatformState() async {

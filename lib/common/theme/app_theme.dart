@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_theme/config.dart';
 
 enum ThemeType {
   light,
@@ -125,10 +126,10 @@ class AppTheme {
           chatBgColor: const Color(0xFFECF1F4),
           error: Colors.red,
           borderGray: const Color(0xFFE6E8EA),
-          blackColor: const Color(0xFF010D21),
+            blackColor: const Color(0xFF010D21),
           chatAppBarColor: Colors.white,
           lightBlackColor: const Color(0xFF586780),
-          redColor: Colors.red,
+          redColor: const Color(0xFFFF5151),
           lightGray: const Color(0xFFF2F2F2),
           contactBgGray: const Color(0xFFE6E6E6),
           contactGray: const Color(0xFFCCCCCC),
@@ -168,7 +169,7 @@ class AppTheme {
           blackColor: Colors.white,
           chatAppBarColor: const Color(0xFF010D21),
           lightBlackColor:Colors.white,
-          redColor: Colors.red,
+          redColor: const Color(0xFFFF5151),
           textColor: const Color(0xFF636363),
           bg1: const Color(0xFFD4DEE5),
           chatBgColor: Colors.black,

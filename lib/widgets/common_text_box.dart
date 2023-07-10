@@ -6,6 +6,7 @@ class CommonTextBox extends StatelessWidget {
   final Widget? suffixIcon;
   final String hinText;
   final String labelText;
+  final String counterText;
   final InputBorder? border;
   final Color? fillColor;
   final FormFieldValidator<String>? validator;
@@ -34,6 +35,7 @@ class CommonTextBox extends StatelessWidget {
       this.validator,
       this.focusNode,
       this.errorText,
+      this.counterText = "",
       this.obscureText = false,
       this.readOnly = false,
       this.keyboardType,
@@ -68,7 +70,6 @@ class CommonTextBox extends StatelessWidget {
               hintText: trans(hinText),
               labelText: trans(labelText),
               errorText: errorText,
-              counterText: "",
               hintStyle:
                   AppCss.poppinsMedium14.textColor(appCtrl.appTheme.blackColor),
               labelStyle:

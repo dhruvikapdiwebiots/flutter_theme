@@ -12,39 +12,33 @@ class DeleteAlert extends StatelessWidget {
     return GetBuilder<ChatController>(builder: (chatCtrl) {
       return AlertDialog(
         backgroundColor: appCtrl.appTheme.whiteColor,
-        title: const Text('Alert!'),
+        title:  Text(fonts.alert.tr),
         content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const <Widget>[
-            Text("Are you sure you want to delete this message?"),
-          ],
-        ),
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children:  <Widget>[
+              Text(fonts.areYouSureToDelete.tr)
+            ]),
         actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Get.back();
-            },
-            child: const Text('Close'),
-          ),
+          TextButton(onPressed: () => Get.back(), child: const Text('Close')),
           TextButton(
             onPressed: () async {
-               Get.back();
-                FirebaseFirestore.instance
-                    .collection('messages').doc(chatCtrl.chatId).collection("chat")
-                    .doc(documentReference!.id)
-                    .delete();
-                await FirebaseFirestore.instance
-                    .runTransaction((transaction) async {});
-                chatCtrl.listScrollController.animateTo(0.0,
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeOut);
-
-                var snapList = FirebaseFirestore.instance
+              dynamic  userData = appCtrl.storage.read(session.user);
+              Get.back();
+              chatCtrl.selectedIndexId.asMap().entries.forEach((element)async {
+                log("ONNN : ${element.value}");
+               await FirebaseFirestore.instance
                     .collection('messages')
                     .doc(chatCtrl.chatId)
-                    .collection("chat").snapshots();
-                log("snapList : ${snapList.length}");
+                    .collection("chat")
+                    .doc(element.value)
+                    .delete();
+              });
+              await FirebaseFirestore.instance
+                  .runTransaction((transaction) async {});
+              chatCtrl.listScrollController.animateTo(0.0,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeOut);
 
               await FirebaseFirestore.instance
                   .collection('messages')
@@ -54,31 +48,34 @@ class DeleteAlert extends StatelessWidget {
                   .limit(1)
                   .get()
                   .then((value) {
-                if(value.docs.isEmpty){
+                if (value.docs.isEmpty) {
                   FirebaseFirestore.instance
-                      .collection("contacts")
+                      .collection(collectionName.users)
+                      .doc(userData["id"])
+                      .collection(collectionName.chats)
                       .where("chatId", isEqualTo: chatCtrl.chatId)
                       .get()
                       .then((value) {
                     FirebaseFirestore.instance
-                        .collection("contacts").doc(value.docs[0].id).delete();
+                        .collection(collectionName.users)
+                        .doc(userData["id"]).collection(collectionName.chats).doc(value.docs[0].id)
+                        .delete();
                   });
-                }else {
+                } else {
                   FirebaseFirestore.instance
-                      .collection("contacts")
+                      .collection(collectionName.users)
+                      .doc(userData["id"])
+                      .collection(collectionName.chats)
                       .where("chatId", isEqualTo: chatCtrl.chatId)
                       .get()
                       .then((snapShot) {
                     if (snapShot.docs.isNotEmpty) {
                       FirebaseFirestore.instance
-                          .collection('contacts')
+                          .collection('users')
                           .doc(snapShot.docs[0].id)
                           .update({
                         "updateStamp":
-                        DateTime
-                            .now()
-                            .millisecondsSinceEpoch
-                            .toString(),
+                            DateTime.now().millisecondsSinceEpoch.toString(),
                         "lastMessage": value.docs[0].data()["content"],
                         "senderId": value.docs[0].data()["senderId"],
                         'sender': {
@@ -97,6 +94,10 @@ class DeleteAlert extends StatelessWidget {
                   });
                 }
               });
+              chatCtrl.selectedIndexId = [];
+              chatCtrl.showPopUp =false;
+              chatCtrl.enableReactionPopup =false;
+              chatCtrl.update();
             },
             child: const Text('Yes'),
           ),

@@ -16,7 +16,7 @@ class VideoCallClass {
   //join user
   Widget buildJoinUserUI(VideoCallController? videoCtrl) {
     final views = _getRenderViews(videoCtrl);
-
+log("views : ${views.length}");
     switch (views.length) {
       case 1:
         return Column(
@@ -73,7 +73,7 @@ class VideoCallClass {
           controller: VideoViewController.remote(
               rtcEngine: videoCallCtrl!.engine,
               canvas: const VideoCanvas(uid: 0),
-              connection: RtcConnection(channelId: fonts.channel)))
+              connection: RtcConnection(channelId: videoCallCtrl.channelName)))
     ];
     videoCallCtrl.users
         .asMap()
@@ -82,7 +82,7 @@ class VideoCallClass {
               controller: VideoViewController.remote(
                   rtcEngine: videoCallCtrl.engine,
                   canvas: VideoCanvas(uid: uid.value),
-                  connection: RtcConnection(channelId: fonts.channel)),
+                  connection: RtcConnection(channelId: videoCallCtrl.channelName)),
             )));
     return list;
   }

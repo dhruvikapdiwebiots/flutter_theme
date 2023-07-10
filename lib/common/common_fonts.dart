@@ -1,10 +1,9 @@
 import 'package:flutter_theme/config.dart';
 
 class Fonts{
-  final gifAPI = "Your GIPHY GIF Api Key";
-  final appId = "Your AGORA APP Api Key";
-  final channel = "flutterTheme";
+  final String crcSeperator = '&';
   final intro1 = "intro1";
+  final appId = "Your AGORA APP Api Key";
   final intro2 = "intro2";
   final intro3 = "intro3";
   final chatify = "Chatify";
@@ -86,6 +85,7 @@ class Fonts{
   final noInternet = "noInternet";
   final inviteUser = "inviteUser";
   final registerUser = "registerUser";
+  final unRegisterUser = "unRegisterUser";
   final recentUpdates = "recentUpdates";
   final download = "download";
   final message = "message";
@@ -115,5 +115,34 @@ class Fonts{
   final emptyCallTitle = "emptyCallTitle";
   final emptyCallDesc = "emptyCallDesc";
   final people = "people";
+  final deviceNotSupported = "deviceNotSupported";
+  final fingerprintLock = "fingerprintLock";
+  final unlockWithFingerprint = "unlockWithFingerprint";
+  final defaultWallpaper = "defaultWallpaper";
+  final unlockWithFingerprintDesc = "unlockWithFingerprintDesc";
+  final delete = "delete";
+  final share = "share";
+  final forward = "forward";
+  final report = "report";
+  final add = "add";
+  final enterGroupName = "enterGroupName";
+  final participants = "participants";
+  final enterGroupDescription = "enterGroupDescription";
+  final createdBy = "createdBy";
+  final mediaDocLinks = "mediaDocLinks";
+  final viewAll = "viewAll";
+  final exitGroup = "exitGroup";
+  final deleteGroup = "deleteGroup";
+  final reportGroup = "reportGroup";
+  final enterBroadcastName = "enterBroadcastName";
+  final deleteBroadcast = "deleteBroadcast";
+  final more = "more";
+  final clearLog = "clearLog";
+  final addGroupDescription = "addGroupDescription";
+  final searchUser = "searchUser";
+  final viewUpdate = "viewUpdate";
+  final reportSend = "reportSend";
+  final messageInfo = "messageInfo";
+  final views = "views";
   String unblockUser(val) => "unblockUser".trParams({'pName':val});
 }

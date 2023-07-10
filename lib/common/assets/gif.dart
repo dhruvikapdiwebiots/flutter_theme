@@ -4,4 +4,5 @@ class GifAssets{
   final String message ="assets/gif/message.gif";
   final String call ="assets/gif/call.gif";
   final String status ="assets/gif/status.gif";
+  final String fingerLock ="assets/gif/fingerlock.gif";
 }

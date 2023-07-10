@@ -101,5 +101,7 @@
 	<true/>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>GADApplicationIdentifier</key>
+    <string>ca-app-pub-1426383974713305~2668032264</string>
 </dict>
 </plist>

@@ -1,9 +1,10 @@
-
 class Status {
   String? uid;
+  String? docId;
   String? username;
   String? phoneNumber;
   List<PhotoUrl>? photoUrl;
+  List? seenAllStatus;
   String? createdAt;
   String? updateAt;
   String? profilePic;
@@ -11,18 +12,20 @@ class Status {
 
   Status(
       {this.uid,
-        this.username,
-        this.phoneNumber,
-        this.photoUrl,
-        this.createdAt,
-        this.updateAt,
-        this.profilePic,
-        this.isSeenByOwn});
+      this.username,
+      this.docId,
+      this.phoneNumber,
+      this.photoUrl,
+      this.seenAllStatus,
+      this.createdAt,
+      this.updateAt,
+      this.profilePic,
+      this.isSeenByOwn});
 
   Status.fromJson(Map<String, dynamic> json) {
     uid = json['uid'];
-    username = json['username'];
-    phoneNumber = json['phoneNumber'];
+    username = json['username'] ?? "";
+    phoneNumber = json['phoneNumber'] ?? "";
     createdAt = json['createdAt'];
     updateAt = json['updateAt'];
     profilePic = json['profilePic'];
@@ -32,6 +35,9 @@ class Status {
       json['photoUrl'].forEach((v) {
         photoUrl!.add(PhotoUrl.fromJson(v));
       });
+    }
+    if (json.containsKey("seenAllStatus")) {
+      seenAllStatus = json['seenAllStatus'] ?? [];
     }
   }
 
@@ -47,6 +53,11 @@ class Status {
     if (photoUrl != null) {
       data['photoUrl'] = photoUrl!.map((v) => v.toJson()).toList();
     }
+    if (seenAllStatus != null) {
+      if (seenAllStatus!.isNotEmpty) {
+        data['seenAllStatus'] = seenAllStatus;
+      }
+    }
     return data;
   }
 }
@@ -58,6 +69,7 @@ class PhotoUrl {
   String? statusText;
   String? statusBgColor;
   bool? isExpired;
+  List? seenBy;
 
   PhotoUrl({this.image, this.timestamp, this.isExpired, this.statusType});
 
@@ -68,6 +80,7 @@ class PhotoUrl {
     statusType = json['statusType'];
     statusText = json['statusText'];
     statusBgColor = json['statusBgColor'];
+    seenBy = json['seenBy'] ?? [];
   }
 
   Map<String, dynamic> toJson() {
@@ -78,6 +91,9 @@ class PhotoUrl {
     data['statusType'] = statusType;
     data['statusText'] = statusText;
     data['statusBgColor'] = statusBgColor;
+    if (seenBy!.isNotEmpty) {
+      data['seenBy'] = seenBy;
+    }
     return data;
   }
 }

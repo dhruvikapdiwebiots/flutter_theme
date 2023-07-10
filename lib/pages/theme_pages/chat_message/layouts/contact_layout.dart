@@ -4,7 +4,7 @@ import '../../../../config.dart';
 class ContactLayout extends StatelessWidget {
   final dynamic document;
   final VoidCallback? onLongPress, onTap;
-
+final String? userId;
   final bool isReceiver, isBroadcast;
 
   const ContactLayout(
@@ -12,6 +12,7 @@ class ContactLayout extends StatelessWidget {
       this.document,
       this.onLongPress,
       this.onTap,
+      this.userId,
       this.isReceiver = false,
       this.isBroadcast = false})
       : super(key: key);
@@ -69,11 +70,11 @@ class ContactLayout extends StatelessWidget {
                               UserContactModel user = UserContactModel(
                                   uid: "0",
                                   isRegister: false,
-                                  image: document!['content'].split('-BREAK-')[2],
+                                  image: decryptMessage(document!["content"]).split('-BREAK-')[2],
                                   username:
-                                      document!['content'].split('-BREAK-')[0],
+                                      decryptMessage(document!["content"]).split('-BREAK-')[0],
                                   phoneNumber: phoneNumberExtension(
-                                      document!['content'].split('-BREAK-')[1]),
+                                      decryptMessage(document!["content"]).split('-BREAK-')[1]),
                                   description: "");
                               MessageFirebaseApi().saveContact(user);
                             },
@@ -92,6 +93,11 @@ class ContactLayout extends StatelessWidget {
           const VSpace(Sizes.s2),
           IntrinsicHeight(
               child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                if (document!.data().toString().contains('isFavourite'))
+                  if(appCtrl.user["id"].toString() == document["favouriteId"].toString())
+                  Icon(Icons.star,
+                      color: appCtrl.appTheme.txtColor, size: Sizes.s10),
+                const HSpace(Sizes.s3),
             if (!isBroadcast && !isReceiver)
               Icon(Icons.done_all_outlined,
                   size: Sizes.s15,

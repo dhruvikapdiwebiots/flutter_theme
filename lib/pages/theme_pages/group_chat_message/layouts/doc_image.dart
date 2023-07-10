@@ -57,7 +57,7 @@ class DocImageLayout extends StatelessWidget {
                         const HSpace(Sizes.s10),
                         Expanded(
                           child: Text(
-                            document!['content'].split("-BREAK-")[0],
+                            decryptMessage(document!["content"]).split("-BREAK-")[0],
                             textAlign: TextAlign.start,
                             style: AppCss.poppinsMedium12.textColor(isReceiver
                                 ? appCtrl.appTheme.lightBlackColor
@@ -87,12 +87,24 @@ class DocImageLayout extends StatelessWidget {
                                         ? appCtrl.appTheme.primary
                                         : appCtrl.appTheme.gray),
                             const HSpace(Sizes.s5),
-                            Text(
-                                DateFormat('HH:mm a').format(
-                                    DateTime.fromMillisecondsSinceEpoch(
-                                        int.parse(document!['timestamp']))),
-                                style: AppCss.poppinsMedium12
-                                    .textColor(appCtrl.appTheme.txtColor))
+                            IntrinsicHeight(
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    if (document!.data().toString().contains('isFavourite'))
+                                      if(appCtrl.user["id"] == document["favouriteId"])
+                                      Icon(Icons.star,color: appCtrl.appTheme.txtColor,size: Sizes.s10),
+                                    const HSpace(Sizes.s3),
+                                    Text(
+                                      DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(
+                                          int.parse(document!['timestamp']))),
+                                      style:
+                                      AppCss.poppinsMedium12.textColor(appCtrl.appTheme.txtColor),
+                                    ),
+                                  ],
+                                )
+                            )
                           ]).marginSymmetric(
                           vertical: Insets.i3, horizontal: Insets.i10),
                     )

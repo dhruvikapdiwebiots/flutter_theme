@@ -2,8 +2,9 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'package:dartx/dartx_io.dart';
+import 'package:drishya_picker/drishya_picker.dart';
+import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter_theme/config.dart';
-import 'package:flutter_theme/widgets/reaction_pop_up/reaction_pop_up.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ChatController extends GetxController {
@@ -20,22 +21,24 @@ class ChatController extends GetxController {
       blockBy;
   dynamic message;
   dynamic pData, allData, userData;
+  List<DrishyaEntity>? entities;
   UserContactModel? userContactModel;
-  FeatureActiveConfig? featureActiveConfig;
   bool positionStreamStarted = false;
   bool isUserAvailable = true;
   XFile? imageFile;
   XFile? videoFile;
-  String? audioFile;
+  String? audioFile, wallPaperType;
   String selectedImage = "";
   final picker = ImagePicker();
   File? selectedFile;
   File? image;
   File? video;
+  int? count;
   bool isLoading = false;
-  bool enableReactionPopup = false;
+  bool enableReactionPopup = false,isChatSearch=false;
   bool showPopUp = false;
   List selectedIndexId = [];
+  List clearChatId = [],searchChatId=[];
 
   bool typing = false, isBlock = false;
   final pickerCtrl = Get.isRegistered<PickerController>()
@@ -45,19 +48,23 @@ class ChatController extends GetxController {
       ? Get.find<PermissionHandlerController>()
       : Get.put(PermissionHandlerController());
   TextEditingController textEditingController = TextEditingController();
+  TextEditingController txtChatSearch = TextEditingController();
   ScrollController listScrollController = ScrollController();
   FocusNode focusNode = FocusNode();
+  late encrypt.Encrypter cryptor;
+  final iv = encrypt.IV.fromLength(8);
 
   @override
   void onReady() {
     // TODO: implement onReady
+
     groupId = '';
     isLoading = false;
     imageUrl = '';
     userData = appCtrl.storage.read(session.user);
     var data = Get.arguments;
     log("data : $data");
-    log("userData : ${userData["id"]}");
+    log("userData : ${userData}");
     if (data == "No User") {
       isUserAvailable = false;
     } else {
@@ -76,7 +83,7 @@ class ChatController extends GetxController {
 
   //get chat data
   getChatData() async {
-    log("chatId : $chatId");
+
     if (chatId != "0") {
       await FirebaseFirestore.instance
           .collection(collectionName.users)
@@ -87,6 +94,7 @@ class ChatController extends GetxController {
           .then((value) {
         log("allData : ${value.docs[0].data()}");
         allData = value.docs[0].data();
+        clearChatId = allData["clearChatId"] ?? [];
         update();
       });
     }
@@ -101,6 +109,43 @@ class ChatController extends GetxController {
       update();
       log("get L : $pData");
     });
+  log("allData : $allData");
+
+    if (allData != null  ) {
+      if(allData["backgroundImage"] != null ||
+          allData["backgroundImage"] != "") {
+        FirebaseFirestore.instance
+            .collection(collectionName.users)
+            .doc(userData["id"])
+            .get()
+            .then((value) {
+          if (value.exists) {
+            allData["backgroundImage"] = value.data()!["backgroundImage"];
+          }
+        });
+      }
+    }else{
+      allData = {};
+      allData["backgroundImage"] = "";
+      allData["isBlock"] = false;
+    }
+    log("CHECK BACK : ${allData["backgroundImage"]}");
+    update();
+    var data = Get.arguments;
+    log("ARGUMENT DATA :${data["message"] != null}");
+    if (data["message"] != null ) {
+      //PhotoUrl photoUrl = PhotoUrl.fromJson(data["message"]);
+      log("ARH : ${data["message"]}");
+      onSendMessage(
+          data["message"].statusType == StatusType.text.name
+              ? data["message"].statusText!
+              : data["message"].image!,
+          data["message"].statusType == StatusType.image.name
+              ? MessageType.image
+              : data["message"].statusType == StatusType.text.name
+                  ? MessageType.text
+                  : MessageType.video);
+    }
   }
 
   //audio and video call tap
@@ -130,41 +175,42 @@ class ChatController extends GetxController {
     log("ALL : $allData");
     log("userData : $userData");
     log("c : $pId");
-    if (allData["senderId"] != userData["id"]) {
-      await FirebaseFirestore.instance
-          .collection(collectionName.messages)
-          .doc(chatId)
-          .collection(collectionName.chat)
-          .where("sender", isEqualTo: pId)
-          .get()
-          .then((value) {
-        value.docs.asMap().entries.forEach((element) {
-          FirebaseFirestore.instance
-              .collection(collectionName.messages)
-              .doc(chatId)
-              .collection(collectionName.chat)
-              .doc(element.value.id)
-              .update({"isSeen": true});
+    if(allData != null){
+      if (allData["senderId"] != userData["id"]) {
+        await FirebaseFirestore.instance
+            .collection(collectionName.messages)
+            .doc(chatId)
+            .collection(collectionName.chat)
+            .where("sender", isEqualTo: pId)
+            .get()
+            .then((value) {
+          value.docs.asMap().entries.forEach((element) {
+            FirebaseFirestore.instance
+                .collection(collectionName.messages)
+                .doc(chatId)
+                .collection(collectionName.chat)
+                .doc(element.value.id)
+                .update({"isSeen": true});
+          });
         });
-      });
-    }
-
-    FirebaseFirestore.instance
-        .collection(collectionName.users)
-        .doc(userData["id"])
-        .collection(collectionName.chats)
-        .where("chatId", isEqualTo: chatId)
-        .get()
-        .then((value) {
-      if (value.docs.isNotEmpty) {
         FirebaseFirestore.instance
             .collection(collectionName.users)
             .doc(userData["id"])
             .collection(collectionName.chats)
-            .doc(value.docs[0].id)
-            .update({"isSeen": true});
+            .where("chatId", isEqualTo: chatId)
+            .get()
+            .then((value) {
+          if (value.docs.isNotEmpty) {
+            FirebaseFirestore.instance
+                .collection(collectionName.users)
+                .doc(userData["id"])
+                .collection(collectionName.chats)
+                .doc(value.docs[0].id)
+                .update({"isSeen": true});
+          }
+        });
       }
-    });
+    }
   }
 
   //share document
@@ -259,7 +305,7 @@ class ChatController extends GetxController {
           newChatId,
           "You unblock this contact",
           isBlock: false,
-          userData["id"]);
+          userData["id"],userData["name"]);
     } else {
       FirebaseFirestore.instance
           .collection(collectionName.messages)
@@ -284,7 +330,7 @@ class ChatController extends GetxController {
           newChatId,
           "You block this contact",
           isBlock: true,
-          userData["id"]);
+          userData["id"],userData["name"]);
     }
     getChatData();
   }
@@ -305,6 +351,30 @@ class ChatController extends GetxController {
         isLoading = false;
         log("imageUrl : $imageUrl");
         onSendMessage(imageUrl!, MessageType.image);
+        update();
+      }, onError: (err) {
+        isLoading = false;
+        update();
+        Fluttertoast.showToast(msg: 'Image is Not Valid');
+      });
+    });
+  }
+
+
+// UPLOAD SELECTED IMAGE TO FIREBASE
+  Future uploadMultipleFile(File imageFile,MessageType messageType ) async {
+    imageFile = imageFile;
+    update();
+
+    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    Reference reference = FirebaseStorage.instance.ref().child(fileName);
+    var file = File( imageFile.path);
+    UploadTask uploadTask = reference.putFile(file);
+    uploadTask.then((res) {
+      res.ref.getDownloadURL().then((downloadUrl) async {
+        imageUrl = downloadUrl;
+        isLoading = false;
+        onSendMessage(imageUrl!, messageType);
         update();
       }, onError: (err) {
         isLoading = false;
@@ -401,13 +471,25 @@ class ChatController extends GetxController {
     });
   }
 
+
+
   // SEND MESSAGE CLICK
   void onSendMessage(String content, MessageType type) async {
     log("allData : $allData");
-    isLoading = true;
+   // isLoading = true;
     update();
     Get.forceAppUpdate();
     log("check for send ");
+    final key = encrypt.Key.fromUtf8('my 32 length key................');
+    final iv = encrypt.IV.fromLength(16);
+
+    final encrypter = encrypt.Encrypter(encrypt.AES(key));
+
+    final encrypted = encrypter.encrypt(content, iv: iv).base64;
+    final decrpypt = encrypter.decrypt(encrypt.Encrypted.fromBase64(encrypted), iv: iv);
+
+    log("encrypted : %${encrypted}");
+    log("encrypted : %${decrpypt}");
     if (content.trim() != '') {
       textEditingController.clear();
       final now = DateTime.now();
@@ -416,7 +498,7 @@ class ChatController extends GetxController {
       chatId = newChatId;
       update();
       imageUrl = "";
-      log("chatId : $chatId");
+
       update();
 
       if (allData != null && allData != "") {
@@ -431,8 +513,8 @@ class ChatController extends GetxController {
                 .collection(collectionName.chat)
                 .add({
               'sender': userData["id"],
-              'receiver': pData["id"],
-              'content': content,
+              'receiver': pId,
+              'content': encrypted,
               "chatId": newChatId,
               'type': type.name,
               'messageType': "sender",
@@ -447,7 +529,7 @@ class ChatController extends GetxController {
               update();
               Get.forceAppUpdate();
               await ChatMessageApi().saveMessageInUserCollection(pData["id"],
-                  userData["id"], newChatId, content, userData["id"]);
+                  userData["id"], newChatId, encrypted, userData["id"],pName);
             }).then((value) {
               isLoading = false;
               update();
@@ -464,7 +546,7 @@ class ChatController extends GetxController {
               .add({
             'sender': userData["id"],
             'receiver': pId,
-            'content': content,
+            'content': encrypted,
             "chatId": newChatId,
             'type': type.name,
             'messageType': "sender",
@@ -479,9 +561,9 @@ class ChatController extends GetxController {
             update();
             Get.forceAppUpdate();
             await ChatMessageApi().saveMessageInUserCollection(
-                userData["id"], pId, newChatId, content, userData["id"]);
+                userData["id"], pId, newChatId, encrypted, userData["id"],pName);
             await ChatMessageApi().saveMessageInUserCollection(
-                pId, pId, newChatId, content, userData["id"]);
+                pId, pId, newChatId, encrypted, userData["id"],userData["name"]);
           }).then((value) {
             isLoading = false;
             update();
@@ -503,7 +585,7 @@ class ChatController extends GetxController {
             .add({
           'sender': userData["id"],
           'receiver': pId,
-          'content': content,
+          'content': encrypted,
           "chatId": newChatId,
           'type': type.name,
           'messageType': "sender",
@@ -519,9 +601,9 @@ class ChatController extends GetxController {
           Get.forceAppUpdate();
           log("check");
           await ChatMessageApi().saveMessageInUserCollection(
-              userData["id"], pId, newChatId, content, userData["id"]);
+              userData["id"], pId, newChatId, encrypted, userData["id"],pName);
           await ChatMessageApi().saveMessageInUserCollection(
-              pId, pId, newChatId, content, userData["id"]);
+              pId, pId, newChatId, encrypted, userData["id"],userData["name"]);
         }).then((value) {
           isLoading = false;
           update();
@@ -530,6 +612,31 @@ class ChatController extends GetxController {
         });
       }
     }
+    if (chatId != "0") {
+      await FirebaseFirestore.instance
+          .collection(collectionName.users)
+          .doc(userData["id"])
+          .collection(collectionName.chats)
+          .where("chatId", isEqualTo: chatId)
+          .get()
+          .then((value) {
+        log("allData : ${value.docs[0].data()}");
+        allData = value.docs[0].data();
+        clearChatId = allData["clearChatId"] ?? [];
+        update();
+      });
+    }
+    seenMessage();
+    await FirebaseFirestore.instance
+        .collection(collectionName.users)
+        .doc(pId)
+        .get()
+        .then((value) {
+      pData = value.data();
+
+      update();
+      log("get L : $pData");
+    });
     if (pData["pushToken"] != "") {
       firebaseCtrl.sendNotification(
           title: "Single Message",
@@ -543,15 +650,135 @@ class ChatController extends GetxController {
           dataTitle: pName);
     }
     isLoading = false;
+    if(allData == null){
+      getChatData();
+    }
     update();
     Get.forceAppUpdate();
   }
 
   //delete chat layout
-  Widget buildPopupDialog(
-      BuildContext context, DocumentSnapshot documentReference) {
-    return DeleteAlert(
-      documentReference: documentReference,
+  buildPopupDialog() async {
+    await showDialog(
+        context: Get.context!, builder: (_) => const DeleteAlert());
+  }
+
+  wallPaperConfirmation(image) async {
+    Get.generalDialog(
+      pageBuilder: (context, anim1, anim2) {
+        return Scaffold(
+          backgroundColor: Colors.transparent,
+          body: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+            return GetBuilder<ChatController>(builder: (chatCtrl) {
+              return Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                      height: 250,
+                      color: appCtrl.appTheme.whiteColor,
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: Insets.i10, vertical: Insets.i15),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: Insets.i10, vertical: Insets.i15),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Set Wallpaper",
+                            style: AppCss.poppinsblack14
+                                .textColor(appCtrl.appTheme.blackColor),
+                          ),
+                          ListTile(
+                            title: Text('Set For this chat "$pName"'),
+                            leading: Radio(
+                              value: "Person Name",
+                              groupValue: wallPaperType,
+                              onChanged: (String? value) {
+                                wallPaperType = value;
+                                update();
+                              },
+                            ),
+                          ),
+                          ListTile(
+                            title: const Text('For all chats'),
+                            leading: Radio(
+                              value: "For All",
+                              groupValue: wallPaperType,
+                              onChanged: (String? value) {
+                                wallPaperType = value;
+                                update();
+                              },
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Expanded(
+                                  child: CommonButton(
+                                title: fonts.cancel.tr,
+                                onTap: () => Get.back(),
+                                style: AppCss.poppinsMedium14
+                                    .textColor(appCtrl.appTheme.white),
+                              )),
+                              const HSpace(Sizes.s10),
+                              Expanded(
+                                  child: CommonButton(
+                                      onTap: () async {
+                                        Get.back();
+                                        log("wallPaperType : $image");
+                                        if (wallPaperType == "Person Name") {
+                                          await FirebaseFirestore.instance
+                                              .collection(collectionName.users)
+                                              .doc(userData["id"])
+                                              .collection(collectionName.chats)
+                                              .where("chatId",
+                                                  isEqualTo: chatId)
+                                              .limit(1)
+                                              .get()
+                                              .then((userChat) {
+                                            if (userChat.docs.isNotEmpty) {
+                                              FirebaseFirestore.instance
+                                                  .collection(
+                                                      collectionName.users)
+                                                  .doc(userData["id"])
+                                                  .collection(
+                                                      collectionName.chats)
+                                                  .doc(userChat.docs[0].id)
+                                                  .update({
+                                                'backgroundImage': image
+                                              });
+                                            }
+                                          });
+                                        } else {
+                                          FirebaseFirestore.instance
+                                              .collection(collectionName.users)
+                                              .doc(userData["id"])
+                                              .update(
+                                                  {'backgroundImage': image});
+                                        }
+                                        chatCtrl.allData["backgroundImage"] =
+                                            image;
+                                        chatCtrl.update();
+                                      },
+                                      title: fonts.ok.tr,
+                                      style: AppCss.poppinsMedium14
+                                          .textColor(appCtrl.appTheme.white))),
+                            ],
+                          )
+                        ],
+                      )));
+            });
+          }),
+        );
+      },
+      transitionBuilder: (context, anim1, anim2, child) {
+        return SlideTransition(
+            position: Tween(begin: const Offset(0, -1), end: const Offset(0, 0))
+                .animate(anim1),
+            child: child);
+      },
+      transitionDuration: const Duration(milliseconds: 300),
     );
   }
 
@@ -603,8 +830,7 @@ class ChatController extends GetxController {
     showPopUp = true;
     enableReactionPopup = true;
 
-    if (!selectedIndexId
-        .contains(docId)) {
+    if (!selectedIndexId.contains(docId)) {
       if (showPopUp == false) {
         selectedIndexId.add(docId);
       } else {
@@ -615,49 +841,43 @@ class ChatController extends GetxController {
     }
     update();
   }
+
+  Widget searchTextField() {
+    return TextField(
+      controller: txtChatSearch,
+      onChanged: (val) async {
+        count =null;
+        searchChatId = [];
+        selectedIndexId = [];
+        message.asMap().entries.forEach((e) {
+          if (decryptMessage(e.value.data()["content"]).toLowerCase().contains(val)) {
+            if (!searchChatId.contains(e.key)) {
+              searchChatId.add(e.key);
+            } else {
+              searchChatId.remove(e.key);
+            }
+          }
+          update();
+        });
+      },
+      autofocus: true,
+      //Display the keyboard when TextField is displayed
+      cursorColor: appCtrl.appTheme.blackColor,
+      style: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.blackColor),
+      textInputAction: TextInputAction.search,
+      //Specify the action button on the keyboard
+      decoration: InputDecoration(
+        //Style of TextField
+        enabledBorder: UnderlineInputBorder(
+          //Default TextField border
+            borderSide: BorderSide(color: appCtrl.appTheme.blackColor)),
+        focusedBorder: UnderlineInputBorder(
+          //Borders when a TextField is in focus
+            borderSide: BorderSide(color: appCtrl.appTheme.blackColor)),
+        hintText: 'Search', //Text that is displayed when nothing is entered.
+      ),
+    );
+  }
+
 }
 
-class FeatureActiveConfig {
-  const FeatureActiveConfig({
-    this.enableSwipeToReply = true,
-    this.enableReactionPopup = true,
-    this.enableTextField = true,
-    this.enableSwipeToSeeTime = true,
-    this.enableCurrentUserProfileAvatar = false,
-    this.enableOtherUserProfileAvatar = true,
-    this.enableReplySnackBar = true,
-    this.enablePagination = false,
-    this.enableChatSeparator = true,
-    this.enableDoubleTapToLike = true,
-  });
-
-  /// Used for enable/disable swipe to reply.
-  final bool enableSwipeToReply;
-
-  /// Used for enable/disable reaction pop-up.
-  final bool enableReactionPopup;
-
-  /// Used for enable/disable text field.
-  final bool enableTextField;
-
-  /// Used for enable/disable swipe whole chat to see message created time.
-  final bool enableSwipeToSeeTime;
-
-  /// Used for enable/disable current user profile circle.
-  final bool enableCurrentUserProfileAvatar;
-
-  /// Used for enable/disable other users profile circle.
-  final bool enableOtherUserProfileAvatar;
-
-  /// Used for enable/disable reply snack bar when user long press on chat-bubble.
-  final bool enableReplySnackBar;
-
-  /// Used for enable/disable pagination.
-  final bool enablePagination;
-
-  /// Used for enable/disable chat separator widget.
-  final bool enableChatSeparator;
-
-  /// Used for enable/disable double tap to like message.
-  final bool enableDoubleTapToLike;
-}

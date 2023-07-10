@@ -6,7 +6,7 @@ import '../../../config.dart';
 
 class ChatMessageApi {
   //save message in user
-  saveMessageInUserCollection(id, receiverId, newChatId, content, senderId,
+  saveMessageInUserCollection(id, receiverId, newChatId, content, senderId,userName,
       {isBlock = false, isBroadcast = false}) async {
     final chatCtrl = Get.isRegistered<ChatController>()
         ? Get.find<ChatController>()
@@ -31,6 +31,7 @@ class ChatMessageApi {
           "chatId": newChatId,
           "isSeen": false,
           "isGroup": false,
+          "name": userName,
           "isBlock": isBlock ?? false,
           "isOneToOne": true,
           "isBroadcast": isBroadcast,
@@ -55,6 +56,7 @@ class ChatMessageApi {
           "chatId": newChatId,
           "isBlock": isBlock ?? false,
           "isOneToOne": true,
+          "name": userName,
           "isBroadcast": isBroadcast,
           "blockBy": isBlock ? id : "",
           "blockUserId": isBlock ? receiverId : "",
@@ -79,7 +81,7 @@ class ChatMessageApi {
     pData,
   ) async {
     var user = appCtrl.storage.read(session.user);
-    List receiver = pData["users"];
+    List receiver = pData["groupData"]["users"];
     receiver.asMap().entries.forEach((element) async {
       await FirebaseFirestore.instance
           .collection(collectionName.users)
@@ -98,6 +100,7 @@ class ChatMessageApi {
             "updateStamp": DateTime.now().millisecondsSinceEpoch.toString(),
             "lastMessage": content,
             "senderId": user["id"],
+            "name":pData["groupData"]["name"]
           });
           if (user["id"] != element.value["id"]) {
             FirebaseFirestore.instance
@@ -111,7 +114,7 @@ class ChatMessageApi {
                     msg: content,
                     groupId: groupId,
                     token: snap.data()!["pushToken"],
-                    dataTitle: pData["name"]);
+                    dataTitle: pData["groupData"]["name"]);
               }
             });
           }

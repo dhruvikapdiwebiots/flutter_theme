@@ -12,7 +12,7 @@ class AgoraToken extends StatelessWidget {
     return user != null && user != ""
         ? StreamBuilder(
       stream: FirebaseFirestore.instance
-          .collection(collectionName.admin)
+          .collection(collectionName.config)
           .doc(session.agoraToken)
           .snapshots(),
       builder: (context, snapshot) {

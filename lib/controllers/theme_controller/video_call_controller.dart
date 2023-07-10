@@ -103,12 +103,13 @@ class VideoCallController extends GetxController {
   //initialise agora
   Future<void> initAgora() async {
     // retrieve permissions
+    dynamic agoraToken = appCtrl.storage.read(session.agoraToken);
     await [Permission.microphone, Permission.camera].request();
     log("permis :");
     //create the engine
     engine = createAgoraRtcEngine();
     await engine.initialize(RtcEngineContext(
-      appId: fonts.appId,
+      appId: agoraToken["agoraAppId"],
       channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
     ));
     log("engine : $engine");
@@ -398,11 +399,9 @@ class VideoCallController extends GetxController {
     await engine.enableVideo();
     await engine.startPreview();
 
-    dynamic agoraToken = appCtrl.storage.read(session.agoraToken);
-    log("agoraToken q: $agoraToken");
     await engine.joinChannel(
       token: agoraToken["token"],
-      channelId: fonts.channel,
+      channelId: channelName!,
       uid: 0,
       options: const ChannelMediaOptions(),
     );

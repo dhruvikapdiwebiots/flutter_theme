@@ -27,7 +27,6 @@ class AppArray{
 
   //statusAction list
   var statusAction = [
-
     {'title': "setting"},
   ];
 
@@ -44,6 +43,17 @@ class AppArray{
     {'title': "rtl","icon" : svgAssets.rtl},
     {'title': "theme","icon" : svgAssets.sun},
     {'title': "deleteAccount","icon" : svgAssets.trash},
+    {'title': "fingerprintLock","icon" : svgAssets.fingerLock},
+    {'title': "rateApp","icon" : svgAssets.star},
     {'title': "logout","icon" : svgAssets.logout},
+  ];
+
+  //background list
+  var backgroundList = [
+    {"image": imageAssets.background1},
+    {"image": imageAssets.background2},
+    {"image": imageAssets.background3},
+    {"image": imageAssets.background4},
+    {"image": imageAssets.background5}
   ];
 }

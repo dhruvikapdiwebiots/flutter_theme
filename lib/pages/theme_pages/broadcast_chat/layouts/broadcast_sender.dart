@@ -1,241 +1,146 @@
-import 'dart:io';
-import 'dart:developer';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
-
 import '../../../../../config.dart';
+import '../broad_cast_on_tap_class.dart';
 
 class BroadcastSenderMessage extends StatefulWidget {
   final dynamic document;
   final int? index;
+  final String? docId;
 
-  const BroadcastSenderMessage({Key? key, this.document, this.index}) : super(key: key);
+  const BroadcastSenderMessage(
+      {Key? key, this.document, this.index, this.docId})
+      : super(key: key);
 
   @override
   State<BroadcastSenderMessage> createState() => _BroadcastSenderMessage();
 }
 
 class _BroadcastSenderMessage extends State<BroadcastSenderMessage> {
-
-  double progress = 0;
-
-  // Track if the PDF was downloaded here.
-  bool didDownloadPDF = false;
-
-  // Show the progress status to the user.
-  String progressString = 'File has not been downloaded yet.';
-
-  Future<bool> saveFile(String url, String fileName) async {
-    log("djhfgd");
-    try {
-      PermissionHandlerController.checkAndRequestPermission(
-          Platform.isIOS ? Permission.storage : Permission.storage)
-          .then((res) async {
-        if (res) {
-          final storageRef = FirebaseStorage.instance.refFromURL(url);
-
-          final islandRef = storageRef.child(storageRef.name);
-
-          log("islandRef : $islandRef");
-
-          final appDocDir = await getApplicationDocumentsDirectory();
-          final filePath =
-              "${appDocDir.path}/${DateTime.now().millisecondsSinceEpoch}";
-          final file = File(filePath);
-
-          final downloadTask = FirebaseStorage.instance
-              .ref()
-              .child(storageRef.fullPath)
-              .writeToFile(file);
-
-          log("downloadTask : $downloadTask");
-
-          downloadTask.snapshotEvents.listen((taskSnapshot) {
-            switch (taskSnapshot.state) {
-              case TaskState.running:
-              // TODO: Handle this case.
-                break;
-              case TaskState.paused:
-              // TODO: Handle this case.
-                break;
-              case TaskState.success:
-              // TODO: Handle this case.
-                break;
-              case TaskState.canceled:
-              // TODO: Handle this case.
-                break;
-              case TaskState.error:
-              // TODO: Handle this case.
-                break;
-            }
-          });
-        }
-      });
-
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<BroadcastChatController>(builder: (chatCtrl) {
-      return Stack(
-        children: [
-          Container(
-              margin: const EdgeInsets.only(bottom: 2.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  Row(mainAxisAlignment: MainAxisAlignment.end, children: <
-                      Widget>[
-                    if (widget.document!["type"] == MessageType.text.name)
-                    // Text
-                      Content(
-                         /* onLongPress: () {
-                            showDialog(
-                              context: Get.context!,
-                              builder: (BuildContext context) => chatCtrl
-                                  .buildPopupDialog(context, widget.document!),
-                            );
-                          },*/
-                          document: widget.document),
-                    if (widget.document!["type"] == MessageType.image.name)
-                      SenderImage(
-                        document: widget.document,
-                        onLongPress: () {
-                          showDialog(
-                            context: Get.context!,
-                            builder: (BuildContext context) => chatCtrl
-                                .buildPopupDialog(context, widget.document!),
-                          );
-                        },
-                        onPressed: () =>
-                            saveFile(widget.document!["content"], "image"),
-                      ),
-                    if (widget.document!["type"] == MessageType.contact.name)
-                      ContactLayout(
-                          onLongPress: () {
-                            showDialog(
-                              context: Get.context!,
-                              builder: (BuildContext context) =>
-                                  chatCtrl.buildPopupDialog(
-                                      context, widget.document!),
-                            );
-                          },
+      return Stack(children: [
+        Container(
+            color: chatCtrl.selectedIndexId.contains(widget.docId)
+                ? appCtrl.appTheme.primary.withOpacity(.08)
+                : appCtrl.appTheme.transparentColor,
+            margin: const EdgeInsets.only(bottom: 2.0),
+            padding: const EdgeInsets.only(left: Insets.i10, right: Insets.i10),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.end, children: <
+                    Widget>[
+              Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
+                if (widget.document!["type"] == MessageType.text.name)
+                  // Text
+                  Content(
+                      onTap: () => BroadcastOnTapFunctionCall()
+                          .contentTap(chatCtrl, widget.docId),
+                      onLongPress: () =>
+                          chatCtrl.onLongPressFunction(widget.docId),
+                      document: widget.document),
+                if (widget.document!["type"] == MessageType.image.name)
+                  SenderImage(
+                    document: widget.document,
+                    onPressed: () => BroadcastOnTapFunctionCall()
+                        .imageTap(chatCtrl, widget.docId, widget.document),
+                    onLongPress: () =>
+                        chatCtrl.onLongPressFunction(widget.docId),
+                  ),
+                if (widget.document!["type"] == MessageType.contact.name)
+                  ContactLayout(
+                          onTap: () => BroadcastOnTapFunctionCall()
+                              .contentTap(chatCtrl, widget.docId),
+                          onLongPress: () =>
+                              chatCtrl.onLongPressFunction(widget.docId),
                           document: widget.document)
-                          .paddingSymmetric(vertical: Insets.i8),
-                    if (widget.document!["type"] == MessageType.location.name)
-                      LocationLayout(
-                        isBroadcast: true,
+                      .paddingSymmetric(vertical: Insets.i8),
+                if (widget.document!["type"] == MessageType.location.name)
+                  LocationLayout(
+                      isBroadcast: true,
+                      document: widget.document,
+                      onTap: () => BroadcastOnTapFunctionCall()
+                          .locationTap(chatCtrl, widget.docId, widget.document),
+                      onLongPress: () =>
+                          chatCtrl.onLongPressFunction(widget.docId)),
+                if (widget.document!["type"] == MessageType.video.name)
+                  VideoDoc(
+                      document: widget.document,
+                      isBroadcast: true,
+                      onTap: () => BroadcastOnTapFunctionCall()
+                          .locationTap(chatCtrl, widget.docId, widget.document),
+                      onLongPress: () =>
+                          chatCtrl.onLongPressFunction(widget.docId)),
+                if (widget.document!["type"] == MessageType.audio.name)
+                  AudioDoc(
+                      isBroadcast: true,
+                      document: widget.document,
+                      onTap: () => BroadcastOnTapFunctionCall()
+                          .locationTap(chatCtrl, widget.docId, widget.document),
+                      onLongPress: () =>
+                          chatCtrl.onLongPressFunction(widget.docId)),
+                if (widget.document!["type"] == MessageType.doc.name)
+                  (widget.document!["content"].contains(".pdf"))
+                      ? PdfLayout(
+                          isBroadcast: true,
                           document: widget.document,
-                          onLongPress: () {
-                            showDialog(
-                              context: Get.context!,
-                              builder: (BuildContext context) => chatCtrl
-                                  .buildPopupDialog(context, widget.document!),
-                            );
-                          },
-                          onTap: () {
-                            launchUrl(Uri.parse(widget.document!["content"]));
-                          }),
-                    if (widget.document!["type"] == MessageType.video.name)
-                      VideoDoc(document: widget.document,isBroadcast: true,),
-                    if (widget.document!["type"] == MessageType.audio.name)
-                      AudioDoc(
-                        isBroadcast: true,
-                          document: widget.document,
-                          onLongPress: () {
-                            showDialog(
-                                context: Get.context!,
-                                builder: (BuildContext context) =>
-                                    chatCtrl.buildPopupDialog(
-                                        context, widget.document!));
-                          }),
-                    if (widget.document!["type"] == MessageType.doc.name)
-                      (widget.document!["content"].contains(".pdf"))
-                          ? PdfLayout(
-                        isBroadcast: true,
-                        document: widget.document,
-                        onLongPress: () {
-                          showDialog(
-                              context: Get.context!,
-                              builder: (BuildContext context) =>
-                                  chatCtrl.buildPopupDialog(
-                                      context, widget.document!));
-                        },
-                      )
-                          : (widget.document!["content"].contains(".doc"))
+                          onTap: () => BroadcastOnTapFunctionCall()
+                              .pdfTap(chatCtrl, widget.docId, widget.document),
+                          onLongPress: () =>
+                              chatCtrl.onLongPressFunction(widget.docId))
+                      : (widget.document!["content"].contains(".doc"))
                           ? DocxLayout(
-                        isBroadcast: true,
-                          document: widget.document,
-                          onLongPress: () {
-                            showDialog(
-                                context: Get.context!,
-                                builder: (BuildContext context) =>
-                                    chatCtrl.buildPopupDialog(
-                                        context, widget.document!));
-                          })
+                              isBroadcast: true,
+                              document: widget.document,
+                              onTap: () => BroadcastOnTapFunctionCall().docTap(
+                                  chatCtrl, widget.docId, widget.document),
+                              onLongPress: () =>
+                                  chatCtrl.onLongPressFunction(widget.docId))
                           : (widget.document!["content"].contains(".xlsx"))
-                          ? ExcelLayout(
-                        isBroadcast: true,
-                        onLongPress: () {
-                          showDialog(
-                              context: Get.context!,
-                              builder: (BuildContext context) =>
-                                  chatCtrl.buildPopupDialog(
-                                      context, widget.document!));
-                        },
-                        document: widget.document,
-                      )
-                          : (widget.document!["content"]
-                          .contains(".jpg") ||
-                          widget.document!["content"]
-                              .contains(".png") ||
-                          widget.document!["content"]
-                              .contains(".heic") ||
-                          widget.document!["content"]
-                              .contains(".jpeg"))
-                          ? DocImageLayout(
-                          document: widget.document,
-                          onLongPress: () {
-                            showDialog(
-                                context: Get.context!,
-                                builder: (BuildContext
-                                context) =>
-                                    chatCtrl.buildPopupDialog(
-                                        context,
-                                        widget.document!));
-                          })
-                          : Container(),
-                    if (widget.document!["type"] == MessageType.gif.name)
-                      GifLayout(
-                        onLongPress: () {
-                          showDialog(
-                              context: Get.context!,
-                              builder: (BuildContext context) => chatCtrl
-                                  .buildPopupDialog(context, widget.document!));
-                        },
-                        document: widget.document,
-                      )
-                  ]),
-                  if (widget.document!["type"] == MessageType.messageType.name)
-                    Align(
-                      alignment: Alignment.center,
-                      child: Text(widget.document!["content"])
-                          .paddingSymmetric(
-                          horizontal: Insets.i8, vertical: Insets.i10)
-                          .decorated(
-                          color: appCtrl.appTheme.primary.withOpacity(.2),
-                          borderRadius: BorderRadius.circular(AppRadius.r8))
-                          .alignment(Alignment.center),
-                    ).paddingOnly(bottom: Insets.i8)
-                ],
-              )),
-        ],
-      );
+                              ? ExcelLayout(
+                                  isBroadcast: true,
+                                  onTap: () => BroadcastOnTapFunctionCall()
+                                      .excelTap(chatCtrl, widget.docId,
+                                          widget.document),
+                                  onLongPress: () => chatCtrl
+                                      .onLongPressFunction(widget.docId),
+                                  document: widget.document,
+                                )
+                              : (widget.document!["content"].contains(".jpg") ||
+                                      widget.document!["content"]
+                                          .contains(".png") ||
+                                      widget.document!["content"]
+                                          .contains(".heic") ||
+                                      widget.document!["content"]
+                                          .contains(".jpeg"))
+                                  ? DocImageLayout(
+                                      document: widget.document,
+                                      onTap: () => BroadcastOnTapFunctionCall()
+                                          .docImageTap(chatCtrl, widget.docId,
+                                              widget.document),
+                                      onLongPress: () => chatCtrl
+                                          .onLongPressFunction(widget.docId))
+                                  : Container(),
+                if (widget.document!["type"] == MessageType.gif.name)
+                  GifLayout(
+                      onTap: () => BroadcastOnTapFunctionCall()
+                          .contentTap(chatCtrl, widget.docId),
+                      onLongPress: () =>
+                          chatCtrl.onLongPressFunction(widget.docId),
+                      document: widget.document)
+              ]),
+              if (widget.document!["type"] == MessageType.messageType.name)
+                Align(
+                        alignment: Alignment.center,
+                        child: Text(decryptMessage(widget.document!["content"]))
+                            .paddingSymmetric(
+                                horizontal: Insets.i8, vertical: Insets.i10)
+                            .decorated(
+                                color: appCtrl.appTheme.primary.withOpacity(.2),
+                                borderRadius:
+                                    BorderRadius.circular(AppRadius.r8))
+                            .alignment(Alignment.center))
+                    .paddingOnly(bottom: Insets.i8)
+            ]))
+      ]);
     });
   }
 }

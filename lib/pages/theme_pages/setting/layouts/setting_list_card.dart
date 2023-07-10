@@ -11,40 +11,68 @@ class SettingListCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SettingController>(builder: (settingCtrl) {
-      return index == 0
-          ? ListTile(
-              dense: true,
-              onTap: () => settingCtrl.onSettingTap(index),
-              minLeadingWidth: 0,
-              contentPadding: EdgeInsets.zero,
-              visualDensity: const VisualDensity(horizontal: 0, vertical: -1),
-              title: Text(trans(data["title"]),
-                  style: AppCss.poppinsMedium14
-                      .textColor(appCtrl.appTheme.blackColor)),
-              subtitle: Text(appCtrl.languageVal == "en" ? "English" :appCtrl.languageVal == "ar" ? "Arabic" : appCtrl.languageVal == "hi" ? "Hindi" : "Gujarati",
-                  style: AppCss.poppinsLight12
-                      .textColor(appCtrl.appTheme.txtColor)),
-              leading: SvgPicture.asset(
-                data["icon"],
-              ).paddingAll(Insets.i10).decorated(
-                    color: appCtrl.appTheme.profileSettingColor,
-                    borderRadius:
-                        SmoothBorderRadius(cornerRadius: 8, cornerSmoothing: 1),
-                  ))
-          : ListTile(
-              contentPadding: EdgeInsets.zero,
-          onTap: () => settingCtrl.onSettingTap(index),
-              minLeadingWidth: 0,
-              title: Text(trans(data["title"]),
-                  style: AppCss.poppinsMedium14
-                      .textColor(appCtrl.appTheme.blackColor)),
-              leading: SvgPicture.asset(
-                data["icon"],
-              ).paddingAll(Insets.i10).decorated(
-                    color: appCtrl.appTheme.profileSettingColor,
-                    borderRadius:
-                        SmoothBorderRadius(cornerRadius: 8, cornerSmoothing: 1),
-                  ));
+      return
+          Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(children: [
+            SvgPicture.asset(
+              data["icon"],
+            ).paddingAll(Insets.i10).decorated(
+                  color: appCtrl.appTheme.profileSettingColor,
+                  borderRadius:
+                      SmoothBorderRadius(cornerRadius: 8, cornerSmoothing: 1),
+                ),
+            const HSpace(Sizes.s10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(trans(data["title"]),
+                    style: AppCss.poppinsMedium14
+                        .textColor(appCtrl.appTheme.blackColor)),
+                if (index == 0)
+                  Text(
+                      appCtrl.languageVal == "en"
+                          ? "English"
+                          : appCtrl.languageVal == "ar"
+                              ? "Arabic"
+                              : appCtrl.languageVal == "hi"
+                                  ? "Hindi"
+                                  : "Gujarati",
+                      style: AppCss.poppinsLight12
+                          .textColor(appCtrl.appTheme.txtColor))
+              ],
+            )
+          ]),
+          data["title"] == "rtl" ||
+                  data["title"] == "theme" ||
+                  data["title"] == "fingerprintLock"
+              ? Switch(
+                  // This bool value toggles the switch.
+                  value: data["title"] == "rtl"
+                      ? appCtrl.isRTL
+                      : data["title"] == "theme"
+                          ? appCtrl.isTheme
+                          : appCtrl.isBiometric,
+                  activeColor: appCtrl.appTheme.primary,
+                  onChanged: (bool value) {
+                    settingCtrl.onSettingTap(index);
+                    appCtrl.update();
+                  },
+                )
+              : SvgPicture.asset(
+                      appCtrl.isRTL
+                          ? svgAssets.arrowBack
+                          : svgAssets.arrowForward,
+                      height: Sizes.s10,
+                      color: appCtrl.appTheme.blackColor)
+                  .paddingAll(Insets.i12)
+                  .decorated(
+                      color: appCtrl.appTheme.txtColor.withOpacity(.1),
+                      shape: BoxShape.circle)
+                  .inkWell(onTap: () => settingCtrl.onSettingTap(index)),
+        ],
+      ).marginSymmetric(vertical: Insets.i5).inkWell(onTap: () => settingCtrl.onSettingTap(index));
     });
   }
 }

@@ -14,28 +14,28 @@ double colorWidth(double radius, int statusCount, double separation) {
 }
 
 double separation(int statusCount) {
-  if (statusCount <= 20)
+  if (statusCount <= 20) {
     return 3.0;
-  else if (statusCount <= 30)
+  } else if (statusCount <= 30) {
     return 1.8;
-  else if (statusCount <= 60)
+  } else if (statusCount <= 60) {
     return 1.0;
-  else
+  } else {
     return 0.3;
+  }
 }
 
 class StatusListCard extends StatelessWidget {
   final Status? snapshot;
-  final int? index;
-  final List<Status>? status;
+  final bool isUserStatus,isSeen;
 
-  const StatusListCard({Key? key, this.snapshot, this.index, this.status})
+  const StatusListCard({Key? key, this.snapshot,this.isUserStatus = true,this.isSeen = false})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<StatusController>(builder: (statusCtrl) {
-      return Column(children: [
+      return Column(mainAxisSize: MainAxisSize.min,children: [
         ListTile(
           horizontalTitleGap: 10,
           contentPadding: const EdgeInsets.symmetric(horizontal: Insets.i15),
@@ -56,10 +56,10 @@ class StatusListCard extends StatelessWidget {
                 style: AppCss.poppinsMedium12
                     .textColor(appCtrl.appTheme.txtColor)),
           ]),
-          title: Text(snapshot!.username!,
+          title:  Text(isUserStatus ?  snapshot!.username! : "Sponsor",
               style: AppCss.poppinsblack14.textColor(appCtrl.appTheme.txt)),
           leading: DottedBorder(
-            color: appCtrl.appTheme.primary,
+            color: isSeen ?appCtrl.appTheme.gray : appCtrl.appTheme.primary,
             padding: const EdgeInsets.all(Insets.i2),
             borderType: BorderType.RRect,
             strokeCap: StrokeCap.round,
@@ -81,7 +81,7 @@ class StatusListCard extends StatelessWidget {
                   ],
             strokeWidth: 1,
             child: Stack(alignment: Alignment.bottomRight, children: [
-              snapshot!.photoUrl![snapshot!.photoUrl!.length - 1].statusType ==
+              snapshot!.photoUrl!.isEmpty? Container():   snapshot!.photoUrl![snapshot!.photoUrl!.length - 1].statusType ==
                       StatusType.text.name
                   ? Container(
                       padding:
@@ -116,7 +116,7 @@ class StatusListCard extends StatelessWidget {
                           image: snapshot!
                               .photoUrl![snapshot!.photoUrl!.length - 1].image
                               .toString(),
-                          name: snapshot!.username,
+                          name: isUserStatus ? snapshot!.username : "C",
                         )
                       : StatusVideo(snapshot: snapshot!),
             ]),

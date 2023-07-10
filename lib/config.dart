@@ -1,5 +1,7 @@
 import 'package:camera/camera.dart';
 
+import 'package:flutter_theme/controllers/common_controller/ad_controller.dart';
+
 import 'config.dart';
 export 'package:get_storage/get_storage.dart';
 
@@ -37,5 +39,4 @@ final appCtrl = Get.isRegistered<AppController>()
 final firebaseCtrl = Get.isRegistered<FirebaseCommonController>()
     ? Get.find<FirebaseCommonController>()
     : Get.put(FirebaseCommonController());
-
 List<CameraDescription> cameras = [];

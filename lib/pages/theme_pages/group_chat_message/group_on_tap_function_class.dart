@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 class GroupOnTapFunctionCall {
   //contentTap
   contentTap(GroupChatMessageController chatCtrl, docId) {
+
     if (chatCtrl.selectedIndexId.isNotEmpty) {
       chatCtrl.enableReactionPopup = false;
       chatCtrl.showPopUp = false;
@@ -38,13 +39,13 @@ class GroupOnTapFunctionCall {
       var dio = Dio();
       var tempDir = await getExternalStorageDirectory();
       var filePath = tempDir!.path +
-          (document!['content'].contains("-BREAK-")
-              ? document!['content'].split("-BREAK-")[0]
-              : (document!['content']));
+          (decryptMessage(document!['content']).contains("-BREAK-")
+              ? decryptMessage(document!['content']).split("-BREAK-")[0]
+              : (decryptMessage(document!['content'])));
       final response = await dio.download(
-          document!['content'].contains("-BREAK-")
-              ? document!['content'].split("-BREAK-")[1]
-              : document!['content'],
+          decryptMessage(document!['content']).contains("-BREAK-")
+              ? decryptMessage(document!['content']).split("-BREAK-")[1]
+              : decryptMessage(document!['content']),
           filePath);
 
       final result = await OpenFilex.open(filePath);
@@ -67,7 +68,7 @@ class GroupOnTapFunctionCall {
       }
       chatCtrl.update();
     } else {
-      launchUrl(Uri.parse(document!["content"]));
+      launchUrl(Uri.parse(decryptMessage(document!['content'])));
     }
   }
 
@@ -89,9 +90,9 @@ class GroupOnTapFunctionCall {
       var dio = Dio();
       var tempDir = await getExternalStorageDirectory();
 
-      var filePath = tempDir!.path + document!['content'].split("-BREAK-")[0];
+      var filePath = tempDir!.path + decryptMessage(document!['content']).split("-BREAK-")[0];
       final response = await dio.download(
-          document!['content'].split("-BREAK-")[1], filePath);
+          decryptMessage(document!['content']).split("-BREAK-")[1], filePath);
 
       final result = await OpenFilex.open(filePath);
 
@@ -118,9 +119,9 @@ class GroupOnTapFunctionCall {
       var dio = Dio();
       var tempDir = await getExternalStorageDirectory();
 
-      var filePath = tempDir!.path + document!['content'].split("-BREAK-")[0];
+      var filePath = tempDir!.path + decryptMessage(document!['content']).split("-BREAK-")[0];
       final response = await dio.download(
-          document!['content'].split("-BREAK-")[1], filePath);
+          decryptMessage(document!['content']).split("-BREAK-")[1], filePath);
 
       final result = await OpenFilex.open(filePath);
 
@@ -147,9 +148,9 @@ class GroupOnTapFunctionCall {
       var dio = Dio();
       var tempDir = await getExternalStorageDirectory();
 
-      var filePath = tempDir!.path + document!['content'].split("-BREAK-")[0];
+      var filePath = tempDir!.path + decryptMessage(document!['content']).split("-BREAK-")[0];
       final response = await dio.download(
-          document!['content'].split("-BREAK-")[1], filePath);
+          decryptMessage(document!['content']).split("-BREAK-")[1], filePath);
 
       final result = await OpenFilex.open(filePath);
 
@@ -177,9 +178,9 @@ class GroupOnTapFunctionCall {
       var dio = Dio();
       var tempDir = await getExternalStorageDirectory();
 
-      var filePath = tempDir!.path + document!['content'].split("-BREAK-")[0];
+      var filePath = tempDir!.path + decryptMessage(document!['content']).split("-BREAK-")[0];
       final response = await dio.download(
-          document!['content'].split("-BREAK-")[1], filePath);
+          decryptMessage(document!['content']).split("-BREAK-")[1], filePath);
 
       final result = await OpenFilex.open(filePath);
 

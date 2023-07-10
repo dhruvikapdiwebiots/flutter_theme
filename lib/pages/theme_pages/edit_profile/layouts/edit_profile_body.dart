@@ -11,29 +11,27 @@ class EditProfileBody extends StatelessWidget {
       log("EDIR : ${editCtrl.user["image"]}");
       return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
         //image layout
-        Hero(
-                tag: "user",
-                child: Stack(
-                  children: [
-                    const EditProfileImage(),
-                    Positioned(
-                      bottom: 0,
-                      right: -1,
-                      child: Align(
-                              alignment: Alignment.bottomRight,
-                              child: SvgPicture.asset(svgAssets.edit,
-                                      height: Sizes.s15)
-                                  .paddingAll(Insets.i6)
-                                  .decorated(
-                                      color: appCtrl.appTheme.primary,
-                                      shape: BoxShape.circle))
-                          .paddingAll(Insets.i1)
+        Stack(
+          children: [
+            const EditProfileImage(),
+            Positioned(
+              bottom: 0,
+              right: -1,
+              child: Align(
+                      alignment: Alignment.bottomRight,
+                      child: SvgPicture.asset(svgAssets.edit,
+                              height: Sizes.s15)
+                          .paddingAll(Insets.i6)
                           .decorated(
-                              color: appCtrl.appTheme.white,
-                              shape: BoxShape.circle),
-                    )
-                  ],
-                ).width(Sizes.s115))
+                              color: appCtrl.appTheme.primary,
+                              shape: BoxShape.circle))
+                  .paddingAll(Insets.i1)
+                  .decorated(
+                      color: appCtrl.appTheme.white,
+                      shape: BoxShape.circle),
+            )
+          ],
+        ).width(Sizes.s115)
             .inkWell(onTap: () => editCtrl.imagePickerOption(context)),
 
         //all input box layout

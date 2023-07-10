@@ -43,10 +43,7 @@ class OtpBody extends StatelessWidget {
             if (otpCtrl.isCountDown)
               Text(
                 '$hours:$minutes:$seconds',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                    fontSize: 50),
+                style: AppCss.poppinsSemiBold16.textColor(appCtrl.appTheme.blackColor),
               ),
             const VSpace(Sizes.s15),
             RichText(

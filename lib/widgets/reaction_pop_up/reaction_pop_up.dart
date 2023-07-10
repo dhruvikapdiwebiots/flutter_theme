@@ -73,8 +73,8 @@ class ReactionPopupState extends State<ReactionPopup>
       _animationController.reverse();
     }
     return showPopUp
-        ? SizedBox(
-      width: deviceWidth > 450 ? 450 : deviceWidth,
+        ? Align(
+alignment: Alignment.centerRight,
       child: AnimatedBuilder(
         animation: _scaleAnimation,
         builder: (context, child) => Transform.scale(
@@ -86,18 +86,18 @@ class ReactionPopupState extends State<ReactionPopup>
           )
               : AnimatedContainer(duration: const Duration(seconds: 2),
             constraints: BoxConstraints(
-                maxWidth: reactionPopupConfig?.maxWidth ?? 350,maxHeight: reactionPopupConfig?.maxWidth ??  35),
+                maxWidth: reactionPopupConfig?.maxWidth ?? 350,maxHeight: reactionPopupConfig?.maxWidth ??  40),
             margin: reactionPopupConfig?.margin ??
                 const EdgeInsets.symmetric(horizontal: 25),
             padding: reactionPopupConfig?.padding ??
                 const EdgeInsets.symmetric(
-                  vertical: 6,
+
                   horizontal: 14,
                 ),
             decoration: BoxDecoration(
               color: reactionPopupConfig?.backgroundColor ??
-                  Colors.white,
-              borderRadius: BorderRadius.circular(30),
+                  appCtrl.appTheme.primary,
+              borderRadius: BorderRadius.circular(50),
               boxShadow: [
                 reactionPopupConfig?.shadow ??
                     BoxShadow(

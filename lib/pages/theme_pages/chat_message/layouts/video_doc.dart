@@ -8,6 +8,7 @@ class VideoDoc extends StatefulWidget {
 final  bool isBroadcast,isReceiver;
   final GestureTapCallback? onTap;
   final VoidCallback? onLongPress;
+
   const VideoDoc({Key? key, this.document,this.isBroadcast = false,this.isReceiver = false,this.onTap,this.onLongPress}) : super(key: key);
 
   @override
@@ -16,7 +17,7 @@ final  bool isBroadcast,isReceiver;
 
 class _VideoDocState extends State<VideoDoc> {
   VideoPlayerController? videoController;
-  late Future<void> initializeVideoPlayerFuture;
+  Future<void>? initializeVideoPlayerFuture;
   bool startedPlaying = false;
 
   @override
@@ -24,7 +25,7 @@ class _VideoDocState extends State<VideoDoc> {
     // TODO: implement initState
     if (widget.document!["type"] == MessageType.video.name) {
       videoController = VideoPlayerController.network(
-        widget.document!["content"].contains("-BREAK-") ? widget.document!["content"].split("-BREAK-")[1] :widget.document!["content"],
+          decryptMessage(widget.document!["content"]).contains("-BREAK-") ? decryptMessage(widget.document!["content"]).split("-BREAK-")[1] :decryptMessage(widget.document!["content"]),
       );
       initializeVideoPlayerFuture = videoController!.initialize();
     }
@@ -58,7 +59,7 @@ crossAxisAlignment: CrossAxisAlignment.end,
                             aspectRatio: videoController!.value.aspectRatio,
                             // Use the VideoPlayer widget to display the video.
                             child: VideoPlayer(videoController!),
-                          ).height(Sizes.s250).clipRRect(all: AppRadius.r8),
+                          ).height(Sizes.s250).width(Sizes.s250).clipRRect(all: AppRadius.r8),
                           IconButton(
                               icon: Icon(
                                       videoController!.value.isPlaying
@@ -89,6 +90,11 @@ crossAxisAlignment: CrossAxisAlignment.end,
                   const VSpace(Sizes.s2),
                   IntrinsicHeight(
                       child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                        if (widget.document!.data().toString().contains('isFavourite'))
+                          if(appCtrl.user["id"] == widget.document["favouriteId"])
+                          Icon(Icons.star,
+                              color: appCtrl.appTheme.txtColor, size: Sizes.s10),
+                        const HSpace(Sizes.s3),
                         if (!widget.isBroadcast && !widget.isReceiver)
                           Icon(Icons.done_all_outlined,
                               size: Sizes.s15,

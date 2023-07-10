@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   log('Handling a background message ${message.messageId}');
   log("message.data : ${message.data}");
+  firebaseCtrl.syncContact();
 }
 
 /// Create a [AndroidNotificationChannel] for heads up notifications
@@ -50,6 +50,7 @@ class CustomNotificationController extends GetxController {
     FirebaseMessaging.instance
         .getInitialMessage()
         .then((RemoteMessage? message) {
+      firebaseCtrl.syncContact();
       if (message != null) {
         flutterLocalNotificationsPlugin.cancelAll();
         Map<String, dynamic>? notificationData = message.data;
@@ -91,7 +92,7 @@ class CustomNotificationController extends GetxController {
     //when app in foreground
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       RemoteNotification notification = message.notification!;
-
+      firebaseCtrl.syncContact();
       AndroidNotification? android = message.notification?.android;
       if (android != null && !kIsWeb) {
         flutterLocalNotificationsPlugin.show(
@@ -158,7 +159,7 @@ class CustomNotificationController extends GetxController {
           flutterLocalNotificationsPlugin.cancelAll();
         } else if (message.data["title"] == "Incoming Video Call..." &&
             message.data["title"] == "Incoming Audio Call...") {
-          await AwesomeNotifications().createNotification(
+        /*  await AwesomeNotifications().createNotification(
               content: NotificationContent(
                   id: -1,
                   // -1 is replaced by a random number
@@ -176,15 +177,14 @@ class CustomNotificationController extends GetxController {
                 NotificationActionButton(
                   key: 'REPLY',
                   label: 'Reply Message',
-                  requireInputText: true,
-                  actionType: ActionType.SilentAction,
+
                 ),
                 NotificationActionButton(
                     key: 'DISMISS',
                     label: 'Dismiss',
-                    actionType: ActionType.DismissAction,
+
                     isDangerousOption: true)
-              ]);
+              ]);*/
         } else {
           flutterLocalNotificationsPlugin.cancelAll();
         }
@@ -199,7 +199,7 @@ class CustomNotificationController extends GetxController {
     AndroidNotification? android = message.notification?.android;
     if (message.data["title"] == "Incoming Video Call..." &&
         message.data["title"] == "Incoming Audio Call...") {
-      await AwesomeNotifications().createNotification(
+     /* await AwesomeNotifications().createNotification(
           content: NotificationContent(
               id: -1,
               // -1 is replaced by a random number
@@ -217,15 +217,14 @@ class CustomNotificationController extends GetxController {
             NotificationActionButton(
               key: 'REPLY',
               label: 'Reply Message',
-              requireInputText: true,
-              actionType: ActionType.SilentAction,
+
             ),
             NotificationActionButton(
                 key: 'DISMISS',
                 label: 'Dismiss',
-                actionType: ActionType.DismissAction,
+
                 isDangerousOption: true)
-          ]);
+          ]);*/
     } else {
       if (notification != null && android != null && !kIsWeb) {
         flutterLocalNotificationsPlugin.show(
@@ -262,7 +261,6 @@ class CustomNotificationController extends GetxController {
   void onReady() {
     // TODO: implement onReady
     initNotification();
-    AwesomeNotificationController.startListeningNotificationEvents();
     super.onReady();
   }
 }

@@ -58,7 +58,7 @@ class ReceiverImage extends StatelessWidget {
                               borderRadius: BorderRadius.circular(AppRadius.r8),
                             ),
                             child: Container()),
-                        imageUrl: document!['content'],
+                        imageUrl: decryptMessage(document!["content"]),
                         width: Sizes.s160,
                         height: Sizes.s150,
                         fit: BoxFit.cover,
@@ -70,13 +70,24 @@ class ReceiverImage extends StatelessWidget {
                 EmojiLayout(emoji: document!["emoji"])
             ],
           ),
-          Text(
-            DateFormat('HH:mm a').format(
-                DateTime.fromMillisecondsSinceEpoch(
-                    int.parse(document!['timestamp']))),
-            style: AppCss.poppinsMedium12
-                .textColor(appCtrl.appTheme.txtColor),
-          ).marginSymmetric(horizontal: Insets.i5, vertical: Insets.i8)
+          IntrinsicHeight(
+            child: Row(
+              children: [
+                if (document!.data().toString().contains('isFavourite'))
+                  if(appCtrl.user["id"] == document["favouriteId"])
+                    Icon(Icons.star,
+                        color: appCtrl.appTheme.txtColor, size: Sizes.s10),
+                const HSpace(Sizes.s3),
+                Text(
+                  DateFormat('HH:mm a').format(
+                      DateTime.fromMillisecondsSinceEpoch(
+                          int.parse(document!['timestamp']))),
+                  style: AppCss.poppinsMedium12
+                      .textColor(appCtrl.appTheme.txtColor),
+                ).marginSymmetric(horizontal: Insets.i5, vertical: Insets.i8),
+              ],
+            ),
+          )
         ],
       ),
     );

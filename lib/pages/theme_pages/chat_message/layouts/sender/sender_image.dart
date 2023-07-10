@@ -12,8 +12,9 @@ class SenderImage extends StatelessWidget {
   final dynamic document;
   final VoidCallback? onPressed, onLongPress;
   final bool isBroadcast;
+  final String? userId;
 
-  const SenderImage({Key? key, this.document, this.onPressed, this.onLongPress,this.isBroadcast =false})
+  const SenderImage({Key? key, this.document, this.onPressed, this.onLongPress,this.isBroadcast =false,this.userId})
       : super(key: key);
 
   @override
@@ -53,7 +54,7 @@ class SenderImage extends StatelessWidget {
                                   borderRadius:SmoothBorderRadius(cornerRadius: 10,cornerSmoothing: 1)),
                             ),
                             child: Container()),
-                        imageUrl: document!['content'],
+                        imageUrl: decryptMessage(document!["content"]),
                         width: Sizes.s160,
                         height: Sizes.s150,
                         fit: BoxFit.cover,
@@ -67,6 +68,11 @@ class SenderImage extends StatelessWidget {
             ),
             Row(
               children: [
+                if (document!.data().toString().contains('isFavourite'))
+                  if(appCtrl.user["id"]  != document.data()["senderId"])
+                  Icon(Icons.star,
+                      color: appCtrl.appTheme.txtColor, size: Sizes.s10),
+                const HSpace(Sizes.s3),
                 if (!isBroadcast)
                   Icon(Icons.done_all_outlined,
                       size: Sizes.s15,

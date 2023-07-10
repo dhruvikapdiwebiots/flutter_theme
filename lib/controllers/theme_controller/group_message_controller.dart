@@ -4,8 +4,12 @@ import 'dart:io';
 import 'dart:math';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:dartx/dartx_io.dart';
+import 'package:drishya_picker/drishya_picker.dart';
 import 'package:flutter_theme/config.dart';
+import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_profile/exit_group_alert.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:encrypt/encrypt.dart' as encrypt;
 
 class GroupChatMessageController extends GetxController {
   String? pId,
@@ -18,15 +22,26 @@ class GroupChatMessageController extends GetxController {
       status,
       statusLastSeen,
       nameList,
-      videoUrl;
-  dynamic message, pData;
+      videoUrl,
+      backgroundImage;
+  dynamic pData, allData;
+  List message = [];
   bool positionStreamStarted = false;
-  XFile? imageFile;
-  XFile? videoFile;
+  int pageSize = 20;
+  XFile? imageFile, videoFile;
+  List userList = [],
+      searchUserList = [],
+      selectedIndexId = [],
+      searchChatId = [];
+  List<DrishyaEntity>? entities;
   File? image;
-  bool isLoading = true;
+  bool isLoading = true,
+      isTextBox = false,
+      isDescTextBox = false,
+      isThere = false,
+      typing = false,
+      isChatSearch = false;
   dynamic user;
-  bool typing = false;
   final permissionHandelCtrl = Get.isRegistered<PermissionHandlerController>()
       ? Get.find<PermissionHandlerController>()
       : Get.put(PermissionHandlerController());
@@ -34,11 +49,21 @@ class GroupChatMessageController extends GetxController {
       ? Get.find<PickerController>()
       : Get.put(PickerController());
   TextEditingController textEditingController = TextEditingController();
+  TextEditingController textNameController = TextEditingController();
+  TextEditingController textDescController = TextEditingController();
+  TextEditingController textSearchController = TextEditingController();
+  TextEditingController txtChatSearch = TextEditingController();
   ScrollController listScrollController = ScrollController();
   FocusNode focusNode = FocusNode();
   bool enableReactionPopup = false;
   bool showPopUp = false;
-  List selectedIndexId = [];
+  int? count;
+  List clearChatId = [];
+
+  late encrypt.Encrypter cryptor;
+  Offset tapPosition = Offset.zero;
+  final iv = encrypt.IV.fromLength(8);
+  final PagingController pagingController = PagingController(firstPageKey: 0);
 
   @override
   void onReady() {
@@ -50,31 +75,129 @@ class GroupChatMessageController extends GetxController {
     imageUrl = '';
     var data = Get.arguments;
     pData = data;
-    pId = pData["groupId"];
-    pName = pData["name"];
-    groupImage = pData["image"];
+    pId = pData["message"]["groupId"];
+    pName = pData["groupData"]["name"];
+    groupImage = pData["groupData"]["image"];
+    log.log("SENDER : ${pData["message"]["senderId"]}");
+    update();
     getPeerStatus();
-
+    pagingController.addPageRequestListener((pageKey) {
+      fetchPage(pageKey);
+    });
     update();
     super.onReady();
   }
 
+  //fetch data
+  Future<void> fetchPage(pageKey) async {
+    pagingController.itemList = [];
+
+    try {
+      final newItems = message;
+      final isLastPage = newItems.length < pageSize;
+      if (isLastPage) {
+        pagingController.appendLastPage(newItems);
+      } else {
+        final nextPageKey = pageKey + newItems.length;
+        pagingController.appendPage(newItems, nextPageKey);
+      }
+    } catch (error) {
+      pagingController.error = error;
+    }
+    isLoading = false;
+    update();
+  }
+
 //get group data
-  getPeerStatus() {
+  getPeerStatus() async {
     nameList = "";
     nameList = null;
+    log.log("receiver");
     FirebaseFirestore.instance
         .collection(collectionName.groups)
         .doc(pId)
         .get()
-        .then((value) {
+        .then((value) async {
+      log.log("value.exists :${value.exists}");
       if (value.exists) {
-        List receiver = pData["users"];
+        allData = value.data();
+        update();
+        backgroundImage = value.data()!['backgroundImage'] ?? "";
+        List receiver = pData["groupData"]["users"] ?? [];
+        log.log("receiver : $receiver");
+        log.log("allDATA : $allData");
+        clearChatId = value.data()!["clearChatId"] ?? [];
         nameList = (receiver.length - 1).toString();
+        if (pData["message"]["senderId"] != user["id"]) {
+          await FirebaseFirestore.instance
+              .collection(collectionName.groupMessage)
+              .doc(pId)
+              .collection(collectionName.chat)
+              .get()
+              .then((value) {
+            value.docs.asMap().entries.forEach((element) {
+              if (element.value.exists) {
+                if (element.value.data()["sender"] != user["id"]) {
+                  List seenMessageList =
+                      element.value.data()["seenMessageList"] ?? [];
+                  log.log("seenMessageList : $seenMessageList");
+                  bool isAvailable = seenMessageList
+                      .where((element) => element["userId"] == user["id"])
+                      .isNotEmpty;
+                  if (!isAvailable) {
+                    var data = {
+                      "userId": user["id"],
+                      "date": DateTime.now().millisecondsSinceEpoch
+                    };
+
+                    seenMessageList.add(data);
+                  }
+                  FirebaseFirestore.instance
+                      .collection(collectionName.groupMessage)
+                      .doc(pId)
+                      .collection(collectionName.chat)
+                      .doc(element.value.id)
+                      .update({"seenMessageList": seenMessageList});
+
+                  FirebaseFirestore.instance
+                      .collection(collectionName.users)
+                      .doc(user["id"])
+                      .collection(collectionName.chats)
+                      .where("groupId", isEqualTo: pId)
+                      .limit(1)
+                      .get()
+                      .then((userChat) {
+                    if (userChat.docs.isNotEmpty) {
+                      FirebaseFirestore.instance
+                          .collection(collectionName.users)
+                          .doc(user["id"])
+                          .collection(collectionName.chats)
+                          .doc(userChat.docs[0].id)
+                          .update({"seenMessageList": seenMessageList});
+                    }
+                  });
+                }
+              }
+            });
+          });
+        }
       }
 
       update();
     });
+    user = appCtrl.storage.read(session.user);
+    if (backgroundImage != null || backgroundImage != "") {
+      FirebaseFirestore.instance
+          .collection(collectionName.users)
+          .doc(user["id"])
+          .get()
+          .then((value) {
+        if (value.exists) {
+          backgroundImage = value.data()!["backgroundImage"] ?? "";
+        }
+        update();
+      });
+    }
 
     FirebaseFirestore.instance
         .collection(collectionName.groupMessage)
@@ -132,11 +255,13 @@ class GroupChatMessageController extends GetxController {
     Get.back();
 
     await permissionHandelCtrl.getCurrentPosition().then((value) async {
+
       var locationString =
           'https://www.google.com/maps/search/?api=1&query=${value!.latitude},${value.longitude}';
       onSendMessage(locationString, MessageType.location);
       return null;
     });
+
   }
 
   //share media
@@ -156,19 +281,60 @@ class GroupChatMessageController extends GetxController {
   }
 
 // UPLOAD SELECTED IMAGE TO FIREBASE
-  Future uploadFile() async {
+  Future uploadFile({isGroupImage = false, groupImageFile}) async {
     imageFile = pickerCtrl.imageFile;
     update();
 
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     Reference reference = FirebaseStorage.instance.ref().child(fileName);
-    var file = File(imageFile!.path);
+    var file = File(!isGroupImage ? imageFile!.path : groupImageFile.path);
     UploadTask uploadTask = reference.putFile(file);
     uploadTask.then((res) {
-      res.ref.getDownloadURL().then((downloadUrl) {
+      res.ref.getDownloadURL().then((downloadUrl) async {
         imageUrl = downloadUrl;
         isLoading = false;
-        onSendMessage(imageUrl!, MessageType.image);
+        if (isGroupImage) {
+          await FirebaseFirestore.instance
+              .collection(collectionName.groups)
+              .doc(pId)
+              .update({'image': imageUrl}).then((value) {
+            FirebaseFirestore.instance
+                .collection('users')
+                .doc(user["id"])
+                .get()
+                .then((snap) async {
+              groupImage = imageUrl;
+              update();
+            });
+          });
+        } else {
+          onSendMessage(imageUrl!, MessageType.image);
+        }
+        update();
+      }, onError: (err) {
+        isLoading = false;
+        update();
+        Fluttertoast.showToast(msg: 'Image is Not Valid');
+      });
+    });
+  }
+
+
+
+// UPLOAD SELECTED IMAGE TO FIREBASE
+  Future uploadMultipleFile(File imageFile,MessageType messageType) async {
+    imageFile = imageFile;
+    update();
+
+    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    Reference reference = FirebaseStorage.instance.ref().child(fileName);
+    var file = File( imageFile.path);
+    UploadTask uploadTask = reference.putFile(file);
+    uploadTask.then((res) {
+      res.ref.getDownloadURL().then((downloadUrl) async {
+        imageUrl = downloadUrl;
+        isLoading = false;
+        onSendMessage(imageUrl!, messageType);
         update();
       }, onError: (err) {
         isLoading = false;
@@ -269,6 +435,33 @@ class GroupChatMessageController extends GetxController {
     isLoading = true;
     textEditingController.clear();
     update();
+    final key = encrypt.Key.fromUtf8('my 32 length key................');
+    final iv = encrypt.IV.fromLength(16);
+
+    final encrypter = encrypt.Encrypter(encrypt.AES(key));
+
+    final encrypted = encrypter.encrypt(content, iv: iv).base64;
+
+    if(clearChatId.contains(user["id"])){
+      clearChatId.removeWhere((element) => element == user["id"]);
+    await  FirebaseFirestore.instance
+          .collection(collectionName.groups)
+          .doc(pId)
+          .get()
+          .then((value) async {
+        log.log("value.exists :${value.exists}");
+        if (value.exists) {
+          await FirebaseFirestore.instance
+              .collection(collectionName.groups)
+              .doc(pId).update({"clearChatId" :clearChatId});
+
+        }
+
+        update();
+      });
+    }
+
+
     if (content.trim() != '') {
       var user = appCtrl.storage.read(session.user);
       id = user["id"];
@@ -279,15 +472,15 @@ class GroupChatMessageController extends GetxController {
           .add({
         'sender': id,
         'senderName': user["name"],
-        'receiver': pData["users"],
-        'content': content,
+        'receiver': pData["groupData"]["users"],
+        'content': encrypted,
         "groupId": pId,
         'type': type.name,
         'messageType': "sender",
         "status": "",
         'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
       });
-      await ChatMessageApi().saveGroupData(id, pId, content, pData);
+      await ChatMessageApi().saveGroupData(id, pId, encrypted, pData);
       isLoading = false;
       videoFile = null;
       videoUrl = "";
@@ -303,23 +496,21 @@ class GroupChatMessageController extends GetxController {
   }
 
   //delete chat layout
-  Widget buildPopupDialog(
-      BuildContext context, DocumentSnapshot documentReference) {
-    return GroupDeleteAlert(
-      documentReference: documentReference,
-    );
+  buildPopupDialog() async {
+    await showDialog(
+        context: Get.context!, builder: (_) => const GroupDeleteAlert());
   }
 
 // BUILD ITEM MESSAGE BOX FOR RECEIVER AND SENDER BOX DESIGN
-  Widget buildItem(int index, DocumentSnapshot document,docId) {
+  Widget buildItem(int index, DocumentSnapshot document, docId) {
     return Column(children: [
       (document['sender'] == user["id"])
           ? GroupSenderMessage(
-              document: document,
-              docId: docId,
-              index: index,
-              currentUserId: user["id"],
-            ).inkWell(onTap: () {
+                  document: document,
+                  docId: docId,
+                  index: index,
+                  currentUserId: user["id"])
+              .inkWell(onTap: () {
               enableReactionPopup = false;
               showPopUp = false;
               selectedIndexId = [];
@@ -327,8 +518,11 @@ class GroupChatMessageController extends GetxController {
             })
           :
           // RECEIVER MESSAGE
-          GroupReceiverMessage(document: document, index: index, docId: docId,).inkWell(
-              onTap: () {
+          GroupReceiverMessage(
+              document: document,
+              index: index,
+              docId: docId,
+            ).inkWell(onTap: () {
               enableReactionPopup = false;
               showPopUp = false;
               selectedIndexId = [];
@@ -345,7 +539,7 @@ class GroupChatMessageController extends GetxController {
       String channelId = Random().nextInt(1000).toString();
       ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
       int timestamp = DateTime.now().millisecondsSinceEpoch;
-      List receiver = pData["users"];
+      List receiver = pData["groupData"]["users"];
 
       receiver.asMap().entries.forEach((element) {
         FirebaseFirestore.instance
@@ -457,8 +651,7 @@ class GroupChatMessageController extends GetxController {
     showPopUp = true;
     enableReactionPopup = true;
 
-    if (!selectedIndexId
-        .contains(docId)) {
+    if (!selectedIndexId.contains(docId)) {
       if (showPopUp == false) {
         selectedIndexId.add(docId);
       } else {
@@ -468,5 +661,217 @@ class GroupChatMessageController extends GetxController {
       update();
     }
     update();
+  }
+
+  //exit group
+
+  //delete chat layout
+  exitGroupDialog() async {
+    await showDialog(
+        context: Get.context!,
+        builder: (_) => ExitGroupAlert(
+              name: pName,
+            ));
+  }
+
+  //delete group
+  deleteGroup() async {
+    await FirebaseFirestore.instance
+        .collection(collectionName.users)
+        .doc(user["id"])
+        .collection(collectionName.chats)
+        .where("groupId", isEqualTo: pId)
+        .limit(1)
+        .get()
+        .then((value) {
+      if (value.docs.isNotEmpty) {
+        FirebaseFirestore.instance
+            .collection(collectionName.users)
+            .doc(user["id"])
+            .collection(collectionName.chats)
+            .doc(value.docs[0].id)
+            .delete()
+            .then((value) {
+          Get.back();
+          Get.back();
+        });
+      }
+    });
+  }
+
+// GET IMAGE FROM GALLERY
+  Future getImage(source) async {
+    final ImagePicker picker = ImagePicker();
+    imageFile = (await picker.pickImage(source: source))!;
+    log.log("imageFile: $imageFile");
+    isLoading = true;
+    update();
+    if (imageFile != null) {
+      update();
+      uploadFile(isGroupImage: true, groupImageFile: imageFile);
+    }
+  }
+
+  //image picker option
+  imagePickerOption(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+          borderRadius:
+              BorderRadius.vertical(top: Radius.circular(AppRadius.r25)),
+        ),
+        builder: (BuildContext context) {
+          // return your layout
+          return ImagePickerLayout(cameraTap: () {
+            getImage(ImageSource.camera);
+            Get.back();
+          }, galleryTap: () {
+            getImage(ImageSource.gallery);
+            Get.back();
+          });
+        });
+  }
+
+  //check contact in firebase and if not exists
+  saveContact(userData, {message}) async {
+    await FirebaseFirestore.instance
+        .collection(collectionName.users)
+        .doc(user["id"])
+        .collection("chats")
+        .where("isOneToOne", isEqualTo: true)
+        .get()
+        .then((value) {
+      bool isEmpty = value.docs
+          .where((element) =>
+              element.data()["senderId"] == userData["uid"] ||
+              element.data()["receiverId"] == userData["uid"])
+          .isNotEmpty;
+      if (!isEmpty) {
+        var data = {"chatId": "0", "data": userData, "message": message};
+        log.log("arg : $data");
+        Get.back();
+        Get.toNamed(routeName.chat, arguments: data);
+      } else {
+        value.docs.asMap().entries.forEach((element) {
+          if (element.value.data()["senderId"] == userData["uid"] ||
+              element.value.data()["receiverId"] == userData["uid"]) {
+            var data = {
+              "chatId": element.value.data()["chatId"],
+              "data": userData,
+              "message": message
+            };
+            Get.back();
+            log.log("arg : $data");
+            Get.toNamed(routeName.chat, arguments: data);
+          }
+        });
+
+        //
+      }
+    });
+  }
+
+  removeUserFromGroup(value, snapshot) async {
+    await FirebaseFirestore.instance
+        .collection(collectionName.groups)
+        .doc(pId)
+        .get()
+        .then((group) {
+      if (group.exists) {
+        List user = group.data()!["users"];
+        user.removeWhere((element) => element["phone"] == value["phone"]);
+        update();
+        FirebaseFirestore.instance
+            .collection(collectionName.groups)
+            .doc(pId)
+            .update({"users": user}).then((value) {
+          getPeerStatus();
+        });
+      }
+    });
+  }
+
+  getTapPosition(TapDownDetails tapDownDetails) {
+    RenderBox renderBox = Get.context!.findRenderObject() as RenderBox;
+    update();
+    tapPosition = renderBox.globalToLocal(tapDownDetails.globalPosition);
+  }
+
+  showContextMenu(context, value, snapshot) async {
+    RenderObject? overlay = Overlay.of(context).context.findRenderObject();
+    final result = await showMenu(
+        color: appCtrl.appTheme.whiteColor,
+        context: context,
+        position: RelativeRect.fromRect(
+          Rect.fromLTWH(tapPosition.dx, tapPosition.dy, 10, 10),
+          Rect.fromLTWH(0, 0, overlay!.paintBounds.size.width,
+              overlay.paintBounds.size.height),
+        ),
+        items: [
+          _buildPopupMenuItem("Chat $pName", 0),
+          _buildPopupMenuItem("Remove $pName", 1),
+        ]);
+    if (result == 0) {
+      var data = {
+        "uid": value["id"],
+        "username": value["name"],
+        "phoneNumber": value["phone"],
+        "image": snapshot.data!.data()!["image"],
+        "description": snapshot.data!.data()!["statusDesc"],
+        "isRegister": true,
+      };
+      UserContactModel userContactModel = UserContactModel.fromJson(data);
+      saveContact(userContactModel);
+    } else {
+      removeUserFromGroup(value, snapshot);
+    }
+  }
+
+  PopupMenuItem _buildPopupMenuItem(String title, int position) {
+    return PopupMenuItem(
+      value: position,
+      child: Row(children: [
+        Text(title,
+            style:
+                AppCss.poppinsMedium14.textColor(appCtrl.appTheme.blackColor))
+      ]),
+    );
+  }
+
+  Widget searchTextField() {
+    return TextField(
+      controller: txtChatSearch,
+      onChanged: (val) async {
+        count =null;
+        searchChatId = [];
+        selectedIndexId = [];
+        message.asMap().entries.forEach((e) {
+          if (decryptMessage(e.value.data()["content"]).toLowerCase().contains(val)) {
+            if (!searchChatId.contains(e.key)) {
+              searchChatId.add(e.key);
+            } else {
+              searchChatId.remove(e.key);
+            }
+          }
+          update();
+        });
+      },
+      autofocus: true,
+      //Display the keyboard when TextField is displayed
+      cursorColor: appCtrl.appTheme.blackColor,
+      style: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.blackColor),
+      textInputAction: TextInputAction.search,
+      //Specify the action button on the keyboard
+      decoration: InputDecoration(
+        //Style of TextField
+        enabledBorder: UnderlineInputBorder(
+            //Default TextField border
+            borderSide: BorderSide(color: appCtrl.appTheme.blackColor)),
+        focusedBorder: UnderlineInputBorder(
+            //Borders when a TextField is in focus
+            borderSide: BorderSide(color: appCtrl.appTheme.blackColor)),
+        hintText: 'Search', //Text that is displayed when nothing is entered.
+      ),
+    );
   }
 }

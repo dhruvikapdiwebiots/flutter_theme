@@ -42,10 +42,10 @@ class GroupContactLayout extends StatelessWidget {
                             bottomRight: SmoothRadius(
                                 cornerRadius: isReceiver ? 20 : 0,
                                 cornerSmoothing: 1)))),
-                width: Sizes.s250,
-                height: Sizes.s110,
+                width:  Sizes.s250 ,
+                height:isReceiver ? Sizes.s150:Sizes.s120,
                 child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       if (document!["sender"] != currentUserId)
@@ -54,7 +54,7 @@ class GroupContactLayout extends StatelessWidget {
                               style: AppCss.poppinsMedium12
                                   .textColor(appCtrl.appTheme.primary)).paddingAll(Insets.i5).decorated(color: appCtrl.appTheme.whiteColor,borderRadius: BorderRadius.circular(AppRadius.r20)),
 
-                        ]),
+                        ]).marginSymmetric(horizontal: Insets.i10,vertical: Insets.i5),
                       Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.end,
@@ -70,26 +70,49 @@ class GroupContactLayout extends StatelessWidget {
                               ? appCtrl.appTheme.lightDividerColor.withOpacity(.2)
                               : appCtrl.appTheme.white,
                           height: 1),
-                      InkWell(
-                          onTap: () {
-                            UserContactModel user = UserContactModel(
-                                uid: "0",
-                                isRegister: false,
-                                image: document!['content'].split('-BREAK-')[2],
-                                username:
-                                document!['content'].split('-BREAK-')[0],
-                                phoneNumber: phoneNumberExtension(
-                                    document!['content'].split('-BREAK-')[1]),
-                                description: "");
-                            MessageFirebaseApi().saveContact(user);
-                          },
-                          child: Text(fonts.message.tr,
-                              textAlign: TextAlign.center,
-                              style: AppCss.poppinsExtraBold12.textColor(
-                                  isReceiver
-                                      ? appCtrl.appTheme.lightBlackColor
-                                      : appCtrl.appTheme.white))
-                              .marginSymmetric(vertical: Insets.i15))
+                      Column(
+                        children: [
+                          InkWell(
+                              onTap: () {
+                                UserContactModel user = UserContactModel(
+                                    uid: "0",
+                                    isRegister: false,
+                                    image: decryptMessage(document!['content']).split('-BREAK-')[2],
+                                    username:
+                                    decryptMessage(document!['content']).split('-BREAK-')[0],
+                                    phoneNumber: phoneNumberExtension(
+                                        decryptMessage(document!['content']).split('-BREAK-')[1]),
+                                    description: "");
+                                MessageFirebaseApi().saveContact(user);
+                              },
+                              child: Text(fonts.message.tr,
+                                  textAlign: TextAlign.center,
+                                  style: AppCss.poppinsExtraBold12.textColor(
+                                      isReceiver
+                                          ? appCtrl.appTheme.lightBlackColor
+                                          : appCtrl.appTheme.white))
+                                  .marginSymmetric(vertical: Insets.i12)),
+                          IntrinsicHeight(
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  if (document!.data().toString().contains('isFavourite'))
+                                    if(appCtrl.user["id"] == document!["favouriteId"])
+                                    Icon(Icons.star,color: appCtrl.appTheme.txtColor,size: Sizes.s10),
+                                  const HSpace(Sizes.s3),
+                                  Text(
+                                    DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(
+                                        int.parse(document!['timestamp']))),
+                                    style:
+                                    AppCss.poppinsMedium12.textColor(appCtrl.appTheme.txtColor),
+                                  ),
+                                ],
+                              ).alignment(Alignment.bottomRight).marginSymmetric(horizontal: Insets.i10)
+                          )
+                        ],
+                      )
                     ])),
             if (document!.data().toString().contains('emoji'))
               EmojiLayout(emoji: document!["emoji"])

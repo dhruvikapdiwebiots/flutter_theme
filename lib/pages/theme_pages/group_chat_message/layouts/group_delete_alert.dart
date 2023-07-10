@@ -9,12 +9,12 @@ class GroupDeleteAlert extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<GroupChatMessageController>(builder: (chatCtrl) {
       return AlertDialog(
-        title: const Text('Alert!'),
+        title: Text(fonts.alert.tr),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const <Widget>[
-            Text("Are you sure you want to delete this message?"),
+          children: <Widget>[
+            Text(fonts.areYouSureToDelete.tr),
           ],
         ),
         actions: <Widget>[
@@ -27,13 +27,15 @@ class GroupDeleteAlert extends StatelessWidget {
           TextButton(
             onPressed: () async {
               Get.back();
+              chatCtrl.selectedIndexId.asMap().entries.forEach((element) {
+                FirebaseFirestore.instance
+                    .collection(collectionName.groupMessage)
+                    .doc(chatCtrl.pId)
+                    .collection(collectionName.chat)
+                    .doc(element.value)
+                    .delete();
+              });
 
-              FirebaseFirestore.instance
-                  .collection('groupMessage')
-                  .doc(chatCtrl.pId)
-                  .collection("chat")
-                  .doc(documentReference!.id)
-                  .delete();
               await FirebaseFirestore.instance
                   .runTransaction((transaction) async {});
               chatCtrl.listScrollController.animateTo(0.0,
@@ -41,9 +43,9 @@ class GroupDeleteAlert extends StatelessWidget {
                   curve: Curves.easeOut);
 
               await FirebaseFirestore.instance
-                  .collection('groupMessage')
+                  .collection(collectionName.groupMessage)
                   .doc(chatCtrl.pId)
-                  .collection("chat")
+                  .collection(collectionName.chat)
                   .orderBy("timestamp", descending: true)
                   .limit(1)
                   .get()
@@ -51,19 +53,27 @@ class GroupDeleteAlert extends StatelessWidget {
                 if (value.docs.isEmpty) {
                   List receiver = value.docs[0].data()["receiver"];
                   receiver.asMap().entries.forEach((element) async {
-                    await FirebaseFirestore.instance
-                        .collection("users")
-                        .doc(element.value['id'])
-                        .delete();
+                    FirebaseFirestore.instance
+                        .collection(collectionName.users)
+                        .doc(element.value["id"])
+                        .collection(collectionName.chats)
+                        .where("groupId", isEqualTo: chatCtrl.pId)
+                        .get()
+                        .then((value) {
+                      FirebaseFirestore.instance
+                          .collection(collectionName.users)
+                          .doc(element.value["id"]).collection(collectionName.chats).doc(value.docs[0].id)
+                          .delete();
+                    });
                   });
                 } else {
                   List receiver = value.docs[0].data()["receiver"];
                   receiver.asMap().entries.forEach((element) async {
-                    await FirebaseFirestore.instance
-                        .collection("users")
+                    await  FirebaseFirestore.instance
+                        .collection(collectionName.users)
                         .doc(element.value["id"])
-                        .collection("chats")
-                        .where("groupId")
+                        .collection(collectionName.chats)
+                        .where("groupId",isEqualTo: chatCtrl.pId  )
                         .get()
                         .then((contact) {
                       if (contact.docs.isNotEmpty) {
@@ -84,6 +94,10 @@ class GroupDeleteAlert extends StatelessWidget {
                   });
                 }
               });
+              chatCtrl.selectedIndexId = [];
+              chatCtrl.showPopUp =false;
+              chatCtrl.enableReactionPopup =false;
+              chatCtrl.update();
             },
             child: const Text('Yes'),
           ),

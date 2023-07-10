@@ -22,6 +22,7 @@ class _ChatState extends State<Chat>
       chatCtrl.setTyping();
     });
     receiverData = Get.arguments;
+
     setState(() {});
     super.initState();
   }
@@ -49,7 +50,7 @@ class _ChatState extends State<Chat>
                           userId: chatCtrl.pId,
                           name: chatCtrl.pName,
                           isBlock: chatCtrl.allData != null
-                              ? chatCtrl.allData["isBlock"]
+                              ? chatCtrl.allData["isBlock"] == true
                                   ? chatCtrl.allData["blockUserId"] ==
                                           chatCtrl.userData["id"]
                                       ? true
@@ -75,30 +76,50 @@ class _ChatState extends State<Chat>
                                 chatCtrl.audioVideoCallTap(true);
                               }
                             });
-                          },
-                          moreTap: () => chatCtrl.blockUser()),
+                          }),
                       backgroundColor: appCtrl.appTheme.bgColor,
-                      body: Stack(children: <Widget>[
-                        Column(children: <Widget>[
-                          // List of messages
-                          const MessageBox(),
-                          // Sticker
-                          Container(),
-                          // Input content
-                          const InputBox()
-                        ]).inkWell(onTap: () {
-                          chatCtrl.enableReactionPopup = false;
-                          chatCtrl.showPopUp = false;
-                          chatCtrl.update();
-                          log("chatCtrl.enableReactionPopup : ${chatCtrl.enableReactionPopup}");
-                        }),
+                      body: chatCtrl.allData != null ? Stack(children: <Widget>[
+                        chatCtrl.allData["backgroundImage"] != null
+                            ? Column(children: <Widget>[
+                                // List of messages
+                                const MessageBox(),
+                                // Sticker
+                                Container(),
+                                // Input content
+                                const InputBox()
+                              ])
+                                .decorated(
+                                    color: appCtrl.appTheme.bgColor,
+                                    image: DecorationImage(
+                                      fit: BoxFit.fill,
+                                        image: NetworkImage(chatCtrl
+                                            .allData["backgroundImage"])))
+                                .inkWell(onTap: () {
+                                chatCtrl.enableReactionPopup = false;
+                                chatCtrl.showPopUp = false;
+                                chatCtrl.update();
+                                log("chatCtrl.enableReactionPopup : ${chatCtrl.enableReactionPopup}");
+                              })
+                            : Column(children: <Widget>[
+                                // List of messages
+                                const MessageBox(),
+                                // Sticker
+                                Container(),
+                                // Input content
+                                const InputBox()
+                              ]).inkWell(onTap: () {
+                                chatCtrl.enableReactionPopup = false;
+                                chatCtrl.showPopUp = false;
+                                chatCtrl.update();
+                                log("chatCtrl.enableReactionPopup : ${chatCtrl.enableReactionPopup}");
+                              }),
                         // Loading
                         if (chatCtrl.isLoading)
                           CommonLoader(isLoading: chatCtrl.isLoading),
                         GetBuilder<AppController>(builder: (appCtrl) {
                           return CommonLoader(isLoading: appCtrl.isLoading);
                         })
-                      ]))
+                      ]): Container())
                   : const Scaffold()),
         ),
       );

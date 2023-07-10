@@ -1,13 +1,20 @@
 //app file
 
-
-
-
-
 import 'package:flutter_theme/pages/theme_pages/all_contact/all_contact_list.dart';
 import 'package:flutter_theme/pages/theme_pages/audio_call/audio_call.dart';
+import 'package:flutter_theme/pages/theme_pages/broadcast_chat/layouts/broadcast_profile/boradcast_search_user.dart';
+import 'package:flutter_theme/pages/theme_pages/broadcast_chat/layouts/broadcast_profile/broadcast_profile.dart';
+import 'package:flutter_theme/pages/theme_pages/broadcast_chat/layouts/broadcast_profile/broadcast_profile_body.dart';
+import 'package:flutter_theme/pages/theme_pages/chat_message/layouts/chat_user_profile/chat_user_profile.dart';
+import 'package:flutter_theme/pages/theme_pages/fingerprint_and_lock_security/fingerprint_and_lock_security.dart';
+import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_profile/group_profile.dart';
+import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_profile/search_user.dart';
+import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/my_message_viewer.dart';
+import 'package:flutter_theme/widgets/background_list.dart';
 import '../pages/bottom_pages/dashboard/dashboard.dart';
 import '../config.dart';
+import '../pages/bottom_pages/status/layouts/my_status.dart';
+import '../pages/theme_pages/group_chat_message/layouts/group_profile/add_participants.dart';
 import '../pages/theme_pages/video_call/video_call.dart';
 import 'route_name.dart';
 
@@ -31,5 +38,16 @@ class AppRoute {
     GetPage(name: _routeName.broadcastChat, page: () =>const BroadcastChat()),
     GetPage(name: _routeName.videoCall, page: () => const VideoCall()),
     GetPage(name: _routeName.audioCall, page: () => const AudioCall()),
+    GetPage(name: _routeName.backgroundList, page: () => const BackgroundList()),
+    GetPage(name: _routeName.fingerLock, page: () =>  FingerPrintLock()),
+    GetPage(name: _routeName.myStatus, page: () => const MyStatus()),
+    GetPage(name: _routeName.chatUserProfile, page: () => const ChatUserProfile()),
+    GetPage(name: _routeName.groupProfile, page: () => const GroupProfile()),
+    GetPage(name: _routeName.broadcastProfile, page: () => const BroadcastProfile()),
+    GetPage(name: _routeName.addParticipants, page: () =>  AddParticipants()),
+    GetPage(name: _routeName.searchUser, page: () => const SearchUser()),
+    GetPage(name: _routeName.broadcastSearchUser, page: () => const BroadcastSearchUser()),
+    GetPage(name: _routeName.myMessageViewer, page: () => const MyMessageViewer()),
+
   ];
 }

@@ -16,4 +16,5 @@ class Session {
   String agoraToken = 'agoraToken';
   String contactList = 'contactList';
   String statusList = 'statusList';
+  String isBiometric = 'isBiometric';
 }

@@ -16,6 +16,7 @@ class _GroupChatMessageState extends State<GroupChatMessage>
   @override
   void initState() {
     // TODO: implement initState
+
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       chatCtrl.textEditingController.addListener(() async {
@@ -33,6 +34,7 @@ class _GroupChatMessageState extends State<GroupChatMessage>
         chatCtrl.update();
       });
     });
+
     super.initState();
   }
 
@@ -73,9 +75,7 @@ class _GroupChatMessageState extends State<GroupChatMessage>
                     const GroupChatBody(),
                     // Loading
                     if (chatCtrl.isLoading)
-                      CommonLoader(
-                        isLoading: chatCtrl.isLoading,
-                      ),
+                      CommonLoader(isLoading: chatCtrl.isLoading),
 
                     GetBuilder<AppController>(builder: (appCtrl) {
                       return CommonLoader(isLoading: appCtrl.isLoading);

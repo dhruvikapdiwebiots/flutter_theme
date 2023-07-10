@@ -46,7 +46,7 @@ class ReceiverChatImage extends StatelessWidget {
                     width: Sizes.s35,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                        color: (colors.toList()..shuffle()).first,
+                        color: const Color(0xff3282B8),
                         shape: BoxShape.circle),
                     child: Text(
                         snapshot.data!.docs[0].data()["name"].length > 2
@@ -63,7 +63,7 @@ class ReceiverChatImage extends StatelessWidget {
                     width: Sizes.s35,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                        color: (colors.toList()..shuffle()).first,
+                        color: const Color(0xff3282B8),
                         shape: BoxShape.circle),
                     child: Text(
                       snapshot.data!.docs[0].data()["name"].length > 2

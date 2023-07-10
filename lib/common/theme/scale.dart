@@ -6,6 +6,7 @@ class Durations {
   static const Duration s1 = Duration(seconds: 1);
   static const Duration s3 = Duration(seconds: 3);
   static const Duration s4 = Duration(seconds: 4);
+  static const Duration s6 = Duration(seconds: 6);
 }
 
 class Fonts {
@@ -24,12 +25,14 @@ class Insets {
   static const double i7 = 7 * scale;
   static const double i8 = 8 * scale;
   static const double i10 = 10 * scale;
+  static const double i11 = 11 * scale;
   static const double i12 = 12 * scale;
   static const double i14 = 14 * scale;
   static const double i15 = 15 * scale;
   static const double i16 = 16 * scale;
   static const double i18 = 18 * scale;
   static const double i20 = 20 * scale;
+  static const double i21 = 21 * scale;
   static const double i22 = 22 * scale;
   static const double i23 = 23 * scale;
   static const double i24 = 24 * scale;

@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
-
+import 'package:drishya_picker/drishya_picker.dart';
+import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:dartx/dartx_io.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/pages/theme_pages/broadcast_chat/layouts/broadcast_file_list.dart';
@@ -21,16 +22,20 @@ class BroadcastChatController extends GetxController {
       videoUrl,
       blockBy;
   dynamic message, userData, broadData;
+  List<DrishyaEntity>? entities;
   final GlobalKey<SfPdfViewerState> pdfViewerKey = GlobalKey();
   List pData = [];
-  List newpData = [];
+  List selectedIndexId = [];
+  List newpData = [], userList = [], searchUserList = [];
   bool positionStreamStarted = false;
   bool isUserAvailable = true;
+  bool isTextBox = false, isThere = false;
   XFile? imageFile;
   XFile? videoFile;
   File? image;
   int totalUser = 0;
   String nameList = "";
+  Offset tapPosition = Offset.zero;
   File? video;
   bool? isLoading = true;
   bool typing = false, isBlock = false;
@@ -41,8 +46,12 @@ class BroadcastChatController extends GetxController {
       ? Get.find<PermissionHandlerController>()
       : Get.put(PermissionHandlerController());
   TextEditingController textEditingController = TextEditingController();
+  TextEditingController textNameController = TextEditingController();
+  TextEditingController textSearchController = TextEditingController();
   ScrollController listScrollController = ScrollController();
   FocusNode focusNode = FocusNode();
+  late encrypt.Encrypter cryptor;
+  final iv = encrypt.IV.fromLength(8);
 
   @override
   void onReady() {
@@ -57,7 +66,7 @@ class BroadcastChatController extends GetxController {
     pId = data["broadcastId"];
     pData = broadData["receiverId"];
     totalUser = pData.length;
-
+    log("broadData : $broadData");
     for (var i = 0; i < pData.length; i++) {
       if (nameList != "") {
         nameList = "$nameList, ${pData[i]["name"]}";
@@ -67,7 +76,31 @@ class BroadcastChatController extends GetxController {
     }
     update();
 
+    getBroadcastData();
+
     super.onReady();
+  }
+
+  //get broad cast data
+  getBroadcastData() async {
+    await FirebaseFirestore.instance
+        .collection(collectionName.broadcast)
+        .doc(pId)
+        .get()
+        .then((value) {
+      if (value.exists) {
+        if (value.data().toString().contains('backgroundImage')) {
+          broadData["backgroundImage"] = value.data()!["backgroundImage"] ?? "";
+        } else {
+          broadData["backgroundImage"] = "";
+        }
+      } else {
+        broadData["backgroundImage"] = "";
+      }
+      broadData["users"] = value.data()!["users"] ?? [];
+    });
+    log("broadData 1: $broadData");
+    update();
   }
 
   //update typing status
@@ -147,9 +180,32 @@ class BroadcastChatController extends GetxController {
     });
   }
 
+
+// UPLOAD SELECTED IMAGE TO FIREBASE
+  Future uploadMultipleFile(File imageFile,MessageType messageType) async {
+    imageFile = imageFile;
+    update();
+
+    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    Reference reference = FirebaseStorage.instance.ref().child(fileName);
+    var file = File( imageFile.path);
+    UploadTask uploadTask = reference.putFile(file);
+    uploadTask.then((res) {
+      res.ref.getDownloadURL().then((downloadUrl) async {
+        imageUrl = downloadUrl;
+        isLoading = false;
+        onSendMessage(imageUrl!, messageType);
+        update();
+      }, onError: (err) {
+        isLoading = false;
+        update();
+        Fluttertoast.showToast(msg: 'Image is Not Valid');
+      });
+    });
+  }
+
   //send video after recording or pick from media
   videoSend() async {
-
     videoFile = pickerCtrl.videoFile;
     update();
     const Duration(seconds: 2);
@@ -200,7 +256,8 @@ class BroadcastChatController extends GetxController {
             margin: const EdgeInsets.all(10),
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-                color: appCtrl.appTheme.whiteColor, borderRadius: BorderRadius.circular(10)),
+                color: appCtrl.appTheme.whiteColor,
+                borderRadius: BorderRadius.circular(10)),
             child: AudioRecordingPlugin(type: type, index: index));
       },
     );
@@ -210,11 +267,17 @@ class BroadcastChatController extends GetxController {
   void onSendMessage(String content, MessageType type) async {
     log("pData : ${pData.length}");
     if (content.trim() != '') {
+      final key = encrypt.Key.fromUtf8('my 32 length key................');
+      final iv = encrypt.IV.fromLength(16);
+
+      final encrypter = encrypt.Encrypter(encrypt.AES(key));
+
+      final encrypted = encrypter.encrypt(content, iv: iv).base64;
+
       textEditingController.clear();
-      await saveMessageInLoop(content, type);
+      await saveMessageInLoop(encrypted, type);
       await Future.delayed(Durations.s4);
       log("newpData : $newpData");
-
 
       await FirebaseFirestore.instance
           .collection(collectionName.users)
@@ -231,7 +294,7 @@ class BroadcastChatController extends GetxController {
             .update({
           "receiverId": newpData,
           "updateStamp": DateTime.now().millisecondsSinceEpoch.toString(),
-          "lastMessage": content
+          "lastMessage": encrypted
         });
       });
 
@@ -243,7 +306,7 @@ class BroadcastChatController extends GetxController {
         'sender': userData["id"],
         'senderName': userData["name"],
         'receiver': newpData,
-        'content': content,
+        'content': encrypted,
         "broadcastId": pId,
         'type': type.name,
         'messageType': "sender",
@@ -292,7 +355,8 @@ class BroadcastChatController extends GetxController {
               element.value["chatId"],
               content,
               isBroadcast: true,
-              userData["id"]);
+              userData["id"],
+              userData["name"]);
         });
       } else {
         final now = DateTime.now();
@@ -325,7 +389,8 @@ class BroadcastChatController extends GetxController {
               element.value["chatId"],
               content,
               isBroadcast: true,
-              userData["id"]);
+              userData["id"],
+              userData["name"]);
         });
       }
     });
@@ -342,7 +407,6 @@ class BroadcastChatController extends GetxController {
 
 // BUILD ITEM MESSAGE BOX FOR RECEIVER AND SENDER BOX DESIGN
   Widget buildItem(int index, document) {
-  
     if (document['sender'] == userData["id"]) {
       return BroadcastSenderMessage(
         document: document,
@@ -363,5 +427,138 @@ class BroadcastChatController extends GetxController {
         .update({'status': "Online"});
     Get.back();
     return Future.value(false);
+  }
+
+  //ON LONG PRESS
+  onLongPressFunction(docId) {
+    if (!selectedIndexId.contains(docId)) {
+      selectedIndexId.add(docId);
+      update();
+    }
+    update();
+  }
+
+  deleteBroadCast() async {
+    await FirebaseFirestore.instance
+        .collection(collectionName.broadcastMessage)
+        .doc(pId)
+        .delete()
+        .then((value) async {
+      await FirebaseFirestore.instance
+          .collection(collectionName.broadcast)
+          .doc(pId)
+          .delete()
+          .then((value) {
+        Get.back();
+        Get.back();
+      });
+    });
+  }
+
+  //check contact in firebase and if not exists
+  saveContact(userData, {message}) async {
+    bool isRegister = false;
+
+    await FirebaseFirestore.instance
+        .collection(collectionName.users)
+        .doc(userData["id"])
+        .collection("chats")
+        .where("isOneToOne", isEqualTo: true)
+        .get()
+        .then((value) {
+      bool isEmpty = value.docs
+          .where((element) =>
+              element.data()["senderId"] == userData["uid"] ||
+              element.data()["receiverId"] == userData["uid"])
+          .isNotEmpty;
+      if (!isEmpty) {
+        var data = {"chatId": "0", "data": userData, "message": message};
+
+        Get.back();
+        Get.toNamed(routeName.chat, arguments: data);
+      } else {
+        value.docs.asMap().entries.forEach((element) {
+          if (element.value.data()["senderId"] == userData["uid"] ||
+              element.value.data()["receiverId"] == userData["uid"]) {
+            var data = {
+              "chatId": element.value.data()["chatId"],
+              "data": userData,
+              "message": message
+            };
+            Get.back();
+
+            Get.toNamed(routeName.chat, arguments: data);
+          }
+        });
+      }
+    });
+  }
+
+  getTapPosition(TapDownDetails tapDownDetails) {
+    RenderBox renderBox = Get.context!.findRenderObject() as RenderBox;
+    update();
+    tapPosition = renderBox.globalToLocal(tapDownDetails.globalPosition);
+  }
+
+  showContextMenu(context, value, snapshot) async {
+    RenderObject? overlay = Overlay.of(context).context.findRenderObject();
+    final result = await showMenu(
+        color: appCtrl.appTheme.whiteColor,
+        context: context,
+        position: RelativeRect.fromRect(
+          Rect.fromLTWH(tapPosition.dx, tapPosition.dy, 10, 10),
+          Rect.fromLTWH(0, 0, overlay!.paintBounds.size.width,
+              overlay.paintBounds.size.height),
+        ),
+        items: [
+          _buildPopupMenuItem("Chat $pName", 0),
+          _buildPopupMenuItem("Remove $pName", 1),
+        ]);
+    if (result == 0) {
+      var data = {
+        "uid": value["id"],
+        "username": value["name"],
+        "phoneNumber": value["phone"],
+        "image": snapshot.data!.data()!["image"],
+        "description": snapshot.data!.data()!["statusDesc"],
+        "isRegister": true,
+      };
+      UserContactModel userContactModel = UserContactModel.fromJson(data);
+      saveContact(userContactModel);
+    }else{
+      removeUserFromGroup(value, snapshot);
+    }
+  }
+
+
+  removeUserFromGroup(value, snapshot) async {
+    await FirebaseFirestore.instance
+        .collection(collectionName.broadcast)
+        .doc(pId)
+        .get()
+        .then((group) {
+      if (group.exists) {
+        List user = group.data()!["users"];
+        user.removeWhere((element) => element["phone"] == value["phone"]);
+        update();
+        FirebaseFirestore.instance
+            .collection(collectionName.broadcast)
+            .doc(pId)
+            .update({"users": user}).then((value) {
+          getBroadcastData();
+        });
+      }
+    });
+  }
+
+  PopupMenuItem _buildPopupMenuItem(String title, int position) {
+    return PopupMenuItem(
+      value: position,
+      child: Row(children: [
+        Text(title,
+            style:
+            AppCss.poppinsMedium14.textColor(appCtrl.appTheme.blackColor))
+      ]),
+    );
   }
 }

@@ -133,9 +133,10 @@ class AudioCallController extends GetxController {
   }
 
   Future<void> initAgora() async {
+    dynamic agoraToken = appCtrl.storage.read(session.agoraToken);
     engine = createAgoraRtcEngine();
     await engine.initialize(RtcEngineContext(
-      appId: fonts.appId,
+      appId: agoraToken["agoraAppId"],
       channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
     ));
     log("engine : $engine");
@@ -309,11 +310,10 @@ class AudioCallController extends GetxController {
     await engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
     await engine.startPreview();
 
-    dynamic agoraToken = appCtrl.storage.read(session.agoraToken);
     log("agoraToken Audio : $agoraToken");
     await engine.joinChannel(
       token: agoraToken["token"],
-      channelId: fonts.channel,
+      channelId: channelName!,
       uid: 0,
       options: const ChannelMediaOptions(),
     );

@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:math' as math;
 import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:encrypt/encrypt.dart' as encrypt;
 import '../config.dart';
 
 var loadingCtrl = Get.find<AppController>();
@@ -174,3 +175,10 @@ const String angryFace = "😡";
 const String astonishedFace = "😲";
 const String thumbsUp = "👍";
 
+final encryptKey = encrypt.Key.fromUtf8('my 32 length key................');
+final iv = encrypt.IV.fromLength(16);
+final encrypter = encrypt.Encrypter(encrypt.AES(encryptKey));
+
+String decryptMessage(content){
+  return encrypter.decrypt(encrypt.Encrypted.fromBase64(content), iv: iv);
+}

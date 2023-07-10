@@ -18,4 +18,12 @@ class ImageAssets{
   final String logo1 =
       'https://pngimage.net/wp-content/uploads/2018/06/user-logo-png-4.png';
 
+
+  // background
+  final String background1 = "assets/images/background/wallpaper1.png";
+  final String background2 = "assets/images/background/wallpaper2.png";
+  final String background3 = "assets/images/background/wallpaper3.png";
+  final String background4 = "assets/images/background/wallpaper4.png";
+  final String background5 = "assets/images/background/wallpaper5.png";
+  final String background6 = "assets/images/background/wallpaper6.png";
 }

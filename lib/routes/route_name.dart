@@ -17,4 +17,14 @@ class RouteName {
   final String broadcastChat = '/broadcastChat';
   final String videoCall = '/videoCall';
   final String audioCall = '/audioCall';
+  final String fingerLock = '/fingerLock';
+  final String myStatus = '/myStatus';
+  final String backgroundList = '/backgroundList';
+  final String chatUserProfile = '/chatUserProfile';
+  final String groupProfile = '/groupProfile';
+  final String broadcastProfile = '/broadcastProfile';
+  final String addParticipants = '/addParticipants';
+  final String searchUser = '/searchUser';
+  final String broadcastSearchUser = '/broadcastSearchUser';
+  final String myMessageViewer = '/myMessageViewer';
 }

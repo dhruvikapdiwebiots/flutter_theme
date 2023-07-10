@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter_theme/config.dart';
+import 'package:flutter_theme/models/usage_control_model.dart';
+import 'package:flutter_theme/models/user_setting_model.dart';
 
 class OtpController extends GetxController {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
@@ -48,10 +50,14 @@ class OtpController extends GetxController {
 
   //navigate to dashboard
   homeNavigation(user) async {
+
     appCtrl.storage.write(session.id, user["id"]);
     await appCtrl.storage.write(session.user, user);
+    appCtrl.user = user;
+    appCtrl.update();
     await appCtrl.storage.write(session.isIntro, true);
     Get.forceAppUpdate();
+
     final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
     firebaseMessaging.getToken().then((token) async {
       await FirebaseFirestore.instance
@@ -233,5 +239,33 @@ class OtpController extends GetxController {
     } on FirebaseAuthException catch (e) {
       log("firebase : $e");
     }
+  }
+
+  getAdminPermission() async {
+      final usageControls = await FirebaseFirestore.instance
+        .collection(collectionName.config)
+        .doc(collectionName.usageControls)
+        .get();
+    log("admin 3: ${usageControls.data()}");
+    appCtrl.usageControlsVal = UsageControlModel.fromJson(usageControls.data()!);
+
+
+    appCtrl.storage.write(session.usageControls, usageControls.data());
+    update();
+    final userAppSettings = await FirebaseFirestore.instance
+        .collection(collectionName.config)
+        .doc(collectionName.userAppSettings)
+        .get();
+    log("admin 4: ${userAppSettings.data()}");
+      appCtrl.userAppSettingsVal = UserAppSettingModel.fromJson(userAppSettings.data()!);
+    final agoraToken = await FirebaseFirestore.instance
+        .collection(collectionName.config)
+        .doc(collectionName.agoraToken)
+        .get();
+ await   appCtrl.storage.write(session.agoraToken, agoraToken.data());
+    log("admin 5: ${agoraToken.data()}");
+    log("admin 6: ${appCtrl.usageControlsVal!.statusDeleteTime!.replaceAll(" hrs", "")}");
+    update();
+    appCtrl.update();
   }
 }

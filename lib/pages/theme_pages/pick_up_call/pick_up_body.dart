@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:camera/camera.dart';
+//import 'package:camera/camera.dart';
 
 import '../../../config.dart';
 
@@ -9,7 +10,9 @@ class PickupBody extends StatelessWidget {
   final Call? call;
   final CameraController? cameraController;
   final String? imageUrl;
-  const PickupBody({Key? key,this.call,this.cameraController,this.imageUrl}) : super(key: key);
+
+  const PickupBody({Key? key, this.call, this.imageUrl, this.cameraController})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,12 +22,12 @@ class PickupBody extends StatelessWidget {
         children: [
           call!.isVideoCall == true
               ? CameraPreview(cameraController!)
-              .height(MediaQuery.of(context).size.height)
+                  .height(MediaQuery.of(context).size.height)
               : Container(
-            color: appCtrl.appTheme.primary,
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-          ),
+                  color: appCtrl.appTheme.primary,
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -39,21 +42,20 @@ class PickupBody extends StatelessWidget {
                   style: AppCss.poppinsblack20
                       .textColor(appCtrl.appTheme.whiteColor)),
               const VSpace(Sizes.s8),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                        call!.isVideoCall == true
-                            ? Icons.videocam
-                            : Icons.mic_rounded,
-                        color: appCtrl.appTheme.whiteColor),
-                    const HSpace(Sizes.s10),
-                    Text(
-                        call!.isVideoCall == true
-                            ? fonts.inComingVideo.tr
-                            : fonts.inComingAudio.tr,
-                        style: AppCss.poppinsMedium18.textColor(appCtrl.appTheme.whiteColor))
-                  ]),
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Icon(
+                    call!.isVideoCall == true
+                        ? Icons.videocam
+                        : Icons.mic_rounded,
+                    color: appCtrl.appTheme.whiteColor),
+                const HSpace(Sizes.s10),
+                Text(
+                    call!.isVideoCall == true
+                        ? fonts.inComingVideo.tr
+                        : fonts.inComingAudio.tr,
+                    style: AppCss.poppinsMedium18
+                        .textColor(appCtrl.appTheme.whiteColor))
+              ]),
             ],
           ).paddingSymmetric(vertical: Insets.i35),
           Align(
@@ -66,8 +68,7 @@ class PickupBody extends StatelessWidget {
                   onTap: () async {
                     log("cancel");
                     //flutterLocalNotificationsPlugin!.cancelAll();
-                    final videoCtrl =
-                    Get.isRegistered<VideoCallController>()
+                    final videoCtrl = Get.isRegistered<VideoCallController>()
                         ? Get.find<VideoCallController>()
                         : Get.put(VideoCallController());
                     await videoCtrl.endCall(call: call!);
@@ -116,8 +117,7 @@ class PickupBody extends StatelessWidget {
                     color: appCtrl.appTheme.whiteColor,
                     size: 35.0,
                   ).paddingAll(Insets.i15).decorated(
-                      color: appCtrl.appTheme.redColor,
-                      shape: BoxShape.circle),
+                      color: appCtrl.appTheme.redColor, shape: BoxShape.circle),
                 ),
                 const HSpace(Sizes.s30),
                 InkWell(
@@ -126,21 +126,17 @@ class PickupBody extends StatelessWidget {
                         var data = {
                           "channelName": call!.channelId,
                           "call": call,
-                          "role":
-                          ClientRoleType.clientRoleBroadcaster
+                          "role": ClientRoleType.clientRoleBroadcaster
                         };
-                        Get.toNamed(routeName.videoCall,
-                            arguments: data);
+                        Get.toNamed(routeName.videoCall, arguments: data);
                       } else {
                         var data = {
                           "channelName": call!.channelId,
                           "call": call,
-                          "role":
-                          ClientRoleType.clientRoleBroadcaster
+                          "role": ClientRoleType.clientRoleBroadcaster
                         };
                         log("data : $data");
-                        Get.toNamed(routeName.audioCall,
-                            arguments: data);
+                        Get.toNamed(routeName.audioCall, arguments: data);
                       }
                     },
                     child: Icon(

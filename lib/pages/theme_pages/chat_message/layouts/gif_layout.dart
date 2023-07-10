@@ -32,14 +32,27 @@ class GifLayout extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Image.network(
-                  document!["content"],
+                    decryptMessage(document!["content"]),
                   height: Sizes.s100
                 ),
-                Text( DateFormat('HH:mm a').format(
-                    DateTime.fromMillisecondsSinceEpoch(
-                        int.parse(document!['timestamp']))),
-                    style: AppCss.poppinsMedium12
-                        .textColor(appCtrl.appTheme.txt))
+                IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (document!.data().toString().contains('isFavourite'))
+                          if(appCtrl.user["id"] == document["favouriteId"])
+                          Icon(Icons.star,color: appCtrl.appTheme.txtColor,size: Sizes.s10),
+                        const HSpace(Sizes.s3),
+                        Text(
+                          DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(
+                              int.parse(document!['timestamp']))),
+                          style:
+                          AppCss.poppinsMedium12.textColor(appCtrl.appTheme.txtColor),
+                        ),
+                      ],
+                    )
+                )
                     .paddingOnly(
                     left: Insets.i8,
                     right: Insets.i8,

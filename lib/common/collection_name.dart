@@ -1,5 +1,7 @@
 class CollectionName{
   String admin ="admin";
+  String config ="config";
+  String adminStatus ="adminStatus";
   String usageControls ="usageControls";
   String userAppSettings ="userAppSettings";
   String chatWith ="chatWith";
@@ -16,4 +18,7 @@ class CollectionName{
   String messages ="messages";
   String broadcast ="broadcast";
   String groupMessage ="groupMessage";
+  String wallpaper ="wallpaper";
+  String userContact ="userContact";
+  String report ="report";
 }

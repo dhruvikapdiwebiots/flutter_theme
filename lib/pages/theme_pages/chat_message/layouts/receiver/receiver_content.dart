@@ -1,5 +1,4 @@
-import 'dart:math' as math;
-import 'package:figma_squircle/figma_squircle.dart';
+
 import 'package:intl/intl.dart';
 
 import '../../../../../config.dart';
@@ -28,7 +27,7 @@ class ReceiverContent extends StatelessWidget {
                       horizontal: Insets.i12, vertical: Insets.i14),
                   width: Sizes.s230,
                   decoration: ShapeDecoration(
-                    color: appCtrl.appTheme.primary,
+                    color: appCtrl.appTheme.chatSecondaryColor,
                     shape: const SmoothRectangleBorder(
                         borderRadius: SmoothBorderRadius.only(
                             topLeft:
@@ -40,9 +39,9 @@ class ReceiverContent extends StatelessWidget {
                               cornerSmoothing: 1
                             ))),
                   ),
-                  child: Text(document!['content'],
+                  child: Text(decryptMessage(document!["content"]),
                       style: AppCss.poppinsMedium14
-                          .textColor(appCtrl.appTheme.white)
+                          .textColor(appCtrl.appTheme.blackColor)
                           .letterSpace(.2)
                           .textHeight(1.2))),
               if (document!.data().toString().contains('emoji'))
@@ -54,7 +53,13 @@ class ReceiverContent extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
+                if (document!.data().toString().contains('isFavourite'))
+                  if(appCtrl.user["id"] == document["favouriteId"])
+                    Icon(Icons.star,
+                        color: appCtrl.appTheme.txtColor, size: Sizes.s10),
+                const HSpace(Sizes.s3),
                 if (document!['isBroadcast'])
+
                   const Icon(Icons.volume_down, size: Sizes.s15),
                 const HSpace(Sizes.s5),
                 Text(

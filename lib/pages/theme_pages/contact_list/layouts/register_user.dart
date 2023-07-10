@@ -4,14 +4,14 @@ import '../../../../config.dart';
 
 class RegisterUser extends StatelessWidget {
   final UserContactModel? userContactModel;
-
-  const RegisterUser({Key? key, this.userContactModel}) : super(key: key);
+final dynamic message;
+  const RegisterUser({Key? key, this.userContactModel,this.message}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
-        MessageFirebaseApi().saveContact(userContactModel!);
+        MessageFirebaseApi().saveContact(userContactModel!,message: message);
       },
       leading: userContactModel!.isRegister!
           ? CachedNetworkImage(
@@ -32,12 +32,12 @@ class RegisterUser extends StatelessWidget {
                           shape: BoxShape.circle),
               errorWidget: (context, url, error) => CircleAvatar(
                       child: Text(
-                    userContactModel!.username!.length > 2
+                          userContactModel!.username!.isNotEmpty ?     userContactModel!.username!.length > 2
                         ? userContactModel!.username!
                             .replaceAll(" ", "")
                             .substring(0, 2)
                             .toUpperCase()
-                        : userContactModel!.username![0],
+                        : userContactModel!.username![0] : "C",
                     style: AppCss.poppinsMedium12
                         .textColor(appCtrl.appTheme.whiteColor),
                   )))
@@ -46,12 +46,12 @@ class RegisterUser extends StatelessWidget {
                   backgroundImage: MemoryImage(userContactModel!.contactImage!))
               : CircleAvatar(
                   child: Text(
-                      userContactModel!.username!.length > 2
+                      userContactModel!.username!.isNotEmpty ?         userContactModel!.username!.length > 2
                           ? userContactModel!.username!
                               .replaceAll(" ", "")
                               .substring(0, 2)
                               .toUpperCase()
-                          : userContactModel!.username![0],
+                          : userContactModel!.username![0] :"C",
                       style: AppCss.poppinsMedium12
                           .textColor(appCtrl.appTheme.whiteColor))),
       title: Text(userContactModel!.username!),

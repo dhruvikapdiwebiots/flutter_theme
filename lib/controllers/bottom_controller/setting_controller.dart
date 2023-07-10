@@ -1,8 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter_theme/config.dart';
+import 'package:flutter_theme/controllers/theme_controller/add_fingerprint_controller.dart';
+import 'package:launch_review/launch_review.dart';
 
 class SettingController extends GetxController {
   List settingList = [];
   dynamic user;
+
 
   @override
   void onReady() {
@@ -10,7 +15,20 @@ class SettingController extends GetxController {
     settingList = appArray.settingList;
     user = appCtrl.storage.read(session.user) ?? "";
     update();
+    getUserData();
     super.onReady();
+  }
+
+  getUserData()async{
+    await FirebaseFirestore.instance.collection(collectionName.users).doc( FirebaseAuth.instance.currentUser != null ? FirebaseAuth.instance.currentUser!.uid : appCtrl.user["id"] ).get().then((value) {
+      if(value.exists){
+        user = value.data();
+        appCtrl.storage.write(session.user, user);
+      }
+      update();
+      appCtrl.update();
+    });
+
   }
 
   editProfile() {
@@ -37,6 +55,25 @@ class SettingController extends GetxController {
       await appCtrl.storage.write(session.isDarkMode, appCtrl.isTheme);
     } else if (index == 3) {
       deleteUser();
+    } else if (index == 4) {
+      log("appCtrl.isBiometric  : ${appCtrl.isBiometric }");
+      if(appCtrl.isBiometric == false) {
+        final fingerPrintCtrl = Get.isRegistered<AddFingerprintController>()
+            ? Get.find<AddFingerprintController>()
+            : Get.put(AddFingerprintController());
+        fingerPrintCtrl.checkBiometric(isSplash: false);
+        fingerPrintCtrl.getAvailableBiometric();
+      }else{
+        appCtrl.isBiometric = false;
+        appCtrl.storage.write(session.isBiometric,false);
+        appCtrl.update();
+
+      }
+      Get.forceAppUpdate();
+    }else if (index == 5) {
+      LaunchReview.launch(
+          androidAppId: appCtrl.userAppSettingsVal!.rateApp,
+          iOSAppId: " ${appCtrl.userAppSettingsVal!.rateAppIos}");
     } else {
       var user = appCtrl.storage.read(session.user);
 

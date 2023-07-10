@@ -8,6 +8,7 @@ class BackIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return SvgPicture.asset(
       appCtrl.isRTL ? svgAssets.arrowForward : svgAssets.arrowBack,
+      color: appCtrl.appTheme.blackColor,
       height: Sizes.s18,
     )
         .paddingSymmetric(horizontal: Insets.i16, vertical: verticalPadding ? Insets.i15 : Insets.i10)

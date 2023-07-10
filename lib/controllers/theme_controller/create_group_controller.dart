@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter_theme/config.dart';
+import 'package:encrypt/encrypt.dart' as encrypt;
 
 class CreateGroupController extends GetxController {
   List<Contact>? contacts;
@@ -12,9 +13,13 @@ class CreateGroupController extends GetxController {
   final formKey = GlobalKey<FormState>();
   File? image;
   XFile? imageFile;
-  bool isLoading = false, isGroup = true;
+  bool isLoading = false, isGroup = true, isAddUser = false;
   dynamic user;
   int counter = 0;
+
+
+  late encrypt.Encrypter cryptor;
+  final iv = encrypt.IV.fromLength(8);
   String imageUrl = "";
   TextEditingController txtGroupName = TextEditingController();
   final pickerCtrl = Get.isRegistered<PickerController>()
@@ -31,10 +36,7 @@ class CreateGroupController extends GetxController {
     user = appCtrl.storage.read(session.user) ?? "";
 
     update();
-    if (user != "") {
-      log("contacts1");
-      getFirebaseContact();
-    }
+    getFirebaseContact();
   }
 
   //get firebase register contact list
@@ -47,41 +49,35 @@ class CreateGroupController extends GetxController {
     Get.forceAppUpdate();
     log("AVAILABLE : ${appCtrl.contactList.length}");
     appCtrl.contactList.asMap().entries.forEach((contact) {
+      if (user["phone"] !=
+          phoneNumberExtension(contact.value.phones[0].number.toString())) {
+        counter++;
 
-      if (contact.value.phones.isNotEmpty) {
-        if (user["phone"] !=
-            phoneNumberExtension(contact.value.phones[0].number.toString())) {
-          counter++;
-          contactList = [];
-
-          update();
-          Get.forceAppUpdate();
-          FirebaseFirestore.instance
-              .collection(collectionName.users)
-              .where("phone",
-                  isEqualTo: phoneNumberExtension(
-                      contact.value.phones[0].number.toString()))
-              .get()
-              .then((value) {
-            if (value.docs.isNotEmpty) {
-
-              if (value.docs[0].data()["isActive"] == true) {
-                if (!contactList.contains(value.docs[0].data())) {
-                  contactList.add(value.docs[0].data());
-                } else {
-                  contactList.remove(value.docs[0].data());
-                }
+        update();
+        FirebaseFirestore.instance
+            .collection(collectionName.users)
+            .where("phone",
+            isEqualTo: phoneNumberExtension(
+                contact.value.phones[0].number.toString()))
+            .get()
+            .then((value) {
+          if (value.docs.isNotEmpty) {
+            if (value.docs[0].data()["isActive"] == true) {
+              bool isContains = contactList
+                  .where((element) =>
+              element["phone"] == value.docs[0].data()["phone"])
+                  .isNotEmpty;
+              if (!isContains) {
+                contactList.add(value.docs[0].data());
               }
             }
+          }
 
-            update();
-            Get.forceAppUpdate();
-          });
           update();
-        }
+        });
+        log("INIT1  : ${contactList.length}");
+        update();
       }
-
-      update();
     });
 
     isLoading = false;
@@ -126,7 +122,7 @@ class CreateGroupController extends GetxController {
             borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
           ),
           builder: (BuildContext context) {
-// return your layout
+            // return your layout
             return const CreateGroup();
           });
     } else {
@@ -134,9 +130,15 @@ class CreateGroupController extends GetxController {
       update();
       final now = DateTime.now();
       String broadcastId = now.microsecondsSinceEpoch.toString();
+      final key = encrypt.Key.fromUtf8('my 32 length key................');
+      final iv = encrypt.IV.fromLength(16);
+
+      final encrypter = encrypt.Encrypter(encrypt.AES(key));
+
+      final encrypted = encrypter.encrypt("You created this broadcast", iv: iv).base64;
+
 
       await checkChatAvailable();
-      log("newContact : $newContact");
       await Future.delayed(Durations.s3);
       await FirebaseFirestore.instance
           .collection(collectionName.broadcast)
@@ -156,7 +158,7 @@ class CreateGroupController extends GetxController {
         'sender': user["id"],
         'senderName': user["name"],
         'receiver': newContact,
-        'content': "You created this broadcast",
+        'content':encrypted,
         "broadcastId": broadcastId,
         'type': MessageType.messageType.name,
         'messageType': "sender",
@@ -174,10 +176,11 @@ class CreateGroupController extends GetxController {
         'receiverId': newContact,
         'senderId': user["id"],
         'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-        "lastMessage": "You created this broadcast",
+        "lastMessage": encrypted,
         "isBroadcast": true,
         "isGroup": false,
         "isBlock": false,
+        "name": "Broadcast",
         "updateStamp": DateTime.now().millisecondsSinceEpoch.toString()
       }).then((value) {
         selectedContact = [];
@@ -261,7 +264,12 @@ class CreateGroupController extends GetxController {
         (element) => element["phone"] == data["phone"],
       );
     } else {
-      selectedContact.add(data);
+      if(selectedContact.length < appCtrl.usageControlsVal!.groupMembersLimit!) {
+        selectedContact.add(data);
+      }else{
+        snackBarMessengers(message: "You can added only ${isGroup ? appCtrl.usageControlsVal!.groupMembersLimit! :appCtrl.usageControlsVal!.broadCastMembersLimit!} Members in the group");
+      }
+
     }
 
     update();

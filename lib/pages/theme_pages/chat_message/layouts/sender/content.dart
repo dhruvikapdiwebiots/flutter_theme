@@ -1,4 +1,3 @@
-
 import 'package:intl/intl.dart';
 
 import '../../../../../config.dart';
@@ -8,13 +7,15 @@ class Content extends StatelessWidget {
   final GestureLongPressCallback? onLongPress;
   final GestureTapCallback? onTap;
   final bool isBroadcast;
+  final String? userId;
 
   const Content(
       {Key? key,
       this.document,
       this.onLongPress,
       this.onTap,
-      this.isBroadcast = false})
+      this.isBroadcast = false,
+      this.userId})
       : super(key: key);
 
   @override
@@ -28,7 +29,7 @@ class Content extends StatelessWidget {
             Stack(
               clipBehavior: Clip.none,
               children: [
-                document!['content'].length > 40
+                decryptMessage(document!["content"]).length > 40
                     ? Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: Insets.i12, vertical: Insets.i14),
@@ -44,7 +45,7 @@ class Content extends StatelessWidget {
                                   bottomLeft: SmoothRadius(
                                       cornerRadius: 20, cornerSmoothing: 1))),
                         ),
-                        child: Text(document!['content'],
+                        child: Text(decryptMessage(document!["content"]),
                             overflow: TextOverflow.clip,
                             style: AppCss.poppinsMedium13
                                 .textColor(appCtrl.appTheme.white)
@@ -68,7 +69,7 @@ class Content extends StatelessWidget {
                                     bottomLeft: SmoothRadius(
                                         cornerRadius: 20,
                                         cornerSmoothing: 1)))),
-                        child: Text(document!['content'],
+                        child: Text(decryptMessage(document!["content"]),
                             overflow: TextOverflow.clip,
                             style: AppCss.poppinsMedium13
                                 .textColor(appCtrl.appTheme.white)
@@ -78,10 +79,15 @@ class Content extends StatelessWidget {
                   EmojiLayout(emoji: document!["emoji"])
               ],
             ),
-          const VSpace(Sizes.s2),
+            const VSpace(Sizes.s2),
             IntrinsicHeight(
                 child:
                     Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+              if (document!.data().toString().contains('isFavourite'))
+                if(appCtrl.user["id"] == document["favouriteId"])
+                  Icon(Icons.star,
+                      color: appCtrl.appTheme.txtColor, size: Sizes.s10),
+              const HSpace(Sizes.s3),
               if (!isBroadcast)
                 Icon(Icons.done_all_outlined,
                     size: Sizes.s15,

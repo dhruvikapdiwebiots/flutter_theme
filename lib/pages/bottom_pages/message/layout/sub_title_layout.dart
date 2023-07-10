@@ -15,31 +15,33 @@ class SubTitleLayout extends StatelessWidget {
                 : appCtrl.appTheme.grey,
             size: Sizes.s16),
         const HSpace(Sizes.s10),
-        document!["lastMessage"].contains(".gif") ?const Icon(Icons.gif_box) :
-        Text(
-            (document!["lastMessage"].contains("media")) ? "You Share Media" :   document!["isBlock"] == true &&
-                document!["isBlock"] == "true"
-                ? document!["blockBy"] != blockBy
-                ? document!["blockUserMessage"]
-                : document!["lastMessage"]
-                .contains("http")
-                :  (document!["lastMessage"].contains(".pdf") ||
-                document!["lastMessage"]
-                    .contains(".doc") ||
-                document!["lastMessage"]
-                    .contains(".mp3") ||
-                document!["lastMessage"]
-                    .contains(".mp4") ||
-                document!["lastMessage"]
-                    .contains(".xlsx") ||
-                document!["lastMessage"]
-                    .contains(".ods"))
-                ? document!["lastMessage"]
-                .split("-BREAK-")[0]
-                : document!["lastMessage"],
-            style: AppCss.poppinsMedium12
-                .textColor(appCtrl.appTheme.grey).textHeight(1.2),
-            overflow: TextOverflow.ellipsis).width(Sizes.s150),
+        decryptMessage(document!["lastMessage"]).contains(".gif") ?const Icon(Icons.gif_box) :
+        Expanded(
+          child: Text(
+              (decryptMessage(document!["lastMessage"]).contains("media")) ? "You Share Media" :   document!["isBlock"] == true &&
+                  document!["isBlock"] == "true"
+                  ? document!["blockBy"] != blockBy
+                  ? document!["blockUserMessage"]
+                  : decryptMessage(document!["lastMessage"])
+                  .contains("http")
+                  :  (decryptMessage(document!["lastMessage"]).contains(".pdf") ||
+                  decryptMessage(document!["lastMessage"])
+                      .contains(".doc") ||
+                  decryptMessage(document!["lastMessage"])
+                      .contains(".mp3") ||
+                  decryptMessage(document!["lastMessage"])
+                      .contains(".mp4") ||
+                  decryptMessage(document!["lastMessage"])
+                      .contains(".xlsx") ||
+                  decryptMessage(document!["lastMessage"])
+                      .contains(".ods"))
+                  ? decryptMessage(document!["lastMessage"])
+                  .split("-BREAK-")[0]
+                  : decryptMessage(document!["lastMessage"]),
+              style: AppCss.poppinsMedium12
+                  .textColor(appCtrl.appTheme.grey).textHeight(1.2),
+              overflow: TextOverflow.ellipsis).width(Sizes.s150),
+        ),
       ],
     );
   }

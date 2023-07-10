@@ -14,17 +14,22 @@ class EditProfile extends StatelessWidget {
           scaffold: Scaffold(
             backgroundColor: appCtrl.appTheme.bgColor,
             appBar: CommonAppBar(text: fonts.saveProfile.tr),
-            body: editCtrl.isLoading
-                ? CommonLoader(isLoading: editCtrl.isLoading)
-                    .height(MediaQuery.of(context).size.height)
-                : SingleChildScrollView(
-                    child: Form(
-                    key: editCtrl.formKey,
-                    child: editCtrl.user != null && editCtrl.user != ""
-                        ?const EditProfileBody().marginSymmetric(
-                            vertical: Insets.i20, horizontal: Insets.i15)
-                        : Container(),
-                  )),
+            body:
+                 Stack(
+                  children: [
+                    SingleChildScrollView(
+                        child: Form(
+                        key: editCtrl.formKey,
+                        child: editCtrl.user != null && editCtrl.user != ""
+                            ?const EditProfileBody().marginSymmetric(
+                                vertical: Insets.i20, horizontal: Insets.i15)
+                            : Container(),
+                      )),
+                   if( editCtrl.isLoading)
+                     CommonLoader(isLoading: editCtrl.isLoading)
+
+                  ],
+                ),
           ),
         ),
       );

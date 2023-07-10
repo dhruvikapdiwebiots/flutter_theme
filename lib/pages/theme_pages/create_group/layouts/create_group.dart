@@ -35,58 +35,59 @@ class CreateGroup extends StatelessWidget {
                         ),
                       ),
                       const VSpace(Sizes.s20),
-                      Row(
-                        children: [
-                          groupCtrl.pickerCtrl.image != null
-                              ? Container(
-                                  height: Sizes.s60,
-                                  width: Sizes.s60,
-                                  decoration: BoxDecoration(
-                                      color: appCtrl.appTheme.gray
-                                          .withOpacity(.2),
-                                      shape: BoxShape.circle),
-                                  child: Image.file(
-                                          groupCtrl.pickerCtrl.image!,
-                                          fit: BoxFit.fill)
-                                      .clipRRect(all: AppRadius.r50),
-                                ).inkWell(onTap: () {
-                                  groupCtrl.pickerCtrl
-                                      .imagePickerOption(context,isCreateGroup: true);
-                                })
-                              : Image.asset(
-                                  imageAssets.user,
-                                  height: Sizes.s30,
-                                  width: Sizes.s30,
-                                  color: appCtrl.appTheme.whiteColor,
-                                )
-                                  .paddingAll(Insets.i15)
-                                  .decorated(
-                                      color: appCtrl.appTheme.grey
-                                          .withOpacity(.4),
-                                      shape: BoxShape.circle)
-                                  .inkWell(
-                                      onTap: () => groupCtrl.pickerCtrl
-                                          .imagePickerOption(context,isCreateGroup: true)),
-                          const HSpace(Sizes.s15),
-                          Expanded(
-                            child: CommonTextBox(
-                              controller: groupCtrl.txtGroupName,
-                              labelText: fonts.groupName.tr,
-                              validator: (val) {
-                                if (val!.isEmpty) {
-                                  return "Group Name Required";
-                                } else {
-                                  return null;
-                                }
-                              },
-                              maxLength: 25,
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: appCtrl.appTheme.blackColor)),
-                              textInputAction: TextInputAction.next,
+                      IntrinsicHeight(
+                        child: Row(
+                          children: [
+                            groupCtrl.pickerCtrl.image != null
+                                ? Container(
+                                    height: Sizes.s60,
+                                    width: Sizes.s60,
+                                    decoration: BoxDecoration(
+                                        color: appCtrl.appTheme.gray
+                                            .withOpacity(.2),
+                                        shape: BoxShape.circle),
+                                    child: Image.file(
+                                            groupCtrl.pickerCtrl.image!,
+                                            fit: BoxFit.fill)
+                                        .clipRRect(all: AppRadius.r50),
+                                  ).inkWell(onTap: () {
+                                    groupCtrl.pickerCtrl
+                                        .imagePickerOption(context,isCreateGroup: true);
+                                  })
+                                : Image.asset(
+                                    imageAssets.user,
+                                    height: Sizes.s30,
+                                    width: Sizes.s30,
+                                    color: appCtrl.appTheme.whiteColor,
+                                  )
+                                    .paddingAll(Insets.i15)
+                                    .decorated(
+                                        color: appCtrl.appTheme.grey
+                                            .withOpacity(.4),
+                                        shape: BoxShape.circle)
+                                    .inkWell(
+                                        onTap: () => groupCtrl.pickerCtrl
+                                            .imagePickerOption(context,isCreateGroup: true)),
+                            const HSpace(Sizes.s15),
+                            Expanded(
+                              child: CommonTextBox(
+                                controller: groupCtrl.txtGroupName,
+                                labelText: fonts.groupName.tr,
+                                validator: (val) {
+                                  if (val!.isEmpty) {
+                                    return "Group Name Required";
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: appCtrl.appTheme.blackColor)),
+                                textInputAction: TextInputAction.next,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       const VSpace(Sizes.s20),
                       CommonButton(

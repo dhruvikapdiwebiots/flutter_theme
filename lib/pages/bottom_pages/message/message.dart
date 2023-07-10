@@ -1,5 +1,5 @@
-
 import 'package:flutter_theme/config.dart';
+
 
 class Message extends StatefulWidget {
   const Message({Key? key}) : super(key: key);
@@ -34,38 +34,28 @@ class _MessageState extends State<Message>
   @override
   Widget build(BuildContext context) {
     return GetBuilder<MessageController>(builder: (_) {
-      return NotificationListener<OverscrollIndicatorNotification>(
-        onNotification: (OverscrollIndicatorNotification overscroll) {
-          overscroll.disallowIndicator();
-          return false;
-        },
-        child: Scaffold(
-            key: messageCtrl.scaffoldKey,
-            backgroundColor: appCtrl.appTheme.bgColor,
-            floatingActionButton: FloatingActionButton(
-              onPressed: ()async {
-
-                Get.to(
-                      () => ContactList(),
-                  transition: Transition.downToUp,
-                );
+      return GetBuilder<AppController>(builder: (appCtrl) {
+        return Stack(children: [
+          NotificationListener<OverscrollIndicatorNotification>(
+              onNotification: (OverscrollIndicatorNotification overscroll) {
+                overscroll.disallowIndicator();
+                return false;
               },
-              backgroundColor: appCtrl.appTheme.primary,
-              child: Container(
-                width: Sizes.s52,
-                height: Sizes.s52,
-                padding: const EdgeInsets.all(Insets.i8),
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: RadialGradient(colors: [
-                    appCtrl.isTheme ? appCtrl.appTheme.primary.withOpacity(.8):  appCtrl.appTheme.lightPrimary,
-                      appCtrl.appTheme.primary
-                    ])),
-                child: SvgPicture.asset(svgAssets.add,height: Sizes.s15),
-              ),
-            ),
-            body: const ChatCard()),
-      );
+              child: Scaffold(
+                  key: messageCtrl.scaffoldKey,
+                  backgroundColor: appCtrl.appTheme.bgColor,
+                  floatingActionButton: const MessageFloatingButton(),
+                  body: SingleChildScrollView(
+                      child: Column(children: [
+                    AdCommonLayout(
+                        bannerAdIsLoaded: messageCtrl.bannerAdIsLoaded,
+                        bannerAd: messageCtrl.bannerAd,
+                        currentAd: messageCtrl.currentAd),
+                    const ChatCard()
+                  ])))),
+          if (appCtrl.isLoading) CommonLoader(isLoading: appCtrl.isLoading)
+        ]);
+      });
     });
   }
 }

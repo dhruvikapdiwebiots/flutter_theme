@@ -221,7 +221,7 @@ class AudioRecordingPluginState extends State<AudioRecordingPlugin> {
                 AppCss.poppinsMedium12.textColor(appCtrl.appTheme.whiteColor),
             onTap: () {
               stopPlayer();
-              log("mPath : $mPath");
+
               Get.back(result: mPath);
             },
             color: appCtrl.isTheme

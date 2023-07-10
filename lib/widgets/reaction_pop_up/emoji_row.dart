@@ -35,34 +35,28 @@ class EmojiRow extends StatelessWidget {
     return IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Expanded(
-            child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: List.generate(
-                    emojiList.length,
-                    (index) => GestureDetector(
-                        onTap: (){
-                          onEmojiTap(emojiList[index]);
-                          log("CHECK `:${emojiList[index]}");
-                        },
-                        child: Text(
-                          emojiList[index],
-                          style: const TextStyle(fontSize: FontSizes.f16),
-                        )))),
-          ),
+          Row(
+              mainAxisSize: MainAxisSize.min,
+              children: List.generate(
+                  emojiList.length,
+                  (index) => InkWell(
+                      onTap: () {
+                        onEmojiTap(emojiList[index]);
+                        log("CHECK `:${emojiList[index]}");
+                      },
+                      child: Text(
+                        emojiList[index],
+                        style: const TextStyle(fontSize: FontSizes.f20),
+                      ).marginOnly(right: Insets.i10,top: Insets.i8,bottom: Insets.i8)))),
           InkWell(
-            child: Icon(
-              Icons.add,
-              color: Colors.grey.shade600,
-              size: 18,
-            ),
+            child: SvgPicture.asset(svgAssets.addCircle),
             onTap: () => _showBottomSheet(context),
-          ).paddingAll(Insets.i2).decorated(
-              color: appCtrl.appTheme.lightGray, shape: BoxShape.circle)
+          )
         ],
-      ),
+      )
     );
   }
 

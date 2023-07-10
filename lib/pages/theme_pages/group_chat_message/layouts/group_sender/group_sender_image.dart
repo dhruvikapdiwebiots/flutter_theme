@@ -14,7 +14,6 @@ class GroupSenderImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log("IMAG : ${document!.data().toString().contains('emoji')}");
     return InkWell(
         onLongPress: onLongPress,
         onTap: onPressed,
@@ -53,7 +52,8 @@ class GroupSenderImage extends StatelessWidget {
                                                         cornerRadius: 10,
                                                         cornerSmoothing: 1))),
                                         child: Container()),
-                                    imageUrl: document!['content'],
+                                    imageUrl:
+                                        decryptMessage(document!['content']),
                                     width: Sizes.s160,
                                     height: Sizes.s150,
                                     fit: BoxFit.cover))
@@ -63,12 +63,24 @@ class GroupSenderImage extends StatelessWidget {
               ],
             ),
             const VSpace(Sizes.s2),
-            Text(
-              DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(
-                  int.parse(document!['timestamp']))),
-              style:
-                  AppCss.poppinsMedium12.textColor(appCtrl.appTheme.txtColor),
-            ).marginOnly(right: Insets.i12)
+            IntrinsicHeight(
+                child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                  if (document!.data().toString().contains('isFavourite'))
+                    if(appCtrl.user["id"] == document!["favouriteId"])
+                    Icon(Icons.star,
+                        color: appCtrl.appTheme.txtColor, size: Sizes.s10),
+                  const HSpace(Sizes.s3),
+                  Text(
+                    DateFormat('HH:mm a').format(
+                        DateTime.fromMillisecondsSinceEpoch(
+                            int.parse(document!['timestamp']))),
+                    style: AppCss.poppinsMedium12
+                        .textColor(appCtrl.appTheme.txtColor),
+                  ).marginOnly(right: Insets.i12),
+                ]))
           ],
         ));
   }

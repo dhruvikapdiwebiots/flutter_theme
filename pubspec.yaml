@@ -42,74 +42,72 @@ dependencies:
   get_storage: ^2.0.3
   dartx: ^1.1.0
   cached_network_image: ^3.2.3
-  google_fonts: ^3.0.1
-  font_awesome_flutter: ^10.3.0
-  flutter_svg: ^1.1.6
-  intl: ^0.17.0
+  google_fonts: ^4.0.0
+  font_awesome_flutter: ^10.4.0
+  flutter_svg: ^2.0.7
+  intl: ^0.18.0
   location: ^4.4.0
   story_view: ^0.14.0
-  audioplayers: ^3.0.1
+  audioplayers: ^3.0.0
   infinite_scroll_pagination: ^3.2.0
-  flip_card: ^0.6.0
-  advance_pdf_viewer_fork: ^2.0.0
-  flutter_pdfview: ^1.2.1
-  syncfusion_flutter_pdfviewer: ^20.4.38
-  dio: ^4.0.6
-  percent_indicator: ^4.2.2
-  smooth_page_indicator: ^1.0.0+2
-  google_sign_in: ^5.4.1
-  shared_preferences: ^2.0.15
-  image_picker: ^0.8.6+3
-  fluttertoast: ^8.0.9
-  cloud_firestore: ^4.3.1
-  firebase_storage: ^11.0.10
-  firebase_messaging: ^14.2.1
-  flutter_local_notifications: ^13.0.0
-  local_auth: ^1.1.0
-  pin_input_text_field: ^4.2.0
-  firebase_auth: ^4.2.5
-  firebase_core: ^2.4.1
-  convex_bottom_bar: ^3.1.0+1
-  file_picker: ^5.2.3
-  path:
-  share_plus: ^6.3.0
-  permission_handler: ^10.2.0
+  syncfusion_flutter_pdfviewer: ^20.1.48
+  dio: ^5.2.1+1
+  percent_indicator: ^4.2.3
+  smooth_page_indicator: ^1.1.0
+  google_sign_in: ^6.1.4
+  image_picker: ^0.8.9
+  fluttertoast: ^8.2.2
+
+  cloud_firestore: ^4.8.1
+  firebase_storage: ^11.0.16
+  firebase_messaging: ^14.6.3
+  flutter_local_notifications: ^14.1.1
+  firebase_auth: ^4.6.3
+  firebase_core: ^2.14.0
+
+  path: ^1.8.3
+  share_plus: ^6.3.4
+  permission_handler: ^10.3.0
   geolocator: ^9.0.2
-  url_launcher: ^6.1.7
-  video_player: ^2.4.9
-  just_audio: ^0.9.31
-  path_provider: ^2.0.11
-  http: ^0.13.5
+  url_launcher: ^6.1.11
+  video_player: ^2.6.1
+  just_audio: ^0.9.34
+  path_provider: ^2.0.15
   flutter_sound: ^9.2.13
-  chewie: ^1.3.5
+  camera: ^0.10.5+2
   #camera: ^0.10.0+4
-  device_info_plus: ^8.0.0
-  flutter_contacts: ^1.1.5+1
-  contacts_service: ^0.6.3
-  intl_phone_number_input: ^0.7.1
-  wechat_assets_picker: ^8.3.1+1
-  connectivity_plus: ^3.0.3
-  pinput: ^2.2.23
+  device_info_plus: ^8.2.0
+  flutter_contacts: ^1.1.6
+  intl_phone_number_input: ^0.7.3+1
+  wechat_assets_picker: ^8.5.0
+  connectivity_plus: ^4.0.1
+  pinput: ^2.2.31
   animated_text_kit: ^4.2.2
-  image_cropper: ^3.0.1
-  giphy_get: ^3.2.0
+  image_cropper: ^4.0.0
+  giphy_get: ^3.0.0
   figma_squircle: ^0.5.3
-  agora_rtc_engine: ^6.1.0
+  agora_rtc_engine: ^6.2.0
   wakelock: ^0.6.2
-  bubble: ^1.2.1
   overlay_support: ^2.1.0
-  camera: ^0.10.3+1
-  awesome_notifications: ^0.7.4+1
-  audio_video_progress_bar: ^0.11.0
+  #camera: ^0.10.5+1
+  audio_video_progress_bar: ^1.0.1
   open_filex: ^4.3.2
   flutter_native_image: ^0.0.6+1
   video_compress: ^3.1.2
   dotted_border: ^2.0.0+3
   light_compressor: ^2.0.1
-  smooth_corner: ^1.1.0
-  extended_text_field: ^11.0.1
-  emoji_picker_flutter: ^1.5.2
-  audio_waveforms: ^1.0.3
+  emoji_picker_flutter: ^1.6.1
+  encrypt: ^5.0.1
+  local_auth: ^2.1.6
+  launch_review: ^3.0.1
+  photo_manager: ^2.6.0
+  google_mobile_ads: ^3.0.0
+  file_picker: ^5.2.0
+  advance_pdf_viewer_fork: ^2.0.0
+  facebook_audience_network: ^1.0.1
+  photo_view: ^0.14.0
+  drishya_picker: ^2.0.0
+  image_gallery_saver: ^2.0.1
 
 
 
@@ -142,6 +140,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/images/
+    - assets/images/background/
     - assets/gif/
     - assets/svg/
 

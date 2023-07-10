@@ -76,12 +76,24 @@ class GroupLocationLayout extends StatelessWidget {
             ],
           ),
           const VSpace(Sizes.s10),
-          Text(
-            DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(
-                int.parse(document!['timestamp']))),
-            textAlign: TextAlign.end,
-            style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.txtColor),
-          ),
+          IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (document!.data().toString().contains('isFavourite'))
+                    if(appCtrl.user["id"] == document!["favouriteId"])
+                    Icon(Icons.star,color: appCtrl.appTheme.txtColor,size: Sizes.s10),
+                  const HSpace(Sizes.s3),
+                  Text(
+                    DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(
+                        int.parse(document!['timestamp']))),
+                    style:
+                    AppCss.poppinsMedium12.textColor(appCtrl.appTheme.txtColor),
+                  ),
+                ],
+              )
+          )
         ],
       ).marginSymmetric(horizontal: Insets.i10),
     );

@@ -1,7 +1,3 @@
-import 'dart:developer';
-
-import 'package:flutter_theme/widgets/common_empty_layout.dart';
-
 import '../../../../config.dart';
 
 class ChatCard extends StatefulWidget {
@@ -17,55 +13,59 @@ class _ChatCardState extends State<ChatCard> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<MessageController>(builder: (messageCtrl) {
-      return StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection(collectionName.users)
-              .doc(messageCtrl.currentUserId)
-              .collection(collectionName.chats)
-              .orderBy("updateStamp", descending: true)
-              .limit(15)
-              .snapshots(),
-          builder: (context, snapshot) {
-            log("has : ${snapshot.hasError}");
-            if (snapshot.hasError) {
-              return CommonEmptyLayout(
-                  gif: gifAssets.message,
-                  title: fonts.emptyMessageTitle.tr,
-                  desc: fonts.emptyMessageDesc.tr);
-            } else if (!snapshot.hasData) {
-              return Center(
-                  child: CircularProgressIndicator(
-                valueColor:
-                    AlwaysStoppedAnimation<Color>(appCtrl.appTheme.primary),
-              )).height(MediaQuery.of(context).size.height);
-            } else {
-              List message = MessageFirebaseApi().chatListWidget(snapshot);
-              log("message : ${message.length}");
-              return !snapshot.hasData
-                  ? Center(
-                      child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                          appCtrl.appTheme.primary),
-                    )).height(MediaQuery.of(context).size.height).expanded()
-                  : message.isNotEmpty
-                      ? ListView.builder(
-                          shrinkWrap: true,
-                          padding: const EdgeInsets.symmetric(
-                              vertical: Insets.i20, horizontal: Insets.i10),
-                          itemBuilder: (context, index) {
-                            return LoadUser(
-                                document: message[index],
-                                blockBy: messageCtrl.storageUser["id"],
-                                currentUserId: messageCtrl.storageUser["id"]);
-                          },
-                          itemCount: message.length,
-                        )
-                      : CommonEmptyLayout(
-                          gif: gifAssets.message,
-                          title: fonts.emptyMessageTitle.tr,
-                          desc: fonts.emptyMessageDesc.tr);
-            }
-          });
+      return GetBuilder<DashboardController>(builder: (dashboardCtrl) {
+        return StreamBuilder(
+            stream: dashboardCtrl.userText.text.isNotEmpty
+                ? dashboardCtrl.onSearch(dashboardCtrl.userText.text)
+                : FirebaseFirestore.instance
+                    .collection(collectionName.users)
+                    .doc(messageCtrl.currentUserId)
+                    .collection(collectionName.chats)
+                    .orderBy("updateStamp", descending: true)
+                    .limit(15)
+                    .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return CommonEmptyLayout(
+                    gif: gifAssets.message,
+                    title: fonts.emptyMessageTitle.tr,
+                    desc: fonts.emptyMessageDesc.tr);
+              } else if (!snapshot.hasData) {
+                return Center(
+                        child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                appCtrl.appTheme.primary)))
+                    .height(MediaQuery.of(context).size.height);
+              } else {
+                List message = MessageFirebaseApi().chatListWidget(snapshot);
+
+                return !snapshot.hasData
+                    ? Center(
+                            child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    appCtrl.appTheme.primary)))
+                        .height(MediaQuery.of(context).size.height)
+                        .expanded()
+                    : message.isNotEmpty
+                        ? ListView.builder(
+                            shrinkWrap: true,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: Insets.i20, horizontal: Insets.i10),
+                            itemBuilder: (context, index) {
+                              return LoadUser(
+                                  document: message[index],
+                                  blockBy: messageCtrl.storageUser["id"],
+                                  currentUserId: messageCtrl.storageUser["id"]);
+                            },
+                            itemCount: message.length,
+                          )
+                        : CommonEmptyLayout(
+                            gif: gifAssets.message,
+                            title: fonts.emptyMessageTitle.tr,
+                            desc: fonts.emptyMessageDesc.tr);
+              }
+            });
+      });
     });
   }
 }
