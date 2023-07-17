@@ -5,6 +5,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/controllers/common_controller/ad_controller.dart';
+import 'package:flutter_theme/models/firebase_contact_model.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class DashboardController extends GetxController
@@ -26,7 +27,6 @@ class DashboardController extends GetxController
   List<UserContactModel>? unRegisterContactList = [];
   List<Contact> storageContact = [];
   List<UserContactModel>? nameList = [];
-
 
   TextEditingController searchText = TextEditingController();
   TextEditingController userText = TextEditingController();
@@ -98,16 +98,47 @@ class DashboardController extends GetxController
     }
   }
 
- Stream onSearch(val)  {
+  Stream onSearch(val) {
+    if (selectedIndex == 0) {
+      return FirebaseFirestore.instance
+          .collection(collectionName.users)
+          .doc(messageCtrl.currentUserId)
+          .collection(collectionName.chats)
+          .where("name", isEqualTo: val)
+          .orderBy("updateStamp", descending: true)
+          .limit(15)
+          .snapshots();
+    } else if (selectedIndex == 1) {
+      return FirebaseFirestore.instance
+          .collection(collectionName.users)
+          .doc(messageCtrl.currentUserId)
+          .collection(collectionName.chats)
+          .where("name", isEqualTo: val)
+          .orderBy("updateStamp", descending: true)
+          .limit(15)
+          .snapshots();
+    } else {
+      Stream<QuerySnapshot<Map<String, dynamic>>>? snapshots =FirebaseFirestore.instance
+          .collection(collectionName.calls)
+          .doc(appCtrl.user["id"])
+          .collection(collectionName.collectionCallHistory)
 
-    return FirebaseFirestore.instance
-        .collection(collectionName.users)
-        .doc(messageCtrl.currentUserId)
-        .collection(collectionName.chats).where("name",isEqualTo: val)
-        .orderBy("updateStamp", descending: true)
-        .limit(15)
-        .snapshots() ;
+          .where("callerName", isEqualTo: val)
+          .orderBy("timestamp", descending: true)
+          .snapshots();
+      return snapshots;
+    }
+  }
 
+  Stream callData(val){
+    Stream<QuerySnapshot<Map<String, dynamic>>>? snapshots =FirebaseFirestore.instance
+        .collection(collectionName.calls)
+        .doc(appCtrl.user["id"])
+        .collection(collectionName.collectionCallHistory)
+        .where("callerName", isEqualTo: val)
+        .orderBy("timestamp", descending: true)
+        .snapshots();
+    return snapshots;
   }
 
   @override
@@ -133,8 +164,8 @@ class DashboardController extends GetxController
     appCtrl.update();
     //statusCtrl.update();
     update();
-   // await Future.delayed(Durations.s3);
-    checkPermission();
+    // await Future.delayed(Durations.s3);
+    //checkPermission();
     //checkContactList();
     super.onReady();
   }
@@ -150,18 +181,149 @@ class DashboardController extends GetxController
       appCtrl.storage.write(session.contactList, contacts);
       appCtrl.update();
       debugPrint("PERR : ${appCtrl.contactList.length}");
-     await checkContactList();
+      await checkContactList();
 
       if (appCtrl.contactList.isNotEmpty) {
+        await addContactInFirebase();
         final contactCtrl = Get.isRegistered<ContactListController>()
             ? Get.find<ContactListController>()
             : Get.put(ContactListController());
+       contactCtrl.getAllData();
+       contactCtrl.getAllUnRegisterUser();
         contactCtrl.onReady();
+
         contactCtrl.update();
         Get.forceAppUpdate();
-
       }
     }
+  }
+
+  addContactInFirebase() async {
+    if (appCtrl.contactList.isNotEmpty) {
+      List<Map<String, dynamic>> contactsData = [];
+      List<Map<String, dynamic>> unRegisterContactData = [];
+
+      appCtrl.contactList.asMap().entries.forEach((contact) async {
+        bool isRegister = false;
+        String id = "";
+        await FirebaseFirestore.instance
+            .collection(collectionName.users)
+            .where("phone",
+                isEqualTo: phoneNumberExtension(
+                    contact.value.phones[0].number.toString()))
+            .get()
+            .then((value) {
+          if (value.docs.isEmpty) {
+            isRegister = false;
+          } else {
+            isRegister = true;
+            id = value.docs[0].id;
+          }
+        });
+        update();
+        if (isRegister) {
+          var objData = {
+            'name': contact.value.displayName,
+            'phone': contact.value.phones.isNotEmpty
+                ? phoneNumberExtension(
+                    contact.value.phones[0].number.toString())
+                : null,
+            "isRegister": true,
+            "image": contact.value.photo,
+            "id": id
+            // Include other necessary contact.value details
+          };
+          if (!contactsData.contains(objData)) {
+            contactsData.add(objData);
+          }
+        } else {
+          var objData = {
+            'name': contact.value.displayName,
+            'phone': contact.value.phones.isNotEmpty
+                ? phoneNumberExtension(
+                    contact.value.phones[0].number.toString())
+                : null,
+            "isRegister": false,
+            "image": contact.value.photo,
+            "id": "0"
+            // Include other necessary contact.value details
+          };
+          if (!unRegisterContactData.contains(objData)) {
+            unRegisterContactData.add(objData);
+          }
+        }
+      });
+
+      await FirebaseFirestore.instance
+          .collection(collectionName.users)
+          .doc(appCtrl.user["id"])
+          .collection(collectionName.registerUser)
+          .get()
+          .then((value) async {
+        if (value.docs.isEmpty) {
+          log("AGAIN ADD");
+          await FirebaseFirestore.instance
+              .collection(collectionName.users)
+              .doc(appCtrl.user["id"])
+              .collection(collectionName.registerUser)
+              .add({"contact": contactsData});
+        } else {
+          log("ALREADY COLLECTION");
+        }
+      });
+
+      await FirebaseFirestore.instance
+          .collection(collectionName.users)
+          .doc(appCtrl.user["id"])
+          .collection(collectionName.unRegisterUser)
+          .get()
+          .then((value) async {
+        if (value.docs.isEmpty) {
+          log("AGAIN ADD");
+          await FirebaseFirestore.instance
+              .collection(collectionName.users)
+              .doc(appCtrl.user["id"])
+              .collection(collectionName.unRegisterUser)
+              .add({"contact": unRegisterContactData});
+        } else {
+          log("ALREADY COLLECTION");
+        }
+      }).then((value) => checkContactList());
+
+      contactCtrl.onReady();
+      contactCtrl.update();
+    }
+
+    if (appCtrl.firebaseContact.isEmpty) {
+      await FirebaseFirestore.instance
+          .collection(collectionName.users)
+          .doc(appCtrl.user["id"])
+          .collection(collectionName.registerUser)
+          .get()
+          .then((value) {
+        List allUserList = value.docs[0].data()["contact"];
+        allUserList.asMap().entries.forEach((element) {
+          if (!appCtrl.firebaseContact.contains(element.value)) {
+            appCtrl.firebaseContact
+                .add(FirebaseContactModel.fromJson(element.value));
+          }
+        });
+      });
+      appCtrl.update();
+    }
+
+    getFirebaseContact();
+  }
+
+  getFirebaseContact() async {
+    log("CHECK DATA");
+    final contactCtrl = Get.isRegistered<ContactListController>()
+        ? Get.find<ContactListController>()
+        : Get.put(ContactListController());
+    contactCtrl.getAllData();
+    contactCtrl.getAllUnRegisterUser();
+    contactCtrl.onReady();
+
   }
 
   checkContactList() async {
@@ -183,7 +345,6 @@ class DashboardController extends GetxController
                     phoneNumberExtension(
                         element.value.phones[0].number.toString())) {
                   appCtrl.userContactList.add(element.value);
-                  appCtrl.firebaseContact.add(users.value);
                 }
               }
             });
@@ -192,11 +353,7 @@ class DashboardController extends GetxController
         });
       }
     });
-    await addDataInList(0);
-    if (appCtrl.contactList.isNotEmpty) {
-      contactCtrl.onReady();
-      contactCtrl.update();
-    }
+
     debugPrint("appCtrl.userContactList : ${appCtrl.userContactList}");
     update();
   }
@@ -215,6 +372,7 @@ class DashboardController extends GetxController
     messageCtrl.onReady();
     statusCtrl.onReady();
     statusCtrl.update();
+    getFirebaseContact();
     super.onInit();
   }
 
@@ -273,18 +431,14 @@ class DashboardController extends GetxController
         }
         Get.toNamed(routeName.groupChat, arguments: true);
       }
-    }else if(value ==3) {
-
+    } else if (value == 3) {
       await FirebaseFirestore.instance
           .collection("calls")
           .doc(user["id"])
           .collection("collectionCallHistory")
           .get()
           .then((value) {
-        value.docs
-            .asMap()
-            .entries
-            .forEach((element) {
+        value.docs.asMap().entries.forEach((element) {
           FirebaseFirestore.instance
               .collection("calls")
               .doc(user["id"])
@@ -293,134 +447,10 @@ class DashboardController extends GetxController
               .delete();
         });
       });
-
-    }else {
+    } else {
       Get.toNamed(routeName.setting);
     }
   }
 
-  addDataInList(pageKey)async{
-    var user = appCtrl.storage.read(session.user);
 
-    if (appCtrl.contactList.isNotEmpty) {
-      appCtrl.contactList
-          .where((c) => c.phones.isNotEmpty)
-          .forEach((Contact p) async {
-        if (p.phones.isNotEmpty) {
-          nameList = [];
-
-          String phone = phoneNumberExtension(p.phones[0].number);
-
-          await FirebaseFirestore.instance
-              .collection(collectionName.users)
-              .where("phone", isEqualTo: phone)
-              .limit(1)
-              .get()
-              .then((value) {
-            if (value.docs.isNotEmpty) {
-              nameList = [];
-
-              update();
-              UserContactModel userContactModel = UserContactModel(
-                isRegister: true,
-                phoneNumber: phone,
-                uid: value.docs[0].data()["id"],
-                image: value.docs[0].data()["image"],
-                username: value.docs[0].data()["name"],
-                description: value.docs[0].data()["statusDesc"],
-              );
-
-              registerContactList!
-                  .removeWhere((element) => element.phoneNumber == phone);
-              update();
-              if (phone != user["phone"]) {
-                if (!registerContactList!.contains(userContactModel)) {
-                  registerContactList!.add(userContactModel);
-                }
-              }
-              update();
-
-              nameList!.add(userContactModel);
-
-            } else {
-              UserContactModel userContactModel = UserContactModel(
-                  isRegister: false,
-                  phoneNumber: phone,
-                  contactImage: p.photo,
-                  uid: "0",
-                  username: p.displayName);
-              unRegisterContactList!
-                  .removeWhere((element) => element.phoneNumber == phone);
-              if (!unRegisterContactList!.contains(userContactModel)) {
-                unRegisterContactList!.add(userContactModel);
-              }
-              nameList!.add(userContactModel);
-            }
-          });
-          update();
-        }
-      });
-    }
-
-
-    contactList = [];
-    counter++;
-    ContactModel contactModel = ContactModel(
-        title: fonts.registerUser.tr, userTitle: registerContactList);
-    if (!contactList.contains(contactModel)) {
-      contactList.add(contactModel);
-    }
-
-    ContactModel unRegisterContactModel = ContactModel(
-        title: fonts.inviteUser.tr, userTitle: unRegisterContactList);
-    if (!contactList.contains(unRegisterContactModel)) {
-      contactList.add(unRegisterContactModel);
-    }
-
-  }
-
-
-/*  //search contact list
-  searchList(pageKey, search) async {
-    if (search != "" && search != null) {
-      try {
-        searchContactList = [];
-        update();
-        debugPrint("nameList : ${nameList!.length}");
-        List<ContactModel> filter = [];
-        contactList.asMap().entries.forEach((element) {
-
-
-          element.value.userTitle!.asMap().entries.forEach((contact) {
-            if (contact.value.username!.toLowerCase().contains(search)) {
-              if (!searchContactList!.contains(contact.value)) {
-                searchContactList!.add(contact.value);
-                update();
-              }
-
-            }
-          });
-
-          update();
-        });
-
-        ContactModel unRegisterContactModel = ContactModel(
-            title: "Invite User for use Chatter", userTitle: searchContactList);
-        filter.add(unRegisterContactModel);
-        final isLastPage = filter.length < pageSize;
-        if (isLastPage) {
-          pagingController.appendLastPage(filter);
-        } else {
-          final nextPageKey = pageKey + filter.length;
-          pagingController.appendPage(filter, nextPageKey);
-        }
-      } catch (error) {
-        pagingController.error = error;
-      }
-      update();
-      debugPrint("pagingController : ${pagingController.itemList!.length}");
-    } else {
-      fetchPage(0);
-    }
-  }*/
 }

@@ -7,6 +7,8 @@ class CommonAssetImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+        height: height,
+        width: width,
         decoration: ShapeDecoration(
             color: appCtrl.appTheme.grey.withOpacity(.4),
             shape: SmoothRectangleBorder(

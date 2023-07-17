@@ -15,7 +15,7 @@ class _ChatCardState extends State<ChatCard> {
     return GetBuilder<MessageController>(builder: (messageCtrl) {
       return GetBuilder<DashboardController>(builder: (dashboardCtrl) {
         return StreamBuilder(
-            stream: dashboardCtrl.userText.text.isNotEmpty
+            stream: dashboardCtrl.userText.text.isNotEmpty && dashboardCtrl.selectedIndex ==0
                 ? dashboardCtrl.onSearch(dashboardCtrl.userText.text)
                 : FirebaseFirestore.instance
                     .collection(collectionName.users)
@@ -26,7 +26,9 @@ class _ChatCardState extends State<ChatCard> {
                     .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
-                return CommonEmptyLayout(
+                return dashboardCtrl.userText.text.isNotEmpty ?Center(
+                  child: Text("NO RESULT FOUND" ,style: AppCss.poppinsSemiBold16.textColor(appCtrl.appTheme.blackColor),),
+                ) : CommonEmptyLayout(
                     gif: gifAssets.message,
                     title: fonts.emptyMessageTitle.tr,
                     desc: fonts.emptyMessageDesc.tr);
@@ -59,7 +61,9 @@ class _ChatCardState extends State<ChatCard> {
                             },
                             itemCount: message.length,
                           )
-                        : CommonEmptyLayout(
+                        : dashboardCtrl.userText.text.isNotEmpty ?Center(
+                  child: Text("NO RESULT FOUND" ,style: AppCss.poppinsSemiBold16.textColor(appCtrl.appTheme.blackColor),),
+                ) : CommonEmptyLayout(
                             gif: gifAssets.message,
                             title: fonts.emptyMessageTitle.tr,
                             desc: fonts.emptyMessageDesc.tr);

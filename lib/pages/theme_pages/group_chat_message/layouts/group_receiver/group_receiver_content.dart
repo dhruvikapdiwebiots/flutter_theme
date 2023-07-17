@@ -61,17 +61,17 @@ final bool isSearch;
                           ],
                         )) : Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: Insets.i12, vertical: Insets.i14),
+                            horizontal: Insets.i12, vertical: Insets.i10),
                         decoration: ShapeDecoration(
                           color: appCtrl.appTheme.chatSecondaryColor,
                           shape: const SmoothRectangleBorder(
                               borderRadius: SmoothBorderRadius.only(
                                   topLeft:
-                                  SmoothRadius(cornerRadius: 20, cornerSmoothing: 1),
+                                  SmoothRadius(cornerRadius: 18, cornerSmoothing: 1),
                                   topRight: SmoothRadius(
-                                      cornerRadius: 20, cornerSmoothing: 1),
+                                      cornerRadius: 18, cornerSmoothing: 1),
                                   bottomRight: SmoothRadius(
-                                      cornerRadius: 20,
+                                      cornerRadius: 18,
                                       cornerSmoothing: 1
                                   ))),
                         ),

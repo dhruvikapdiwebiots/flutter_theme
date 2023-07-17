@@ -150,7 +150,7 @@ class CreateGroupController extends GetxController {
         'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
       });
 
-      FirebaseFirestore.instance
+   await   FirebaseFirestore.instance
           .collection(collectionName.broadcastMessage)
           .doc(broadcastId)
           .collection(collectionName.chat)
@@ -158,13 +158,31 @@ class CreateGroupController extends GetxController {
         'sender': user["id"],
         'senderName': user["name"],
         'receiver': newContact,
-        'content':encrypted,
+        'content':"",
         "broadcastId": broadcastId,
-        'type': MessageType.messageType.name,
+        'type': MessageType.note.name,
         'messageType': "sender",
         "status": "",
         'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+      }).then((e) {
+        FirebaseFirestore.instance
+            .collection(collectionName.broadcastMessage)
+            .doc(broadcastId)
+            .collection(collectionName.chat)
+            .add({
+          'sender': user["id"],
+          'senderName': user["name"],
+          'receiver': newContact,
+          'content':encrypted,
+          "broadcastId": broadcastId,
+          'type': MessageType.messageType.name,
+          'messageType': "sender",
+          "status": "",
+          'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+        });
       });
+
+
 
       await FirebaseFirestore.instance
           .collection(collectionName.users)

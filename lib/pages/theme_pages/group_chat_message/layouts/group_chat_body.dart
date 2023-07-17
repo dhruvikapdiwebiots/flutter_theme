@@ -29,9 +29,8 @@ class GroupChatBody extends StatelessWidget {
           : Column(children: <Widget>[
               // List of messages
               const GroupMessageBox(),
-              // Sticker
-              Container(),
-              // Input content
+
+Container(),              // Input content
               const GroupInputBox()
             ]).inkWell(onTap: () {
               chatCtrl.enableReactionPopup = false;

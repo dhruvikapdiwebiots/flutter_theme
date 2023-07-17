@@ -42,7 +42,6 @@ class _DashboardState extends State<Dashboard>
       if (dashboardCtrl.controller != null) {
         dashboardCtrl.onChange(dashboardCtrl.controller!.index);
       }
-      log("DD : ${appCtrl.user }");
 
       return OverlaySupport.global(
         child: AgoraToken(
@@ -104,8 +103,22 @@ class _DashboardState extends State<Dashboard>
                         }
                         return WillPopScope(
                           onWillPop: () async {
-                            SystemNavigator.pop();
-                            return false;
+                            if(dashboardCtrl.selectedIndex != 0){
+                              dashboardCtrl.onChange(0);
+                              dashboardCtrl.controller!.index =0;
+                              dashboardCtrl.update();
+                              return false;
+                            }else if(dashboardCtrl.isSearch == true){
+                              dashboardCtrl.isSearch = false;
+                              dashboardCtrl.userText.text = "";
+
+                              dashboardCtrl.update();
+                              return false;
+                            }else{
+                              SystemNavigator.pop();
+                              return true;
+                            }
+
                           },
                           child: dashboardCtrl.bottomList.isNotEmpty
                               ? DashboardBody(

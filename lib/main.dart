@@ -13,9 +13,9 @@ import 'config.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  GetStorage.init();
+  await GetStorage.init();
   cameras = await availableCameras();
-
+  Get.put(LoadingController());
   // Set the background messaging handler early on, as a named top-level function
   Get.put(AppController());
   Get.put(FirebaseCommonController());

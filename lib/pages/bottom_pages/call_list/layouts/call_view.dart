@@ -1,8 +1,10 @@
 
+import 'dart:developer';
+
 import '../../../../config.dart';
 
 class CallView extends StatelessWidget {
-  final AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>? snapshot;
+  final AsyncSnapshot<dynamic>? snapshot;
   final int? index;
   final String? userId;
 
@@ -49,18 +51,18 @@ class CallView extends StatelessWidget {
                       : snapshot!.data!.docs[index!].data()["id"]),
               title: StreamBuilder(
                   stream: FirebaseFirestore.instance
-                      .collection('users')
-                      .where("id",
-                          isEqualTo: snapshot!.data!.docs[index!].data()["id"] ==
-                                  userId
-                              ? snapshot!.data!.docs[index!].data()["receiverId"]
-                              : snapshot!.data!.docs[index!].data()["id"])
+                      .collection('users').doc( snapshot!.data!.docs[index!].data()["id"] ==
+                      userId
+                      ? snapshot!.data!.docs[index!].data()["receiverId"]
+                      : snapshot!.data!.docs[index!].data()["id"])
                       .snapshots(),
                   builder: (context, userSnapshot) {
+                    log("ID : ${snapshot!.data!.docs[index!].data()["id"]}");
                     if (userSnapshot.hasData) {
                       if (snapshot!.data != null) {
+                        log("DATA : ${userSnapshot.data!}");
                         return Text(
-                            userSnapshot.data!.docs.isEmpty ? "C":    userSnapshot.data!.docs[0].data()["name"],
+                          snapshot!.data!.docs[index!].data()["callerName"],
                           style: AppCss.poppinsSemiBold14
                               .textColor(appCtrl.appTheme.blackColor),
                         );

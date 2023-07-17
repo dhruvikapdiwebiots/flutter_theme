@@ -27,4 +27,5 @@ class RouteName {
   final String searchUser = '/searchUser';
   final String broadcastSearchUser = '/broadcastSearchUser';
   final String myMessageViewer = '/myMessageViewer';
+  final String callContactList = '/callContactList';
 }

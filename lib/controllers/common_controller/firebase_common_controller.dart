@@ -42,10 +42,26 @@ class FirebaseCommonController extends GetxController {
   }
 
   //last seen update
-  void groupTypingStatus(pId, documentId, isTyping) async {
+  void groupTypingStatus(pId, isTyping) async {
     var user = appCtrl.storage.read(session.user);
+
+    String nameList = "";
+
+    await FirebaseFirestore.instance
+        .collection(collectionName.groups)
+        .doc(pId)
+        .get()
+        .then((value) {
+      if (value.exists) {
+        nameList = value.data()!["status"] ?? "";
+        if (nameList != "") {
+          String newName = nameList.split(" is typing")[0];
+          nameList = "$newName, ${user["name"]}";
+        }
+      }
+    });
     await FirebaseFirestore.instance.collection("groups").doc(pId).update(
-      {"status": isTyping ? "${user["name"]} is typing" : ""},
+      {"status": isTyping ? "$nameList is typing" : ""},
     );
   }
 
@@ -78,7 +94,7 @@ class FirebaseCommonController extends GetxController {
           Status status = Status.fromJson(value.docs[0].data());
           List<PhotoUrl> photoUrl = status.photoUrl!;
           await getPhotoUrl(status.photoUrl!).then((list) async {
-            photoUrl = [];
+
             List<PhotoUrl> photoUrls = list;
             log("photoUrls : ${photoUrls.length}");
             if (photoUrls.isEmpty) {
@@ -89,7 +105,6 @@ class FirebaseCommonController extends GetxController {
                   .doc(value.docs[0].id)
                   .delete();
             } else {
-
               if (photoUrls.length <= status.photoUrl!.length) {
                 log("URL : ${photoUrls.length <= status.photoUrl!.length}");
                 var statusesSnapshot = await FirebaseFirestore.instance
@@ -103,7 +118,7 @@ class FirebaseCommonController extends GetxController {
                     .collection(collectionName.status)
                     .doc(statusesSnapshot.docs[0].id)
                     .update(
-                    {'photoUrl': photoUrl.map((e) => e.toJson()).toList()});
+                        {'photoUrl': photoUrl.map((e) => e.toJson()).toList()});
               }
             }
           });
@@ -115,7 +130,7 @@ class FirebaseCommonController extends GetxController {
   syncContact() async {
     await Firebase.initializeApp();
     dynamic user = appCtrl.storage.read(session.user);
-    if(user != null) {
+    if (user != null) {
       await FirebaseFirestore.instance
           .collection(collectionName.users)
           .doc(user["id"])
@@ -125,31 +140,34 @@ class FirebaseCommonController extends GetxController {
           log("value : ${value.exists}");
           bool isWebLogin = value.data()!["isWebLogin"] ?? false;
           if (isWebLogin == true) {
-            log("appCtrl.contactList.isNotEmpty: ${appCtrl.contactList
-                .isNotEmpty}");
+            log("appCtrl.contactList.isNotEmpty: ${appCtrl.contactList.isNotEmpty}");
             if (appCtrl.contactList.isNotEmpty) {
               List<Map<String, dynamic>> contactsData =
-              appCtrl.contactList.map((contact) {
+                  appCtrl.contactList.map((contact) {
                 return {
                   'name': contact.displayName,
                   'phoneNumber': contact.phones.isNotEmpty
-                      ? phoneNumberExtension(contact.phones[0].number
-                      .toString())
+                      ? phoneNumberExtension(
+                          contact.phones[0].number.toString())
                       : null,
                   // Include other necessary contact details
                 };
               }).toList();
               await FirebaseFirestore.instance
                   .collection(collectionName.users)
-                  .doc(FirebaseAuth.instance.currentUser != null ? FirebaseAuth.instance.currentUser!.uid : user["id"])
+                  .doc(FirebaseAuth.instance.currentUser != null
+                      ? FirebaseAuth.instance.currentUser!.uid
+                      : user["id"])
                   .collection(collectionName.userContact)
                   .get()
                   .then((allContact) {
-                    log("CHECK EMPTY : ${allContact.docs.length}");
+                log("CHECK EMPTY : ${allContact.docs.length}");
                 if (allContact.docs.isEmpty) {
                   FirebaseFirestore.instance
                       .collection(collectionName.users)
-                      .doc(FirebaseAuth.instance.currentUser != null ? FirebaseAuth.instance.currentUser!.uid : user["id"])
+                      .doc(FirebaseAuth.instance.currentUser != null
+                          ? FirebaseAuth.instance.currentUser!.uid
+                          : user["id"])
                       .collection(collectionName.userContact)
                       .add({'contacts': contactsData});
                 }
@@ -163,12 +181,12 @@ class FirebaseCommonController extends GetxController {
               dashboardCtrl.checkPermission();
               if (appCtrl.contactList.isNotEmpty) {
                 List<Map<String, dynamic>> contactsData =
-                appCtrl.contactList.map((contact) {
+                    appCtrl.contactList.map((contact) {
                   return {
                     'name': contact.displayName,
                     'phoneNumber': contact.phones.isNotEmpty
                         ? phoneNumberExtension(
-                        contact.phones[0].number.toString())
+                            contact.phones[0].number.toString())
                         : null,
                     // Include other necessary contact details
                   };
@@ -202,14 +220,25 @@ class FirebaseCommonController extends GetxController {
       DateTime dt = DateTime.fromMillisecondsSinceEpoch(millis);
       var date = DateTime.now();
 
-      log("diff : ${dt.hour <= date.hour}");
+      debugPrint("diff : ${dt.hour}");
+
+      debugPrint("diff : ${date.hour}");
+      debugPrint("diff : ${dt.hour <= date.hour}");
       if (appCtrl.usageControlsVal!.statusDeleteTime!.contains(" hrs")) {
         if (dt.hour <= date.hour) {
-          newPhotoList.add(photoUrl[i]);
+          debugPrint("minute : ${dt.minute}");
+          debugPrint("minute : ${date.minute}");
+          if (dt.minute <= date.minute) {
+            debugPrint("minute : ${dt.minute}");
+            debugPrint("minute : ${date.minute}");
+            newPhotoList.add(photoUrl[i]);
+          }
         }
       } else if (appCtrl.usageControlsVal!.statusDeleteTime!.contains(" min")) {
         if (dt.minute <= date.minute) {
-          newPhotoList.add(photoUrl[i]);
+          if (dt.second <= date.second) {
+            newPhotoList.add(photoUrl[i]);
+          }
         }
       }
       update();
@@ -255,12 +284,11 @@ class FirebaseCommonController extends GetxController {
 
     final headers = {
       'content-type': 'application/json',
-      'Authorization':
-          'key=${appCtrl.userAppSettingsVal!.firebaseServerToken}'
+      'Authorization': 'key=${appCtrl.userAppSettingsVal!.firebaseServerToken}'
     };
 
     BaseOptions options = BaseOptions(
-      connectTimeout:const Duration(seconds: 5),
+      connectTimeout: const Duration(seconds: 5),
       receiveTimeout: const Duration(seconds: 3),
       headers: headers,
     );

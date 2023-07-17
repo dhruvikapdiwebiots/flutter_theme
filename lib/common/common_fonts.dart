@@ -144,5 +144,14 @@ class Fonts{
   final reportSend = "reportSend";
   final messageInfo = "messageInfo";
   final views = "views";
+  final oops = "oops";
+  final noteEncrypt = "noteEncrypt";
+  final info = "info";
+  final copy = "copy";
+  final search = "search";
+  final wallpaper = "wallpaper";
+  final clearChat = "clearChat";
+  final deleteOptions = "deleteOptions";
+  final clearChatId = "clearChatId";
   String unblockUser(val) => "unblockUser".trParams({'pName':val});
 }

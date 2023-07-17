@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:flutter_theme/pages/theme_pages/group_chat_message/group_message_api.dart';
+import 'package:flutter_theme/widgets/common_note_encrypt.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../../../config.dart';
@@ -21,6 +23,8 @@ class GroupMessageBox extends StatelessWidget {
                                   appCtrl.appTheme.primary)))
                       : StreamBuilder<QuerySnapshot>(
                           stream: FirebaseFirestore.instance
+                              .collection(collectionName.users)
+                              .doc(appCtrl.user["id"])
                               .collection(collectionName.groupMessage)
                               .doc(chatCtrl.pId)
                               .collection(collectionName.chat)
@@ -31,12 +35,16 @@ class GroupMessageBox extends StatelessWidget {
                             if (!snapshot.hasData) {
                               return Container();
                             } else {
-                              chatCtrl.message = (snapshot.data!).docs;
+
+                              GroupMessageApi().getMessageAsPerDate(snapshot);
 
                               return ListView.builder(
-                                itemBuilder: (context, index){
-                                  return chatCtrl.buildItem(
-                                      index, (snapshot.data!).docs[index],snapshot.data!.docs[index].id).marginOnly(bottom: Insets.i18);
+                                itemBuilder: (context, index) {
+                                  return chatCtrl
+                                      .timeLayout(
+
+                                      chatCtrl.message[index])
+                                      .marginOnly(bottom: Insets.i18);
                                 },
                                 itemCount: (snapshot.data!).docs.length,
                                 reverse: true,
@@ -44,9 +52,7 @@ class GroupMessageBox extends StatelessWidget {
                               );
                             }
                           },
-                        )
-
-              )
+                        ))
           : Container();
     });
   }

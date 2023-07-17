@@ -53,21 +53,21 @@ class Content extends StatelessWidget {
                                 .textHeight(1.2)))
                     : Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: Insets.i12, vertical: Insets.i14),
+                            horizontal: Insets.i12, vertical: Insets.i10),
                         decoration: ShapeDecoration(
                             color: appCtrl.appTheme.primary,
                             shape: const SmoothRectangleBorder(
                                 borderRadius: SmoothBorderRadius.only(
                                     topLeft: SmoothRadius(
-                                      cornerRadius: 20,
+                                      cornerRadius: 18,
                                       cornerSmoothing: 1,
                                     ),
                                     topRight: SmoothRadius(
-                                      cornerRadius: 20,
+                                      cornerRadius: 18,
                                       cornerSmoothing: 1,
                                     ),
                                     bottomLeft: SmoothRadius(
-                                        cornerRadius: 20,
+                                        cornerRadius: 18,
                                         cornerSmoothing: 1)))),
                         child: Text(decryptMessage(document!["content"]),
                             overflow: TextOverflow.clip,
@@ -91,7 +91,7 @@ class Content extends StatelessWidget {
               if (!isBroadcast)
                 Icon(Icons.done_all_outlined,
                     size: Sizes.s15,
-                    color: document!['isSeen'] == false
+                    color: document!['isSeen'] == true
                         ? appCtrl.appTheme.primary
                         : appCtrl.appTheme.gray),
               const HSpace(Sizes.s5),
@@ -103,6 +103,6 @@ class Content extends StatelessWidget {
                       .textColor(appCtrl.appTheme.txtColor))
             ]))
           ],
-        ).marginSymmetric(vertical: Insets.i8, horizontal: Insets.i15));
+        ).marginSymmetric( horizontal: Insets.i15));
   }
 }

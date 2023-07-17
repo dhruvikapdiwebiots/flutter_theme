@@ -11,44 +11,41 @@ class ImageLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection(collectionName.users)
-            .where("id", isEqualTo: id)
+            .doc(id)
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.data != null) {
-            if (!snapshot.data!.docs.isNotEmpty) {
+            if (!snapshot.data!.exists) {
+
               return Stack(children: [
                 CommonAssetImage(
-                    height: isImageLayout ? Sizes.s40 : Sizes.s45,
-                    width: isImageLayout ? Sizes.s40 : Sizes.s45),
+                    height: isImageLayout ? Sizes.s40 : Sizes.s48,
+                    width: isImageLayout ? Sizes.s40 : Sizes.s48),
                 if (isLastSeen)
-                  if ((snapshot.data!).docs[0]["status"] != "Offline")
-                   const Positioned(
-                        right: 3,
-                        bottom: 10,
-                        child: IconCircle())
+                  if ((snapshot.data!).data()!["status"] != "Offline")
+                    const Positioned(right: 3, bottom: 10, child: IconCircle())
               ]);
             } else {
               return Stack(children: [
                 CommonImage(
-                    height: isImageLayout ? Sizes.s40 : Sizes.s45,
-                    width: isImageLayout ? Sizes.s40 : Sizes.s45,
-                    image: (snapshot.data!).docs[0]["image"],
-                    name: (snapshot.data!).docs[0]["name"]),
+                    height: isImageLayout ? Sizes.s40 : Sizes.s48,
+                    width: isImageLayout ? Sizes.s40 : Sizes.s48,
+                    image: (snapshot.data!).data()!["image"] ?? "",
+                    name: (snapshot.data!).data()!["name"] ?? ""),
                 if (isLastSeen)
-                 const Positioned(
-                      right: -2,
-                      bottom: 0,
-                      child: IconCircle())
+                  if ((snapshot.data!).data()!["status"] != "Offline")
+                    const Positioned(right: -2, bottom: 0, child: IconCircle())
               ]);
             }
           } else {
-            return CommonAssetImage(
-                height: isImageLayout ? Sizes.s40 : Sizes.s45,
-                width: isImageLayout ? Sizes.s40 : Sizes.s45);
+            return Stack(children: [
+              CommonAssetImage(
+                  height: isImageLayout ? Sizes.s40 : Sizes.s48,
+                  width: isImageLayout ? Sizes.s40 : Sizes.s48),
+            ]);
           }
         });
   }

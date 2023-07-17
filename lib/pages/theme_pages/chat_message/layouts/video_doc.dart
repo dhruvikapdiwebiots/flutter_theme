@@ -98,7 +98,7 @@ crossAxisAlignment: CrossAxisAlignment.end,
                         if (!widget.isBroadcast && !widget.isReceiver)
                           Icon(Icons.done_all_outlined,
                               size: Sizes.s15,
-                              color: widget.document!['isSeen'] == false
+                              color: widget.document!['isSeen'] == true
                                   ? appCtrl.appTheme.primary
                                   : appCtrl.appTheme.gray),
                         const HSpace(Sizes.s5),

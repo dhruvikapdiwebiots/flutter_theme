@@ -16,17 +16,18 @@ class CurrentUserEmptyStatus extends StatelessWidget {
 
     return StreamBuilder(
         stream: FirebaseFirestore.instance
-            .collection(collectionName.users)
-            .where("id", isEqualTo: appCtrl.user["id"]).limit(1)
+            .collection(collectionName.users).doc(appCtrl.user["id"])
+
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
 
-            if(snapshot.data!.docs.isNotEmpty){
+            if(snapshot.data!.exists){
+              log("NAME : ${appCtrl.user["id"]}");
               return ListTile(
                   onTap: onTap,
                   horizontalTitleGap: 10,
-                  title: Text((snapshot.data!).docs[0]["name"],style: AppCss.poppinsBold14.textColor(appCtrl.appTheme.blackColor),),
+                  title: Text((snapshot.data!)["name"],style: AppCss.poppinsBold14.textColor(appCtrl.appTheme.blackColor),),
                   subtitle: Text("Tap to add status update",style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.txtColor)),
                   contentPadding:
                   const EdgeInsets.symmetric(horizontal: Insets.i12),
@@ -36,7 +37,7 @@ class CurrentUserEmptyStatus extends StatelessWidget {
                       height: Sizes.s50,
                       width: Sizes.s50,
                       image: "",
-                      name: (snapshot.data!).docs[0]["name"],
+                      name: (snapshot.data!)["name"],
                     ),
                     Positioned(
                       right: -2,

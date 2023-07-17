@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:flutter_theme/models/firebase_contact_model.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_theme/models/user_setting_model.dart';
@@ -13,7 +14,9 @@ class AppController extends GetxController {
   final storage = GetStorage();
   List<Contact> contactList = [];
   List<Contact> userContactList = [];
-  List firebaseContact =[];
+  List<FirebaseContactModel> firebaseContact =[];
+  List<FirebaseContactModel> registerContact =[];
+  List<FirebaseContactModel> unRegisterContact =[];
   AppTheme get appTheme => _appTheme;
   int selectedIndex = 0;
   bool isTheme = false;

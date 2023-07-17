@@ -7,17 +7,19 @@ class GroupContactLayout extends StatelessWidget {
   final VoidCallback? onLongPress,onTap;
   final String? currentUserId;
   final bool isReceiver;
-
+  final List? userList;
   const GroupContactLayout(
       {Key? key,
       this.document,
       this.onLongPress,
       this.currentUserId,
-      this.isReceiver = false,this.onTap})
+      this.isReceiver = false,this.onTap,this.userList})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    List seen = [];
+    seen = document!.data().toString().contains('seenMessageList') ? document!['seenMessageList'] : [];
 
     return InkWell(
         onLongPress: onLongPress,
@@ -101,6 +103,12 @@ class GroupContactLayout extends StatelessWidget {
                                   if (document!.data().toString().contains('isFavourite'))
                                     if(appCtrl.user["id"] == document!["favouriteId"])
                                     Icon(Icons.star,color: appCtrl.appTheme.txtColor,size: Sizes.s10),
+                                  const HSpace(Sizes.s3),
+                                  Icon(Icons.done_all_outlined,
+                                      size: Sizes.s15,
+                                      color: userList!.length == seen.length
+                                          ? appCtrl.appTheme.primary
+                                          : appCtrl.appTheme.grey),
                                   const HSpace(Sizes.s3),
                                   Text(
                                     DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(

@@ -196,6 +196,8 @@ class GroupOnTapFunctionCall {
     chatCtrl.enableReactionPopup = false;
     chatCtrl.update();
     await FirebaseFirestore.instance
+        .collection(collectionName.users)
+        .doc(appCtrl.user["id"])
         .collection(collectionName.groupMessage)
         .doc(chatCtrl.pId)
         .collection(collectionName.chat)

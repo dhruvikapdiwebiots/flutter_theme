@@ -20,11 +20,7 @@ class StatusListStream extends StatelessWidget {
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return CommonEmptyLayout(
-                gif: gifAssets.status,
-                title: fonts.emptyStatusTitle.tr,
-                desc: fonts.emptyStatusDesc,
-              );
+              return Container();
             } else if (!snapshot.hasData) {
               return Container();
             } else {
@@ -36,17 +32,12 @@ class StatusListStream extends StatelessWidget {
                 log("CONTAINS : $id");
                 if (element.value.containsKey("seenAllStatus")) {
 
-                  if (!convertStatus.seenAllStatus!
+                  if (convertStatus.seenAllStatus!
                       .contains(statusCtrl.user["id"])) {
                     if (!statusList.contains(Status.fromJson(element.value))) {
                       statusCtrl.isData = true;
                       statusList.add(Status.fromJson(element.value));
                     }
-                  }
-                } else {
-                  if (!statusList.contains(Status.fromJson(element.value))) {
-                    statusCtrl.isData = true;
-                    statusList.add(Status.fromJson(element.value));
                   }
                 }
               });

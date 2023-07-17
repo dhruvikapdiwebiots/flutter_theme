@@ -1,6 +1,5 @@
 import 'package:flutter_theme/config.dart';
 
-
 class Message extends StatefulWidget {
   const Message({Key? key}) : super(key: key);
 
@@ -45,15 +44,7 @@ class _MessageState extends State<Message>
                   key: messageCtrl.scaffoldKey,
                   backgroundColor: appCtrl.appTheme.bgColor,
                   floatingActionButton: const MessageFloatingButton(),
-                  body: SingleChildScrollView(
-                      child: Column(children: [
-                    AdCommonLayout(
-                        bannerAdIsLoaded: messageCtrl.bannerAdIsLoaded,
-                        bannerAd: messageCtrl.bannerAd,
-                        currentAd: messageCtrl.currentAd),
-                    const ChatCard()
-                  ])))),
-          if (appCtrl.isLoading) CommonLoader(isLoading: appCtrl.isLoading)
+                  body:const ChatCard())),
         ]);
       });
     });

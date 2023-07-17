@@ -3,7 +3,7 @@
 import '../../../../config.dart';
 
 class CallListLayout extends StatelessWidget {
-  final AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>? snapshot;
+  final AsyncSnapshot<dynamic>? snapshot;
 
   const CallListLayout({Key? key, this.snapshot}) : super(key: key);
 
@@ -15,7 +15,7 @@ class CallListLayout extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: Insets.i10),
         itemBuilder: (context, index) {
           return CallView(
-            snapshot: snapshot,
+            snapshot: snapshot!,
             index: index,
             userId: callListCtrl.user["id"],
           );

@@ -47,4 +47,8 @@ class SvgAssets{
   final String exit = "assets/svg/exit.svg";
   final String profileAdd = "assets/svg/profileAdd.svg";
   final String edit2 = "assets/svg/edit-2.svg";
+  final String arrowLeft = "assets/svg/arrowLeft.svg";
+  final String audioVideo = "assets/svg/audio_video.svg";
+  final String closeCircle = "assets/svg/closeCircle.svg";
+  final String lock = "assets/svg/lock.svg";
 }

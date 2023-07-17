@@ -23,8 +23,9 @@ class _ReceiverMessageState extends State<ReceiverMessage> {
             ? appCtrl.appTheme.primary.withOpacity(.08)
             : appCtrl.appTheme.transparentColor,
             margin: const EdgeInsets.only(bottom: Insets.i10),
-            padding: const EdgeInsets.only(
-                bottom: Insets.i10, left: Insets.i20, right: Insets.i20),
+            padding:  EdgeInsets.only(
+                bottom: Insets.i10, left: Insets.i20, right: Insets.i20,top: chatCtrl.selectedIndexId.contains(widget.docId) ? Insets
+                .i10 : 0),
             child: Row(children: [
               ReceiverChatImage(id: chatCtrl.pId),
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: <

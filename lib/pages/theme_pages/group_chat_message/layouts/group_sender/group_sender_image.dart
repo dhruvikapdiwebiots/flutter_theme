@@ -7,13 +7,15 @@ import '../../../../../config.dart';
 class GroupSenderImage extends StatelessWidget {
   final DocumentSnapshot? document;
   final VoidCallback? onPressed, onLongPress;
-
+  final List? userList;
   const GroupSenderImage(
-      {Key? key, this.document, this.onPressed, this.onLongPress})
+      {Key? key, this.document, this.onPressed, this.onLongPress,this.userList})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    List seen = [];
+    seen = document!.data().toString().contains('seenMessageList') ? document!['seenMessageList'] : [];
     return InkWell(
         onLongPress: onLongPress,
         onTap: onPressed,
@@ -72,6 +74,12 @@ class GroupSenderImage extends StatelessWidget {
                     if(appCtrl.user["id"] == document!["favouriteId"])
                     Icon(Icons.star,
                         color: appCtrl.appTheme.txtColor, size: Sizes.s10),
+                  const HSpace(Sizes.s3),
+                      Icon(Icons.done_all_outlined,
+                          size: Sizes.s15,
+                          color: userList!.length == seen.length
+                              ? appCtrl.appTheme.primary
+                              : appCtrl.appTheme.grey),
                   const HSpace(Sizes.s3),
                   Text(
                     DateFormat('HH:mm a').format(

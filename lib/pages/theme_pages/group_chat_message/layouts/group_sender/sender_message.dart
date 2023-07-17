@@ -24,6 +24,7 @@ class _GroupSenderMessageState extends State<GroupSenderMessage> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<GroupChatMessageController>(builder: (chatCtrl) {
+      log("DOCID : ${widget.docId}");
       return Stack(
         alignment: Alignment.topLeft,
         children: [
@@ -46,6 +47,7 @@ class _GroupSenderMessageState extends State<GroupSenderMessage> {
                     if (widget.document!["type"] == MessageType.text.name)
                       // Text
                       GroupContent(
+                        userList: chatCtrl.pData["groupData"]["users"],
                         isSearch:chatCtrl.searchChatId.contains(widget.index) ,
                           onTap: () => GroupOnTapFunctionCall()
                               .contentTap(chatCtrl, widget.docId),
@@ -54,6 +56,7 @@ class _GroupSenderMessageState extends State<GroupSenderMessage> {
                           document: widget.document),
                     if (widget.document!["type"] == MessageType.image.name)
                       GroupSenderImage(
+                          userList: chatCtrl.pData["groupData"]["users"],
                           onPressed: () => GroupOnTapFunctionCall().imageTap(
                               chatCtrl, widget.docId, widget.document),
                           document: widget.document,
@@ -61,6 +64,7 @@ class _GroupSenderMessageState extends State<GroupSenderMessage> {
                               chatCtrl.onLongPressFunction(widget.docId)),
                     if (widget.document!["type"] == MessageType.contact.name)
                       GroupContactLayout(
+                          userList: chatCtrl.pData["groupData"]["users"],
                           currentUserId: widget.currentUserId,
                           onLongPress: () =>
                               chatCtrl.onLongPressFunction(widget.docId),

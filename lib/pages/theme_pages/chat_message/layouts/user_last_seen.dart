@@ -15,23 +15,22 @@ class UserLastSeen extends StatelessWidget {
         log("pid : ${chatCtrl.pId}");
         return StreamBuilder(
             stream: FirebaseFirestore.instance
-                .collection('users')
-                .where("id", isEqualTo: chatCtrl.pId)
+                .collection('users').doc(chatCtrl.pId)
+
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.data != null) {
                 if (!snapshot.hasData) {
                   return Container();
                 } else {
-                  chatCtrl.message = (snapshot.data!).docs;
 
-                  return chatCtrl.chatId ==  "0" ? Container(): Text(
-                    snapshot.data!.docs[0]["status"] == "Offline"
+                  return chatCtrl.pId ==  "0" ? Container(): Text(
+                    snapshot.data!.data()!["status"] == "Offline"
                         ? DateFormat('HH:mm a').format(
                         DateTime.fromMillisecondsSinceEpoch(
-                            int.parse(snapshot.data!.docs[0]
+                            int.parse(snapshot.data!.data()!
                             ['lastSeen'])))
-                        : snapshot.data!.docs[0]["status"],
+                        : snapshot.data!.data()!["status"],
                     textAlign: TextAlign.center,
                     style: AppCss.poppinsLight14
                         .textColor(appCtrl.appTheme.txtColor),

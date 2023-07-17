@@ -47,25 +47,8 @@ class _StatusListState extends State<StatusList>
                     bannerAdIsLoaded: statusCtrl.bannerAdIsLoaded,
                     bannerAd: statusCtrl.bannerAd,
                     currentAd: statusCtrl.currentAd),
-                Stack(children: [
-                  StreamBuilder(
-                      stream: FirebaseFirestore.instance
-                          .collection(collectionName.users)
-                          .doc(statusCtrl.currentUserId)
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) {
-                          return CommonEmptyLayout(
-                              gif: gifAssets.status,
-                              title: fonts.emptyStatusTitle.tr,
-                              desc: fonts.emptyStatusDesc);
-                        } else {
-                          return const StatusListBodyLayout();
-                        }
-                      }),
-                  if (statusCtrl.isLoading)
-                    CommonLoader(isLoading: statusCtrl.isLoading)
-                ])
+
+                 const   StatusListBodyLayout()
               ]))));
     });
   }

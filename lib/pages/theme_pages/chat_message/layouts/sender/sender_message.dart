@@ -1,3 +1,5 @@
+import 'package:flutter_theme/widgets/common_note_encrypt.dart';
+
 import '../../../../../config.dart';
 
 class SenderMessage extends StatefulWidget {
@@ -26,7 +28,7 @@ class _SenderMessageState extends State<SenderMessage> {
             margin: const EdgeInsets.only(bottom: 2.0),
             padding: EdgeInsets.only(
                 top: chatCtrl.selectedIndexId.contains(widget.docId) ? Insets
-                    .i20 : 0,
+                    .i10 : 0,
                 left: Insets.i10,
                 right: Insets.i10),
             child: Column(
@@ -160,6 +162,11 @@ class _SenderMessageState extends State<SenderMessage> {
                         color: appCtrl.appTheme.primary.withOpacity(.2),
                         borderRadius: BorderRadius.circular(AppRadius.r8))
                         .alignment(Alignment.center),
+                  ).paddingOnly(bottom: Insets.i8),
+                if (widget.document!["type"] == MessageType.note.name)
+                  const Align(
+                    alignment: Alignment.center,
+                    child: CommonNoteEncrypt(),
                   ).paddingOnly(bottom: Insets.i8)
               ],
             )),

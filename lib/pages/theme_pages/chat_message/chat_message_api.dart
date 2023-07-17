@@ -5,8 +5,40 @@ import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import '../../../config.dart';
 
 class ChatMessageApi {
+  Future saveMessage(newChatId, pId, encrypted,MessageType type,dateTime,senderId,
+      {isBlock = false,
+      isSeen = false,
+      isBroadcast = false,
+      blockBy = "",
+      blockUserId = "" }) async {
+    log.log("SAVE");
+    dynamic userData = appCtrl.storage.read(session.user);
+    await FirebaseFirestore.instance
+        .collection(collectionName.users)
+        .doc(senderId)
+        .collection(collectionName.messages)
+        .doc(newChatId)
+        .collection(collectionName.chat)
+        .doc(dateTime)
+        .set({
+      'sender': userData["id"],
+      'receiver': pId,
+      'content': encrypted,
+      "chatId": newChatId,
+      'type': type.name,
+      'messageType': "sender",
+      "isBlock": isBlock,
+      "isSeen": isSeen,
+      "isBroadcast": isBroadcast,
+      "blockBy": blockBy,
+      "blockUserId": blockUserId,
+      'timestamp': dateTime,
+    }, SetOptions(merge: true));
+  }
+
   //save message in user
-  saveMessageInUserCollection(id, receiverId, newChatId, content, senderId,userName,
+  saveMessageInUserCollection(
+      id, receiverId, newChatId, content, senderId, userName,
       {isBlock = false, isBroadcast = false}) async {
     final chatCtrl = Get.isRegistered<ChatController>()
         ? Get.find<ChatController>()
@@ -100,7 +132,7 @@ class ChatMessageApi {
             "updateStamp": DateTime.now().millisecondsSinceEpoch.toString(),
             "lastMessage": content,
             "senderId": user["id"],
-            "name":pData["groupData"]["name"]
+            "name": pData["groupData"]["name"]
           });
           if (user["id"] != element.value["id"]) {
             FirebaseFirestore.instance
@@ -142,7 +174,8 @@ class ChatMessageApi {
           callerToken: userData["pushToken"],
           receiverToken: toData["pushToken"],
           channelId: channelId,
-          isVideoCall: isVideoCall,receiver: null);
+          isVideoCall: isVideoCall,
+          receiver: null);
       ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
       await FirebaseFirestore.instance
           .collection(collectionName.calls)
@@ -179,7 +212,7 @@ class ChatMessageApi {
           "hasDialled": false,
           "channelId": channelId,
           "isVideoCall": isVideoCall
-        }).then((value)async {
+        }).then((value) async {
           call.hasDialled = true;
           if (isVideoCall == false) {
             firebaseCtrl.sendNotification(
@@ -211,8 +244,6 @@ class ChatMessageApi {
             };
 
             Get.toNamed(routeName.videoCall, arguments: data);
-
-
           }
         });
       });
@@ -220,5 +251,107 @@ class ChatMessageApi {
       // Caught an exception from Firebase.
       log.log("Failed with error '${e.code}': ${e.message}");
     }
+  }
+
+  getMessageAsPerDate(snapshot){
+    final chatCtrl = Get.isRegistered<ChatController>()
+        ? Get.find<ChatController>()
+        : Get.put(ChatController());
+    List<QueryDocumentSnapshot<Object?>> message =
+        (snapshot.data!).docs;
+    message.asMap().entries.forEach((element) {
+
+      if (getDate(element.value.id) == "today") {
+        List<QueryDocumentSnapshot<Object?>> newMessageList = [];
+        bool isExist = chatCtrl.message
+            .where((element) => element["title"] == "today")
+            .isNotEmpty;
+
+        if (isExist) {
+          if(!newMessageList.contains(element.value)) {
+            newMessageList.add(element.value);
+            int index = chatCtrl.message.indexWhere(
+                    (element) =>
+                element["title"] == "today");
+            chatCtrl.message[index]["message"] =
+                newMessageList;
+          }
+        } else {
+          if(!newMessageList.contains(element.value)) {
+            newMessageList.add(element.value);
+            var data = {
+              "title": getDate(element.value.id),
+              "message": newMessageList
+            };
+
+            chatCtrl.message = [data];
+          }
+
+        }
+      }
+      if (getDate(element.value.id) == "yesterday") {
+        List<QueryDocumentSnapshot<Object?>> newMessageList = [];
+        bool isExist = chatCtrl.message
+            .where((element) => element["title"] == "yesterday")
+            .isNotEmpty;
+
+        if (isExist) {
+          if(!newMessageList.contains(element.value)) {
+            newMessageList.add(element.value);
+            int index = chatCtrl.message.indexWhere(
+                    (element) =>
+                element["title"] == "yesterday");
+            chatCtrl.message[index]["message"] =
+                newMessageList;
+          }
+        } else {
+          if(!newMessageList.contains(element.value)) {
+            newMessageList.add(element.value);
+            var data = {
+              "title": getDate(element.value.id),
+              "message": newMessageList
+            };
+
+            if(chatCtrl.message.isNotEmpty){
+              chatCtrl.message.add(data);
+            }else {
+              chatCtrl.message = [data];
+            }
+          }
+        }
+      }
+      if(getDate(element.value.id) != "yesterday" && getDate(element.value.id) != "today"){
+        List<QueryDocumentSnapshot<Object?>> newMessageList = [];
+        bool isExist = chatCtrl.message
+            .where((element) => element["title"].contains("-other"))
+            .isNotEmpty;
+
+        if (isExist) {
+          if(!newMessageList.contains(element.value)) {
+            newMessageList.add(element.value);
+            int index = chatCtrl.message.indexWhere(
+                    (element) =>
+                element["title"].contains("-other"));
+            chatCtrl.message[index]["message"] =
+                newMessageList;
+          }
+        } else {
+          if(!newMessageList.contains(element.value)) {
+            newMessageList.add(element.value);
+            var data = {
+              "title": getWhen(element.value.id),
+              "message": newMessageList
+            };
+
+            if(chatCtrl.message.isNotEmpty){
+              chatCtrl.message.add(data);
+            }else {
+              chatCtrl.message = [data];
+            }
+          }
+        }
+      }
+    });
+
   }
 }

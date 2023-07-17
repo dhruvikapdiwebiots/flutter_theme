@@ -29,28 +29,31 @@ class GroupCardSubTitle extends StatelessWidget {
                 Icons.gif_box,
                 size: Sizes.s20,
               ).alignment(Alignment.centerLeft)
-            : Text(
-                (decryptMessage(document!["lastMessage"]).contains("media"))
-                    ? hasData
-                        ? "$name Media Share"
-                        : "Media Share"
-                    : (decryptMessage(document!["lastMessage"]).contains(".pdf") ||
-                            decryptMessage(document!["lastMessage"]).contains(".doc") ||
-                            decryptMessage(document!["lastMessage"]).contains(".mp3") ||
-                            decryptMessage(document!["lastMessage"]).contains(".mp4") ||
-                            decryptMessage(document!["lastMessage"]).contains(".xlsx") ||
-                            decryptMessage(document!["lastMessage"]).contains(".ods"))
-                        ? decryptMessage(document!["lastMessage"]).split("-BREAK-")[0]
-                        : decryptMessage(document!["lastMessage"]) == ""
-                            ? currentUserId == document!["senderId"]
-                                ? "You Create this group ${document!["group"]['name']}"
-                                : "${document!["sender"]['name']} added you"
-                            : decryptMessage(document!["lastMessage"]),
-                overflow: TextOverflow.ellipsis,
-                style: AppCss.poppinsMedium12
-                    .textColor(appCtrl.appTheme.txtColor)
-                    .textHeight(1.2)
-                    .letterSpace(.2)).width(Sizes.s170),
+            : SizedBox(
+          width: Sizes.s150,
+              child: Text(
+                  (decryptMessage(document!["lastMessage"]).contains("media"))
+                      ? hasData
+                          ? "$name Media Share"
+                          : "Media Share"
+                      : (decryptMessage(document!["lastMessage"]).contains(".pdf") ||
+                              decryptMessage(document!["lastMessage"]).contains(".doc") ||
+                              decryptMessage(document!["lastMessage"]).contains(".mp3") ||
+                              decryptMessage(document!["lastMessage"]).contains(".mp4") ||
+                              decryptMessage(document!["lastMessage"]).contains(".xlsx") ||
+                              decryptMessage(document!["lastMessage"]).contains(".ods"))
+                          ? decryptMessage(document!["lastMessage"]).split("-BREAK-")[0]
+                          : decryptMessage(document!["lastMessage"]) == ""
+                              ? currentUserId == document!["senderId"]
+                                  ? "You Create this group ${document!["group"]['name']}"
+                                  : "${document!["sender"]['name']} added you"
+                              : decryptMessage(document!["lastMessage"]),
+                  overflow: TextOverflow.ellipsis,
+                  style: AppCss.poppinsMedium12
+                      .textColor(appCtrl.appTheme.txtColor)
+                      .textHeight(1.2)
+                      .letterSpace(.2)).width(Sizes.s170),
+            ),
       ],
     );
   }

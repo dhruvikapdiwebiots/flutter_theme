@@ -5,6 +5,10 @@ import 'package:dartx/dartx_io.dart';
 import 'package:drishya_picker/drishya_picker.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter_theme/config.dart';
+import 'package:flutter_theme/pages/theme_pages/chat_message/layouts/chat_wall_paper.dart';
+import 'package:flutter_theme/pages/theme_pages/chat_message/layouts/single_clear_dialog.dart';
+import 'package:flutter_theme/widgets/common_note_encrypt.dart';
+import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ChatController extends GetxController {
@@ -19,9 +23,10 @@ class ChatController extends GetxController {
       statusLastSeen,
       videoUrl,
       blockBy;
-  dynamic message;
+  List message = [];
   dynamic pData, allData, userData;
   List<DrishyaEntity>? entities;
+
   UserContactModel? userContactModel;
   bool positionStreamStarted = false;
   bool isUserAvailable = true;
@@ -35,10 +40,10 @@ class ChatController extends GetxController {
   File? video;
   int? count;
   bool isLoading = false;
-  bool enableReactionPopup = false,isChatSearch=false;
+  bool enableReactionPopup = false, isChatSearch = false;
   bool showPopUp = false;
   List selectedIndexId = [];
-  List clearChatId = [],searchChatId=[];
+  List clearChatId = [], searchChatId = [];
 
   bool typing = false, isBlock = false;
   final pickerCtrl = Get.isRegistered<PickerController>()
@@ -83,7 +88,7 @@ class ChatController extends GetxController {
 
   //get chat data
   getChatData() async {
-
+    log("CHAT ID : $chatId");
     if (chatId != "0") {
       await FirebaseFirestore.instance
           .collection(collectionName.users)
@@ -97,6 +102,8 @@ class ChatController extends GetxController {
         clearChatId = allData["clearChatId"] ?? [];
         update();
       });
+    } else {
+      onSendMessage(fonts.noteEncrypt.tr, MessageType.note);
     }
     seenMessage();
     await FirebaseFirestore.instance
@@ -109,10 +116,10 @@ class ChatController extends GetxController {
       update();
       log("get L : $pData");
     });
-  log("allData : $allData");
+    log("allData : $allData");
 
-    if (allData != null  ) {
-      if(allData["backgroundImage"] != null ||
+    if (allData != null) {
+      if (allData["backgroundImage"] != null ||
           allData["backgroundImage"] != "") {
         FirebaseFirestore.instance
             .collection(collectionName.users)
@@ -124,7 +131,7 @@ class ChatController extends GetxController {
           }
         });
       }
-    }else{
+    } else {
       allData = {};
       allData["backgroundImage"] = "";
       allData["isBlock"] = false;
@@ -133,7 +140,7 @@ class ChatController extends GetxController {
     update();
     var data = Get.arguments;
     log("ARGUMENT DATA :${data["message"] != null}");
-    if (data["message"] != null ) {
+    if (data["message"] != null) {
       //PhotoUrl photoUrl = PhotoUrl.fromJson(data["message"]);
       log("ARH : ${data["message"]}");
       onSendMessage(
@@ -175,7 +182,7 @@ class ChatController extends GetxController {
     log("ALL : $allData");
     log("userData : $userData");
     log("c : $pId");
-    if(allData != null){
+    if (allData != null) {
       if (allData["senderId"] != userData["id"]) {
         await FirebaseFirestore.instance
             .collection(collectionName.messages)
@@ -233,7 +240,7 @@ class ChatController extends GetxController {
       String downloadUrl = await snap.ref.getDownloadURL();
       isLoading = true;
       update();
-      log("fileName : $downloadUrl");
+
       onSendMessage(
           "${result.files.single.name}-BREAK-$downloadUrl",
           result.files.single.path.toString().contains(".mp4")
@@ -305,7 +312,8 @@ class ChatController extends GetxController {
           newChatId,
           "You unblock this contact",
           isBlock: false,
-          userData["id"],userData["name"]);
+          userData["id"],
+          userData["name"]);
     } else {
       FirebaseFirestore.instance
           .collection(collectionName.messages)
@@ -330,7 +338,8 @@ class ChatController extends GetxController {
           newChatId,
           "You block this contact",
           isBlock: true,
-          userData["id"],userData["name"]);
+          userData["id"],
+          userData["name"]);
     }
     getChatData();
   }
@@ -360,15 +369,14 @@ class ChatController extends GetxController {
     });
   }
 
-
 // UPLOAD SELECTED IMAGE TO FIREBASE
-  Future uploadMultipleFile(File imageFile,MessageType messageType ) async {
+  Future uploadMultipleFile(File imageFile, MessageType messageType) async {
     imageFile = imageFile;
     update();
 
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     Reference reference = FirebaseStorage.instance.ref().child(fileName);
-    var file = File( imageFile.path);
+    var file = File(imageFile.path);
     UploadTask uploadTask = reference.putFile(file);
     uploadTask.then((res) {
       res.ref.getDownloadURL().then((downloadUrl) async {
@@ -471,12 +479,10 @@ class ChatController extends GetxController {
     });
   }
 
-
-
   // SEND MESSAGE CLICK
   void onSendMessage(String content, MessageType type) async {
     log("allData : $allData");
-   // isLoading = true;
+    // isLoading = true;
     update();
     Get.forceAppUpdate();
     log("check for send ");
@@ -486,10 +492,7 @@ class ChatController extends GetxController {
     final encrypter = encrypt.Encrypter(encrypt.AES(key));
 
     final encrypted = encrypter.encrypt(content, iv: iv).base64;
-    final decrpypt = encrypter.decrypt(encrypt.Encrypted.fromBase64(encrypted), iv: iv);
 
-    log("encrypted : %${encrypted}");
-    log("encrypted : %${decrpypt}");
     if (content.trim() != '') {
       textEditingController.clear();
       final now = DateTime.now();
@@ -507,29 +510,27 @@ class ChatController extends GetxController {
             ScaffoldMessenger.of(Get.context!).showSnackBar(
                 SnackBar(content: Text(fonts.unblockUser(pName))));
           } else {
-            await FirebaseFirestore.instance
-                .collection(collectionName.messages)
-                .doc(newChatId)
-                .collection(collectionName.chat)
-                .add({
-              'sender': userData["id"],
-              'receiver': pId,
-              'content': encrypted,
-              "chatId": newChatId,
-              'type': type.name,
-              'messageType': "sender",
-              "isBlock": false,
-              "isSeen": false,
-              "isBroadcast": false,
-              "blockBy": "",
-              "blockUserId": "",
-              'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-            }).then((snap) async {
+            ChatMessageApi()
+                .saveMessage(
+                    newChatId,
+                    pId,
+                    encrypted,
+                    type,
+                    DateTime.now().millisecondsSinceEpoch.toString(),
+                    userData["id"])
+                .then((snap) async {
               isLoading = false;
               update();
               Get.forceAppUpdate();
-              await ChatMessageApi().saveMessageInUserCollection(pData["id"],
-                  userData["id"], newChatId, encrypted, userData["id"],pName);
+              if (type.name != MessageType.note.name) {
+                await ChatMessageApi().saveMessageInUserCollection(
+                    pData["id"],
+                    userData["id"],
+                    newChatId,
+                    encrypted,
+                    userData["id"],
+                    pName);
+              }
             }).then((value) {
               isLoading = false;
               update();
@@ -539,35 +540,38 @@ class ChatController extends GetxController {
           isLoading = false;
           update();
         } else {
-          await FirebaseFirestore.instance
-              .collection(collectionName.messages)
-              .doc(newChatId)
-              .collection(collectionName.chat)
-              .add({
-            'sender': userData["id"],
-            'receiver': pId,
-            'content': encrypted,
-            "chatId": newChatId,
-            'type': type.name,
-            'messageType': "sender",
-            "isBlock": false,
-            "isSeen": false,
-            "isBroadcast": false,
-            "blockBy": "",
-            "blockUserId": "",
-            'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-          }).then((snap) async {
-            isLoading = false;
-            update();
-            Get.forceAppUpdate();
-            await ChatMessageApi().saveMessageInUserCollection(
-                userData["id"], pId, newChatId, encrypted, userData["id"],pName);
-            await ChatMessageApi().saveMessageInUserCollection(
-                pId, pId, newChatId, encrypted, userData["id"],userData["name"]);
-          }).then((value) {
-            isLoading = false;
-            update();
-            Get.forceAppUpdate();
+          ChatMessageApi()
+              .saveMessage(
+                  newChatId,
+                  pId,
+                  encrypted,
+                  type,
+                  DateTime.now().millisecondsSinceEpoch.toString(),
+                  userData["id"])
+              .then((value) {
+            ChatMessageApi()
+                .saveMessage(newChatId, pId, encrypted, type,
+                    DateTime.now().millisecondsSinceEpoch.toString(), pId)
+                .then((snap) async {
+              isLoading = false;
+              update();
+              Get.forceAppUpdate();
+              if (type.name != MessageType.note.name) {
+                await ChatMessageApi().saveMessageInUserCollection(
+                    userData["id"],
+                    pId,
+                    newChatId,
+                    encrypted,
+                    userData["id"],
+                    pName);
+                await ChatMessageApi().saveMessageInUserCollection(pId, pId,
+                    newChatId, encrypted, userData["id"], userData["name"]);
+              }
+            }).then((value) {
+              isLoading = false;
+              update();
+              Get.forceAppUpdate();
+            });
           });
         }
         isLoading = false;
@@ -578,53 +582,56 @@ class ChatController extends GetxController {
         isLoading = false;
         update();
 
-        await FirebaseFirestore.instance
-            .collection(collectionName.messages)
-            .doc(newChatId)
-            .collection(collectionName.chat)
-            .add({
-          'sender': userData["id"],
-          'receiver': pId,
-          'content': encrypted,
-          "chatId": newChatId,
-          'type': type.name,
-          'messageType': "sender",
-          "isBlock": false,
-          "isSeen": false,
-          "isBroadcast": false,
-          "blockBy": "",
-          "blockUserId": "",
-          'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-        }).then((snap) async {
-          isLoading = false;
-          update();
-          Get.forceAppUpdate();
-          log("check");
-          await ChatMessageApi().saveMessageInUserCollection(
-              userData["id"], pId, newChatId, encrypted, userData["id"],pName);
-          await ChatMessageApi().saveMessageInUserCollection(
-              pId, pId, newChatId, encrypted, userData["id"],userData["name"]);
-        }).then((value) {
-          isLoading = false;
-          update();
-          Get.forceAppUpdate();
-          getChatData();
+        ChatMessageApi()
+            .saveMessage(
+                newChatId,
+                pId,
+                encrypted,
+                type,
+                DateTime.now().millisecondsSinceEpoch.toString(),
+                userData["id"])
+            .then((value) {
+          ChatMessageApi()
+              .saveMessage(newChatId, pId, encrypted, type,
+                  DateTime.now().millisecondsSinceEpoch.toString(), pId)
+              .then((snap) async {
+            isLoading = false;
+            update();
+            Get.forceAppUpdate();
+            log("check");
+
+            if (type.name != MessageType.note.name) {
+              await ChatMessageApi().saveMessageInUserCollection(userData["id"],
+                  pId, newChatId, encrypted, userData["id"], pName);
+              await ChatMessageApi().saveMessageInUserCollection(pId, pId,
+                  newChatId, encrypted, userData["id"], userData["name"]);
+            }
+          }).then((value) {
+            isLoading = false;
+            update();
+            Get.forceAppUpdate();
+            if (type != MessageType.note) {
+              getChatData();
+            }
+          });
         });
       }
     }
-    if (chatId != "0") {
-      await FirebaseFirestore.instance
-          .collection(collectionName.users)
-          .doc(userData["id"])
-          .collection(collectionName.chats)
-          .where("chatId", isEqualTo: chatId)
-          .get()
-          .then((value) {
-        log("allData : ${value.docs[0].data()}");
-        allData = value.docs[0].data();
-        clearChatId = allData["clearChatId"] ?? [];
-        update();
-      });
+    if (type != MessageType.note) {
+      if (chatId != "0") {
+        await FirebaseFirestore.instance
+            .collection(collectionName.users)
+            .doc(userData["id"])
+            .collection(collectionName.chats)
+            .where("chatId", isEqualTo: chatId)
+            .get()
+            .then((value) {
+          log("allData : ${value.docs[0].data()}");
+          allData = value.docs[0].data();
+          clearChatId = allData["clearChatId"] ?? [];
+          update();
+        });
+      }
     }
     seenMessage();
     await FirebaseFirestore.instance
@@ -650,7 +657,7 @@ class ChatController extends GetxController {
           dataTitle: pName);
     }
     isLoading = false;
-    if(allData == null){
+    if (allData == null) {
       getChatData();
     }
     update();
@@ -666,110 +673,8 @@ class ChatController extends GetxController {
   wallPaperConfirmation(image) async {
     Get.generalDialog(
       pageBuilder: (context, anim1, anim2) {
-        return Scaffold(
-          backgroundColor: Colors.transparent,
-          body: StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-            return GetBuilder<ChatController>(builder: (chatCtrl) {
-              return Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                      height: 250,
-                      color: appCtrl.appTheme.whiteColor,
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: Insets.i10, vertical: Insets.i15),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: Insets.i10, vertical: Insets.i15),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Set Wallpaper",
-                            style: AppCss.poppinsblack14
-                                .textColor(appCtrl.appTheme.blackColor),
-                          ),
-                          ListTile(
-                            title: Text('Set For this chat "$pName"'),
-                            leading: Radio(
-                              value: "Person Name",
-                              groupValue: wallPaperType,
-                              onChanged: (String? value) {
-                                wallPaperType = value;
-                                update();
-                              },
-                            ),
-                          ),
-                          ListTile(
-                            title: const Text('For all chats'),
-                            leading: Radio(
-                              value: "For All",
-                              groupValue: wallPaperType,
-                              onChanged: (String? value) {
-                                wallPaperType = value;
-                                update();
-                              },
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Expanded(
-                                  child: CommonButton(
-                                title: fonts.cancel.tr,
-                                onTap: () => Get.back(),
-                                style: AppCss.poppinsMedium14
-                                    .textColor(appCtrl.appTheme.white),
-                              )),
-                              const HSpace(Sizes.s10),
-                              Expanded(
-                                  child: CommonButton(
-                                      onTap: () async {
-                                        Get.back();
-                                        log("wallPaperType : $image");
-                                        if (wallPaperType == "Person Name") {
-                                          await FirebaseFirestore.instance
-                                              .collection(collectionName.users)
-                                              .doc(userData["id"])
-                                              .collection(collectionName.chats)
-                                              .where("chatId",
-                                                  isEqualTo: chatId)
-                                              .limit(1)
-                                              .get()
-                                              .then((userChat) {
-                                            if (userChat.docs.isNotEmpty) {
-                                              FirebaseFirestore.instance
-                                                  .collection(
-                                                      collectionName.users)
-                                                  .doc(userData["id"])
-                                                  .collection(
-                                                      collectionName.chats)
-                                                  .doc(userChat.docs[0].id)
-                                                  .update({
-                                                'backgroundImage': image
-                                              });
-                                            }
-                                          });
-                                        } else {
-                                          FirebaseFirestore.instance
-                                              .collection(collectionName.users)
-                                              .doc(userData["id"])
-                                              .update(
-                                                  {'backgroundImage': image});
-                                        }
-                                        chatCtrl.allData["backgroundImage"] =
-                                            image;
-                                        chatCtrl.update();
-                                      },
-                                      title: fonts.ok.tr,
-                                      style: AppCss.poppinsMedium14
-                                          .textColor(appCtrl.appTheme.white))),
-                            ],
-                          )
-                        ],
-                      )));
-            });
-          }),
+        return ChatWallPaper(
+          image: image,
         );
       },
       transitionBuilder: (context, anim1, anim2, child) {
@@ -782,9 +687,36 @@ class ChatController extends GetxController {
     );
   }
 
-// BUILD ITEM MESSAGE BOX FOR RECEIVER AND SENDER BOX DESIGN
+
+  Widget timeLayout(document) {
+    List newMessageList = document["message"];
+    return Column(
+      children: [
+        Text(document["title"].contains("-other") ? document["title"].split("-other")[0]: document["title"],style: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.txtColor)).marginSymmetric(vertical: Insets.i5),
+        ...newMessageList.asMap().entries.map((e) {
+          return buildItem(e.key, e.value, e.value.id);
+        }).toList()
+      ],
+    );
+  }
+
+  // BUILD ITEM MESSAGE BOX FOR RECEIVER AND SENDER BOX DESIGN
   Widget buildItem(int index, document, documentId) {
-    if (document['sender'] == userData["id"]) {
+    if (document["type"] == MessageType.note.name) {
+      return Container(
+          margin: const EdgeInsets.only(bottom: 2.0),
+          padding: const EdgeInsets.only(left: Insets.i10, right: Insets.i10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              if (document!["type"] == MessageType.note.name)
+                const Align(
+                  alignment: Alignment.center,
+                  child: CommonNoteEncrypt(),
+                ).paddingOnly(bottom: Insets.i8)
+            ],
+          ));
+    } else if (document['sender'] == userData["id"]) {
       return SenderMessage(
         document: document,
         index: index,
@@ -796,7 +728,7 @@ class ChatController extends GetxController {
         update();
         log("enable : $enableReactionPopup");
       });
-    } else {
+    } else if (document['sender'] != userData["id"]) {
       // RECEIVER MESSAGE
       return document["type"] == MessageType.messageType.name
           ? Container()
@@ -811,16 +743,30 @@ class ChatController extends GetxController {
                   update();
                   log("enable : $enableReactionPopup");
                 });
+    } else {
+      return Container();
     }
   }
 
   // ON BACK PRESS
   Future<bool> onBackPress() {
     FirebaseFirestore.instance
-        .collection(
-            'users') // Your collection name will be whatever you have given in firestore database
-        .doc(userData["id"])
-        .update({'status': "Online"});
+        .collection(collectionName.messages)
+        .doc(chatId)
+        .collection(collectionName.chat)
+        .get()
+        .then((value) {
+      if (value.docs.isNotEmpty) {
+        if (value.docs.length == 1) {
+          FirebaseFirestore.instance
+              .collection(collectionName.messages)
+              .doc(chatId)
+              .collection(collectionName.chat)
+              .doc(value.docs[0].id)
+              .delete();
+        }
+      }
+    });
     Get.back();
     return Future.value(false);
   }
@@ -846,11 +792,13 @@ class ChatController extends GetxController {
     return TextField(
       controller: txtChatSearch,
       onChanged: (val) async {
-        count =null;
+        count = null;
         searchChatId = [];
         selectedIndexId = [];
         message.asMap().entries.forEach((e) {
-          if (decryptMessage(e.value.data()["content"]).toLowerCase().contains(val)) {
+          if (decryptMessage(e.value.data()["content"])
+              .toLowerCase()
+              .contains(val)) {
             if (!searchChatId.contains(e.key)) {
               searchChatId.add(e.key);
             } else {
@@ -859,8 +807,9 @@ class ChatController extends GetxController {
           }
           update();
         });
+        log("message : $message");
       },
-      autofocus: true,
+
       //Display the keyboard when TextField is displayed
       cursorColor: appCtrl.appTheme.blackColor,
       style: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.blackColor),
@@ -869,15 +818,30 @@ class ChatController extends GetxController {
       decoration: InputDecoration(
         //Style of TextField
         enabledBorder: UnderlineInputBorder(
-          //Default TextField border
+            //Default TextField border
             borderSide: BorderSide(color: appCtrl.appTheme.blackColor)),
         focusedBorder: UnderlineInputBorder(
-          //Borders when a TextField is in focus
+            //Borders when a TextField is in focus
             borderSide: BorderSide(color: appCtrl.appTheme.blackColor)),
         hintText: 'Search', //Text that is displayed when nothing is entered.
       ),
     );
   }
 
-}
 
+//clear dialog
+  clearChatConfirmation() async {
+    Get.generalDialog(
+      pageBuilder: (context, anim1, anim2) {
+        return const SingleClearDialog();
+      },
+      transitionBuilder: (context, anim1, anim2, child) {
+        return SlideTransition(
+            position: Tween(begin: const Offset(0, -1), end: const Offset(0, 0))
+                .animate(anim1),
+            child: child);
+      },
+      transitionDuration: const Duration(milliseconds: 300),
+    );
+  }
+}

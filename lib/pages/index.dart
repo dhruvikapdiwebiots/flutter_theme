@@ -153,3 +153,4 @@ export '../widgets/common_empty_layout.dart';
 export '../widgets/reaction_pop_up/reaction_config.dart';
 export '../widgets/common_app_bar.dart';
 export '../widgets/reaction_pop_up/reaction_pop_up.dart';
+export '../widgets/loading_component.dart';

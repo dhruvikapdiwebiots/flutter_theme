@@ -6,12 +6,26 @@ class GifLayout extends StatelessWidget {
   final dynamic document;
   final GestureLongPressCallback? onLongPress;
   final GestureTapCallback? onTap;
-  final bool isReceiver,isGroup;
+  final bool isReceiver, isGroup;
   final String? currentUserId;
-  const GifLayout({Key? key,this.document,this.onLongPress, this.isReceiver = false, this.isGroup = false,this.currentUserId,this.onTap}) : super(key: key);
+
+  const GifLayout(
+      {Key? key,
+      this.document,
+      this.onLongPress,
+      this.isReceiver = false,
+      this.isGroup = false,
+      this.currentUserId,
+      this.onTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    List seen = [];
+    if(isGroup){
+
+      seen = document!.data().toString().contains('seenMessageList') ? document['seenMessageList'] : [];
+    }
     return InkWell(
         onLongPress: onLongPress,
         onTap: onTap,
@@ -25,47 +39,54 @@ class GifLayout extends StatelessWidget {
                       alignment: Alignment.topLeft,
                       child: Column(children: [
                         Text(document!['senderName'],
-                            style: AppCss.poppinsMedium12
-                                .textColor(appCtrl.appTheme.primary)).paddingSymmetric(horizontal: Insets.i10,vertical: Insets.i5).decorated(color:  appCtrl.appTheme.whiteColor ,borderRadius: BorderRadius.circular(AppRadius.r20)),
+                                style: AppCss.poppinsMedium12
+                                    .textColor(appCtrl.appTheme.primary))
+                            .paddingSymmetric(
+                                horizontal: Insets.i10, vertical: Insets.i5)
+                            .decorated(
+                                color: appCtrl.appTheme.whiteColor,
+                                borderRadius:
+                                    BorderRadius.circular(AppRadius.r20)),
                       ])),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Image.network(
-                    decryptMessage(document!["content"]),
-                  height: Sizes.s100
-                ),
+                Image.network(decryptMessage(document!["content"]),
+                    height: Sizes.s100),
                 IntrinsicHeight(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (document!.data().toString().contains('isFavourite'))
-                          if(appCtrl.user["id"] == document["favouriteId"])
-                          Icon(Icons.star,color: appCtrl.appTheme.txtColor,size: Sizes.s10),
-                        const HSpace(Sizes.s3),
-                        Text(
-                          DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(
+                        child: Row(
+                  children: [
+                    if (document!.data().toString().contains('isFavourite'))
+                      if (appCtrl.user["id"] != document.data()["senderId"])
+                        Icon(Icons.star,
+                            color: appCtrl.appTheme.txtColor, size: Sizes.s10),
+                    const HSpace(Sizes.s3),
+                    isGroup ?Icon(Icons.done_all_outlined,
+                        size: Sizes.s15,
+                        color:seen.contains(currentUserId)
+                            ? appCtrl.appTheme.primary
+                            : appCtrl.appTheme.gray) :
+                    Icon(Icons.done_all_outlined,
+                        size: Sizes.s15,
+                        color: document!['isSeen'] == true
+                            ? appCtrl.appTheme.primary
+                            : appCtrl.appTheme.gray),
+                    const HSpace(Sizes.s5),
+                    Text(
+                      DateFormat('HH:mm a').format(
+                          DateTime.fromMillisecondsSinceEpoch(
                               int.parse(document!['timestamp']))),
-                          style:
-                          AppCss.poppinsMedium12.textColor(appCtrl.appTheme.txtColor),
-                        ),
-                      ],
+                      style: AppCss.poppinsMedium12
+                          .textColor(appCtrl.appTheme.txtColor),
                     )
-                )
+                  ],
+                ).marginSymmetric(horizontal: Insets.i6, vertical: Insets.i4))
                     .paddingOnly(
-                    left: Insets.i8,
-                    right: Insets.i8,
-                    top: Insets.i5,
-                    bottom: Insets.i2)
-                    .decorated(
-                    color:
-                    appCtrl.appTheme.grey.withOpacity(.3),
-                    borderRadius:
-                    BorderRadius.circular(AppRadius.r30)),
+                  top: Insets.i5,
+                ),
               ],
             ),
           ],
-        ).marginSymmetric(vertical: Insets.i8,horizontal: Insets.i10));
+        ).marginSymmetric(horizontal: Insets.i10));
   }
 }

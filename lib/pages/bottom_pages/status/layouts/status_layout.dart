@@ -23,20 +23,30 @@ class _StatusLayoutState extends State<StatusLayout> {
   @override
   void initState() {
     // TODO: implement initState
-    if ((widget.snapshot!.data!).docs[0]["photoUrl"]
-                [(widget.snapshot!.data!).docs[0]["photoUrl"].length - 1]
-            ["statusType"] ==
-        StatusType.video.name) {
-      videoController = VideoPlayerController.network(
-        (widget.snapshot!.data!).docs[0]["photoUrl"]
-            [(widget.snapshot!.data!).docs[0]["photoUrl"].length - 1]["image"],
-      )..initialize().then((_) {
-          // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-          setState(() {});
-        }).onError((error, stackTrace) {});
-      initializeVideoPlayerFuture = videoController!.initialize();
+  log.log("SRR : ${(widget.snapshot!.data!).docs[0].data()}");
+    Status status = Status.fromJson((widget.snapshot!.data!).docs[0].data());
+    List<PhotoUrl> photoUrl = status.photoUrl!;
+    if(photoUrl.isNotEmpty) {
+      if (photoUrl.isNotEmpty) {
+        if ((widget.snapshot!.data!).docs[0]["photoUrl"][
+        (widget.snapshot!.data!).docs[0]["photoUrl"].length == 0
+            ? 0
+            : (widget.snapshot!.data!).docs[0]["photoUrl"].length - 1]
+        ["statusType"] ==
+            StatusType.video.name) {
+          videoController = VideoPlayerController.network(
+            (widget.snapshot!.data!).docs[0]["photoUrl"]
+            [(widget.snapshot!.data!).docs[0]["photoUrl"].length - 1]
+            ["image"],
+          )
+            ..initialize().then((_) {
+              // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+              setState(() {});
+            }).onError((error, stackTrace) {});
+          initializeVideoPlayerFuture = videoController!.initialize();
+        }
+      }
     }
-
     setState(() {});
     log.log("STA : $status");
     setState(() {});

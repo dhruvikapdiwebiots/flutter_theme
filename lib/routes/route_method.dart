@@ -1,5 +1,6 @@
 //app file
 
+import 'package:flutter_theme/pages/bottom_pages/call_list/layouts/call_contact_list.dart';
 import 'package:flutter_theme/pages/theme_pages/all_contact/all_contact_list.dart';
 import 'package:flutter_theme/pages/theme_pages/audio_call/audio_call.dart';
 import 'package:flutter_theme/pages/theme_pages/broadcast_chat/layouts/broadcast_profile/boradcast_search_user.dart';
@@ -48,6 +49,7 @@ class AppRoute {
     GetPage(name: _routeName.searchUser, page: () => const SearchUser()),
     GetPage(name: _routeName.broadcastSearchUser, page: () => const BroadcastSearchUser()),
     GetPage(name: _routeName.myMessageViewer, page: () => const MyMessageViewer()),
+    GetPage(name: _routeName.callContactList, page: () => const CallContactList()),
 
   ];
 }

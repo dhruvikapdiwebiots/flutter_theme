@@ -87,7 +87,7 @@ class PickupBody extends StatelessWidget {
                       'receiverId': call!.receiverId,
                       'isJoin': false,
                       'started': null,
-                      'callerName': call!.callerName,
+                      'callerName': call!.receiverName,
                       'status': 'rejected',
                       'ended': DateTime.now(),
                     }, SetOptions(merge: true));
@@ -106,7 +106,7 @@ class PickupBody extends StatelessWidget {
                       'receiverId': call!.receiverId,
                       'isJoin': true,
                       'started': null,
-                      'callerName': call!.callerName,
+                      'callerName': appCtrl.user["name"],
                       'status': 'rejected',
                       'ended': DateTime.now(),
                     }, SetOptions(merge: true));

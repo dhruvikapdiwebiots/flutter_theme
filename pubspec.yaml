@@ -64,6 +64,7 @@ dependencies:
   flutter_local_notifications: ^14.1.1
   firebase_auth: ^4.6.3
   firebase_core: ^2.14.0
+  collection: any
 
   path: ^1.8.3
   share_plus: ^6.3.4

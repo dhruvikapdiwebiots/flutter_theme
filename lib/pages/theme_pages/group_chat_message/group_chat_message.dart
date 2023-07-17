@@ -23,16 +23,27 @@ class _GroupChatMessageState extends State<GroupChatMessage>
         if (chatCtrl.textEditingController.text.isNotEmpty) {
           chatCtrl.typing = true;
           firebaseCtrl.groupTypingStatus(
-              chatCtrl.pId, chatCtrl.documentId, true);
+              chatCtrl.pId,  true);
         }
         if (chatCtrl.textEditingController.text.isEmpty &&
             chatCtrl.typing == true) {
           chatCtrl.typing = false;
           firebaseCtrl.groupTypingStatus(
-              chatCtrl.pId, chatCtrl.documentId, false);
+              chatCtrl.pId, false);
         }
         chatCtrl.update();
       });
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      log("CHECK SCROOL : ${chatCtrl.listScrollController}");
+      if (chatCtrl.listScrollController.hasClients) {
+        chatCtrl.listScrollController.animateTo(
+          chatCtrl.listScrollController.position.maxScrollExtent,
+          curve: Curves.easeOut,
+          duration: const Duration(milliseconds: 500),
+        );
+      }
     });
 
     super.initState();
@@ -80,7 +91,7 @@ class _GroupChatMessageState extends State<GroupChatMessage>
                     GetBuilder<AppController>(builder: (appCtrl) {
                       return CommonLoader(isLoading: appCtrl.isLoading);
                     })
-                  ]))),
+                  ]).height(MediaQuery.of(context).size.height))),
         ),
       );
     });

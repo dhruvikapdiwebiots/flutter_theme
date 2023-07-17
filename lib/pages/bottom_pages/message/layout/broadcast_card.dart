@@ -29,16 +29,19 @@ class BroadCastMessageCard extends StatelessWidget {
                 child: Icon(Icons.volume_down,
                     color: appCtrl.appTheme.blackColor)),
             const HSpace(Sizes.s12),
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text("${selectedContact.length} recipient",
-                  style: AppCss.poppinsblack14
-                      .textColor(appCtrl.appTheme.blackColor)),
-              const VSpace(Sizes.s5),
-              Text(decryptMessage(document!["lastMessage"]),
-                  overflow: TextOverflow.ellipsis,
-                  style: AppCss.poppinsMedium14
-                      .textColor(appCtrl.appTheme.txtColor))
-            ])
+            SizedBox(
+              width: Sizes.s150,
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text("${selectedContact.length} recipient",
+                    style: AppCss.poppinsblack14
+                        .textColor(appCtrl.appTheme.blackColor)),
+                const VSpace(Sizes.s5),
+                Text(decryptMessage(document!["lastMessage"]),
+                    overflow: TextOverflow.ellipsis,
+                    style: AppCss.poppinsMedium14
+                        .textColor(appCtrl.appTheme.txtColor))
+              ]),
+            )
           ]),
           Text(
                   DateFormat('HH:mm a').format(

@@ -29,6 +29,8 @@ class GroupDeleteAlert extends StatelessWidget {
               Get.back();
               chatCtrl.selectedIndexId.asMap().entries.forEach((element) {
                 FirebaseFirestore.instance
+                    .collection(collectionName.users)
+                    .doc(appCtrl.user["id"])
                     .collection(collectionName.groupMessage)
                     .doc(chatCtrl.pId)
                     .collection(collectionName.chat)
@@ -43,6 +45,8 @@ class GroupDeleteAlert extends StatelessWidget {
                   curve: Curves.easeOut);
 
               await FirebaseFirestore.instance
+                  .collection(collectionName.users)
+                  .doc(appCtrl.user["id"])
                   .collection(collectionName.groupMessage)
                   .doc(chatCtrl.pId)
                   .collection(collectionName.chat)

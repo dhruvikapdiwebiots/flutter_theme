@@ -134,6 +134,7 @@ class AudioCallController extends GetxController {
 
   Future<void> initAgora() async {
     dynamic agoraToken = appCtrl.storage.read(session.agoraToken);
+    log("agoraToken : $agoraToken");
     engine = createAgoraRtcEngine();
     await engine.initialize(RtcEngineContext(
       appId: agoraToken["agoraAppId"],
@@ -167,7 +168,7 @@ class AudioCallController extends GetxController {
               'status': 'calling',
               'started': null,
               'ended': null,
-              'callerName': call!.callerName,
+              'callerName': call!.receiverName,
             }, SetOptions(merge: true));
             FirebaseFirestore.instance
                 .collection(collectionName.calls)
@@ -435,7 +436,7 @@ class AudioCallController extends GetxController {
           'receiverId': call!.receiverId,
           'isJoin': false,
           'started': null,
-          'callerName': call!.callerName,
+          'callerName': call!.receiverName,
           'status': 'ended',
           'ended': DateTime.now(),
         }, SetOptions(merge: true));

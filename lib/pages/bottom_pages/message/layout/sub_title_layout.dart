@@ -16,7 +16,8 @@ class SubTitleLayout extends StatelessWidget {
             size: Sizes.s16),
         const HSpace(Sizes.s10),
         decryptMessage(document!["lastMessage"]).contains(".gif") ?const Icon(Icons.gif_box) :
-        Expanded(
+        SizedBox(
+          width: Sizes.s150,
           child: Text(
               (decryptMessage(document!["lastMessage"]).contains("media")) ? "You Share Media" :   document!["isBlock"] == true &&
                   document!["isBlock"] == "true"

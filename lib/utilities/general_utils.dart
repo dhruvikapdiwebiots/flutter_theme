@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math' as math;
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
+import 'package:intl/intl.dart';
 import '../config.dart';
 
 var loadingCtrl = Get.find<AppController>();
@@ -181,4 +182,39 @@ final encrypter = encrypt.Encrypter(encrypt.AES(encryptKey));
 
 String decryptMessage(content){
   return encrypter.decrypt(encrypt.Encrypted.fromBase64(content), iv: iv);
+}
+
+int calculateDifference(DateTime date) {
+  DateTime now = DateTime.now();
+  return DateTime(date.year, date.month, date.day).difference(DateTime(now.year, now.month, now.day)).inDays;
+}
+
+getDate(date) {
+  log("DATE : $date");
+  DateTime now = DateTime.now();
+  String when;
+  DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(int.parse(date));
+  if (dateTime.day == now.day) {
+    when = 'today';
+  } else if (dateTime.day == now.subtract(Duration(days: 1)).day) {
+    when = 'yesterday';
+  } else {
+    when = "${DateFormat.MMMd().format(dateTime)}-other";
+  }
+  return when;
+}
+
+getWhen(date) {
+  log("DATE : $date");
+  DateTime now = DateTime.now();
+  String when;
+  DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(int.parse(date));
+  if (dateTime.day == now.day) {
+    when = 'today';
+  } else if (dateTime.day == now.subtract(Duration(days: 1)).day) {
+    when = 'yesterday';
+  } else {
+    when = "${DateFormat.MMMd().format(dateTime)}-other";
+  }
+  return when;
 }

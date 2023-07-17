@@ -22,7 +22,8 @@ class ReceiverContent extends StatelessWidget {
           Stack(
             clipBehavior: Clip.none,
             children: [
-              Container(
+              decryptMessage(document!["content"]).length > 40
+                  ?    Container(
                   padding: const EdgeInsets.symmetric(
                       horizontal: Insets.i12, vertical: Insets.i14),
                   width: Sizes.s230,
@@ -37,6 +38,27 @@ class ReceiverContent extends StatelessWidget {
                             bottomRight: SmoothRadius(
                               cornerRadius: 20,
                               cornerSmoothing: 1
+                            ))),
+                  ),
+                  child: Text(decryptMessage(document!["content"]),
+                      style: AppCss.poppinsMedium14
+                          .textColor(appCtrl.appTheme.blackColor)
+                          .letterSpace(.2)
+                          .textHeight(1.2))) :
+              Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: Insets.i12, vertical: Insets.i10),
+                  decoration: ShapeDecoration(
+                    color: appCtrl.appTheme.chatSecondaryColor,
+                    shape: const SmoothRectangleBorder(
+                        borderRadius: SmoothBorderRadius.only(
+                            topLeft:
+                            SmoothRadius(cornerRadius: 18, cornerSmoothing: 1),
+                            topRight: SmoothRadius(
+                                cornerRadius: 18, cornerSmoothing: 1),
+                            bottomRight: SmoothRadius(
+                                cornerRadius: 18,
+                                cornerSmoothing: 1
                             ))),
                   ),
                   child: Text(decryptMessage(document!["content"]),

@@ -45,7 +45,7 @@ class MessageController extends GetxController {
     }
 
     update();
-/*
+    update();
     if (bannerAd == null) {
       bannerAd = BannerAd(
           size: AdSize.banner,
@@ -73,6 +73,8 @@ class MessageController extends GetxController {
       buildBanner();
     }
 
+
+
     _getId().then((id) {
       String? deviceId = id;
 
@@ -82,7 +84,7 @@ class MessageController extends GetxController {
       );
     });
     _showBannerAd();
-    update();*/
+    update();
     super.onReady();
   }
 

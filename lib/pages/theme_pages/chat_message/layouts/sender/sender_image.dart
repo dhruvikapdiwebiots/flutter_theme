@@ -76,7 +76,7 @@ class SenderImage extends StatelessWidget {
                 if (!isBroadcast)
                   Icon(Icons.done_all_outlined,
                       size: Sizes.s15,
-                      color: document!['isSeen'] == false
+                      color: document!['isSeen'] == true
                           ? appCtrl.appTheme.primary
                           : appCtrl.appTheme.gray),
                 const HSpace(Sizes.s5),

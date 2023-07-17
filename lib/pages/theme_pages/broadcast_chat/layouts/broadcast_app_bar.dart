@@ -72,7 +72,7 @@ class BroadCastAppBar extends StatelessWidget implements PreferredSizeWidget {
                   style: AppCss.poppinsBold16
                       .textColor(appCtrl.appTheme.blackColor),
                 ),
-                const VSpace(Sizes.s10),
+                const VSpace(Sizes.s5),
                 Text(
                   nameList!,
                   style: AppCss.poppinsMedium14

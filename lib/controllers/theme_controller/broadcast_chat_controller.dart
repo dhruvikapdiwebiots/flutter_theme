@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:drishya_picker/drishya_picker.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:dartx/dartx_io.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/pages/theme_pages/broadcast_chat/layouts/broadcast_file_list.dart';
+import 'package:flutter_theme/widgets/common_note_encrypt.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
@@ -277,7 +279,7 @@ class BroadcastChatController extends GetxController {
       textEditingController.clear();
       await saveMessageInLoop(encrypted, type);
       await Future.delayed(Durations.s4);
-      log("newpData : $newpData");
+
 
       await FirebaseFirestore.instance
           .collection(collectionName.users)
@@ -299,10 +301,13 @@ class BroadcastChatController extends GetxController {
       });
 
       FirebaseFirestore.instance
+          .collection(collectionName.users)
+          .doc(userData["id"])
           .collection(collectionName.broadcastMessage)
           .doc(pId)
           .collection(collectionName.chat)
-          .add({
+          .doc(DateTime.now().millisecondsSinceEpoch.toString())
+          .set({
         'sender': userData["id"],
         'senderName': userData["name"],
         'receiver': newpData,
@@ -407,7 +412,21 @@ class BroadcastChatController extends GetxController {
 
 // BUILD ITEM MESSAGE BOX FOR RECEIVER AND SENDER BOX DESIGN
   Widget buildItem(int index, document) {
-    if (document['sender'] == userData["id"]) {
+   if(document['type'] == MessageType.note.name){
+     return Container(
+         margin: const EdgeInsets.only(bottom: 2.0),
+         padding: const EdgeInsets.only(left: Insets.i10, right: Insets.i10),
+         child: Column(
+           crossAxisAlignment: CrossAxisAlignment.end,
+           children: <Widget>[
+             if (document!["type"] == MessageType.note.name)
+               const Align(
+                 alignment: Alignment.center,
+                 child: CommonNoteEncrypt(),
+               ).paddingOnly(bottom: Insets.i8)
+           ],
+         ));
+   }else if (document['sender'] == userData["id"]) {
       return BroadcastSenderMessage(
         document: document,
         index: index,

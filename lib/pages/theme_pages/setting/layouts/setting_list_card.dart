@@ -40,7 +40,7 @@ class SettingListCard extends StatelessWidget {
                                   ? "Hindi"
                                   : "Gujarati",
                       style: AppCss.poppinsLight12
-                          .textColor(appCtrl.appTheme.txtColor))
+                          .textColor(appCtrl.appTheme.txtColor)).marginOnly(top: Insets.i3)
               ],
             )
           ]),

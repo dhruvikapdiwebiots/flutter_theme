@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_theme/pages/theme_pages/chat_message/layouts/receiver_image.dart';
 import '../../../../../config.dart';
 import '../../group_on_tap_function_class.dart';
@@ -17,7 +19,9 @@ class GroupReceiverMessage extends StatefulWidget {
 class _GroupReceiverMessageState extends State<GroupReceiverMessage> {
   @override
   Widget build(BuildContext context) {
+
     return GetBuilder<GroupChatMessageController>(builder: (chatCtrl) {
+
       return Stack(
         alignment: Alignment.topLeft,
         children: [
@@ -26,8 +30,9 @@ class _GroupReceiverMessageState extends State<GroupReceiverMessage> {
                 ? appCtrl.appTheme.primary.withOpacity(.08)
                 : appCtrl.appTheme.bgColor,
             margin: const EdgeInsets.only(bottom: Insets.i10),
-            padding: const EdgeInsets.only(
-                bottom: Insets.i10, left: Insets.i20, right: Insets.i20),
+            padding:  EdgeInsets.only(
+                bottom: Insets.i10, left: Insets.i20, right: Insets.i20,top: chatCtrl.selectedIndexId.contains(widget.docId) ? Insets
+                .i10 : 0,),
             child: Column(
               children: [
                 Row(

@@ -5,6 +5,7 @@ import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter_theme/config.dart';
+import 'package:flutter_theme/models/firebase_contact_model.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'dart:math' as math;
 
@@ -13,6 +14,7 @@ class CallListController extends GetxController {
   dynamic user;
   BannerAd? bannerAd;
   bool bannerAdIsLoaded = false;
+  List<FirebaseContactModel> contactList = [];
   Widget currentAd = const SizedBox(
     width: 0.0,
     height: 0.0,
@@ -171,10 +173,14 @@ class CallListController extends GetxController {
     await audioAndVideoCallApi(toData: pData, isVideoCall: isVideoCall);
   }
 
+  callFromList(isVideoCall, pData) async {
+    await audioAndVideoCallApi(toData: pData, isVideoCall: isVideoCall);
+  }
+
   audioAndVideoCallApi({toData, isVideoCall}) async {
     try {
       dynamic agoraToken = appCtrl.storage.read(session.agoraToken);
-
+      log("toData : $toData");
       var userData = appCtrl.storage.read(session.user);
       String channelId = math.Random().nextInt(1000).toString();
       int timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -183,11 +189,11 @@ class CallListController extends GetxController {
           callerId: userData["id"],
           callerName: userData["name"],
           callerPic: userData["image"],
-          receiverId: toData["receiverId"],
-          receiverName: toData["receiverName"],
-          receiverPic: toData["receiverPic"],
+          receiverId: toData["id"],
+          receiverName: toData["name"],
+          receiverPic: toData["image"],
           callerToken: userData["pushToken"],
-          receiverToken: toData["receiverToken"],
+          receiverToken: toData["pushToken"],
           channelId: channelId,
           isVideoCall: isVideoCall,
           receiver: null);
@@ -201,11 +207,11 @@ class CallListController extends GetxController {
         "callerId": userData["id"],
         "callerName": userData["name"],
         "callerPic": userData["image"],
-        "receiverId": toData["receiverId"],
-        "receiverName": toData["receiverName"],
-        "receiverPic": toData["receiverPic"],
+        "receiverId": toData["id"],
+        "receiverName": toData["name"],
+        "receiverPic": toData["image"],
         "callerToken": userData["pushToken"],
-        "receiverToken": toData["receiverToken"],
+        "receiverToken": toData["pushToken"],
         "hasDialled": true,
         "channelId": channelId,
         "isVideoCall": isVideoCall,
@@ -219,11 +225,11 @@ class CallListController extends GetxController {
           "callerId": userData["id"],
           "callerName": userData["name"],
           "callerPic": userData["image"],
-          "receiverId": toData["receiverId"],
-          "receiverName": toData["receiverName"],
-          "receiverPic": toData["receiverPic"],
+          "receiverId": toData["id"],
+          "receiverName": toData["name"],
+          "receiverPic": toData["image"],
           "callerToken": userData["pushToken"],
-          "receiverToken": toData["receiverToken"],
+          "receiverToken": toData["pushToken"],
           "hasDialled": false,
           "channelId": channelId,
           "isVideoCall": isVideoCall
@@ -266,5 +272,28 @@ class CallListController extends GetxController {
       // Caught an exception from Firebase.
       log("Failed with error '${e.code}': ${e.message}");
     }
+  }
+
+  getAllRegister() async {
+    List allUserList = [];
+
+    log("allUserList : ${appCtrl.firebaseContact.length}");
+    await FirebaseFirestore.instance
+        .collection(collectionName.users)
+        .doc(appCtrl.user["id"])
+        .collection(collectionName.registerUser)
+        .get().then((value) {
+          if(value.docs.isNotEmpty){
+            allUserList = value.docs[0].data()["contact"];
+            allUserList.asMap().entries.forEach((element) {
+             if(!contactList.contains(FirebaseContactModel.fromJson(element.value))){
+               contactList.add(FirebaseContactModel.fromJson(element.value));
+             }
+            });
+            update();
+          }
+          update();
+    });
+    log("contactList : ${contactList.length}");
   }
 }

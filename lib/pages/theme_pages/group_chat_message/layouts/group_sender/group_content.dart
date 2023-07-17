@@ -7,12 +7,15 @@ class GroupContent extends StatelessWidget {
   final GestureLongPressCallback? onLongPress;
   final GestureTapCallback? onTap;
   final bool isSearch;
+  final List? userList;
 
-  const GroupContent({Key? key, this.document, this.onLongPress, this.onTap,this.isSearch = false})
+  const GroupContent({Key? key, this.document, this.onLongPress, this.onTap,this.isSearch = false,this.userList})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    List seen = [];
+    seen = document!.data().toString().contains('seenMessageList') ? document!['seenMessageList'] : [];
     return InkWell(
         onLongPress: onLongPress,
         onTap: onTap,
@@ -46,17 +49,17 @@ class GroupContent extends StatelessWidget {
                                 .textHeight(1.2)).backgroundColor(isSearch ? appCtrl.appTheme.orangeColor.withOpacity(.4) : appCtrl.appTheme.transparentColor))
                     : Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: Insets.i12, vertical: Insets.i14),
+                            horizontal: Insets.i12, vertical: Insets.i10),
                         decoration: ShapeDecoration(
                             color: appCtrl.appTheme.primary,
                             shape: const SmoothRectangleBorder(
                                 borderRadius: SmoothBorderRadius.only(
                                     topLeft: SmoothRadius(
-                                        cornerRadius: 20, cornerSmoothing: 1),
+                                        cornerRadius: 18, cornerSmoothing: 1),
                                     topRight: SmoothRadius(
-                                        cornerRadius: 20, cornerSmoothing: 1),
+                                        cornerRadius: 18, cornerSmoothing: 1),
                                     bottomLeft: SmoothRadius(
-                                        cornerRadius: 20,
+                                        cornerRadius: 18,
                                         cornerSmoothing: 1)))),
                         child: Text(decryptMessage(document!['content']),
                             overflow: TextOverflow.clip,
@@ -68,7 +71,7 @@ class GroupContent extends StatelessWidget {
                   EmojiLayout(emoji: document!["emoji"])
               ],
             ),
-             VSpace(document!.data().toString().contains('emoji')? Sizes.s10: Sizes.s2),
+             VSpace(document!.data().toString().contains('emoji')? Sizes.s10: Sizes.s5),
             IntrinsicHeight(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,6 +80,12 @@ class GroupContent extends StatelessWidget {
                   if (document!.data().toString().contains('isFavourite'))
                     if(appCtrl.user["id"] == document!["favouriteId"])
                     Icon(Icons.star,color: appCtrl.appTheme.txtColor,size: Sizes.s10),
+                  const HSpace(Sizes.s3),
+                  Icon(Icons.done_all_outlined,
+                      size: Sizes.s15,
+                      color: userList!.length == seen.length
+                          ? appCtrl.appTheme.primary
+                          : appCtrl.appTheme.grey),
                   const HSpace(Sizes.s3),
                   Text(
                     DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(

@@ -21,4 +21,7 @@ class CollectionName{
   String wallpaper ="wallpaper";
   String userContact ="userContact";
   String report ="report";
+  String allContact ="allContact";
+  String registerUser ="registerUser";
+  String unRegisterUser ="unRegisterUser";
 }

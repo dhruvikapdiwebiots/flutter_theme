@@ -91,6 +91,7 @@ class SettingController extends GetxController {
       await appCtrl.storage.remove(session.isRTL);
       await appCtrl.storage.remove(session.languageCode);
       await appCtrl.storage.remove(session.languageCode);
+      await appCtrl.storage.erase();
       Get.offAllNamed(routeName.phone);
     }
   }

@@ -6,10 +6,16 @@ import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:dartx/dartx_io.dart';
 import 'package:drishya_picker/drishya_picker.dart';
 import 'package:flutter_theme/config.dart';
+import 'package:flutter_theme/pages/theme_pages/group_chat_message/group_message_api.dart';
+import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/clear_dialog.dart';
+import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_chat_wall_paper.dart';
 import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_profile/exit_group_alert.dart';
+import 'package:flutter_theme/widgets/common_note_encrypt.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
+
+import '../../pages/theme_pages/chat_message/layouts/chat_wall_paper.dart';
 
 class GroupChatMessageController extends GetxController {
   String? pId,
@@ -28,6 +34,7 @@ class GroupChatMessageController extends GetxController {
   List message = [];
   bool positionStreamStarted = false;
   int pageSize = 20;
+  String? wallPaperType;
   XFile? imageFile, videoFile;
   List userList = [],
       searchUserList = [],
@@ -53,7 +60,8 @@ class GroupChatMessageController extends GetxController {
   TextEditingController textDescController = TextEditingController();
   TextEditingController textSearchController = TextEditingController();
   TextEditingController txtChatSearch = TextEditingController();
-  ScrollController listScrollController = ScrollController();
+  ScrollController listScrollController =
+      ScrollController(initialScrollOffset: 0);
   FocusNode focusNode = FocusNode();
   bool enableReactionPopup = false;
   bool showPopUp = false;
@@ -73,6 +81,8 @@ class GroupChatMessageController extends GetxController {
     groupId = '';
     isLoading = false;
     imageUrl = '';
+    listScrollController = ScrollController(initialScrollOffset: 0);
+
     var data = Get.arguments;
     pData = data;
     pId = pData["message"]["groupId"];
@@ -84,7 +94,9 @@ class GroupChatMessageController extends GetxController {
     pagingController.addPageRequestListener((pageKey) {
       fetchPage(pageKey);
     });
+
     update();
+    log.log("INIT SC : $listScrollController");
     super.onReady();
   }
 
@@ -255,13 +267,11 @@ class GroupChatMessageController extends GetxController {
     Get.back();
 
     await permissionHandelCtrl.getCurrentPosition().then((value) async {
-
       var locationString =
           'https://www.google.com/maps/search/?api=1&query=${value!.latitude},${value.longitude}';
       onSendMessage(locationString, MessageType.location);
       return null;
     });
-
   }
 
   //share media
@@ -319,16 +329,14 @@ class GroupChatMessageController extends GetxController {
     });
   }
 
-
-
 // UPLOAD SELECTED IMAGE TO FIREBASE
-  Future uploadMultipleFile(File imageFile,MessageType messageType) async {
+  Future uploadMultipleFile(File imageFile, MessageType messageType) async {
     imageFile = imageFile;
     update();
 
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     Reference reference = FirebaseStorage.instance.ref().child(fileName);
-    var file = File( imageFile.path);
+    var file = File(imageFile.path);
     UploadTask uploadTask = reference.putFile(file);
     uploadTask.then((res) {
       res.ref.getDownloadURL().then((downloadUrl) async {
@@ -442,9 +450,9 @@ class GroupChatMessageController extends GetxController {
 
     final encrypted = encrypter.encrypt(content, iv: iv).base64;
 
-    if(clearChatId.contains(user["id"])){
+    if (clearChatId.contains(user["id"])) {
       clearChatId.removeWhere((element) => element == user["id"]);
-    await  FirebaseFirestore.instance
+      await FirebaseFirestore.instance
           .collection(collectionName.groups)
           .doc(pId)
           .get()
@@ -453,33 +461,20 @@ class GroupChatMessageController extends GetxController {
         if (value.exists) {
           await FirebaseFirestore.instance
               .collection(collectionName.groups)
-              .doc(pId).update({"clearChatId" :clearChatId});
-
+              .doc(pId)
+              .update({"clearChatId": clearChatId});
         }
 
         update();
       });
     }
 
-
     if (content.trim() != '') {
       var user = appCtrl.storage.read(session.user);
       id = user["id"];
-      FirebaseFirestore.instance
-          .collection(collectionName.groupMessage)
-          .doc(pId)
-          .collection(collectionName.chat)
-          .add({
-        'sender': id,
-        'senderName': user["name"],
-        'receiver': pData["groupData"]["users"],
-        'content': encrypted,
-        "groupId": pId,
-        'type': type.name,
-        'messageType': "sender",
-        "status": "",
-        'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-      });
+    await  GroupMessageApi().saveGroupMessage(encrypted, type);
+
+
       await ChatMessageApi().saveGroupData(id, pId, encrypted, pData);
       isLoading = false;
       videoFile = null;
@@ -490,8 +485,17 @@ class GroupChatMessageController extends GetxController {
       update();
       pickerCtrl.update();
       update();
-      listScrollController.animateTo(0.0,
-          duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
+    }
+    scrollToBottom();
+  }
+
+  void scrollToBottom() {
+    if (listScrollController.hasClients) {
+      listScrollController.animateTo(
+        listScrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
     }
   }
 
@@ -501,33 +505,57 @@ class GroupChatMessageController extends GetxController {
         context: Get.context!, builder: (_) => const GroupDeleteAlert());
   }
 
+  //clear chat Option
+  clearChatOption() async {
+    await showDialog(
+        context: Get.context!, builder: (_) => const GroupDeleteAlert());
+  }
+
+  Widget timeLayout(document) {
+    List newMessageList = document["message"];
+    return Column(
+      children: [
+        Text(document["title"].contains("-other") ? document["title"].split("-other")[0]: document["title"],style: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.txtColor)).marginSymmetric(vertical: Insets.i5),
+        ...newMessageList.asMap().entries.map((e) {
+          return buildItem(e.key, e.value, e.value.id);
+        }).toList()
+      ],
+    );
+  }
+
+
 // BUILD ITEM MESSAGE BOX FOR RECEIVER AND SENDER BOX DESIGN
   Widget buildItem(int index, DocumentSnapshot document, docId) {
+    log.log("CHECK NOTE : ${document["type"] == MessageType.note.name}");
     return Column(children: [
-      (document['sender'] == user["id"])
-          ? GroupSenderMessage(
-                  document: document,
-                  docId: docId,
-                  index: index,
-                  currentUserId: user["id"])
-              .inkWell(onTap: () {
-              enableReactionPopup = false;
-              showPopUp = false;
-              selectedIndexId = [];
-              update();
-            })
-          :
-          // RECEIVER MESSAGE
-          GroupReceiverMessage(
-              document: document,
-              index: index,
-              docId: docId,
-            ).inkWell(onTap: () {
-              enableReactionPopup = false;
-              showPopUp = false;
-              selectedIndexId = [];
-              update();
-            })
+      document["type"] == MessageType.note.name
+          ? const CommonNoteEncrypt()
+          : (document['sender'] == user["id"])
+              ? GroupSenderMessage(
+                      document: document,
+                      docId: docId,
+                      index: index,
+                      currentUserId: user["id"])
+                  .inkWell(onTap: () {
+                  enableReactionPopup = false;
+                  showPopUp = false;
+                  selectedIndexId = [];
+                  update();
+                })
+              : document['sender'] != user["id"]
+                  ?
+                  // RECEIVER MESSAGE
+                  GroupReceiverMessage(
+                      document: document,
+                      index: index,
+                      docId: docId,
+                    ).inkWell(onTap: () {
+                      enableReactionPopup = false;
+                      showPopUp = false;
+                      selectedIndexId = [];
+                      update();
+                    })
+                  : Container()
     ]);
   }
 
@@ -641,7 +669,7 @@ class GroupChatMessageController extends GetxController {
 
   // ON BACK PRESS
   Future<bool> onBackPress() {
-    firebaseCtrl.groupTypingStatus(pId, documentId, false);
+    firebaseCtrl.groupTypingStatus(pId, false);
     Get.back();
     return Future.value(false);
   }
@@ -842,11 +870,13 @@ class GroupChatMessageController extends GetxController {
     return TextField(
       controller: txtChatSearch,
       onChanged: (val) async {
-        count =null;
+        count = null;
         searchChatId = [];
         selectedIndexId = [];
         message.asMap().entries.forEach((e) {
-          if (decryptMessage(e.value.data()["content"]).toLowerCase().contains(val)) {
+          if (decryptMessage(e.value.data()["content"])
+              .toLowerCase()
+              .contains(val)) {
             if (!searchChatId.contains(e.key)) {
               searchChatId.add(e.key);
             } else {
@@ -856,7 +886,7 @@ class GroupChatMessageController extends GetxController {
           update();
         });
       },
-      autofocus: true,
+
       //Display the keyboard when TextField is displayed
       cursorColor: appCtrl.appTheme.blackColor,
       style: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.blackColor),
@@ -874,4 +904,38 @@ class GroupChatMessageController extends GetxController {
       ),
     );
   }
+
+  wallPaperConfirmation(image) async {
+    Get.generalDialog(
+      pageBuilder: (context, anim1, anim2) {
+        return GroupChatWallPaper(
+          image: image,
+        );
+      },
+      transitionBuilder: (context, anim1, anim2, child) {
+        return SlideTransition(
+            position: Tween(begin: const Offset(0, -1), end: const Offset(0, 0))
+                .animate(anim1),
+            child: child);
+      },
+      transitionDuration: const Duration(milliseconds: 300),
+    );
+  }
+
+//clear dialog
+  clearChatConfirmation() async {
+    Get.generalDialog(
+      pageBuilder: (context, anim1, anim2) {
+        return const ClearDialog();
+      },
+      transitionBuilder: (context, anim1, anim2, child) {
+        return SlideTransition(
+            position: Tween(begin: const Offset(0, -1), end: const Offset(0, 0))
+                .animate(anim1),
+            child: child);
+      },
+      transitionDuration: const Duration(milliseconds: 300),
+    );
+  }
 }
+

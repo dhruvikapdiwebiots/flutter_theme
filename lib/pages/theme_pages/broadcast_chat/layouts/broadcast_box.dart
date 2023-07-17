@@ -51,7 +51,7 @@ class BroadcastInputBox extends StatelessWidget {
                 onTap: () => chatCtrl.audioRecording(context, "audio", 0)),
             SvgPicture.asset(svgAssets.gif)
                 .inkWell(onTap: () => chatCtrl.shareMedia(context))
-                .marginSymmetric(horizontal: Insets.i20),
+                .marginSymmetric(horizontal: Insets.i10),
             InkWell(
               child:  Icon(Icons.gif_box_outlined, color: appCtrl.appTheme.primary),
               onTap: () async {
