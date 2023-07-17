@@ -145,6 +145,23 @@ int getUnseenMessagesNumber(
   return counter;
 }
 
+
+int getGroupUnseenMessagesNumber(
+    List<QueryDocumentSnapshot<Map<String, dynamic>>> items) {
+  int counter = 0;
+  items
+      .asMap()
+      .entries
+      .forEach((element) {
+        if(element.value.data().containsKey("seenMessageList")) {
+          if (!element.value.data()["seenMessageList"].contains(appCtrl.user["id"])) {
+            counter++;
+          }
+        }
+  });
+  return counter;
+}
+
 bool checkUserExist(phone) {
   bool isExist = false;
   log("{userContactList.length: ${appCtrl.userContactList.length}");
