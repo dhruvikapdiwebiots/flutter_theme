@@ -337,10 +337,13 @@ class BroadcastChatController extends GetxController {
         newpData.add(element.value);
         update();
         await FirebaseFirestore.instance
+            .collection(collectionName.users)
+            .doc(element.value["id"])
             .collection(collectionName.messages)
             .doc(element.value["chatId"])
             .collection(collectionName.chat)
-            .add({
+            .doc(DateTime.now().millisecondsSinceEpoch.toString())
+            .set({
           'sender': userData["id"],
           'receiver': element.value["id"],
           'content': content,
@@ -369,10 +372,13 @@ class BroadcastChatController extends GetxController {
         update();
         element.value["chatId"] = newChatId;
         await FirebaseFirestore.instance
+            .collection(collectionName.users)
+            .doc(element.value["id"])
             .collection(collectionName.messages)
             .doc(element.value["chatId"])
             .collection(collectionName.chat)
-            .add({
+            .doc(DateTime.now().millisecondsSinceEpoch.toString())
+            .set({
           'sender': userData["id"],
           'receiver': element.value["id"],
           'content': content,
@@ -407,6 +413,25 @@ class BroadcastChatController extends GetxController {
       BuildContext context, DocumentSnapshot documentReference) {
     return BroadCastDeleteAlert(
       documentReference: documentReference,
+    );
+  }
+
+
+  Widget timeLayout(document) {
+    List newMessageList = document["message"];
+    return Column(
+      children: [
+        Text(
+            document["title"].contains("-other")
+                ? document["title"].split("-other")[0]
+                : document["title"],
+            style:
+            AppCss.poppinsMedium14.textColor(appCtrl.appTheme.txtColor))
+            .marginSymmetric(vertical: Insets.i5),
+        ...newMessageList.asMap().entries.map((e) {
+          return buildItem(e.key, e.value);
+        }).toList()
+      ],
     );
   }
 

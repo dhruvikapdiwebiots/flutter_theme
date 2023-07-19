@@ -88,7 +88,8 @@ final dynamic en = {
   "enterYourMessage": "Type here...",
   "noItemFound": "No Item Found",
   "noMoreItemFound": "No More Item Found",
-  "noInternet": "Couldn’t connect to the internet, please check your connection setting.",
+  "noInternet":
+      "Couldn’t connect to the internet, please check your connection setting.",
   "intro1": "Chat anytime, anywhere",
   "intro2": "Connect your friend",
   "intro3": "Make Group Chat",
@@ -116,24 +117,29 @@ final dynamic en = {
   "plsWait": "Please Wait",
   "newChat": "New Chat",
   "pleaseWait": "Please wait for remote user to join",
-  "deleteConfirmation": "Are you sure you want to delete your Account? After delete you will lose all your data.",
+  "deleteConfirmation":
+      "Are you sure you want to delete your Account? After delete you will lose all your data.",
   "ok": "Ok",
   "rtl": "RTL/LTR",
   "areYouSureToDelete": "Are you sure you want to delete this message?",
   "today": "Today, ",
   "yesterday": "Yesterday, ",
   "emptyMessageTitle": "You’ve not chat yet !!",
-  "emptyMessageDesc": "There is no chat done yet. Click on Below Button to start chat",
+  "emptyMessageDesc":
+      "There is no chat done yet. Click on Below Button to start chat",
   "emptyCallTitle": "You’ve not call yet !!",
-  "emptyCallDesc": "There is no call done yet. Click on Below Button to start call",
+  "emptyCallDesc":
+      "There is no call done yet. Click on Below Button to start call",
   "emptyStatusTitle": "No Status Here Yet",
-  "emptyStatusDesc": "Send a status or tap the greeting above & be the first one to start status.",
+  "emptyStatusDesc":
+      "Send a status or tap the greeting above & be the first one to start status.",
   "people": "People",
   "deviceNotSupported": "Device Not Supported",
   "defaultWallpaper": "Default Wallpaper",
   "unlockWithFingerprint": "Unlock with fingerprint",
   "fingerprintLock": "Fingerprint Lock",
-  "unlockWithFingerprintDesc": "when enabled, you’ll need to use fingerprint to open chatify. You can still answer calls if chatify is locked.",
+  "unlockWithFingerprintDesc":
+      "when enabled, you’ll need to use fingerprint to open chatify. You can still answer calls if chatify is locked.",
   "rateApp": "Rate App",
   "delete": "Delete",
   "share": "Share",
@@ -168,5 +174,6 @@ final dynamic en = {
   "clearChat": "Clear Chat",
   "clearChatId": "Clear this chat?",
   "deleteOption": "Also delete media received in this chat from your device",
-  "noteEncrypt": "Message, Audio, Video, Media, etc share end-to-end encryption so that no one, can read your conversation.",
+  "noteEncrypt":
+      "Message, Audio, Video, Media, etc share end-to-end encryption so that no one, can read your conversation.",
 };

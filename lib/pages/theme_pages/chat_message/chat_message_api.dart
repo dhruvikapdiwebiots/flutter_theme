@@ -354,4 +354,106 @@ class ChatMessageApi {
     });
 
   }
+
+  getBroadcastMessageAsPerDate(snapshot){
+    final chatCtrl = Get.isRegistered<BroadcastChatController>()
+        ? Get.find<BroadcastChatController>()
+        : Get.put(BroadcastChatController());
+    List<QueryDocumentSnapshot<Object?>> message =
+        (snapshot.data!).docs;
+    message.asMap().entries.forEach((element) {
+
+      if (getDate(element.value.id) == "today") {
+        List<QueryDocumentSnapshot<Object?>> newMessageList = [];
+        bool isExist = chatCtrl.message
+            .where((element) => element["title"] == "today")
+            .isNotEmpty;
+
+        if (isExist) {
+          if(!newMessageList.contains(element.value)) {
+            newMessageList.add(element.value);
+            int index = chatCtrl.message.indexWhere(
+                    (element) =>
+                element["title"] == "today");
+            chatCtrl.message[index]["message"] =
+                newMessageList;
+          }
+        } else {
+          if(!newMessageList.contains(element.value)) {
+            newMessageList.add(element.value);
+            var data = {
+              "title": getDate(element.value.id),
+              "message": newMessageList
+            };
+
+            chatCtrl.message = [data];
+          }
+
+        }
+      }
+      if (getDate(element.value.id) == "yesterday") {
+        List<QueryDocumentSnapshot<Object?>> newMessageList = [];
+        bool isExist = chatCtrl.message
+            .where((element) => element["title"] == "yesterday")
+            .isNotEmpty;
+
+        if (isExist) {
+          if(!newMessageList.contains(element.value)) {
+            newMessageList.add(element.value);
+            int index = chatCtrl.message.indexWhere(
+                    (element) =>
+                element["title"] == "yesterday");
+            chatCtrl.message[index]["message"] =
+                newMessageList;
+          }
+        } else {
+          if(!newMessageList.contains(element.value)) {
+            newMessageList.add(element.value);
+            var data = {
+              "title": getDate(element.value.id),
+              "message": newMessageList
+            };
+
+            if(chatCtrl.message.isNotEmpty){
+              chatCtrl.message.add(data);
+            }else {
+              chatCtrl.message = [data];
+            }
+          }
+        }
+      }
+      if(getDate(element.value.id) != "yesterday" && getDate(element.value.id) != "today"){
+        List<QueryDocumentSnapshot<Object?>> newMessageList = [];
+        bool isExist = chatCtrl.message
+            .where((element) => element["title"].contains("-other"))
+            .isNotEmpty;
+
+        if (isExist) {
+          if(!newMessageList.contains(element.value)) {
+            newMessageList.add(element.value);
+            int index = chatCtrl.message.indexWhere(
+                    (element) =>
+                    element["title"].contains("-other"));
+            chatCtrl.message[index]["message"] =
+                newMessageList;
+          }
+        } else {
+          if(!newMessageList.contains(element.value)) {
+            newMessageList.add(element.value);
+            var data = {
+              "title": getWhen(element.value.id),
+              "message": newMessageList
+            };
+
+            if(chatCtrl.message.isNotEmpty){
+              chatCtrl.message.add(data);
+            }else {
+              chatCtrl.message = [data];
+            }
+          }
+        }
+      }
+    });
+
+  }
 }

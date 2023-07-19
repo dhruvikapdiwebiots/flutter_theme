@@ -288,23 +288,23 @@ class ChatController extends GetxController {
         chatId == "0" ? now.microsecondsSinceEpoch.toString() : chatId;
     chatId = newChatId;
     update();
+    final key = encrypt.Key.fromUtf8('my 32 length key................');
+    final iv = encrypt.IV.fromLength(16);
+
+    final encrypter = encrypt.Encrypter(encrypt.AES(key));
+
     if (allData["isBlock"] == true) {
-      FirebaseFirestore.instance
-          .collection(collectionName.messages)
-          .doc(newChatId)
-          .collection(collectionName.chat)
-          .add({
-        'sender': userData["id"],
-        'receiver': pId,
-        'content': "You unblock this contact",
-        "chatId": newChatId,
-        'type': MessageType.messageType.name,
-        "isBlock": false,
-        "blockBy": userData["id"],
-        "blockUserId": "",
-        'messageType': "sender",
-        'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-      });
+
+      final encrypted =
+          encrypter.encrypt("You unblock this contact", iv: iv).base64;
+
+      ChatMessageApi().saveMessage(
+          newChatId,
+          pId,
+          encrypted,
+          MessageType.messageType,
+          DateTime.now().millisecondsSinceEpoch.toString(),
+          userData["id"]);
 
       await ChatMessageApi().saveMessageInUserCollection(
           userData["id"],
@@ -315,22 +315,17 @@ class ChatController extends GetxController {
           userData["id"],
           userData["name"]);
     } else {
-      FirebaseFirestore.instance
-          .collection(collectionName.messages)
-          .doc(newChatId)
-          .collection(collectionName.chat)
-          .add({
-        'sender': userData["id"],
-        'receiver': pId,
-        'content': "You block this contact",
-        "chatId": newChatId,
-        'type': MessageType.messageType.name,
-        "isBlock": true,
-        "blockBy": userData["id"],
-        "blockUserId": pId,
-        'messageType': "sender",
-        'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-      });
+
+      final encrypted =
+          encrypter.encrypt("You block this contact", iv: iv).base64;
+
+      ChatMessageApi().saveMessage(
+          newChatId,
+          pId,
+          encrypted,
+          MessageType.messageType,
+          DateTime.now().millisecondsSinceEpoch.toString(),
+          userData["id"]);
 
       await ChatMessageApi().saveMessageInUserCollection(
           userData["id"],
@@ -687,12 +682,17 @@ class ChatController extends GetxController {
     );
   }
 
-
   Widget timeLayout(document) {
     List newMessageList = document["message"];
     return Column(
       children: [
-        Text(document["title"].contains("-other") ? document["title"].split("-other")[0]: document["title"],style: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.txtColor)).marginSymmetric(vertical: Insets.i5),
+        Text(
+                document["title"].contains("-other")
+                    ? document["title"].split("-other")[0]
+                    : document["title"],
+                style:
+                    AppCss.poppinsMedium14.textColor(appCtrl.appTheme.txtColor))
+            .marginSymmetric(vertical: Insets.i5),
         ...newMessageList.asMap().entries.map((e) {
           return buildItem(e.key, e.value, e.value.id);
         }).toList()
@@ -827,7 +827,6 @@ class ChatController extends GetxController {
       ),
     );
   }
-
 
 //clear dialog
   clearChatConfirmation() async {

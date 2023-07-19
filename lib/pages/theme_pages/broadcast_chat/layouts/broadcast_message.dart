@@ -9,12 +9,15 @@ class BroadcastMessage extends StatelessWidget {
     return GetBuilder<BroadcastChatController>(builder: (chatCtrl) {
       return Flexible(
         child:  StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection(collectionName.broadcastMessage)
-              .doc(chatCtrl.pId)
-              .collection(collectionName.chat)
-              .orderBy('timestamp', descending: true)
-              .limit(20).snapshots(),
+          stream:  FirebaseFirestore.instance
+            .collection(collectionName.users)
+            .doc(appCtrl.user["id"])
+            .collection(collectionName.broadcastMessage)
+            .doc(chatCtrl.pId)
+            .collection(collectionName.chat)
+            .orderBy('timestamp', descending: true)
+            .limit(20)
+            .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Center(
@@ -22,11 +25,12 @@ class BroadcastMessage extends StatelessWidget {
                       valueColor: AlwaysStoppedAnimation<Color>(
                           appCtrl.appTheme.primary)));
             } else {
-              chatCtrl.message = (snapshot.data!);
+              ChatMessageApi().getBroadcastMessageAsPerDate(snapshot);
               return ListView.builder(
-                itemBuilder: (context, index) => chatCtrl.buildItem(
-                    index, (snapshot.data!).docs[index]),
-                itemCount: (snapshot.data!).docs.length,
+                itemBuilder: (context, index) => chatCtrl.timeLayout(
+                chatCtrl.message[index],
+              ),
+                itemCount: chatCtrl.message.length,
                 reverse: true,
                 controller: chatCtrl.listScrollController,
               );
