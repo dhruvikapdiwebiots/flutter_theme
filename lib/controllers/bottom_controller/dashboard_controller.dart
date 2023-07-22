@@ -185,12 +185,8 @@ class DashboardController extends GetxController
 
       if (appCtrl.contactList.isNotEmpty) {
         await addContactInFirebase();
-        final contactCtrl = Get.isRegistered<ContactListController>()
-            ? Get.find<ContactListController>()
-            : Get.put(ContactListController());
-       contactCtrl.getAllData();
-       contactCtrl.getAllUnRegisterUser();
-        contactCtrl.onReady();
+       await getFirebaseContact();
+
 
         contactCtrl.update();
         Get.forceAppUpdate();
@@ -199,57 +195,60 @@ class DashboardController extends GetxController
   }
 
   addContactInFirebase() async {
+    log("CHECK : ${appCtrl.contactList.length}");
     if (appCtrl.contactList.isNotEmpty) {
       List<Map<String, dynamic>> contactsData = [];
       List<Map<String, dynamic>> unRegisterContactData = [];
 
       appCtrl.contactList.asMap().entries.forEach((contact) async {
-        bool isRegister = false;
-        String id = "";
-        await FirebaseFirestore.instance
-            .collection(collectionName.users)
-            .where("phone",
-                isEqualTo: phoneNumberExtension(
-                    contact.value.phones[0].number.toString()))
-            .get()
-            .then((value) {
-          if (value.docs.isEmpty) {
-            isRegister = false;
+        if(contact.value.phones.isNotEmpty) {
+          bool isRegister = false;
+          String id = "";
+          await FirebaseFirestore.instance
+              .collection(collectionName.users)
+              .where("phone",
+              isEqualTo: phoneNumberExtension(
+                  contact.value.phones[0].number.toString()))
+              .get()
+              .then((value) {
+            if (value.docs.isEmpty) {
+              isRegister = false;
+            } else {
+              isRegister = true;
+              id = value.docs[0].id;
+            }
+          });
+          update();
+          if (isRegister) {
+            var objData = {
+              'name': contact.value.displayName,
+              'phone': contact.value.phones.isNotEmpty
+                  ? phoneNumberExtension(
+                  contact.value.phones[0].number.toString())
+                  : null,
+              "isRegister": true,
+              "image": contact.value.photo,
+              "id": id
+              // Include other necessary contact.value details
+            };
+            if (!contactsData.contains(objData)) {
+              contactsData.add(objData);
+            }
           } else {
-            isRegister = true;
-            id = value.docs[0].id;
-          }
-        });
-        update();
-        if (isRegister) {
-          var objData = {
-            'name': contact.value.displayName,
-            'phone': contact.value.phones.isNotEmpty
-                ? phoneNumberExtension(
-                    contact.value.phones[0].number.toString())
-                : null,
-            "isRegister": true,
-            "image": contact.value.photo,
-            "id": id
-            // Include other necessary contact.value details
-          };
-          if (!contactsData.contains(objData)) {
-            contactsData.add(objData);
-          }
-        } else {
-          var objData = {
-            'name': contact.value.displayName,
-            'phone': contact.value.phones.isNotEmpty
-                ? phoneNumberExtension(
-                    contact.value.phones[0].number.toString())
-                : null,
-            "isRegister": false,
-            "image": contact.value.photo,
-            "id": "0"
-            // Include other necessary contact.value details
-          };
-          if (!unRegisterContactData.contains(objData)) {
-            unRegisterContactData.add(objData);
+            var objData = {
+              'name': contact.value.displayName,
+              'phone': contact.value.phones.isNotEmpty
+                  ? phoneNumberExtension(
+                  contact.value.phones[0].number.toString())
+                  : null,
+              "isRegister": false,
+              "image": contact.value.photo,
+              "id": "0"
+              // Include other necessary contact.value details
+            };
+            if (!unRegisterContactData.contains(objData)) {
+              unRegisterContactData.add(objData);
+            }
           }
         }
       });
@@ -268,6 +267,7 @@ class DashboardController extends GetxController
               .collection(collectionName.registerUser)
               .add({"contact": contactsData});
         } else {
+
           log("ALREADY COLLECTION");
         }
       });
@@ -288,31 +288,15 @@ class DashboardController extends GetxController
         } else {
           log("ALREADY COLLECTION");
         }
-      }).then((value) => checkContactList());
+      });
 
       contactCtrl.onReady();
       contactCtrl.update();
+    }else{
+      checkPermission();
     }
 
-    if (appCtrl.firebaseContact.isEmpty) {
-      await FirebaseFirestore.instance
-          .collection(collectionName.users)
-          .doc(appCtrl.user["id"])
-          .collection(collectionName.registerUser)
-          .get()
-          .then((value) {
-        List allUserList = value.docs[0].data()["contact"];
-        allUserList.asMap().entries.forEach((element) {
-          if (!appCtrl.firebaseContact.contains(element.value)) {
-            appCtrl.firebaseContact
-                .add(FirebaseContactModel.fromJson(element.value));
-          }
-        });
-      });
-      appCtrl.update();
-    }
 
-    getFirebaseContact();
   }
 
   getFirebaseContact() async {
@@ -372,7 +356,7 @@ class DashboardController extends GetxController
     messageCtrl.onReady();
     statusCtrl.onReady();
     statusCtrl.update();
-    getFirebaseContact();
+
     super.onInit();
   }
 

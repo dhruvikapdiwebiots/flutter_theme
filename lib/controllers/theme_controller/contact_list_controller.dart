@@ -79,10 +79,7 @@ class ContactListController extends GetxController {
 
         debugPrint("CONNNN 11: ${appCtrl.firebaseContact.length}");
         allUserList = snapshot.docs[0].data()["contact"];
-        debugPrint("allUserList : ${allUserList.length}");
         allUserList.asMap().entries.forEach((element) {
-          log("PHONE : ${element.value["phone"]}");
-          log("PHONE : ${appCtrl.user["phone"]}");
           if(element.value["phone"] != appCtrl.user["phone"]) {
             if (!appCtrl.firebaseContact.contains(element.value)) {
               appCtrl.firebaseContact

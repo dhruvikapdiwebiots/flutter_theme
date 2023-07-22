@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:audioplayers/audioplayers.dart' as audio_players;
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter_theme/common/language/en.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wakelock/wakelock.dart';
 import '../../config.dart';
@@ -140,7 +141,26 @@ class AudioCallController extends GetxController {
       appId: agoraToken["agoraAppId"],
       channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
     ));
+    await engine.setEnableSpeakerphone(isSpeaker);
+    await engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
+    await engine.setChannelProfile(ChannelProfileType.channelProfileLiveBroadcasting);
     log("engine : $engine");
+update();
+
+    log("engine1 : $engine");
+
+    await engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
+    await engine.startPreview();
+
+    log("agoraToken Audio : $agoraToken");
+    await engine.joinChannel(
+      token: agoraToken["token"],
+      channelId: channelName!,
+      uid: 0,
+      options: const ChannelMediaOptions(),
+    );
+    update();
+
 
     engine.registerEventHandler(
       RtcEngineEventHandler(
@@ -306,19 +326,7 @@ class AudioCallController extends GetxController {
       ),
     );
 
-    log("engine1 : $engine");
 
-    await engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
-    await engine.startPreview();
-
-    log("agoraToken Audio : $agoraToken");
-    await engine.joinChannel(
-      token: agoraToken["token"],
-      channelId: channelName!,
-      uid: 0,
-      options: const ChannelMediaOptions(),
-    );
-    update();
   }
 
   //speaker mute - unMute
@@ -529,7 +537,7 @@ class AudioCallController extends GetxController {
                     width: w / 1.1,
                     child: Text(
                         call!.callerId == userData["id"]
-                            ? call!.receiverName!
+                            ? call!.receiverName ?? "Anonymous"
                             : call!.callerName!,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,

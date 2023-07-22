@@ -51,4 +51,5 @@ class SvgAssets{
   final String audioVideo = "assets/svg/audio_video.svg";
   final String closeCircle = "assets/svg/closeCircle.svg";
   final String lock = "assets/svg/lock.svg";
+  final String emoji = "assets/svg/emoji.svg";
 }

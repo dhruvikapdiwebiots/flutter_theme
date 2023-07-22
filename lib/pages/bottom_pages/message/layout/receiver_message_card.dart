@@ -36,7 +36,7 @@ class ReceiverMessageCard extends StatelessWidget {
                                 style: AppCss.poppinsblack14
                                     .textColor(appCtrl.appTheme.blackColor)),
                             const VSpace(Sizes.s5),
-                            document!["lastMessage"] != null
+                            document!["lastMessage"] != null && document!["lastMessage"] != ""
                                 ? SubTitleLayout(
                                     document: document,
                                     name: snapshot.data!["name"],

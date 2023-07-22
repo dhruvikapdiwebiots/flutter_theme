@@ -39,14 +39,14 @@ class MessageBox extends StatelessWidget {
                         ChatMessageApi().getMessageAsPerDate(snapshot);
                         return ListView.builder(
                             itemBuilder: (context, index) {
-                              log("DDDD : ${chatCtrl.message.length}");
+                              log("DDDD : ${chatCtrl.chatId}");
                               return chatCtrl
                                   .timeLayout(
                                     chatCtrl.message[index],
                                   )
                                   .marginOnly(bottom: Insets.i18);
                             },
-                            itemCount: chatCtrl.message.length,
+                            itemCount: chatCtrl.message.reversed.length,
                             reverse: true,
                             controller: chatCtrl.listScrollController);
                       }

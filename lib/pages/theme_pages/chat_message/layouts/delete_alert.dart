@@ -28,9 +28,11 @@ class DeleteAlert extends StatelessWidget {
               chatCtrl.selectedIndexId.asMap().entries.forEach((element)async {
                 log("ONNN : ${element.value}");
                await FirebaseFirestore.instance
-                    .collection('messages')
-                    .doc(chatCtrl.chatId)
-                    .collection("chat")
+                   .collection(collectionName.users)
+                   .doc(appCtrl.user["id"])
+                   .collection(collectionName.messages)
+                   .doc(chatCtrl.chatId)
+                   .collection(collectionName.chat)
                     .doc(element.value)
                     .delete();
               });
@@ -41,9 +43,11 @@ class DeleteAlert extends StatelessWidget {
                   curve: Curves.easeOut);
 
               await FirebaseFirestore.instance
-                  .collection('messages')
+                  .collection(collectionName.users)
+                  .doc(appCtrl.user["id"])
+                  .collection(collectionName.messages)
                   .doc(chatCtrl.chatId)
-                  .collection("chat")
+                  .collection(collectionName.chat)
                   .orderBy("timestamp", descending: true)
                   .limit(1)
                   .get()

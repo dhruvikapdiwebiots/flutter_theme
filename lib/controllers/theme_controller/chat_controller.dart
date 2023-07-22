@@ -7,7 +7,9 @@ import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/pages/theme_pages/chat_message/layouts/chat_wall_paper.dart';
 import 'package:flutter_theme/pages/theme_pages/chat_message/layouts/single_clear_dialog.dart';
+import 'package:flutter_theme/pages/theme_pages/group_chat_message/group_on_tap_function_class.dart';
 import 'package:flutter_theme/widgets/common_note_encrypt.dart';
+import 'package:flutter_theme/widgets/reaction_pop_up/emoji_picker_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -310,7 +312,7 @@ class ChatController extends GetxController {
           userData["id"],
           pId,
           newChatId,
-          "You unblock this contact",
+          encrypted,
           isBlock: false,
           userData["id"],
           userData["name"]);
@@ -331,7 +333,7 @@ class ChatController extends GetxController {
           userData["id"],
           pData["id"],
           newChatId,
-          "You block this contact",
+          encrypted,
           isBlock: true,
           userData["id"],
           userData["name"]);
@@ -505,7 +507,7 @@ class ChatController extends GetxController {
             ScaffoldMessenger.of(Get.context!).showSnackBar(
                 SnackBar(content: Text(fonts.unblockUser(pName))));
           } else {
-            ChatMessageApi()
+         await  ChatMessageApi()
                 .saveMessage(
                     newChatId,
                     pId,
@@ -535,7 +537,7 @@ class ChatController extends GetxController {
           isLoading = false;
           update();
         } else {
-          ChatMessageApi()
+          await   ChatMessageApi()
               .saveMessage(
                   newChatId,
                   pId,
@@ -543,8 +545,8 @@ class ChatController extends GetxController {
                   type,
                   DateTime.now().millisecondsSinceEpoch.toString(),
                   userData["id"])
-              .then((value) {
-            ChatMessageApi()
+              .then((value)async {
+            await    ChatMessageApi()
                 .saveMessage(newChatId, pId, encrypted, type,
                     DateTime.now().millisecondsSinceEpoch.toString(), pId)
                 .then((snap) async {
@@ -577,7 +579,7 @@ class ChatController extends GetxController {
         isLoading = false;
         update();
 
-        ChatMessageApi()
+        await  ChatMessageApi()
             .saveMessage(
                 newChatId,
                 pId,
@@ -585,8 +587,8 @@ class ChatController extends GetxController {
                 type,
                 DateTime.now().millisecondsSinceEpoch.toString(),
                 userData["id"])
-            .then((value) {
-          ChatMessageApi()
+            .then((value) async{
+          await   ChatMessageApi()
               .saveMessage(newChatId, pId, encrypted, type,
                   DateTime.now().millisecondsSinceEpoch.toString(), pId)
               .then((snap) async {
@@ -716,7 +718,8 @@ class ChatController extends GetxController {
                 ).paddingOnly(bottom: Insets.i8)
             ],
           ));
-    } else if (document['sender'] == userData["id"]) {
+    }
+    if (document['sender'] == userData["id"]) {
       return SenderMessage(
         document: document,
         index: index,
@@ -842,5 +845,21 @@ class ChatController extends GetxController {
       },
       transitionDuration: const Duration(milliseconds: 300),
     );
+  }
+
+
+  void showBottomSheet(BuildContext context) => showModalBottomSheet<void>(
+    context: context,
+    builder: (context) => EmojiPickerWidget(onSelected: (emoji) {
+      Navigator.pop(context);
+      log("emoji : ${emoji.codeUnits}");
+      log("emoji : ${emoji.characters}");
+      onEmojiTap(emoji);
+    }),
+  );
+
+  onEmojiTap(emoji){
+
+   onSendMessage(emoji, MessageType.text);
   }
 }

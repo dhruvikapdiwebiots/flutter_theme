@@ -11,6 +11,7 @@ import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/clear
 import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_chat_wall_paper.dart';
 import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_profile/exit_group_alert.dart';
 import 'package:flutter_theme/widgets/common_note_encrypt.dart';
+import 'package:flutter_theme/widgets/reaction_pop_up/emoji_picker_widget.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
@@ -936,6 +937,19 @@ class GroupChatMessageController extends GetxController {
       },
       transitionDuration: const Duration(milliseconds: 300),
     );
+  }
+
+  void showBottomSheet(BuildContext context) => showModalBottomSheet<void>(
+    context: context,
+    builder: (context) => EmojiPickerWidget(onSelected: (emoji) {
+      Navigator.pop(context);
+      onEmojiTap(emoji);
+    }),
+  );
+
+  onEmojiTap(emoji){
+
+    onSendMessage(emoji, MessageType.text);
   }
 }
 

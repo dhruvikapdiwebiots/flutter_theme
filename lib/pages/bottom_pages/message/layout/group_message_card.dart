@@ -1,4 +1,6 @@
 
+import 'dart:developer';
+
 import '../../../../config.dart';
 
 class GroupMessageCard extends StatelessWidget {
@@ -19,6 +21,7 @@ class GroupMessageCard extends StatelessWidget {
           if (!snapshot.hasData) {
             return Container();
           } else {
+            log("SNAAPSJOT: ${snapshot.data!.exists}");
             return StreamBuilder(
                     stream: FirebaseFirestore.instance
                         .collection("users")
@@ -30,7 +33,7 @@ class GroupMessageCard extends StatelessWidget {
                                 snapshot: snapshot,
                                 document: document,
                                 currentUserId: currentUserId,
-                                userSnapShot: userSnapShot)
+                                userSnapShot: userSnapShot,)
                             .inkWell(onTap: () {
                           var data = {
                             "message": document!.data(),

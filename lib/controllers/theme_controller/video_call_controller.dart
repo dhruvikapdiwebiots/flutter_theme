@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:audioplayers/audioplayers.dart' as audio_players;
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter_theme/common/language/en.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wakelock/wakelock.dart';
@@ -77,21 +78,7 @@ class VideoCallController extends GetxController {
   @override
   void onReady() {
     // TODO: implement onReady
-    var data = Get.arguments;
-    channelName = data["channelName"];
-    call = data["call"];
-    role = data["role"];
-    userData = appCtrl.storage.read(session.user);
-    update();
 
-    stream = FirebaseFirestore.instance
-        .collection(collectionName.calls)
-        .doc(userData["id"])
-        .collection(collectionName.collectionCallHistory)
-        .doc(call!.timestamp.toString())
-        .snapshots();
-    update();
-    log("stream : $stream");
     super.onReady();
   }
 
@@ -99,21 +86,45 @@ class VideoCallController extends GetxController {
     return Future.value(false);
   }
 
-
   //initialise agora
   Future<void> initAgora() async {
-    // retrieve permissions
     dynamic agoraToken = appCtrl.storage.read(session.agoraToken);
-    await [Permission.microphone, Permission.camera].request();
-    log("permis :");
+    String appId = agoraToken["agoraAppId"];
+    if (appId.isEmpty) {
+      infoStrings.add(
+        'APP_ID missing, please provide your APP_ID in settings.dart',
+      );
+      infoStrings.add('Agora Engine is not starting');
+      return;
+    }
+
+    log("permis : $infoStrings");
     //create the engine
     engine = createAgoraRtcEngine();
+
     await engine.initialize(RtcEngineContext(
       appId: agoraToken["agoraAppId"],
-      channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
     ));
-    log("engine : $engine");
 
+    await agoraHandelEvent();
+
+    await engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
+    await engine.enableVideo();
+    await engine.startPreview();
+    await engine.joinChannel(
+      token: agoraToken["token"],
+      channelId: channelName!,
+      uid: 0,
+      options: const ChannelMediaOptions(),
+    );
+    update();
+
+    log("ENABLE : $engine");
+  }
+
+
+
+  agoraHandelEvent() {
     engine.registerEventHandler(
       RtcEngineEventHandler(
         onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
@@ -121,7 +132,7 @@ class VideoCallController extends GetxController {
           localUserJoined = true;
           final info = 'onJoinChannel: $channel, uid: ${connection.localUid}';
           infoStrings.add(info);
-          log("info :info" );
+          log("info :info");
           if (call!.receiver != null) {
             List receiver = call!.receiver!;
             receiver.asMap().entries.forEach((element) {
@@ -156,7 +167,7 @@ class VideoCallController extends GetxController {
               'started': null,
               'ended': null,
               'callerName':
-              call!.receiver != null ? nameList : call!.callerName,
+                  call!.receiver != null ? nameList : call!.callerName,
             }, SetOptions(merge: true));
             if (call!.receiver != null) {
               List receiver = call!.receiver!;
@@ -180,7 +191,7 @@ class VideoCallController extends GetxController {
                     'started': null,
                     'ended': null,
                     'callerName':
-                    call!.receiver != null ? nameList : call!.callerName,
+                        call!.receiver != null ? nameList : call!.callerName,
                   }, SetOptions(merge: true));
                 }
               });
@@ -205,7 +216,7 @@ class VideoCallController extends GetxController {
                 'started': null,
                 'ended': null,
                 'callerName':
-                call!.receiver != null ? nameList : call!.callerName,
+                    call!.receiver != null ? nameList : call!.callerName,
               }, SetOptions(merge: true));
             }
           }
@@ -217,6 +228,10 @@ class VideoCallController extends GetxController {
         onFirstRemoteAudioFrame: (connection, userId, elapsed) {
           final info = 'firstRemoteVideo: $userId';
           infoStrings.add(info);
+        },
+        onError: (err, msg) {
+          log("ONERROR : $err");
+          log("ONERROR : $msg");
         },
         onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
           remoteUidValue = remoteUid;
@@ -333,7 +348,7 @@ class VideoCallController extends GetxController {
             }
           }
         },
-        onTokenPrivilegeWillExpire: (RtcConnection connection, String token) {
+        onTokenPrivilegeWillExpire: (RtcConnection connection, String token)async {
           debugPrint(
               '[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
         },
@@ -392,22 +407,7 @@ class VideoCallController extends GetxController {
         },
       ),
     );
-
-    log("engine1 : $engine");
-
-    await engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
-    await engine.enableVideo();
-    await engine.startPreview();
-
-    await engine.joinChannel(
-      token: agoraToken["token"],
-      channelId: channelName!,
-      uid: 0,
-      options: const ChannelMediaOptions(),
-    );
-    update();
   }
-
 
   //on speaker off on
   void onToggleSpeaker() {
@@ -415,7 +415,6 @@ class VideoCallController extends GetxController {
     update();
     engine.setEnableSpeakerphone(isSpeaker);
   }
-
 
   //mute - unMute toggle
   void onToggleMute() {
@@ -447,7 +446,10 @@ class VideoCallController extends GetxController {
     String? status,
   ) {
     if (role == ClientRoleType.clientRoleAudience) return Container();
-    return VideoToolBar(isShowSpeaker: isShowSpeaker,status: status,);
+    return VideoToolBar(
+      isShowSpeaker: isShowSpeaker,
+      status: status,
+    );
   }
 
   //switch camera
@@ -594,5 +596,4 @@ class VideoCallController extends GetxController {
     Wakelock.disable();
     Get.back();
   }
-
 }

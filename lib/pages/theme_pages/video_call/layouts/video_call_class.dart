@@ -84,6 +84,8 @@ log("views : ${views.length}");
                   canvas: VideoCanvas(uid: uid.value),
                   connection: RtcConnection(channelId: videoCallCtrl.channelName)),
             )));
+
+    log("AGORA : $list");
     return list;
   }
 

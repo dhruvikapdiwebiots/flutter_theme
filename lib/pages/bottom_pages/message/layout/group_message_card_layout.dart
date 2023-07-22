@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:intl/intl.dart';
 
 import '../../../../config.dart';
@@ -18,17 +20,18 @@ class GroupMessageCardLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log("SNAP  : ${(snapshot!.data!.exists)}");
     return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(children: [
             CommonImage(
-                image: (snapshot!.data!)["image"],
-                name: (snapshot!.data!)["name"]),
+                image: snapshot!.data!.exists ? (snapshot!.data!)["image"] :"",
+                name: snapshot!.data!.exists ?  (snapshot!.data!)["name"] :"C"),
             const HSpace(Sizes.s12),
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(snapshot!.data!["name"],
+              Text(snapshot!.data!.exists ? snapshot!.data!["name"]:"",
                   style: AppCss.poppinsblack14
                       .textColor(appCtrl.appTheme.blackColor)),
               const VSpace(Sizes.s5),

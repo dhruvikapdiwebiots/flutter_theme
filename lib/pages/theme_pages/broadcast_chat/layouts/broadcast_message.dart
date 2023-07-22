@@ -26,14 +26,14 @@ class BroadcastMessage extends StatelessWidget {
                           appCtrl.appTheme.primary)));
             } else {
               ChatMessageApi().getBroadcastMessageAsPerDate(snapshot);
-              return ListView.builder(
+              return chatCtrl.message != null ? ListView.builder(
                 itemBuilder: (context, index) => chatCtrl.timeLayout(
                 chatCtrl.message[index],
               ),
                 itemCount: chatCtrl.message.length,
                 reverse: true,
                 controller: chatCtrl.listScrollController,
-              );
+              ) : Container();
             }
           },
         ),

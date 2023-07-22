@@ -28,8 +28,14 @@ class _AudioCallState extends State<AudioCall> {
       return Scaffold(
           backgroundColor: appCtrl.appTheme.whiteColor,
           body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-              stream: audioCallCtrl.stream
-                  as Stream<DocumentSnapshot<Map<String, dynamic>>>?,
+              stream: FirebaseFirestore.instance
+                  .collection(collectionName.calls)
+                  .doc(appCtrl.user["id"] == audioCallCtrl.call!.callerId
+                  ?  audioCallCtrl.call!.receiverId
+                  :  audioCallCtrl.call!.callerId)
+                  .collection("collectionCallHistory")
+                  .doc( audioCallCtrl.call!.timestamp.toString())
+                  .snapshots(),
               builder: (BuildContext context, snapshot) {
                 if (snapshot.hasData) {
                   if (snapshot.data!.data() == null || snapshot.data == null) {

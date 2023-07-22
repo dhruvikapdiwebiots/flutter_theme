@@ -47,17 +47,12 @@ class _ChatState extends State<Chat>
               child: chatCtrl.userData != null
                   ? Scaffold(
                       appBar: ChatMessageAppBar(
-                          userId: chatCtrl.pId,
-                          name: chatCtrl.pName,
-                          isBlock: chatCtrl.allData != null
-                              ? chatCtrl.allData["isBlock"] == true
-                                  ? chatCtrl.allData["blockUserId"] ==
-                                          chatCtrl.userData["id"]
-                                      ? true
-                                      : false
-                                  : false
-                              : false,
-                          callTap: () async {
+                        userId: chatCtrl.pId,
+                        name: chatCtrl.pName,
+                        onSelected: (result) async {
+                          log("CAA : $result");
+                          if (result == 0) {
+                            log("CALL");
                             await chatCtrl.permissionHandelCtrl
                                 .getCameraMicrophonePermissions()
                                 .then((value) {
@@ -65,8 +60,7 @@ class _ChatState extends State<Chat>
                                 chatCtrl.audioVideoCallTap(false);
                               }
                             });
-                          },
-                          videoTap: () async {
+                          } else if (result == 1) {
                             await chatCtrl.permissionHandelCtrl
                                 .getCameraMicrophonePermissions()
                                 .then((value) {
@@ -76,50 +70,63 @@ class _ChatState extends State<Chat>
                                 chatCtrl.audioVideoCallTap(true);
                               }
                             });
-                          }),
+                          }
+                        },
+                        isBlock: chatCtrl.allData != null
+                            ? chatCtrl.allData["isBlock"] == true
+                                ? chatCtrl.allData["blockUserId"] ==
+                                        chatCtrl.userData["id"]
+                                    ? true
+                                    : false
+                                : false
+                            : false,
+                      ),
                       backgroundColor: appCtrl.appTheme.bgColor,
-                      body: chatCtrl.allData != null ? Stack(children: <Widget>[
-                        chatCtrl.allData["backgroundImage"] != null
-                            ? Column(children: <Widget>[
-                                // List of messages
-                                const MessageBox(),
-                                // Sticker
-                                Container(),
-                                // Input content
-                                const InputBox()
-                              ])
-                                .decorated(
-                                    color: appCtrl.appTheme.bgColor,
-                                    image: DecorationImage(
-                                      fit: BoxFit.fill,
-                                        image: NetworkImage(chatCtrl
-                                            .allData["backgroundImage"])))
-                                .inkWell(onTap: () {
-                                chatCtrl.enableReactionPopup = false;
-                                chatCtrl.showPopUp = false;
-                                chatCtrl.update();
-                                log("chatCtrl.enableReactionPopup : ${chatCtrl.enableReactionPopup}");
+                      body: chatCtrl.allData != null
+                          ? Stack(children: <Widget>[
+                              chatCtrl.allData["backgroundImage"] != null
+                                  ? Column(children: <Widget>[
+                                      // List of messages
+                                      const MessageBox(),
+                                      // Sticker
+                                      Container(),
+                                      // Input content
+                                      const InputBox()
+                                    ])
+                                      .decorated(
+                                          color: appCtrl.appTheme.bgColor,
+                                          image: DecorationImage(
+                                              fit: BoxFit.fill,
+                                              image: NetworkImage(chatCtrl
+                                                  .allData["backgroundImage"])))
+                                      .inkWell(onTap: () {
+                                      chatCtrl.enableReactionPopup = false;
+                                      chatCtrl.showPopUp = false;
+                                      chatCtrl.update();
+                                      log("chatCtrl.enableReactionPopup : ${chatCtrl.enableReactionPopup}");
+                                    })
+                                  : Column(children: <Widget>[
+                                      // List of messages
+                                      const MessageBox(),
+                                      // Sticker
+                                      Container(),
+                                      // Input content
+                                      const InputBox()
+                                    ]).inkWell(onTap: () {
+                                      chatCtrl.enableReactionPopup = false;
+                                      chatCtrl.showPopUp = false;
+                                      chatCtrl.update();
+                                      log("chatCtrl.enableReactionPopup : ${chatCtrl.enableReactionPopup}");
+                                    }),
+                              // Loading
+                              if (chatCtrl.isLoading)
+                                CommonLoader(isLoading: chatCtrl.isLoading),
+                              GetBuilder<AppController>(builder: (appCtrl) {
+                                return CommonLoader(
+                                    isLoading: appCtrl.isLoading);
                               })
-                            : Column(children: <Widget>[
-                                // List of messages
-                                const MessageBox(),
-                                // Sticker
-                                Container(),
-                                // Input content
-                                const InputBox()
-                              ]).inkWell(onTap: () {
-                                chatCtrl.enableReactionPopup = false;
-                                chatCtrl.showPopUp = false;
-                                chatCtrl.update();
-                                log("chatCtrl.enableReactionPopup : ${chatCtrl.enableReactionPopup}");
-                              }),
-                        // Loading
-                        if (chatCtrl.isLoading)
-                          CommonLoader(isLoading: chatCtrl.isLoading),
-                        GetBuilder<AppController>(builder: (appCtrl) {
-                          return CommonLoader(isLoading: appCtrl.isLoading);
-                        })
-                      ]): Container())
+                            ])
+                          : Container())
                   : const Scaffold()),
         ),
       );

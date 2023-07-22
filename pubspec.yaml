@@ -87,7 +87,7 @@ dependencies:
   image_cropper: ^4.0.0
   giphy_get: ^3.0.0
   figma_squircle: ^0.5.3
-  agora_rtc_engine: ^6.2.0
+  agora_rtc_engine: ^6.1.0
   wakelock: ^0.6.2
   overlay_support: ^2.1.0
   #camera: ^0.10.5+1

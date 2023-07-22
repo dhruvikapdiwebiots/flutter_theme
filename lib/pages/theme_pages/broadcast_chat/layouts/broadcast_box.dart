@@ -96,8 +96,13 @@ class BroadcastInputBox extends StatelessWidget {
                     margin: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: SvgPicture.asset(svgAssets.send)))
                 .inkWell(
-                onTap: () => chatCtrl.onSendMessage(
-                    chatCtrl.textEditingController.text, MessageType.text))
+                onTap: () {
+                  if(chatCtrl.textEditingController.text.isNotEmpty){
+                    chatCtrl.onSendMessage(
+                        chatCtrl.textEditingController.text,
+                        MessageType.text);
+                  }
+                })
           ],
         ),
       );

@@ -53,6 +53,7 @@ class FirebaseCommonController extends GetxController {
         .get()
         .then((value) {
       if (value.exists) {
+
         nameList = value.data()!["status"] ?? "";
         if (nameList != "") {
           String newName = nameList.split(" is typing")[0];
@@ -94,7 +95,6 @@ class FirebaseCommonController extends GetxController {
           Status status = Status.fromJson(value.docs[0].data());
           List<PhotoUrl> photoUrl = status.photoUrl!;
           await getPhotoUrl(status.photoUrl!).then((list) async {
-
             List<PhotoUrl> photoUrls = list;
             log("photoUrls : ${photoUrls.length}");
             if (photoUrls.isEmpty) {
@@ -307,4 +307,40 @@ class FirebaseCommonController extends GetxController {
       log('exception $e');
     }
   }
+
+  //delete Contacts
+  void deleteContacts() async {
+    await FirebaseFirestore.instance
+        .collection(collectionName.users)
+        .doc(appCtrl.user["id"])
+        .collection(collectionName.registerUser)
+        .get()
+        .then((value) {
+      if (value.docs.isNotEmpty) {
+        FirebaseFirestore.instance
+            .collection(collectionName.users)
+            .doc(appCtrl.user["id"])
+            .collection(collectionName.registerUser)
+            .doc(value.docs[0].id)
+            .delete();
+      }
+    });
+
+    await FirebaseFirestore.instance
+        .collection(collectionName.users)
+        .doc(appCtrl.user["id"])
+        .collection(collectionName.unRegisterUser)
+        .get()
+        .then((value) {
+      if (value.docs.isNotEmpty) {
+        FirebaseFirestore.instance
+            .collection(collectionName.users)
+            .doc(appCtrl.user["id"])
+            .collection(collectionName.unRegisterUser)
+            .doc(value.docs[0].id)
+            .delete();
+      }
+    });
+  }
+
 }

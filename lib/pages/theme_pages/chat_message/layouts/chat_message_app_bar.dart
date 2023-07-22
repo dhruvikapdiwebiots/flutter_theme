@@ -5,14 +5,16 @@ import '../../../../config.dart';
 
 class ChatMessageAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? name, image, userId;
-  final VoidCallback? callTap, videoTap;
+  final Function? callTap, videoTap;
   final bool isBlock;
+  final PopupMenuItemSelected<dynamic>? onSelected;
 
   const ChatMessageAppBar(
       {Key? key,
       this.name,
       this.image,
       this.userId,
+        this.onSelected,
       this.callTap,
       this.isBlock = false,
       this.videoTap})
@@ -145,7 +147,10 @@ class ChatMessageAppBar extends StatelessWidget implements PreferredSizeWidget {
                                           .asMap()
                                           .entries
                                           .forEach((element) async {
+                               
                                         await FirebaseFirestore.instance
+                                            .collection(collectionName.users)
+                                            .doc(appCtrl.user["id"])
                                             .collection(collectionName.messages)
                                             .doc(chatCtrl.chatId)
                                             .collection(collectionName.chat)
@@ -170,14 +175,7 @@ class ChatMessageAppBar extends StatelessWidget implements PreferredSizeWidget {
                               padding: EdgeInsets.zero,
                               constraints: BoxConstraints(maxWidth: Sizes.s170),
                               iconSize: Sizes.s20,
-                              onSelected: (result) async {
-                                log("CAA : $result");
-                                if (result == 0) {
-                                  callTap;
-                                } else if (result == 2) {
-                                  videoTap;
-                                }
-                              },
+                              onSelected: onSelected,
                               offset: Offset(0.0, appBarHeight),
                               shape: RoundedRectangleBorder(
                                   borderRadius:

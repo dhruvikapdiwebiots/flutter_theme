@@ -60,9 +60,9 @@ class CallView extends StatelessWidget {
                     log("ID : ${snapshot!.data!.docs[index!].data()["id"]}");
                     if (userSnapshot.hasData) {
                       if (snapshot!.data != null) {
-                        log("DATA : ${userSnapshot.data!}");
+                        log("DATA : ${snapshot!.data!.docs[index].data()}");
                         return Text(
-                          snapshot!.data!.docs[index!].data()["callerName"],
+                          snapshot!.data!.docs[index!].data()["callerName"] ?? "Anonymous",
                           style: AppCss.poppinsSemiBold14
                               .textColor(appCtrl.appTheme.blackColor),
                         );

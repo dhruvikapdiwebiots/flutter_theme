@@ -10,12 +10,15 @@ class PickupBody extends StatelessWidget {
   final Call? call;
   final CameraController? cameraController;
   final String? imageUrl;
+  final ClientRoleType? role;
 
-  const PickupBody({Key? key, this.call, this.imageUrl, this.cameraController})
+  const PickupBody({Key? key, this.call, this.imageUrl, this.cameraController,this.role})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    log("CALL : ${call!.isVideoCall}");
+    log("CALL : ${cameraController}");
     return Scaffold(
       backgroundColor: appCtrl.appTheme.primary,
       body: Stack(
@@ -122,18 +125,19 @@ class PickupBody extends StatelessWidget {
                 const HSpace(Sizes.s30),
                 InkWell(
                     onTap: () async {
+                      flutterLocalNotificationsPlugin!.cancelAll();
                       if (call!.isVideoCall!) {
                         var data = {
                           "channelName": call!.channelId,
                           "call": call,
-                          "role": ClientRoleType.clientRoleBroadcaster
+                          "role": role
                         };
                         Get.toNamed(routeName.videoCall, arguments: data);
                       } else {
                         var data = {
                           "channelName": call!.channelId,
                           "call": call,
-                          "role": ClientRoleType.clientRoleBroadcaster
+                          "role": role
                         };
                         log("data : $data");
                         Get.toNamed(routeName.audioCall, arguments: data);

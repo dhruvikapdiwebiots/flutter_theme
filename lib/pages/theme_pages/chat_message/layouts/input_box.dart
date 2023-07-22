@@ -2,7 +2,6 @@ import 'package:giphy_get/giphy_get.dart';
 
 import '../../../../config.dart';
 
-
 import 'package:giphy_get/giphy_get.dart';
 
 import '../../../../config.dart';
@@ -33,10 +32,14 @@ class InputBox extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            const HSpace(Sizes.s15),
+            if (chatCtrl.textEditingController.text.isEmpty)
+              const HSpace(Sizes.s15),
+            if (chatCtrl.textEditingController.text.isEmpty)
+              SvgPicture.asset(svgAssets.emoji, height: Sizes.s22).inkWell(onTap: ()=> chatCtrl.showBottomSheet(context)),
+            const HSpace(Sizes.s10),
             Flexible(
                 child: TextFormField(
-                    minLines: 1,
+              minLines: 1,
               maxLines: 5,
               style: TextStyle(color: appCtrl.appTheme.txt, fontSize: 15.0),
               controller: chatCtrl.textEditingController,
@@ -53,62 +56,82 @@ class InputBox extends StatelessWidget {
                   chatCtrl.textEditingController.clear();
                 }
                 chatCtrl.setTyping();
+                chatCtrl.update();
               },
             )),
-            SvgPicture.asset(
-              svgAssets.audio,
-              height: Sizes.s22,
-            ).inkWell(
-                onTap: () => chatCtrl.audioRecording(context, "audio", 0)),
-            SvgPicture.asset(svgAssets.gif)
-                .inkWell(onTap: () => chatCtrl.shareMedia(context)).marginSymmetric(horizontal: Insets.i7)
-               ,
-            InkWell(
-                child:  Icon(Icons.gif_box_outlined, color: appCtrl.appTheme.primary),
-                onTap: () async {
-                  GiphyGif? gif = await GiphyGet.getGif(
-                    tabColor: appCtrl.appTheme.primary,
-                    context: context,
+            if (chatCtrl.textEditingController.text.isEmpty)
+              Row(
+                children: [
+                  SvgPicture.asset(
+                    svgAssets.audio,
+                    height: Sizes.s22,
+                  ).inkWell(
+                      onTap: () =>
+                          chatCtrl.audioRecording(context, "audio", 0)),
+                  SvgPicture.asset(svgAssets.gif)
+                      .inkWell(onTap: () => chatCtrl.shareMedia(context))
+                      .marginSymmetric(horizontal: Insets.i7),
+                  InkWell(
+                    child: Icon(Icons.gif_box_outlined,
+                        color: appCtrl.appTheme.primary),
+                    onTap: () async {
+                      GiphyGif? gif = await GiphyGet.getGif(
+                        tabColor: appCtrl.appTheme.primary,
+                        context: context,
 
-                    apiKey: appCtrl.userAppSettingsVal!.gifAPI!, //YOUR API KEY HERE
-                    lang: GiphyLanguage.english,
-                  );
-                  if (gif != null) {
-                    chatCtrl.onSendMessage(
-                        gif.images!.original!.url, MessageType.gif);
-                  }
-                },
-               ).marginOnly( right: appCtrl.isRTL || appCtrl.languageVal == "ar"
-                ? 0
-                : Insets.i6,
-                left: appCtrl.isRTL || appCtrl.languageVal == "ar"
-                    ? Insets.i6
-                    : 0),
+                        apiKey: appCtrl.userAppSettingsVal!.gifAPI!,
+                        //YOUR API KEY HERE
+                        lang: GiphyLanguage.english,
+                      );
+                      if (gif != null) {
+                        chatCtrl.onSendMessage(
+                            gif.images!.original!.url, MessageType.gif);
+                      }
+                    },
+                  ).marginOnly(
+                      right: appCtrl.isRTL || appCtrl.languageVal == "ar"
+                          ? 0
+                          : Insets.i6,
+                      left: appCtrl.isRTL || appCtrl.languageVal == "ar"
+                          ? Insets.i6
+                          : 0),
+
+                ],
+              ),
             Container(
-                    margin: EdgeInsets.only(
-                        right: appCtrl.isRTL || appCtrl.languageVal == "ar"
-                            ? 0
-                            : Insets.i6,
-                        left: appCtrl.isRTL || appCtrl.languageVal == "ar"
-                            ? Insets.i6
-                            : 0),
-                    padding: const EdgeInsets.symmetric(
-                        vertical: Insets.i10, horizontal: Insets.i2),
-                    decoration: ShapeDecoration(
-                        gradient: RadialGradient(colors: [
-                       appCtrl.isTheme? appCtrl.appTheme.primary.withOpacity(.8):   appCtrl.appTheme.lightPrimary,
-                          appCtrl.appTheme.primary
-                        ]),
-                        shape: SmoothRectangleBorder(
-                          borderRadius: SmoothBorderRadius(
-                              cornerRadius: 12, cornerSmoothing: 1),
-                        )),
-                    child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: SvgPicture.asset(svgAssets.send)))
+                margin: EdgeInsets.only(
+                    right:
+                    appCtrl.isRTL || appCtrl.languageVal == "ar"
+                        ? 0
+                        : Insets.i6,
+                    left: appCtrl.isRTL || appCtrl.languageVal == "ar"
+                        ? Insets.i6
+                        : 0),
+                padding: const EdgeInsets.symmetric(
+                    vertical: Insets.i10, horizontal: Insets.i2),
+                decoration: ShapeDecoration(
+                    gradient: RadialGradient(colors: [
+                      appCtrl.isTheme
+                          ? appCtrl.appTheme.primary.withOpacity(.8)
+                          : appCtrl.appTheme.lightPrimary,
+                      appCtrl.appTheme.primary
+                    ]),
+                    shape: SmoothRectangleBorder(
+                      borderRadius: SmoothBorderRadius(
+                          cornerRadius: 12, cornerSmoothing: 1),
+                    )),
+                child: Container(
+                    margin:
+                    const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: SvgPicture.asset(svgAssets.send)))
                 .inkWell(
-                    onTap: () => chatCtrl.onSendMessage(
-                        chatCtrl.textEditingController.text, MessageType.text))
+                onTap: () {
+                  if(chatCtrl.textEditingController.text.isNotEmpty){
+                    chatCtrl.onSendMessage(
+                        chatCtrl.textEditingController.text,
+                        MessageType.text);
+                  }
+                }),
           ],
         ),
       );

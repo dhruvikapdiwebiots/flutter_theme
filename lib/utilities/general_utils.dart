@@ -231,7 +231,7 @@ getWhen(date) {
   } else if (dateTime.day == now.subtract(Duration(days: 1)).day) {
     when = 'yesterday';
   } else {
-    when = "${DateFormat.MMMd().format(dateTime)}-other";
+    when = "${DateFormat.MMMd().format(dateTime)}";
   }
   return when;
 }

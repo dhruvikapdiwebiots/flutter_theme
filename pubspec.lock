@@ -21,10 +21,10 @@ packages:
     dependency: "direct main"
     description:
       name: agora_rtc_engine
-      sha256: f4ed954e859d7de0d036e17f2657f748813d1184d71de6d14cbabe43d49cfb6b
+      sha256: "5e0d363c8ae68b08028d19a743972278266b8cb73f81243d09bc024f5541412c"
       url: "https://pub.dev"
     source: hosted
-    version: "6.2.0"
+    version: "6.2.1"
   animated_text_kit:
     dependency: "direct main"
     description:

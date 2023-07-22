@@ -6,26 +6,29 @@ class GroupMessageApi {
         ? Get.find<GroupChatMessageController>()
         : Get.put(GroupChatMessageController());
     List<QueryDocumentSnapshot<Object?>> message = (snapshot.data!).docs;
-    message.asMap().entries.forEach((element) {
+    List<QueryDocumentSnapshot<Object?>> todayMessage = [];
+    List<QueryDocumentSnapshot<Object?>> yesterdayMessage = [];
+    List<QueryDocumentSnapshot<Object?>> newMessageList = [];
+    List reveredList = message.reversed.toList();
+    reveredList.asMap().entries.forEach((element) {
       if (getDate(element.value.id) == "today") {
-        List<QueryDocumentSnapshot<Object?>> newMessageList = [];
         bool isExist = chatCtrl.message
             .where((element) => element["title"] == "today")
             .isNotEmpty;
 
         if (isExist) {
-          if (!newMessageList.contains(element.value)) {
-            newMessageList.add(element.value);
+          if (!todayMessage.contains(element.value)) {
+            todayMessage.add(element.value);
             int index = chatCtrl.message
                 .indexWhere((element) => element["title"] == "today");
-            chatCtrl.message[index]["message"] = newMessageList;
+            chatCtrl.message[index]["message"] = todayMessage;
           }
         } else {
-          if (!newMessageList.contains(element.value)) {
-            newMessageList.add(element.value);
+          if (!todayMessage.contains(element.value)) {
+            todayMessage.add(element.value);
             var data = {
               "title": getDate(element.value.id),
-              "message": newMessageList
+              "message": todayMessage
             };
 
             chatCtrl.message = [data];
@@ -33,24 +36,23 @@ class GroupMessageApi {
         }
       }
       if (getDate(element.value.id) == "yesterday") {
-        List<QueryDocumentSnapshot<Object?>> newMessageList = [];
         bool isExist = chatCtrl.message
             .where((element) => element["title"] == "yesterday")
             .isNotEmpty;
 
         if (isExist) {
-          if (!newMessageList.contains(element.value)) {
-            newMessageList.add(element.value);
+          if (!yesterdayMessage.contains(element.value)) {
+            yesterdayMessage.add(element.value);
             int index = chatCtrl.message
                 .indexWhere((element) => element["title"] == "yesterday");
-            chatCtrl.message[index]["message"] = newMessageList;
+            chatCtrl.message[index]["message"] = yesterdayMessage;
           }
         } else {
-          if (!newMessageList.contains(element.value)) {
-            newMessageList.add(element.value);
+          if (!yesterdayMessage.contains(element.value)) {
+            yesterdayMessage.add(element.value);
             var data = {
               "title": getDate(element.value.id),
-              "message": newMessageList
+              "message": yesterdayMessage
             };
 
             if (chatCtrl.message.isNotEmpty) {
@@ -63,7 +65,6 @@ class GroupMessageApi {
       }
       if (getDate(element.value.id) != "yesterday" &&
           getDate(element.value.id) != "today") {
-        List<QueryDocumentSnapshot<Object?>> newMessageList = [];
         bool isExist = chatCtrl.message
             .where((element) => element["title"].contains("-other"))
             .isNotEmpty;
@@ -79,7 +80,7 @@ class GroupMessageApi {
           if (!newMessageList.contains(element.value)) {
             newMessageList.add(element.value);
             var data = {
-              "title": getWhen(element.value.id),
+              "title": getDate(element.value.id),
               "message": newMessageList
             };
 

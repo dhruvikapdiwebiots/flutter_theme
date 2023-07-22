@@ -46,7 +46,7 @@ class GroupMessageBox extends StatelessWidget {
                                       chatCtrl.message[index])
                                       .marginOnly(bottom: Insets.i18);
                                 },
-                                itemCount: (snapshot.data!).docs.length,
+                                itemCount:chatCtrl.message.length,
                                 reverse: true,
                                 controller: chatCtrl.listScrollController,
                               );

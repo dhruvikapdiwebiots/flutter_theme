@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 //import 'package:camera/camera.dart';
+import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:camera/camera.dart';
 
 import '../../../config.dart';
@@ -22,7 +23,7 @@ class _PickupLayoutState extends State<PickupLayout>
   AnimationController? controller;
   Animation? colorAnimation;
   CameraController? cameraController;
-
+ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
   Animation? sizeAnimation;
 
   @override
@@ -73,19 +74,22 @@ class _PickupLayoutState extends State<PickupLayout>
   Widget build(BuildContext context) {
     // ignore: unnecessary_null_comparison
     var user = appCtrl.storage.read(session.user);
-    return user != null && user != ""
+    return appCtrl.user != null && appCtrl.user != ""
         ? StreamBuilder(
             stream: FirebaseFirestore.instance
                 .collection(collectionName.calls)
-                .doc(user["id"])
+                .doc(appCtrl.user["id"])
                 .collection(collectionName.calling)
                 .limit(1)
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
                 Call call = Call.fromMap(snapshot.data!.docs[0].data());
-                if (!call.hasDialled!) {
+                log("SSS : ${call.receiverId}");
+                if (call.hasDialled!) {
+
                   return PickupBody(
+                    role: role,
                     call: call,
                     cameraController: cameraController,
                     imageUrl: snapshot.data!.docs[0].data()["callerPic"]
