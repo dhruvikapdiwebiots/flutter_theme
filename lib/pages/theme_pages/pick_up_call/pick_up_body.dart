@@ -17,8 +17,7 @@ class PickupBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log("CALL : ${call!.isVideoCall}");
-    log("CALL : ${cameraController}");
+
     return Scaffold(
       backgroundColor: appCtrl.appTheme.primary,
       body: Stack(
@@ -69,7 +68,7 @@ class PickupBody extends StatelessWidget {
               children: <Widget>[
                 InkWell(
                   onTap: () async {
-                    log("cancel");
+
                     //flutterLocalNotificationsPlugin!.cancelAll();
                     final videoCtrl = Get.isRegistered<VideoCallController>()
                         ? Get.find<VideoCallController>()
@@ -139,7 +138,7 @@ class PickupBody extends StatelessWidget {
                           "call": call,
                           "role": role
                         };
-                        log("data : $data");
+
                         Get.toNamed(routeName.audioCall, arguments: data);
                       }
                     },

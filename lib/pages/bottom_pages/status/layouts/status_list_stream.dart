@@ -26,10 +26,10 @@ class StatusListStream extends StatelessWidget {
             } else {
               List<Status> statusList = [];
               List status = statusCtrl.statusListWidget(snapshot);
-              log("status : ${status.length}");
+
               status.asMap().entries.forEach((element) {
                 Status convertStatus = Status.fromJson(element.value);
-                log("CONTAINS : $id");
+
                 if (element.value.containsKey("seenAllStatus")) {
 
                   if (convertStatus.seenAllStatus!
@@ -41,8 +41,6 @@ class StatusListStream extends StatelessWidget {
                   }
                 }
               });
-
-              log("statusList : $statusList");
 
               return ListView.builder(
                   itemCount: statusList.length,

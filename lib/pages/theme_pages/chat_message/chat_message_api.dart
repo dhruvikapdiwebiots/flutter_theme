@@ -11,7 +11,6 @@ class ChatMessageApi {
       isBroadcast = false,
       blockBy = "",
       blockUserId = "" }) async {
-    log.log("SAVE");
     dynamic userData = appCtrl.storage.read(session.user);
     await FirebaseFirestore.instance
         .collection(collectionName.users)
@@ -146,7 +145,7 @@ class ChatMessageApi {
                     msg: content,
                     groupId: groupId,
                     token: snap.data()!["pushToken"],
-                    dataTitle: pData["groupData"]["name"]);
+                    dataTitle: element.value["name"]);
               }
             });
           }
@@ -159,7 +158,7 @@ class ChatMessageApi {
   audioAndVideoCallApi({toData, isVideoCall}) async {
     try {
       dynamic agoraToken = appCtrl.storage.read(session.agoraToken);
-      log.log("agoraToken : $agoraToken");
+
       var userData = appCtrl.storage.read(session.user);
       String channelId = Random().nextInt(1000).toString();
       int timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -264,13 +263,12 @@ class ChatMessageApi {
     List<QueryDocumentSnapshot<Object?>> yesterdayMessage = [];
     List<QueryDocumentSnapshot<Object?>> newMessageList = [];
     reveredList.asMap().entries.forEach((element) {
-    log.log("TYPE : ${element.value.data()}");
+
       if (getDate(element.value.id) == "today") {
 
         bool isExist = chatCtrl.message
             .where((element) => element["title"] == "today")
             .isNotEmpty;
-log.log("isExist : $isExist");
         if (isExist) {
           if(!todayMessage.contains(element.value)) {
             todayMessage.add(element.value);
@@ -355,7 +353,7 @@ log.log("isExist : $isExist");
         }
 
       }
-      log.log("MMMMM : ${chatCtrl.message[0]["message"]}");
+
     });
 
   }

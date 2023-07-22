@@ -17,7 +17,7 @@ class ReceiverContent extends StatelessWidget {
       onLongPress: onLongPress,
       onTap: onTap,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Stack(
             clipBehavior: Clip.none,
@@ -70,7 +70,7 @@ class ReceiverContent extends StatelessWidget {
                 EmojiLayout(emoji: document!["emoji"])
             ],
           ),
-          const VSpace(Sizes.s2),
+          const VSpace(Sizes.s5),
           IntrinsicHeight(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -88,6 +88,7 @@ class ReceiverContent extends StatelessWidget {
                   DateFormat('HH:mm a').format(
                       DateTime.fromMillisecondsSinceEpoch(
                           int.parse(document!['timestamp']))),
+                  textAlign: TextAlign.end,
                   style: AppCss.poppinsMedium12
                       .textColor(appCtrl.appTheme.txtColor),
                 ),

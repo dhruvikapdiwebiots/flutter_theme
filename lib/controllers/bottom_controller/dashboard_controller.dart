@@ -102,10 +102,9 @@ class DashboardController extends GetxController
     if (selectedIndex == 0) {
       return FirebaseFirestore.instance
           .collection(collectionName.users)
-          .doc(messageCtrl.currentUserId)
+          .doc(appCtrl.user["id"])
           .collection(collectionName.chats)
           .where("name", isEqualTo: val)
-          .orderBy("updateStamp", descending: true)
           .limit(15)
           .snapshots();
     } else if (selectedIndex == 1) {
@@ -158,7 +157,7 @@ class DashboardController extends GetxController
     firebaseCtrl.setIsActive();
     controller!.addListener(() {
       selectedIndex = controller!.index;
-      update();
+
     });
     user = appCtrl.storage.read(session.user);
     appCtrl.update();
@@ -195,7 +194,6 @@ class DashboardController extends GetxController
   }
 
   addContactInFirebase() async {
-    log("CHECK : ${appCtrl.contactList.length}");
     if (appCtrl.contactList.isNotEmpty) {
       List<Map<String, dynamic>> contactsData = [];
       List<Map<String, dynamic>> unRegisterContactData = [];
@@ -260,7 +258,7 @@ class DashboardController extends GetxController
           .get()
           .then((value) async {
         if (value.docs.isEmpty) {
-          log("AGAIN ADD");
+
           await FirebaseFirestore.instance
               .collection(collectionName.users)
               .doc(appCtrl.user["id"])
@@ -279,7 +277,7 @@ class DashboardController extends GetxController
           .get()
           .then((value) async {
         if (value.docs.isEmpty) {
-          log("AGAIN ADD");
+
           await FirebaseFirestore.instance
               .collection(collectionName.users)
               .doc(appCtrl.user["id"])
@@ -300,7 +298,7 @@ class DashboardController extends GetxController
   }
 
   getFirebaseContact() async {
-    log("CHECK DATA");
+
     final contactCtrl = Get.isRegistered<ContactListController>()
         ? Get.find<ContactListController>()
         : Get.put(ContactListController());

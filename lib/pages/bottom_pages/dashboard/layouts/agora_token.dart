@@ -20,7 +20,6 @@ class AgoraToken extends StatelessWidget {
               if (snapshot.hasData && snapshot.data!.data()!.isNotEmpty) {
                 appCtrl.storage
                     .write(session.agoraToken, snapshot.data!.data());
-                log("token con : ${snapshot.data!.data()}");
               }
               return StreamBuilder(
                   stream: FirebaseFirestore.instance

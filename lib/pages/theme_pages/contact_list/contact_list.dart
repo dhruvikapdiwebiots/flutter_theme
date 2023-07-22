@@ -10,7 +10,6 @@ class ContactList extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<DashboardController>(builder: (dashboardCtrl) {
       return GetBuilder<ContactListController>(builder: (contactCtrl) {
-        log("SEARCH : ${dashboardCtrl.searchText.text.isNotEmpty}");
         return WillPopScope(
           onWillPop: () async {
             dashboardCtrl.searchText.text = "";
@@ -20,6 +19,7 @@ class ContactList extends StatelessWidget {
           child: AgoraToken(
               scaffold: PickupLayout(
                   scaffold: Stack(children: [
+
             Scaffold(
                 backgroundColor: appCtrl.appTheme.bgColor,
                 appBar: AppBar(
@@ -33,7 +33,7 @@ class ContactList extends StatelessWidget {
                             .textColor(appCtrl.appTheme.primary)),
                     centerTitle: true,
                     actions: [
-                       Icon(Icons.refresh, color: appCtrl.appTheme.blackColor)
+                      Icon(Icons.refresh, color: appCtrl.appTheme.blackColor)
                           .paddingAll(Insets.i10)
                           .decorated(
                               color: appCtrl.appTheme.white,
@@ -50,12 +50,16 @@ class ContactList extends StatelessWidget {
                           .paddingSymmetric(
                               vertical: Insets.i14, horizontal: Insets.i15)
                           .inkWell(onTap: () async {
-                            contactCtrl.getAllData();
-                            contactCtrl.getAllUnRegisterUser();
-                       })
+                        contactCtrl.refreshData();
+                        contactCtrl.update();
+                      })
                     ],
                     leading: const BackIcon()),
                 body: Stack(children: [
+                  if (contactCtrl.isLoading)
+                    CommonLoader(
+                      isLoading: contactCtrl.isLoading,
+                    ),
                   SingleChildScrollView(
                       child: Column(children: [
                     CommonTextBox(
@@ -123,22 +127,19 @@ class ContactList extends StatelessWidget {
                                 children: [
                                   Text(fonts.registerUser.tr)
                                       .paddingSymmetric(
-                                      horizontal: Insets.i15,
-                                      vertical: Insets.i10)
-                                      .width(MediaQuery.of(context)
-                                      .size
-                                      .width),
+                                          horizontal: Insets.i15,
+                                          vertical: Insets.i10)
+                                      .width(MediaQuery.of(context).size.width),
                                   contactCtrl.allRegisterList.isNotEmpty
                                       ? Column(children: [
-                                    ...contactCtrl.allRegisterList
-                                        .asMap()
-                                        .entries
-                                        .map((item) => RegisterUser(
-                                        message: message,
-                                        userContactModel:
-                                        item.value))
-                                        .toList()
-                                  ])
+                                          ...contactCtrl.allRegisterList
+                                              .asMap()
+                                              .entries
+                                              .map((item) => RegisterUser(
+                                                  message: message,
+                                                  userContactModel: item.value))
+                                              .toList()
+                                        ])
                                       : Container(),
                                 ],
                               ),
@@ -146,19 +147,19 @@ class ContactList extends StatelessWidget {
                                 children: [
                                   Text(fonts.inviteUser.tr)
                                       .paddingSymmetric(
-                                      horizontal: Insets.i15,
-                                      vertical: Insets.i10)
+                                          horizontal: Insets.i15,
+                                          vertical: Insets.i10)
                                       .width(MediaQuery.of(context).size.width),
                                   contactCtrl.allUnRegisterList.isNotEmpty
                                       ? Column(children: [
-                                    ...contactCtrl.allUnRegisterList
-                                        .asMap()
-                                        .entries
-                                        .map((item) => UnRegisterUser(
-                                        item: item.value,
-                                        message: message))
-                                        .toList()
-                                  ])
+                                          ...contactCtrl.allUnRegisterList
+                                              .asMap()
+                                              .entries
+                                              .map((item) => UnRegisterUser(
+                                                  item: item.value,
+                                                  message: message))
+                                              .toList()
+                                        ])
                                       : Container()
                                 ],
                               )

@@ -7,19 +7,11 @@ class MessageFloatingButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton(
         onPressed: ()async {
-          final contactCtrl = Get.isRegistered<ContactListController>()
-              ? Get.find<ContactListController>()
-              : Get.put(ContactListController());
-          contactCtrl.isLoading =true;
-          contactCtrl.update();
-          Get.forceAppUpdate();
-/*
+
           Get.to(() =>  ContactList(),
-              transition: Transition.downToUp);*/
-        Get.toNamed(routeName.contactList);
-        await Future.delayed(Durations.s3);
-          contactCtrl.isLoading =false;
-          contactCtrl.update();
+              transition: Transition.downToUp);
+        //Get.toNamed(routeName.contactList);
+
         },
         backgroundColor: appCtrl.appTheme.primary,
         child: Container(

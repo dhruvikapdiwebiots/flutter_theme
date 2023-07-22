@@ -110,7 +110,7 @@ class AudioCallController extends GetxController {
     update();
     // retrieve permissions
     await [Permission.microphone].request();
-    log("permission :");
+
     //create the engine
     initAgora();
     super.onReady();
@@ -135,7 +135,7 @@ class AudioCallController extends GetxController {
 
   Future<void> initAgora() async {
     dynamic agoraToken = appCtrl.storage.read(session.agoraToken);
-    log("agoraToken : $agoraToken");
+
     engine = createAgoraRtcEngine();
     await engine.initialize(RtcEngineContext(
       appId: agoraToken["agoraAppId"],
@@ -144,15 +144,14 @@ class AudioCallController extends GetxController {
     await engine.setEnableSpeakerphone(isSpeaker);
     await engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
     await engine.setChannelProfile(ChannelProfileType.channelProfileLiveBroadcasting);
-    log("engine : $engine");
+
 update();
 
-    log("engine1 : $engine");
+
 
     await engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
     await engine.startPreview();
 
-    log("agoraToken Audio : $agoraToken");
     await engine.joinChannel(
       token: agoraToken["token"],
       channelId: channelName!,
@@ -167,7 +166,7 @@ update();
         onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
           debugPrint("local user ${connection.localUid} joined");
           localUserJoined = true;
-          log("localUid : ${connection.localUid}");
+
           if (call!.callerId == userData["id"]) {
 
             update();
@@ -219,7 +218,7 @@ update();
           remoteUidValue = remoteUid;
           startTimerNow();
           update();
-          log("remoteUidValue : $remoteUidValue");
+
           debugPrint("remote user $remoteUidValue joined");
           if (userData["id"] == call!.callerId) {
             FirebaseFirestore.instance

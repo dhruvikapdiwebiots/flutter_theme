@@ -47,7 +47,6 @@ class CallList extends StatelessWidget {
                           .orderBy("timestamp", descending: true)
                           .snapshots(),
                   builder: (context, snapshot) {
-                    log("snapshot : ${snapshot.hasData}");
                     if (snapshot.hasError) {
                       return Container();
                     } else if (!snapshot.hasData) {

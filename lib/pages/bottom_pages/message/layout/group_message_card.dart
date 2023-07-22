@@ -21,7 +21,7 @@ class GroupMessageCard extends StatelessWidget {
           if (!snapshot.hasData) {
             return Container();
           } else {
-            log("SNAAPSJOT: ${snapshot.data!.exists}");
+
             return StreamBuilder(
                     stream: FirebaseFirestore.instance
                         .collection("users")

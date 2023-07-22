@@ -42,7 +42,7 @@ class BroadcastOnTapFunctionCall {
 
 
       openResult = "type=${result.type}  message=${result.message}";
-      log("result : ${openResult}");
+
     }
   }
 

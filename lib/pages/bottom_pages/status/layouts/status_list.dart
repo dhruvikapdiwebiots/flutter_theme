@@ -15,7 +15,7 @@ class _StatusListLayoutState extends State<StatusListLayout> {
     return GetBuilder<StatusController>(builder: (statusCtrl) {
       return GetBuilder<DashboardController>(builder: (dashboardCtrl) {
         return GetBuilder<AppController>(builder: (appCtrl) {
-          log("statusCtrl.isData : ${appCtrl.firebaseContact.length}");
+
           return Stack(
             children: [
               Container(

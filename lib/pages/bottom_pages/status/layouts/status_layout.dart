@@ -23,7 +23,7 @@ class _StatusLayoutState extends State<StatusLayout> {
   @override
   void initState() {
     // TODO: implement initState
-  log.log("SRR : ${(widget.snapshot!.data!).docs[0].data()}");
+
     Status status = Status.fromJson((widget.snapshot!.data!).docs[0].data());
     List<PhotoUrl> photoUrl = status.photoUrl!;
     if(photoUrl.isNotEmpty) {
@@ -48,7 +48,7 @@ class _StatusLayoutState extends State<StatusLayout> {
       }
     }
     setState(() {});
-    log.log("STA : $status");
+
     setState(() {});
     super.initState();
   }

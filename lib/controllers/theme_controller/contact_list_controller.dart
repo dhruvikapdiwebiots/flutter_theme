@@ -5,7 +5,7 @@ import 'package:flutter_theme/models/firebase_contact_model.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class ContactListController extends GetxController {
-  bool isLoading = true;
+  bool isLoading = false;
   static const pageSize = 20;
   final PagingController<int, UserContactModel> pagingController =
       PagingController(firstPageKey: 0);
@@ -44,7 +44,6 @@ class ContactListController extends GetxController {
   }
 
   onSearch(val) async {
-    log("CHECK USER : ${registerContact!.userTitle!.length}");
     registerList = [];
     unRegisterList = [];
     registerContact!.userTitle!.asMap().entries.forEach((element) {
@@ -61,12 +60,36 @@ class ContactListController extends GetxController {
         }
       }
     });
-    log("unRegisterList : ${unRegisterList.length}");
+
     update();
     //fetchRegisterData(0);
   }
 
+
+  refreshData()async{
+    isLoading = true;
+    update();
+    await firebaseCtrl.deleteContacts();
+
+    allRegisterList = [];
+    allUnRegisterList = [];
+    update();
+
+    final dashboardCtrl = Get.isRegistered<DashboardController>()
+        ? Get.find<DashboardController>()
+        : Get.put(DashboardController());
+
+    await dashboardCtrl.addContactInFirebase();
+    dashboardCtrl.update();
+    update();
+
+   await getAllData();
+    await  getAllUnRegisterUser();
+    update();
+}
+
   getAllData() async {
+
     List allUserList = [];
     appCtrl.firebaseContact = [];
     await FirebaseFirestore.instance
@@ -76,11 +99,10 @@ class ContactListController extends GetxController {
         .get()
         .then((snapshot) {
       if (snapshot.docs.isNotEmpty) {
-
         debugPrint("CONNNN 11: ${appCtrl.firebaseContact.length}");
         allUserList = snapshot.docs[0].data()["contact"];
         allUserList.asMap().entries.forEach((element) {
-          if(element.value["phone"] != appCtrl.user["phone"]) {
+          if (element.value["phone"] != appCtrl.user["phone"]) {
             if (!appCtrl.firebaseContact.contains(element.value)) {
               appCtrl.firebaseContact
                   .add(FirebaseContactModel.fromJson(element.value));
@@ -142,10 +164,8 @@ class ContactListController extends GetxController {
           registerContact!.userTitle = [];
           unRegisterContact!.userTitle = [];
         }
-        debugPrint("CONNNNs 11: ${appCtrl.user}");
-        debugPrint("CONNNN : ${FirebaseAuth.instance.currentUser}");
         allUserList = snapshot.docs[0].data()["contact"];
-        debugPrint("allUserList : ${allUserList.length}");
+
         allUserList.asMap().entries.forEach((element) {
           if (!appCtrl.firebaseContact.contains(element.value)) {
             appCtrl.firebaseContact
@@ -153,7 +173,6 @@ class ContactListController extends GetxController {
           }
         });
         List<UserContactModel> unRegister = [];
-        debugPrint("CONNNN : ${appCtrl.firebaseContact.length}");
         if (appCtrl.firebaseContact.isNotEmpty) {
           appCtrl.firebaseContact.asMap().entries.forEach((element) async {
             UserContactModel userContactModel = UserContactModel(
@@ -174,7 +193,7 @@ class ContactListController extends GetxController {
         }
       }
     });
+    isLoading =false;
     update();
   }
-
 }

@@ -11,9 +11,7 @@ class MessageBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<ChatController>(builder: (chatCtrl) {
       return Flexible(
-        child: chatCtrl.clearChatId.contains(chatCtrl.userData["id"])
-            ? Container()
-            : chatCtrl.chatId == null
+        child:  chatCtrl.chatId == null
                 ? Center(
                     child: CircularProgressIndicator(
                         valueColor: AlwaysStoppedAnimation<Color>(
@@ -35,11 +33,9 @@ class MessageBox extends StatelessWidget {
                                 valueColor: AlwaysStoppedAnimation<Color>(
                                     appCtrl.appTheme.primary)));
                       } else {
-                        log("CHATDATE : ${(snapshot.data!).docs.length}");
                         ChatMessageApi().getMessageAsPerDate(snapshot);
                         return ListView.builder(
                             itemBuilder: (context, index) {
-                              log("DDDD : ${chatCtrl.chatId}");
                               return chatCtrl
                                   .timeLayout(
                                     chatCtrl.message[index],

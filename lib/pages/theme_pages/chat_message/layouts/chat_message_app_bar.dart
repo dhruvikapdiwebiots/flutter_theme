@@ -14,7 +14,7 @@ class ChatMessageAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.name,
       this.image,
       this.userId,
-        this.onSelected,
+      this.onSelected,
       this.callTap,
       this.isBlock = false,
       this.videoTap})
@@ -67,15 +67,16 @@ class ChatMessageAppBar extends StatelessWidget implements PreferredSizeWidget {
                         top: Insets.i22,
                         bottom: Insets.i22,
                         left: Insets.i20)
-                    .inkWell(onTap: () => Get.back()),
+                    .inkWell(onTap: () {
+                  chatCtrl.onBackPress();
+                  Get.back();
+                }),
                 actions: [
                   chatCtrl.isChatSearch == true
                       ? Row(
                           children: [
                             SvgPicture.asset(svgAssets.search).inkWell(
                                 onTap: () async {
-                                  log("message1");
-
                               if (chatCtrl.txtChatSearch.text.isEmpty) {
                                 chatCtrl.isChatSearch = false;
                                 chatCtrl.update();
@@ -125,11 +126,9 @@ class ChatMessageAppBar extends StatelessWidget implements PreferredSizeWidget {
                                   chatCtrl.update();
                                 });
                                 chatCtrl.update();
-                                log("chatCtrl.selectedIndexId : ${chatCtrl.selectedIndexId}");
 
                               }
-                                  FocusScope.of(Get.context!).unfocus();
-
+                              FocusScope.of(Get.context!).unfocus();
                             }),
                             const HSpace(Sizes.s10)
                           ],
@@ -147,7 +146,6 @@ class ChatMessageAppBar extends StatelessWidget implements PreferredSizeWidget {
                                           .asMap()
                                           .entries
                                           .forEach((element) async {
-                               
                                         await FirebaseFirestore.instance
                                             .collection(collectionName.users)
                                             .doc(appCtrl.user["id"])
@@ -210,17 +208,18 @@ class ChatMessageAppBar extends StatelessWidget implements PreferredSizeWidget {
                     padding: EdgeInsets.zero,
                     iconSize: Sizes.s20,
                     onSelected: (result) async {
-                      log("CAA : $result");
+
                       if (result == 0) {
                         chatCtrl.blockUser();
-                      } if (result == 1) {
+                      }
+                      if (result == 1) {
                         chatCtrl.isChatSearch = true;
                         chatCtrl.update();
                       } else if (result == 2) {
                         Get.toNamed(routeName.backgroundList,
                                 arguments: {"chatId": chatCtrl.chatId})!
                             .then((value) {
-                          log("VALUE : $value");
+
                           if (value != null && value != "") {
                             chatCtrl.wallPaperConfirmation(value);
                           } else {
@@ -233,10 +232,10 @@ class ChatMessageAppBar extends StatelessWidget implements PreferredSizeWidget {
                         chatCtrl.clearChatConfirmation();
                       } else if (result == 4) {
                         int index = chatCtrl.message.indexWhere((element) {
-                          log("element.id : ${element.id}");
+
                           return element.id == chatCtrl.selectedIndexId[0];
                         });
-                        log("index : $index");
+
                         Clipboard.setData(ClipboardData(
                             text: decryptMessage(chatCtrl.message[index]
                                         .data()["content"])

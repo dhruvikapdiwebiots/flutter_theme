@@ -303,7 +303,6 @@ class EditProfileController extends GetxController {
 
               Get.toNamed(routeName.dashboard);
               if(isPhoneLogin ==true){
-                log("CHACNGE");
                 await checkPermission();
               }
             }).catchError((onError) {

@@ -36,7 +36,7 @@ class _GroupChatMessageState extends State<GroupChatMessage>
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      log("CHECK SCROOL : ${chatCtrl.listScrollController}");
+
       if (chatCtrl.listScrollController.hasClients) {
         chatCtrl.listScrollController.animateTo(
           chatCtrl.listScrollController.position.maxScrollExtent,
@@ -60,7 +60,7 @@ class _GroupChatMessageState extends State<GroupChatMessage>
 
   @override
   Widget build(BuildContext context) {
-    log("use : ${chatCtrl.getPeerStatus()}");
+
     return GetBuilder<GroupChatMessageController>(builder: (_) {
       return AgoraToken(
         scaffold: PickupLayout(

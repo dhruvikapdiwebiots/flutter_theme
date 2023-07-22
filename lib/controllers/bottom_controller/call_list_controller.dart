@@ -39,12 +39,12 @@ class CallListController extends GetxController {
               : appCtrl.userAppSettingsVal!.bannerIOSId!,
           listener: BannerAdListener(
             onAdLoaded: (Ad ad) {
-              log('$BannerAd loaded.');
+
               bannerAdIsLoaded = true;
               update();
             },
             onAdFailedToLoad: (Ad ad, LoadAdError error) {
-              log('$BannerAd failedToLoad: $error');
+
               ad.dispose();
             },
             onAdOpened: (Ad ad) => log('$BannerAd onAdOpened.'),
@@ -113,12 +113,12 @@ class CallListController extends GetxController {
             : appCtrl.userAppSettingsVal!.bannerIOSId!,
         listener: BannerAdListener(
           onAdLoaded: (Ad ad) {
-            log('$BannerAd loaded.');
+
             bannerAdIsLoaded = true;
             update();
           },
           onAdFailedToLoad: (Ad ad, LoadAdError error) {
-            log('$BannerAd failedToLoad: $error');
+
             ad.dispose();
           },
           onAdOpened: (Ad ad) => log('$BannerAd onAdOpened.'),
@@ -126,7 +126,7 @@ class CallListController extends GetxController {
         ),
         request: const AdRequest())
       ..load();
-    log("Home Banner AGAIn: $bannerAd");
+
   }
 
   callList() async {
@@ -145,7 +145,7 @@ class CallListController extends GetxController {
               .then((value) {
             count = count + value.docs.length;
             update();
-            log("COUNT : $count");
+
           });
         });
       }
@@ -154,7 +154,7 @@ class CallListController extends GetxController {
 
   //audio and video call tap
   audioVideoCallTap(isVideoCall, pData) async {
-    log("pData : $pData");
+
     await FirebaseFirestore.instance
         .collection(collectionName.users)
         .doc(pData["id"] == appCtrl.user["id"]
@@ -179,8 +179,7 @@ class CallListController extends GetxController {
 
   audioAndVideoCallApi({toData, isVideoCall}) async {
     try {
-      dynamic agoraToken = appCtrl.storage.read(session.agoraToken);
-      log("toData : $toData");
+
       var userData = appCtrl.storage.read(session.user);
       String channelId = math.Random().nextInt(1000).toString();
       int timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -277,7 +276,6 @@ class CallListController extends GetxController {
   getAllRegister() async {
     List allUserList = [];
 
-    log("allUserList : ${appCtrl.firebaseContact.length}");
     await FirebaseFirestore.instance
         .collection(collectionName.users)
         .doc(appCtrl.user["id"])
@@ -294,6 +292,6 @@ class CallListController extends GetxController {
           }
           update();
     });
-    log("contactList : ${contactList.length}");
+
   }
 }

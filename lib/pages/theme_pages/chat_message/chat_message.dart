@@ -50,9 +50,9 @@ class _ChatState extends State<Chat>
                         userId: chatCtrl.pId,
                         name: chatCtrl.pName,
                         onSelected: (result) async {
-                          log("CAA : $result");
+
                           if (result == 0) {
-                            log("CALL");
+
                             await chatCtrl.permissionHandelCtrl
                                 .getCameraMicrophonePermissions()
                                 .then((value) {
@@ -64,9 +64,9 @@ class _ChatState extends State<Chat>
                             await chatCtrl.permissionHandelCtrl
                                 .getCameraMicrophonePermissions()
                                 .then((value) {
-                              log("value : $value");
+
                               if (value == true) {
-                                log("message");
+
                                 chatCtrl.audioVideoCallTap(true);
                               }
                             });
@@ -103,7 +103,7 @@ class _ChatState extends State<Chat>
                                       chatCtrl.enableReactionPopup = false;
                                       chatCtrl.showPopUp = false;
                                       chatCtrl.update();
-                                      log("chatCtrl.enableReactionPopup : ${chatCtrl.enableReactionPopup}");
+
                                     })
                                   : Column(children: <Widget>[
                                       // List of messages
@@ -116,7 +116,6 @@ class _ChatState extends State<Chat>
                                       chatCtrl.enableReactionPopup = false;
                                       chatCtrl.showPopUp = false;
                                       chatCtrl.update();
-                                      log("chatCtrl.enableReactionPopup : ${chatCtrl.enableReactionPopup}");
                                     }),
                               // Loading
                               if (chatCtrl.isLoading)

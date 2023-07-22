@@ -32,7 +32,7 @@ class GroupCardSubTitle extends StatelessWidget {
             : SizedBox(
           width: Sizes.s150,
               child: Text(
-                  (decryptMessage(document!["lastMessage"]).contains("media"))
+                  document!["lastMessage"] == "" ?"" :  (decryptMessage(document!["lastMessage"]).contains("media"))
                       ? hasData
                           ? "$name Media Share"
                           : "Media Share"

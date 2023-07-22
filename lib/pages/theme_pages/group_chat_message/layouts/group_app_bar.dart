@@ -64,7 +64,9 @@ class GroupChatMessageAppBar extends StatelessWidget
                   top: Insets.i22,
                   bottom: Insets.i22,
                   left: Insets.i20)
-                  .inkWell(onTap: () => Get.back()),
+                  .inkWell(onTap: ()  {
+                    chatCtrl.onBackPress();
+                    Get.back();}),
               actions: [
                 chatCtrl.isChatSearch == true
                     ? Row(
@@ -82,7 +84,7 @@ class GroupChatMessageAppBar extends StatelessWidget
                             if (chatCtrl.count! >= chatCtrl.searchChatId.length) {
                               chatCtrl.count = 0;
                             }
-                            log("HHHH L${chatCtrl.listScrollController}");
+
                             final contentSize = chatCtrl.listScrollController
                                 .position.viewportDimension +
                                 chatCtrl.listScrollController.position
@@ -115,7 +117,7 @@ class GroupChatMessageAppBar extends StatelessWidget
                               chatCtrl.update();
                             });
                             chatCtrl.update();
-                            log("chatCtrl.selectedIndexId : ${chatCtrl.selectedIndexId}");
+
                           }
                         }),
                     const HSpace(Sizes.s10)
@@ -154,10 +156,10 @@ class GroupChatMessageAppBar extends StatelessWidget
                     :PopupMenuButton(
                   color: appCtrl.appTheme.whiteColor,
                   padding: EdgeInsets.zero,
-                  constraints: BoxConstraints(maxWidth: Sizes.s170),
+                  constraints:const BoxConstraints(maxWidth: Sizes.s170),
                   iconSize: Sizes.s20,
                   onSelected: (result) async {
-                    log("CAA : $result");
+
                     if (result == 0) {
                       callTap;
                     } else if (result == 2) {
@@ -200,10 +202,10 @@ class GroupChatMessageAppBar extends StatelessWidget
                   onSelected: (result) async {
                     if(result ==0){
                       int index = chatCtrl.message.indexWhere((element) {
-                        log("element.id : ${element.id}");
+
                         return element.id == chatCtrl.selectedIndexId[0];
                       });
-                      log("seenMessageList : ${chatCtrl.message[index].data()["seenMessageList"]}");
+
                       var data ={
                         "backgroundImage" :chatCtrl.backgroundImage,
                         "message": decryptMessage(
@@ -215,10 +217,10 @@ class GroupChatMessageAppBar extends StatelessWidget
                     }else
                     if (result == 1) {
                       int index = chatCtrl.message.indexWhere((element) {
-                        log("element.id : ${element.id}");
+
                         return element.id == chatCtrl.selectedIndexId[0];
                       });
-                      log("index : $index");
+
                       Clipboard.setData(ClipboardData(
                           text: decryptMessage(
                               chatCtrl.message[index].data()["content"])));
@@ -229,7 +231,7 @@ class GroupChatMessageAppBar extends StatelessWidget
                       Get.toNamed(routeName.backgroundList,
                           arguments: {"chatId": chatCtrl.pId})!
                           .then((value) {
-                        log("VALUE : $value");
+
                         if (value != null && value != "") {
                           chatCtrl.wallPaperConfirmation(value);
                         } else {

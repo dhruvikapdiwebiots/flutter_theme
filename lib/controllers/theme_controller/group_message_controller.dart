@@ -67,19 +67,16 @@ class GroupChatMessageController extends GetxController {
   bool enableReactionPopup = false;
   bool showPopUp = false;
   int? count;
-  List clearChatId = [];
 
   late encrypt.Encrypter cryptor;
   Offset tapPosition = Offset.zero;
   final iv = encrypt.IV.fromLength(8);
-  final PagingController pagingController = PagingController(firstPageKey: 0);
 
   @override
   void onReady() {
     // TODO: implement onReady
     user = appCtrl.storage.read(session.user);
     id = user["id"];
-    groupId = '';
     isLoading = false;
     imageUrl = '';
     listScrollController = ScrollController(initialScrollOffset: 0);
@@ -89,73 +86,51 @@ class GroupChatMessageController extends GetxController {
     pId = pData["message"]["groupId"];
     pName = pData["groupData"]["name"];
     groupImage = pData["groupData"]["image"];
-    log.log("SENDER : ${pData["message"]["senderId"]}");
+
     update();
     getPeerStatus();
-    pagingController.addPageRequestListener((pageKey) {
-      fetchPage(pageKey);
-    });
 
     update();
-    log.log("INIT SC : $listScrollController");
+
     super.onReady();
-  }
-
-  //fetch data
-  Future<void> fetchPage(pageKey) async {
-    pagingController.itemList = [];
-
-    try {
-      final newItems = message;
-      final isLastPage = newItems.length < pageSize;
-      if (isLastPage) {
-        pagingController.appendLastPage(newItems);
-      } else {
-        final nextPageKey = pageKey + newItems.length;
-        pagingController.appendPage(newItems, nextPageKey);
-      }
-    } catch (error) {
-      pagingController.error = error;
-    }
-    isLoading = false;
-    update();
   }
 
 //get group data
   getPeerStatus() async {
     nameList = "";
     nameList = null;
-    log.log("receiver");
+
     FirebaseFirestore.instance
         .collection(collectionName.groups)
         .doc(pId)
         .get()
         .then((value) async {
-      log.log("value.exists :${value.exists}");
+
       if (value.exists) {
         allData = value.data();
         update();
         backgroundImage = value.data()!['backgroundImage'] ?? "";
         List receiver = pData["groupData"]["users"] ?? [];
-        log.log("receiver : $receiver");
-        log.log("allDATA : $allData");
-        clearChatId = value.data()!["clearChatId"] ?? [];
+
         nameList = (receiver.length - 1).toString();
         if (pData["message"]["senderId"] != user["id"]) {
           await FirebaseFirestore.instance
+              .collection(collectionName.users)
+              .doc(appCtrl.user["id"])
               .collection(collectionName.groupMessage)
               .doc(pId)
               .collection(collectionName.chat)
               .get()
               .then((value) {
-            value.docs.asMap().entries.forEach((element) {
+
+            value.docs.asMap().entries.forEach((element)async {
               if (element.value.exists) {
                 if (element.value.data()["sender"] != user["id"]) {
                   List seenMessageList =
                       element.value.data()["seenMessageList"] ?? [];
-                  log.log("seenMessageList : $seenMessageList");
+
                   bool isAvailable = seenMessageList
-                      .where((element) => element["userId"] == user["id"])
+                      .where((availableElement) => availableElement["userId"] == user["id"])
                       .isNotEmpty;
                   if (!isAvailable) {
                     var data = {
@@ -164,24 +139,27 @@ class GroupChatMessageController extends GetxController {
                     };
 
                     seenMessageList.add(data);
+
                   }
-                  FirebaseFirestore.instance
+                await  FirebaseFirestore.instance
+                      .collection(collectionName.users)
+                      .doc(appCtrl.user["id"])
                       .collection(collectionName.groupMessage)
                       .doc(pId)
                       .collection(collectionName.chat)
                       .doc(element.value.id)
                       .update({"seenMessageList": seenMessageList});
 
-                  FirebaseFirestore.instance
+                  await   FirebaseFirestore.instance
                       .collection(collectionName.users)
                       .doc(user["id"])
                       .collection(collectionName.chats)
                       .where("groupId", isEqualTo: pId)
                       .limit(1)
                       .get()
-                      .then((userChat) {
+                      .then((userChat) async{
                     if (userChat.docs.isNotEmpty) {
-                      FirebaseFirestore.instance
+                      await  FirebaseFirestore.instance
                           .collection(collectionName.users)
                           .doc(user["id"])
                           .collection(collectionName.chats)
@@ -196,7 +174,6 @@ class GroupChatMessageController extends GetxController {
         }
       }
 
-      update();
     });
     user = appCtrl.storage.read(session.user);
     if (backgroundImage != null || backgroundImage != "") {
@@ -451,32 +428,13 @@ class GroupChatMessageController extends GetxController {
 
     final encrypted = encrypter.encrypt(content, iv: iv).base64;
 
-    if (clearChatId.contains(user["id"])) {
-      clearChatId.removeWhere((element) => element == user["id"]);
-      await FirebaseFirestore.instance
-          .collection(collectionName.groups)
-          .doc(pId)
-          .get()
-          .then((value) async {
-        log.log("value.exists :${value.exists}");
-        if (value.exists) {
-          await FirebaseFirestore.instance
-              .collection(collectionName.groups)
-              .doc(pId)
-              .update({"clearChatId": clearChatId});
-        }
-
-        update();
-      });
-    }
-
     if (content.trim() != '') {
       var user = appCtrl.storage.read(session.user);
       id = user["id"];
-    await  GroupMessageApi().saveGroupMessage(encrypted, type);
-
+      await GroupMessageApi().saveGroupMessage(encrypted, type);
 
       await ChatMessageApi().saveGroupData(id, pId, encrypted, pData);
+
       isLoading = false;
       videoFile = null;
       videoUrl = "";
@@ -506,17 +464,17 @@ class GroupChatMessageController extends GetxController {
         context: Get.context!, builder: (_) => const GroupDeleteAlert());
   }
 
-  //clear chat Option
-  clearChatOption() async {
-    await showDialog(
-        context: Get.context!, builder: (_) => const GroupDeleteAlert());
-  }
-
   Widget timeLayout(document) {
     List newMessageList = document["message"];
     return Column(
       children: [
-        Text(document["title"].contains("-other") ? document["title"].split("-other")[0]: document["title"],style: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.txtColor)).marginSymmetric(vertical: Insets.i5),
+        Text(
+                document["title"].contains("-other")
+                    ? document["title"].split("-other")[0]
+                    : document["title"],
+                style:
+                    AppCss.poppinsMedium14.textColor(appCtrl.appTheme.txtColor))
+            .marginSymmetric(vertical: Insets.i5),
         ...newMessageList.asMap().entries.map((e) {
           return buildItem(e.key, e.value, e.value.id);
         }).toList()
@@ -524,10 +482,9 @@ class GroupChatMessageController extends GetxController {
     );
   }
 
-
 // BUILD ITEM MESSAGE BOX FOR RECEIVER AND SENDER BOX DESIGN
   Widget buildItem(int index, DocumentSnapshot document, docId) {
-    log.log("CHECK NOTE : ${document["type"] == MessageType.note.name}");
+
     return Column(children: [
       document["type"] == MessageType.note.name
           ? const CommonNoteEncrypt()
@@ -670,7 +627,26 @@ class GroupChatMessageController extends GetxController {
 
   // ON BACK PRESS
   Future<bool> onBackPress() {
+    appCtrl.isTyping = false;
+    appCtrl.update();
     firebaseCtrl.groupTypingStatus(pId, false);
+    FirebaseFirestore.instance.collection(collectionName.users).doc(appCtrl.user["id"])
+        .collection(collectionName.messages)
+        .doc(pId)
+        .collection(collectionName.chat)
+        .get()
+        .then((value) {
+      if (value.docs.isNotEmpty) {
+        if (value.docs.length == 1) {
+          FirebaseFirestore.instance.collection(collectionName.users).doc(appCtrl.user["id"])
+              .collection(collectionName.messages)
+              .doc(pId)
+              .collection(collectionName.chat)
+              .doc(value.docs[0].id)
+              .delete();
+        }
+      }
+    });
     Get.back();
     return Future.value(false);
   }
@@ -732,7 +708,7 @@ class GroupChatMessageController extends GetxController {
   Future getImage(source) async {
     final ImagePicker picker = ImagePicker();
     imageFile = (await picker.pickImage(source: source))!;
-    log.log("imageFile: $imageFile");
+
     isLoading = true;
     update();
     if (imageFile != null) {
@@ -777,7 +753,7 @@ class GroupChatMessageController extends GetxController {
           .isNotEmpty;
       if (!isEmpty) {
         var data = {"chatId": "0", "data": userData, "message": message};
-        log.log("arg : $data");
+
         Get.back();
         Get.toNamed(routeName.chat, arguments: data);
       } else {
@@ -790,7 +766,7 @@ class GroupChatMessageController extends GetxController {
               "message": message
             };
             Get.back();
-            log.log("arg : $data");
+
             Get.toNamed(routeName.chat, arguments: data);
           }
         });
@@ -940,16 +916,14 @@ class GroupChatMessageController extends GetxController {
   }
 
   void showBottomSheet(BuildContext context) => showModalBottomSheet<void>(
-    context: context,
-    builder: (context) => EmojiPickerWidget(onSelected: (emoji) {
-      Navigator.pop(context);
-      onEmojiTap(emoji);
-    }),
-  );
+        context: context,
+        builder: (context) => EmojiPickerWidget(onSelected: (emoji) {
+          Navigator.pop(context);
+          onEmojiTap(emoji);
+        }),
+      );
 
-  onEmojiTap(emoji){
-
+  onEmojiTap(emoji) {
     onSendMessage(emoji, MessageType.text);
   }
 }
-

@@ -100,26 +100,26 @@ class GroupMessageApi {
         ? Get.find<GroupChatMessageController>()
         : Get.put(GroupChatMessageController());
     List  userList = chatCtrl.pData["groupData"]["users"];
-    userList.asMap().entries.forEach((element)async {
-      await   FirebaseFirestore.instance
-          .collection(collectionName.users)
-          .doc(element.value["id"])
-          .collection(collectionName.groupMessage)
-          .doc(chatCtrl.pId)
-          .collection(collectionName.chat)
-          .doc(DateTime.now().millisecondsSinceEpoch.toString())
-          .set({
-        'sender': appCtrl.user["id"],
-        'senderName': appCtrl.user["name"],
-        'receiver': chatCtrl.pData["groupData"]["users"],
-        'content': encrypted,
-        "groupId": chatCtrl.pId,
-        'type': type.name,
-        'messageType': "sender",
-        "status": "",
-        'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+      userList.asMap().entries.forEach((element)async {
+        await   FirebaseFirestore.instance
+            .collection(collectionName.users)
+            .doc(element.value["id"])
+            .collection(collectionName.groupMessage)
+            .doc(chatCtrl.pId)
+            .collection(collectionName.chat)
+            .doc(DateTime.now().millisecondsSinceEpoch.toString())
+            .set({
+          'sender': appCtrl.user["id"],
+          'senderName': appCtrl.user["name"],
+          'receiver': chatCtrl.pData["groupData"]["users"],
+          'content': encrypted,
+          "groupId": chatCtrl.pId,
+          'type': type.name,
+          'messageType': "sender",
+          "status": "",
+          'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+        });
       });
-    });
 
   }
 }

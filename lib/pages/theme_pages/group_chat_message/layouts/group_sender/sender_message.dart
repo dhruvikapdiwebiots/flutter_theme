@@ -24,7 +24,7 @@ class _GroupSenderMessageState extends State<GroupSenderMessage> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<GroupChatMessageController>(builder: (chatCtrl) {
-      log("DOCID : ${widget.docId}");
+
       return Stack(
         alignment: Alignment.topLeft,
         children: [

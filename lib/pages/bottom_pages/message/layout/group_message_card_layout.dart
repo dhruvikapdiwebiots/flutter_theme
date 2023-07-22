@@ -20,7 +20,6 @@ class GroupMessageCardLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log("SNAP  : ${(snapshot!.data!.exists)}");
     return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -35,7 +34,7 @@ class GroupMessageCardLayout extends StatelessWidget {
                   style: AppCss.poppinsblack14
                       .textColor(appCtrl.appTheme.blackColor)),
               const VSpace(Sizes.s5),
-              document!["lastMessage"] != null
+              document!["lastMessage"] != ""
                   ? GroupCardSubTitle(
                       currentUserId: currentUserId,
                       name: userSnapShot!.data!["name"],
@@ -45,15 +44,17 @@ class GroupMessageCardLayout extends StatelessWidget {
             ])
           ]),
           StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection(collectionName.groups)
+              stream:  FirebaseFirestore.instance.collection(collectionName.users).doc(appCtrl.user["id"])
+                  .collection(collectionName.groupMessage)
                   .doc(document!["groupId"])
-                  .collection(collectionName.chat)
+                  .collection(collectionName.chat).where("sender",isNotEqualTo: appCtrl.user["id"])
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
+
                   int number = getGroupUnseenMessagesNumber(snapshot.data!.docs);
                   return Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
                           DateFormat('HH:mm a').format(

@@ -151,7 +151,7 @@ class Fonts{
   final search = "search";
   final wallpaper = "wallpaper";
   final clearChat = "clearChat";
-  final deleteOptions = "deleteOptions";
+  final deleteOption = "deleteOption";
   final clearChatId = "clearChatId";
   String unblockUser(val) => "unblockUser".trParams({'pName':val});
 }

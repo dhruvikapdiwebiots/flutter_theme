@@ -8,6 +8,7 @@ import 'package:dartx/dartx_io.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/pages/theme_pages/broadcast_chat/layouts/broadcast_file_list.dart';
 import 'package:flutter_theme/widgets/common_note_encrypt.dart';
+import 'package:flutter_theme/widgets/reaction_pop_up/emoji_picker_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
@@ -68,7 +69,7 @@ class BroadcastChatController extends GetxController {
     pId = data["broadcastId"];
     pData = broadData["receiverId"];
     totalUser = pData.length;
-    log("broadData : $broadData");
+
     for (var i = 0; i < pData.length; i++) {
       if (nameList != "") {
         nameList = "$nameList, ${pData[i]["name"]}";
@@ -101,7 +102,7 @@ class BroadcastChatController extends GetxController {
       }
       broadData["users"] = value.data()!["users"] ?? [];
     });
-    log("broadData 1: $broadData");
+
     update();
   }
 
@@ -267,7 +268,7 @@ class BroadcastChatController extends GetxController {
 
   // SEND MESSAGE CLICK
   void onSendMessage(String content, MessageType type) async {
-    log("pData : ${pData.length}");
+
     if (content.trim() != '') {
       final key = encrypt.Key.fromUtf8('my 32 length key................');
       final iv = encrypt.IV.fromLength(16);
@@ -332,7 +333,7 @@ class BroadcastChatController extends GetxController {
 
   saveMessageInLoop(String content, MessageType type) async {
     pData.asMap().entries.forEach((element) async {
-      log("cha : ${element.value["chatId"]}");
+
       if (element.value["chatId"] != null) {
         newpData.add(element.value);
         update();
@@ -405,7 +406,7 @@ class BroadcastChatController extends GetxController {
         });
       }
     });
-    log("loop : $newpData");
+
   }
 
   //delete chat layout
@@ -604,5 +605,18 @@ class BroadcastChatController extends GetxController {
             AppCss.poppinsMedium14.textColor(appCtrl.appTheme.blackColor))
       ]),
     );
+  }
+
+
+  void showBottomSheet(BuildContext context) => showModalBottomSheet<void>(
+    context: context,
+    builder: (context) => EmojiPickerWidget(onSelected: (emoji) {
+      Navigator.pop(context);
+      onEmojiTap(emoji);
+    }),
+  );
+
+  onEmojiTap(emoji) {
+    onSendMessage(emoji, MessageType.text);
   }
 }

@@ -8,12 +8,12 @@ class CallContactList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<CallListController>(builder: (callCtrl) {
-      log("CHHH : %${callCtrl.contactList.isEmpty}");
+
       if (callCtrl.contactList.isEmpty) {
         callCtrl.getAllRegister();
 
       }
-      log("CALL : ${callCtrl.contactList.length}");
+
       return AgoraToken(
         scaffold: PickupLayout(
           scaffold: GetBuilder<AppController>(builder: (appCtrl) {

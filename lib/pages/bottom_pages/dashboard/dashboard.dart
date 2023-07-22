@@ -57,9 +57,6 @@ class _DashboardState extends State<Dashboard>
   @override
   Widget build(BuildContext context) {
     return GetBuilder<DashboardController>(builder: (_) {
-      if (dashboardCtrl.controller != null) {
-        dashboardCtrl.onChange(dashboardCtrl.controller!.index);
-      }
 
       return OverlaySupport.global(
         child: AgoraToken(

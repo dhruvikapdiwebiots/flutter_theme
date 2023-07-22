@@ -154,9 +154,16 @@ int getGroupUnseenMessagesNumber(
       .entries
       .forEach((element) {
         if(element.value.data().containsKey("seenMessageList")) {
-          if (!element.value.data()["seenMessageList"].contains(appCtrl.user["id"])) {
+
+          List seenList =element.value.data()["seenMessageList"];
+          bool isAvailable = seenList
+              .where((availableElement) => availableElement["userId"] == appCtrl.user["id"])
+              .isNotEmpty;
+          if (!isAvailable) {
             counter++;
           }
+        }else{
+          counter++;
         }
   });
   return counter;
@@ -164,7 +171,7 @@ int getGroupUnseenMessagesNumber(
 
 bool checkUserExist(phone) {
   bool isExist = false;
-  log("{userContactList.length: ${appCtrl.userContactList.length}");
+
   var contain = appCtrl.userContactList.where((element) {
     return element.phones.isNotEmpty ? phoneNumberExtension(
         element.phones[0].number.toString()) == phone : false;
@@ -207,7 +214,7 @@ int calculateDifference(DateTime date) {
 }
 
 getDate(date) {
-  log("DATE : $date");
+
   DateTime now = DateTime.now();
   String when;
   DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(int.parse(date));
@@ -222,7 +229,6 @@ getDate(date) {
 }
 
 getWhen(date) {
-  log("DATE : $date");
   DateTime now = DateTime.now();
   String when;
   DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(int.parse(date));

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import '../../../../config.dart';
 
 class ChatCard extends StatefulWidget {
@@ -25,13 +27,9 @@ class _ChatCardState extends State<ChatCard> {
                     .limit(15)
                     .snapshots(),
             builder: (context, snapshot) {
+             
               if (snapshot.hasError) {
-                return dashboardCtrl.userText.text.isNotEmpty ?Center(
-                  child: Text("NO RESULT FOUND" ,style: AppCss.poppinsSemiBold16.textColor(appCtrl.appTheme.blackColor),),
-                ) : CommonEmptyLayout(
-                    gif: gifAssets.message,
-                    title: fonts.emptyMessageTitle.tr,
-                    desc: fonts.emptyMessageDesc.tr);
+                return Container();
               } else if (!snapshot.hasData) {
                 return Center(
                         child: CircularProgressIndicator(
@@ -40,8 +38,20 @@ class _ChatCardState extends State<ChatCard> {
                     .height(MediaQuery.of(context).size.height);
               } else {
                 List message = MessageFirebaseApi().chatListWidget(snapshot);
-
-                return !snapshot.hasData
+                return dashboardCtrl.searchText.text.isNotEmpty ? message.isEmpty ? Center(
+                  child: Text("NO RESULT FOUND" ,style: AppCss.poppinsSemiBold16.textColor(appCtrl.appTheme.blackColor),),
+                ) : ListView.builder(
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.symmetric(
+                      vertical: Insets.i20, horizontal: Insets.i10),
+                  itemBuilder: (context, index) {
+                    return LoadUser(
+                        document: message[index],
+                        blockBy: messageCtrl.storageUser["id"],
+                        currentUserId: messageCtrl.storageUser["id"]);
+                  },
+                  itemCount: message.length,
+                ):  !snapshot.hasData
                     ? Center(
                             child: CircularProgressIndicator(
                                 valueColor: AlwaysStoppedAnimation<Color>(

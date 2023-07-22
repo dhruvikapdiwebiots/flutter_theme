@@ -85,7 +85,7 @@ class FirebaseAuthController extends GetxController {
       final User currentUser = firebaseAuth.currentUser!;
       assert(user.user!.uid == currentUser.uid);
       isLoading = false;
-      log('login : ${user.user}');
+
       dynamic resultData = await getUserData(user.user!);
       if (resultData["phone"] == "") {
         Get.toNamed(routeName.editProfile,

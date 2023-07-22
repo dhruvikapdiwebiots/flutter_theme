@@ -22,22 +22,24 @@ class TrailingLayout extends StatelessWidget {
 
 
               StreamBuilder(
-                  stream: FirebaseFirestore.instance
+                  stream: FirebaseFirestore.instance.collection(collectionName.users).doc(appCtrl.user["id"])
                       .collection(collectionName.messages)
                       .doc(document!["chatId"])
-                      .collection(collectionName.chat)
+                      .collection(collectionName.chat).where("receiver",isEqualTo: appCtrl.user["id"])
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       int number = getUnseenMessagesNumber(snapshot.data!.docs);
+
                       return Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
                               DateFormat('HH:mm a').format(
                                   DateTime.fromMillisecondsSinceEpoch(
                                       int.parse(document!['updateStamp']))),
                               style: AppCss.poppinsMedium12.textColor(currentUserId == document!["senderId"] ? appCtrl.appTheme.txtColor: number == 0? appCtrl.appTheme.txtColor : appCtrl.appTheme.primary)),
-                          if((currentUserId != document!["senderId"]))
+                          if(appCtrl.user["id"] != document!["senderId"])
                           number == 0
                               ? Container()
                               : Container(

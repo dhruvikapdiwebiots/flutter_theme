@@ -7,10 +7,8 @@ import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/pages/theme_pages/chat_message/layouts/chat_wall_paper.dart';
 import 'package:flutter_theme/pages/theme_pages/chat_message/layouts/single_clear_dialog.dart';
-import 'package:flutter_theme/pages/theme_pages/group_chat_message/group_on_tap_function_class.dart';
 import 'package:flutter_theme/widgets/common_note_encrypt.dart';
 import 'package:flutter_theme/widgets/reaction_pop_up/emoji_picker_widget.dart';
-import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ChatController extends GetxController {
@@ -45,7 +43,7 @@ class ChatController extends GetxController {
   bool enableReactionPopup = false, isChatSearch = false;
   bool showPopUp = false;
   List selectedIndexId = [];
-  List clearChatId = [], searchChatId = [];
+  List searchChatId = [];
 
   bool typing = false, isBlock = false;
   final pickerCtrl = Get.isRegistered<PickerController>()
@@ -70,8 +68,7 @@ class ChatController extends GetxController {
     imageUrl = '';
     userData = appCtrl.storage.read(session.user);
     var data = Get.arguments;
-    log("data : $data");
-    log("userData : ${userData}");
+
     if (data == "No User") {
       isUserAvailable = false;
     } else {
@@ -90,8 +87,9 @@ class ChatController extends GetxController {
 
   //get chat data
   getChatData() async {
-    log("CHAT ID : $chatId");
+
     if (chatId != "0") {
+      update();
       await FirebaseFirestore.instance
           .collection(collectionName.users)
           .doc(userData["id"])
@@ -99,10 +97,49 @@ class ChatController extends GetxController {
           .where("chatId", isEqualTo: chatId)
           .get()
           .then((value) {
-        log("allData : ${value.docs[0].data()}");
+
         allData = value.docs[0].data();
-        clearChatId = allData["clearChatId"] ?? [];
         update();
+      });
+      final key = encrypt.Key.fromUtf8('my 32 length key................');
+      final iv = encrypt.IV.fromLength(16);
+
+      final encrypter = encrypt.Encrypter(encrypt.AES(key));
+
+      final encrypted = encrypter.encrypt(fonts.noteEncrypt.tr, iv: iv).base64;
+      await FirebaseFirestore.instance
+          .collection(collectionName.users)
+          .doc(appCtrl.user["id"])
+          .collection(collectionName.messages)
+          .doc(chatId)
+          .collection(collectionName.chat)
+          .where("type", isEqualTo: MessageType.note.name).limit(1)
+          .get()
+          .then((value) async {
+        if (value.docs.isEmpty) {
+
+          await FirebaseFirestore.instance
+              .collection(collectionName.users)
+              .doc(appCtrl.user["id"])
+              .collection(collectionName.messages)
+              .doc(chatId)
+              .collection(collectionName.chat)
+              .doc(DateTime.now().millisecondsSinceEpoch.toString())
+              .set({
+            'sender': userData["id"],
+            'receiver': pId,
+            'content': encrypted,
+            "chatId": chatId,
+            'type': MessageType.note.name,
+            'messageType': "sender",
+            "isBlock": isBlock,
+            "isSeen": true,
+            "isBroadcast": false,
+            "blockBy": "",
+            "blockUserId": "",
+            'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+          }, SetOptions(merge: true));
+        }
       });
     } else {
       onSendMessage(fonts.noteEncrypt.tr, MessageType.note);
@@ -116,9 +153,9 @@ class ChatController extends GetxController {
       pData = value.data();
 
       update();
-      log("get L : $pData");
+
     });
-    log("allData : $allData");
+
 
     if (allData != null) {
       if (allData["backgroundImage"] != null ||
@@ -138,13 +175,12 @@ class ChatController extends GetxController {
       allData["backgroundImage"] = "";
       allData["isBlock"] = false;
     }
-    log("CHECK BACK : ${allData["backgroundImage"]}");
+
     update();
     var data = Get.arguments;
-    log("ARGUMENT DATA :${data["message"] != null}");
+
     if (data["message"] != null) {
-      //PhotoUrl photoUrl = PhotoUrl.fromJson(data["message"]);
-      log("ARH : ${data["message"]}");
+
       onSendMessage(
           data["message"].statusType == StatusType.text.name
               ? data["message"].statusText!
@@ -159,7 +195,6 @@ class ChatController extends GetxController {
 
   //audio and video call tap
   audioVideoCallTap(isVideoCall) async {
-    log("pData : $pData");
 
     await ChatMessageApi()
         .audioAndVideoCallApi(toData: pData, isVideoCall: isVideoCall);
@@ -181,20 +216,24 @@ class ChatController extends GetxController {
 
   //seen all message
   seenMessage() async {
-    log("ALL : $allData");
-    log("userData : $userData");
-    log("c : $pId");
+
     if (allData != null) {
       if (allData["senderId"] != userData["id"]) {
         await FirebaseFirestore.instance
+            .collection(collectionName.users)
+            .doc(appCtrl.user["id"])
             .collection(collectionName.messages)
             .doc(chatId)
             .collection(collectionName.chat)
-            .where("sender", isEqualTo: pId)
+            .where("receiver", isEqualTo: appCtrl.user["id"])
             .get()
             .then((value) {
-          value.docs.asMap().entries.forEach((element) {
-            FirebaseFirestore.instance
+
+          value.docs.asMap().entries.forEach((element) async {
+
+            await FirebaseFirestore.instance
+                .collection(collectionName.users)
+                .doc(appCtrl.user["id"])
                 .collection(collectionName.messages)
                 .doc(chatId)
                 .collection(collectionName.chat)
@@ -235,7 +274,7 @@ class ChatController extends GetxController {
       File file = File(result.files.single.path.toString());
       String fileName =
           "${file.name}-${DateTime.now().millisecondsSinceEpoch.toString()}";
-      log("file : $file");
+
       Reference reference = FirebaseStorage.instance.ref().child(fileName);
       UploadTask uploadTask = reference.putFile(file);
       TaskSnapshot snap = await uploadTask;
@@ -259,7 +298,7 @@ class ChatController extends GetxController {
     Get.back();
 
     await permissionHandelCtrl.getCurrentPosition().then((value) async {
-      log("value : $value");
+
       var locationString =
           'https://www.google.com/maps/search/?api=1&query=${value!.latitude},${value.longitude}';
       onSendMessage(locationString, MessageType.location);
@@ -284,7 +323,7 @@ class ChatController extends GetxController {
 
   //block user
   blockUser() async {
-    log("VLOCK");
+
     DateTime now = DateTime.now();
     String? newChatId =
         chatId == "0" ? now.microsecondsSinceEpoch.toString() : chatId;
@@ -296,7 +335,6 @@ class ChatController extends GetxController {
     final encrypter = encrypt.Encrypter(encrypt.AES(key));
 
     if (allData["isBlock"] == true) {
-
       final encrypted =
           encrypter.encrypt("You unblock this contact", iv: iv).base64;
 
@@ -317,7 +355,6 @@ class ChatController extends GetxController {
           userData["id"],
           userData["name"]);
     } else {
-
       final encrypted =
           encrypter.encrypt("You block this contact", iv: iv).base64;
 
@@ -345,7 +382,7 @@ class ChatController extends GetxController {
   Future uploadFile() async {
     imageFile = pickerCtrl.imageFile;
     update();
-    log("chat_con : $imageFile");
+
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     Reference reference = FirebaseStorage.instance.ref().child(fileName);
     var file = File(imageFile!.path);
@@ -355,7 +392,7 @@ class ChatController extends GetxController {
         imageUrl = downloadUrl;
         imageFile = null;
         isLoading = false;
-        log("imageUrl : $imageUrl");
+
         onSendMessage(imageUrl!, MessageType.image);
         update();
       }, onError: (err) {
@@ -394,7 +431,7 @@ class ChatController extends GetxController {
     update();
     videoFile = pickerCtrl.videoFile;
     update();
-    log("videoFile : $videoFile");
+
     const Duration(seconds: 2);
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     Reference reference = FirebaseStorage.instance.ref().child(fileName);
@@ -432,7 +469,7 @@ class ChatController extends GetxController {
       Get.toNamed(routeName.allContactList)!.then((value) async {
         if (value != null) {
           Contact contact = value;
-          log("ccc : $contact");
+
           isLoading = true;
           update();
           onSendMessage(
@@ -463,26 +500,22 @@ class ChatController extends GetxController {
       },
     ).then((value) async {
       File file = File(value);
-      log("file : $file");
+
       String fileName =
           "${file.name}-${DateTime.now().millisecondsSinceEpoch.toString()}";
       Reference reference = FirebaseStorage.instance.ref().child(fileName);
       UploadTask uploadTask = reference.putFile(file);
       TaskSnapshot snap = await uploadTask;
       String downloadUrl = await snap.ref.getDownloadURL();
-      log("audioFile : $downloadUrl");
       onSendMessage(downloadUrl, MessageType.audio);
-      log("audioFile : $downloadUrl");
     });
   }
 
   // SEND MESSAGE CLICK
   void onSendMessage(String content, MessageType type) async {
-    log("allData : $allData");
     // isLoading = true;
     update();
     Get.forceAppUpdate();
-    log("check for send ");
     final key = encrypt.Key.fromUtf8('my 32 length key................');
     final iv = encrypt.IV.fromLength(16);
 
@@ -507,7 +540,7 @@ class ChatController extends GetxController {
             ScaffoldMessenger.of(Get.context!).showSnackBar(
                 SnackBar(content: Text(fonts.unblockUser(pName))));
           } else {
-         await  ChatMessageApi()
+            await ChatMessageApi()
                 .saveMessage(
                     newChatId,
                     pId,
@@ -519,15 +552,8 @@ class ChatController extends GetxController {
               isLoading = false;
               update();
               Get.forceAppUpdate();
-              if (type.name != MessageType.note.name) {
-                await ChatMessageApi().saveMessageInUserCollection(
-                    pData["id"],
-                    userData["id"],
-                    newChatId,
-                    encrypted,
-                    userData["id"],
-                    pName);
-              }
+              await ChatMessageApi().saveMessageInUserCollection(pData["id"],
+                  userData["id"], newChatId, encrypted, userData["id"], pName);
             }).then((value) {
               isLoading = false;
               update();
@@ -537,7 +563,7 @@ class ChatController extends GetxController {
           isLoading = false;
           update();
         } else {
-          await   ChatMessageApi()
+          await ChatMessageApi()
               .saveMessage(
                   newChatId,
                   pId,
@@ -545,25 +571,19 @@ class ChatController extends GetxController {
                   type,
                   DateTime.now().millisecondsSinceEpoch.toString(),
                   userData["id"])
-              .then((value)async {
-            await    ChatMessageApi()
+              .then((value) async {
+            await ChatMessageApi()
                 .saveMessage(newChatId, pId, encrypted, type,
                     DateTime.now().millisecondsSinceEpoch.toString(), pId)
                 .then((snap) async {
               isLoading = false;
               update();
               Get.forceAppUpdate();
-              if (type.name != MessageType.note.name) {
-                await ChatMessageApi().saveMessageInUserCollection(
-                    userData["id"],
-                    pId,
-                    newChatId,
-                    encrypted,
-                    userData["id"],
-                    pName);
-                await ChatMessageApi().saveMessageInUserCollection(pId, pId,
-                    newChatId, encrypted, userData["id"], userData["name"]);
-              }
+
+              await ChatMessageApi().saveMessageInUserCollection(userData["id"],
+                  pId, newChatId, encrypted, userData["id"], pName);
+              await ChatMessageApi().saveMessageInUserCollection(pId, pId,
+                  newChatId, encrypted, userData["id"], userData["name"]);
             }).then((value) {
               isLoading = false;
               update();
@@ -575,11 +595,10 @@ class ChatController extends GetxController {
         update();
         Get.forceAppUpdate();
       } else {
-        log("message se");
         isLoading = false;
         update();
 
-        await  ChatMessageApi()
+        await ChatMessageApi()
             .saveMessage(
                 newChatId,
                 pId,
@@ -587,49 +606,45 @@ class ChatController extends GetxController {
                 type,
                 DateTime.now().millisecondsSinceEpoch.toString(),
                 userData["id"])
-            .then((value) async{
-          await   ChatMessageApi()
+            .then((value) async {
+          await ChatMessageApi()
               .saveMessage(newChatId, pId, encrypted, type,
                   DateTime.now().millisecondsSinceEpoch.toString(), pId)
               .then((snap) async {
             isLoading = false;
             update();
             Get.forceAppUpdate();
-            log("check");
 
-            if (type.name != MessageType.note.name) {
-              await ChatMessageApi().saveMessageInUserCollection(userData["id"],
-                  pId, newChatId, encrypted, userData["id"], pName);
-              await ChatMessageApi().saveMessageInUserCollection(pId, pId,
-                  newChatId, encrypted, userData["id"], userData["name"]);
-            }
+
+            await ChatMessageApi().saveMessageInUserCollection(userData["id"],
+                pId, newChatId, encrypted, userData["id"], pName);
+            await ChatMessageApi().saveMessageInUserCollection(pId, pId,
+                newChatId, encrypted, userData["id"], userData["name"]);
           }).then((value) {
             isLoading = false;
             update();
             Get.forceAppUpdate();
-            if (type != MessageType.note) {
-              getChatData();
-            }
+            getChatData();
           });
         });
       }
     }
-    if (type != MessageType.note) {
-      if (chatId != "0") {
-        await FirebaseFirestore.instance
-            .collection(collectionName.users)
-            .doc(userData["id"])
-            .collection(collectionName.chats)
-            .where("chatId", isEqualTo: chatId)
-            .get()
-            .then((value) {
-          log("allData : ${value.docs[0].data()}");
-          allData = value.docs[0].data();
-          clearChatId = allData["clearChatId"] ?? [];
-          update();
-        });
-      }
+
+    if (chatId != "0") {
+      await FirebaseFirestore.instance
+          .collection(collectionName.users)
+          .doc(userData["id"])
+          .collection(collectionName.chats)
+          .where("chatId", isEqualTo: chatId)
+          .get()
+          .then((value) {
+
+        allData = value.docs[0].data();
+
+        update();
+      });
     }
+
     seenMessage();
     await FirebaseFirestore.instance
         .collection(collectionName.users)
@@ -639,7 +654,7 @@ class ChatController extends GetxController {
       pData = value.data();
 
       update();
-      log("get L : $pData");
+
     });
     if (pData["pushToken"] != "") {
       firebaseCtrl.sendNotification(
@@ -729,7 +744,7 @@ class ChatController extends GetxController {
         showPopUp = false;
         selectedIndexId = [];
         update();
-        log("enable : $enableReactionPopup");
+
       });
     } else if (document['sender'] != userData["id"]) {
       // RECEIVER MESSAGE
@@ -753,6 +768,8 @@ class ChatController extends GetxController {
 
   // ON BACK PRESS
   Future<bool> onBackPress() {
+    appCtrl.isTyping = false;
+    appCtrl.update();
     FirebaseFirestore.instance
         .collection(collectionName.messages)
         .doc(chatId)
@@ -810,7 +827,7 @@ class ChatController extends GetxController {
           }
           update();
         });
-        log("message : $message");
+
       },
 
       //Display the keyboard when TextField is displayed
@@ -847,19 +864,19 @@ class ChatController extends GetxController {
     );
   }
 
-
+  //ON TAP EMOJI BOTTOM SHEET OPEN
   void showBottomSheet(BuildContext context) => showModalBottomSheet<void>(
-    context: context,
-    builder: (context) => EmojiPickerWidget(onSelected: (emoji) {
-      Navigator.pop(context);
-      log("emoji : ${emoji.codeUnits}");
-      log("emoji : ${emoji.characters}");
-      onEmojiTap(emoji);
-    }),
-  );
+        context: context,
+        builder: (context) => EmojiPickerWidget(onSelected: (emoji) {
+          Navigator.pop(context);
+          log("emoji : ${emoji.codeUnits}");
+          log("emoji : ${emoji.characters}");
+          onEmojiTap(emoji);
+        }),
+      );
 
-  onEmojiTap(emoji){
-
-   onSendMessage(emoji, MessageType.text);
+  //ON SELECT EMOJI SEND TO CHAT
+  onEmojiTap(emoji) {
+    onSendMessage(emoji, MessageType.text);
   }
 }

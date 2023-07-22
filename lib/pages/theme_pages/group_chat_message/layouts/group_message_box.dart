@@ -14,9 +14,7 @@ class GroupMessageBox extends StatelessWidget {
     return GetBuilder<GroupChatMessageController>(builder: (chatCtrl) {
       return chatCtrl.user != null
           ? Flexible(
-              child: chatCtrl.clearChatId.contains(chatCtrl.user["id"])
-                  ? Container()
-                  : chatCtrl.pId == null
+              child: chatCtrl.pId == null
                       ? Center(
                           child: CircularProgressIndicator(
                               valueColor: AlwaysStoppedAnimation<Color>(

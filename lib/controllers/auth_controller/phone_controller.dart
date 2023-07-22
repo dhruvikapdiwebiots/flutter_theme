@@ -31,9 +31,9 @@ class PhoneController extends GetxController {
 
   void checkValidation() async {
     if (phone.text.isNotEmpty) {
-      log("number : ${phone.text == "7990261461"}");
+
       if (phone.text == "8141833594") {
-        log("number CHECK");
+
        await FirebaseFirestore.instance
             .collection(collectionName.users)
             .where("phone", isEqualTo: "8141833594")
@@ -42,7 +42,7 @@ class PhoneController extends GetxController {
           if (value.docs.isNotEmpty) {
             homeNavigation(value.docs[0].data());
           }
-          log("value : ${value.docs}");
+
         }).catchError((err) {
           log("get : $err");
         });
@@ -71,12 +71,11 @@ class PhoneController extends GetxController {
 
     final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
     firebaseMessaging.getToken().then((token) async {
-      log("token : $token");
+
       await FirebaseFirestore.instance
           .collection(collectionName.users)
           .doc(user["id"])
           .update({'status': "Online", "pushToken": token, "isActive": true});
-      log('check : ${appCtrl.storage.read(session.isIntro)}');
 
       Get.toNamed(routeName.dashboard);
       await checkPermission();
@@ -265,7 +264,7 @@ class PhoneController extends GetxController {
         .collection(collectionName.config)
         .doc(collectionName.usageControls)
         .get();
-    log("admin 3: ${usageControls.data()}");
+
     appCtrl.usageControlsVal = UsageControlModel.fromJson(usageControls.data()!);
 
 
@@ -275,15 +274,12 @@ class PhoneController extends GetxController {
         .collection(collectionName.config)
         .doc(collectionName.userAppSettings)
         .get();
-    log("admin 4: ${userAppSettings.data()}");
     appCtrl.userAppSettingsVal = UserAppSettingModel.fromJson(userAppSettings.data()!);
     final agoraToken = await FirebaseFirestore.instance
         .collection(collectionName.config)
         .doc(collectionName.agoraToken)
         .get();
     await   appCtrl.storage.write(session.agoraToken, agoraToken.data());
-    log("admin 5: ${agoraToken.data()}");
-    log("admin 6: ${appCtrl.usageControlsVal!.statusDeleteTime!.replaceAll(" hrs", "")}");
     update();
     appCtrl.update();
   }

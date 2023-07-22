@@ -24,6 +24,8 @@ class UserLastSeen extends StatelessWidget {
                   return Container();
                 } else {
 
+                  log("CHEC : ${snapshot.data!.data()}");
+
                   return chatCtrl.pId ==  "0" ? Container(): Text(
                     snapshot.data!.data()!["status"] == "Offline"
                         ? DateFormat('HH:mm a').format(
