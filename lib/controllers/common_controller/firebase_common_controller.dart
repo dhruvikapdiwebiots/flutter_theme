@@ -92,11 +92,16 @@ class FirebaseCommonController extends GetxController {
           .get()
           .then((value) async {
         if (value.docs.isNotEmpty) {
+          List<PhotoUrl> photoUrls =[];
+          update();
           Status status = Status.fromJson(value.docs[0].data());
+
           List<PhotoUrl> photoUrl = status.photoUrl!;
           await getPhotoUrl(status.photoUrl!).then((list) async {
-            List<PhotoUrl> photoUrls = list;
-
+            photoUrls  = list;
+            update();
+          log("PHOTO URL : ${photoUrls.length}");
+          log("PHOTO URL : ${photoUrl.length}");
             if (photoUrls.isEmpty) {
               FirebaseFirestore.instance
                   .collection(collectionName.users)
@@ -105,6 +110,7 @@ class FirebaseCommonController extends GetxController {
                   .doc(value.docs[0].id)
                   .delete();
             } else {
+
               if (photoUrls.length <= status.photoUrl!.length) {
 
                 var statusesSnapshot = await FirebaseFirestore.instance
@@ -220,18 +226,17 @@ class FirebaseCommonController extends GetxController {
       DateTime dt = DateTime.fromMillisecondsSinceEpoch(millis);
       var date = DateTime.now();
 
-      debugPrint("diff : ${dt.hour}");
-
-      debugPrint("diff : ${date.hour}");
-      debugPrint("diff : ${dt.hour <= date.hour}");
       if (appCtrl.usageControlsVal!.statusDeleteTime!.contains(" hrs")) {
-        if (dt.hour <= date.hour) {
-          debugPrint("minute : ${dt.minute}");
-          debugPrint("minute : ${date.minute}");
-          if (dt.minute <= date.minute) {
-            debugPrint("minute : ${dt.minute}");
-            debugPrint("minute : ${date.minute}");
-            newPhotoList.add(photoUrl[i]);
+        if(dt.day == date.day) {
+          newPhotoList.add(photoUrl[i]);
+        }else{
+          if(dt.day <= date.day) {
+
+            if (dt.hour <= date.hour) {
+              if (dt.minute <= date.minute) {
+                newPhotoList.add(photoUrl[i]);
+              }
+            }
           }
         }
       } else if (appCtrl.usageControlsVal!.statusDeleteTime!.contains(" min")) {
@@ -309,6 +314,7 @@ class FirebaseCommonController extends GetxController {
 
   //delete Contacts
   deleteContacts() async {
+    log("DELETE CONTACT");
     await FirebaseFirestore.instance
         .collection(collectionName.users)
         .doc(appCtrl.user["id"])
@@ -324,6 +330,7 @@ class FirebaseCommonController extends GetxController {
               .doc(value.docs[0].id)
               .delete();
         }else{
+
           value.docs.asMap().entries.forEach((element) async{
             await    FirebaseFirestore.instance
                 .collection(collectionName.users)

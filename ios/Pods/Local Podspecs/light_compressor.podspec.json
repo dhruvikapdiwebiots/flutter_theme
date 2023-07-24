@@ -1,0 +1,31 @@
+{
+  "name": "light_compressor",
+  "version": "1.0.0",
+  "summary": "Light Compressor Library",
+  "description": "A new Flutter plugin.",
+  "homepage": "https://github.com/AbedElazizShe",
+  "license": {
+    "file": "../LICENSE"
+  },
+  "authors": {
+    "Your Company": "elaziz.shehadeh@gmail.com"
+  },
+  "source": {
+    "path": "."
+  },
+  "source_files": "Classes/**/*",
+  "dependencies": {
+    "Flutter": [
+
+    ]
+  },
+  "platforms": {
+    "ios": "14.0"
+  },
+  "pod_target_xcconfig": {
+    "DEFINES_MODULE": "YES",
+    "VALID_ARCHS[sdk=iphonesimulator*]": "x86_64"
+  },
+  "swift_versions": "5.0",
+  "swift_version": "5.0"
+}

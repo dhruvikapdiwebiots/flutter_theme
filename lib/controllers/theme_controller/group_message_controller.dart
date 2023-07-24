@@ -487,8 +487,8 @@ class GroupChatMessageController extends GetxController {
 
     return Column(children: [
       document["type"] == MessageType.note.name
-          ? const CommonNoteEncrypt()
-          : (document['sender'] == user["id"])
+          ? const CommonNoteEncrypt() : Container(),
+        (document['sender'] == user["id"])
               ? GroupSenderMessage(
                       document: document,
                       docId: docId,
@@ -688,9 +688,9 @@ class GroupChatMessageController extends GetxController {
         .where("groupId", isEqualTo: pId)
         .limit(1)
         .get()
-        .then((value) {
+        .then((value)async {
       if (value.docs.isNotEmpty) {
-        FirebaseFirestore.instance
+   await     FirebaseFirestore.instance
             .collection(collectionName.users)
             .doc(user["id"])
             .collection(collectionName.chats)

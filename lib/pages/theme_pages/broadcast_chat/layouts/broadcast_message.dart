@@ -1,4 +1,6 @@
 
+import 'dart:developer';
+
 import '../../../../config.dart';
 
 class BroadcastMessage extends StatelessWidget {
@@ -25,6 +27,7 @@ class BroadcastMessage extends StatelessWidget {
                       valueColor: AlwaysStoppedAnimation<Color>(
                           appCtrl.appTheme.primary)));
             } else {
+              log("SNAP : ${snapshot.data!.docs.length}");
               ChatMessageApi().getBroadcastMessageAsPerDate(snapshot);
               return chatCtrl.message != null ? ListView.builder(
                 itemBuilder: (context, index) => chatCtrl.timeLayout(

@@ -32,6 +32,7 @@ class _BroadcastSenderMessage extends State<BroadcastSenderMessage> {
                 if (widget.document!["type"] == MessageType.text.name)
                   // Text
                   Content(
+                    isBroadcast: true,
                       onTap: () => BroadcastOnTapFunctionCall()
                           .contentTap(chatCtrl, widget.docId),
                       onLongPress: () =>
@@ -39,6 +40,7 @@ class _BroadcastSenderMessage extends State<BroadcastSenderMessage> {
                       document: widget.document),
                 if (widget.document!["type"] == MessageType.image.name)
                   SenderImage(
+                    isBroadcast: true,
                     document: widget.document,
                     onPressed: () => BroadcastOnTapFunctionCall()
                         .imageTap(chatCtrl, widget.docId, widget.document),
@@ -47,6 +49,7 @@ class _BroadcastSenderMessage extends State<BroadcastSenderMessage> {
                   ),
                 if (widget.document!["type"] == MessageType.contact.name)
                   ContactLayout(
+                      isBroadcast: true,
                           onTap: () => BroadcastOnTapFunctionCall()
                               .contentTap(chatCtrl, widget.docId),
                           onLongPress: () =>

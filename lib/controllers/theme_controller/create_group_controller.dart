@@ -17,7 +17,6 @@ class CreateGroupController extends GetxController {
   dynamic user;
   int counter = 0;
 
-
   late encrypt.Encrypter cryptor;
   final iv = encrypt.IV.fromLength(8);
   String imageUrl = "";
@@ -57,15 +56,15 @@ class CreateGroupController extends GetxController {
         FirebaseFirestore.instance
             .collection(collectionName.users)
             .where("phone",
-            isEqualTo: phoneNumberExtension(
-                contact.value.phones[0].number.toString()))
+                isEqualTo: phoneNumberExtension(
+                    contact.value.phones[0].number.toString()))
             .get()
             .then((value) {
           if (value.docs.isNotEmpty) {
             if (value.docs[0].data()["isActive"] == true) {
               bool isContains = contactList
                   .where((element) =>
-              element["phone"] == value.docs[0].data()["phone"])
+                      element["phone"] == value.docs[0].data()["phone"])
                   .isNotEmpty;
               if (!isContains) {
                 contactList.add(value.docs[0].data());
@@ -126,20 +125,23 @@ class CreateGroupController extends GetxController {
             return const CreateGroup();
           });
     } else {
-      isLoading = true;
-      update();
-      final now = DateTime.now();
-      String broadcastId = now.microsecondsSinceEpoch.toString();
+     /* isLoading = true;
+      update();*/
+      String broadcastId = DateTime.now().millisecondsSinceEpoch.toString();
+      final dateTime = DateTime.now().millisecondsSinceEpoch.toString();
       final key = encrypt.Key.fromUtf8('my 32 length key................');
       final iv = encrypt.IV.fromLength(16);
 
       final encrypter = encrypt.Encrypter(encrypt.AES(key));
 
-      final encrypted = encrypter.encrypt("You created this broadcast", iv: iv).base64;
-
+      final encrypted =
+          encrypter.encrypt("You created this broadcast", iv: iv).base64;
+      final fontEncrypted =
+          encrypter.encrypt(fonts.noteEncrypt.tr, iv: iv).base64;
 
       await checkChatAvailable();
-      await Future.delayed(Durations.s3);
+      await Future.delayed(Durations.s6);
+      log("newContact SS: ${newContact.length}");
       await FirebaseFirestore.instance
           .collection(collectionName.broadcast)
           .doc(broadcastId)
@@ -150,39 +152,47 @@ class CreateGroupController extends GetxController {
         'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
       });
 
-   await   FirebaseFirestore.instance
+      log("CREATE BROADCAST");
+
+      await FirebaseFirestore.instance
+          .collection(collectionName.users)
+          .doc(appCtrl.user["id"])
           .collection(collectionName.broadcastMessage)
           .doc(broadcastId)
           .collection(collectionName.chat)
-          .add({
+          .doc(dateTime)
+          .set({
         'sender': user["id"],
         'senderName': user["name"],
         'receiver': newContact,
-        'content':"",
+        'content': fontEncrypted,
         "broadcastId": broadcastId,
         'type': MessageType.note.name,
         'messageType': "sender",
         "status": "",
         'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-      }).then((e) {
-        FirebaseFirestore.instance
-            .collection(collectionName.broadcastMessage)
-            .doc(broadcastId)
-            .collection(collectionName.chat)
-            .add({
+      });
+
+      await FirebaseFirestore.instance
+          .collection(collectionName.users)
+          .doc(appCtrl.user["id"])
+          .collection(collectionName.broadcastMessage)
+          .doc(broadcastId)
+          .collection(collectionName.chat)
+          .doc(dateTime)
+          .set(
+        {
           'sender': user["id"],
           'senderName': user["name"],
           'receiver': newContact,
-          'content':encrypted,
+          'content': fontEncrypted,
           "broadcastId": broadcastId,
-          'type': MessageType.messageType.name,
+          'type': MessageType.note.name,
           'messageType': "sender",
           "status": "",
           'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-        });
-      });
-
-
+        },
+      );
 
       await FirebaseFirestore.instance
           .collection(collectionName.users)
@@ -202,7 +212,7 @@ class CreateGroupController extends GetxController {
         "updateStamp": DateTime.now().millisecondsSinceEpoch.toString()
       }).then((value) {
         selectedContact = [];
-        newContact = [];
+
         update();
       });
 
@@ -215,18 +225,32 @@ class CreateGroupController extends GetxController {
           .collection(collectionName.chats)
           .where("broadcastId", isEqualTo: broadcastId)
           .get()
-          .then((value) {
-        var data = {"broadcastId": broadcastId, "data": value.docs[0].data()};
+          .then((value) async {
+        var data = {
+          "broadcastId": broadcastId,
+          "data": value.docs[0].data(),
+          "newContact": newContact,
+        };
+
+        log("newContact :$data");
+
+
         Get.toNamed(routeName.broadcastChat, arguments: data);
+
       });
     }
   }
 
   //check chat available with contacts
   Future<List> checkChatAvailable() async {
+    newContact = [];
+    int count=0;
+    int dddd=0;
     final user = appCtrl.storage.read(session.user);
+    log("selectedContact : ${selectedContact.length}");
     selectedContact.asMap().entries.forEach((e) async {
       log("e.value : ${e.value["chatId"]}");
+      count ++;
       await FirebaseFirestore.instance
           .collection(collectionName.users)
           .doc(user["id"])
@@ -235,9 +259,9 @@ class CreateGroupController extends GetxController {
           .get()
           .then((value) {
         if (value.docs.isNotEmpty) {
+          dddd++;
           value.docs.asMap().entries.forEach((element) {
             log("element.value : ${element.value.data()}");
-            log("exist : ${element.value.data()["senderId"] == user["id"] && element.value.data()["receiverId"] == e.value["id"] || element.value.data()["senderId"] == e.value["id"] && element.value.data()["receiverId"] == user["id"]}");
             if (element.value.data()["senderId"] == user["id"] &&
                     element.value.data()["receiverId"] == e.value["id"] ||
                 element.value.data()["senderId"] == e.value["id"] &&
@@ -247,12 +271,10 @@ class CreateGroupController extends GetxController {
               if (!newContact.contains(e.value)) {
                 newContact.add(e.value);
               }
-            } else {
-              e.value["chatId"] = null;
-              if (!newContact.contains(e.value)) {
-                newContact.add(e.value);
-              }
+
             }
+
+            update();
           });
         } else {
           e.value["chatId"] = null;
@@ -260,10 +282,11 @@ class CreateGroupController extends GetxController {
             newContact.add(e.value);
           }
         }
+
         update();
       });
     });
-
+    log("DATA CHAT : ${newContact.length}");
     return newContact;
   }
 
@@ -282,12 +305,14 @@ class CreateGroupController extends GetxController {
         (element) => element["phone"] == data["phone"],
       );
     } else {
-      if(selectedContact.length < appCtrl.usageControlsVal!.groupMembersLimit!) {
+      if (selectedContact.length <
+          appCtrl.usageControlsVal!.groupMembersLimit!) {
         selectedContact.add(data);
-      }else{
-        snackBarMessengers(message: "You can added only ${isGroup ? appCtrl.usageControlsVal!.groupMembersLimit! :appCtrl.usageControlsVal!.broadCastMembersLimit!} Members in the group");
+      } else {
+        snackBarMessengers(
+            message:
+                "You can added only ${isGroup ? appCtrl.usageControlsVal!.groupMembersLimit! : appCtrl.usageControlsVal!.broadCastMembersLimit!} Members in the group");
       }
-
     }
 
     update();

@@ -74,7 +74,7 @@ class _GroupAudioDocState extends State<GroupAudioDoc>
           onChanged: (value) async {
             seekToSec(value.toInt());
           }),
-    );
+    ).width(Sizes.s130);
   }
 
   @override
@@ -143,6 +143,7 @@ class _GroupAudioDocState extends State<GroupAudioDoc>
               clipBehavior: Clip.none,
               children: [
                 Container(
+                  
                     margin: const EdgeInsets.symmetric(vertical: Insets.i10,horizontal: Insets.i10),
                     padding: const EdgeInsets.symmetric(
                         vertical: Insets.i5, horizontal: Insets.i15),
@@ -152,9 +153,9 @@ class _GroupAudioDocState extends State<GroupAudioDoc>
                           : appCtrl.appTheme.primary,
                       borderRadius: BorderRadius.circular(AppRadius.r15),
                     ),
-                    height: widget.isReceiver ? Sizes.s100 : Sizes.s90,
+                    height: widget.isReceiver ? Sizes.s115 : Sizes.s90,
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                      crossAxisAlignment: widget.isReceiver ? CrossAxisAlignment.start :CrossAxisAlignment.end ,
                       children: [
                         if (widget.isReceiver)
                           if (widget.document!["sender"] !=
@@ -162,10 +163,11 @@ class _GroupAudioDocState extends State<GroupAudioDoc>
                             Align(
                                 alignment: Alignment.topLeft,
                                 child: Column(children: [
+                                  const VSpace(Sizes.s2),
                                   Text(widget.document!['senderName'],
                                       style: AppCss.poppinsMedium12
                                           .textColor(appCtrl.appTheme.primary)),
-                                  const VSpace(Sizes.s8)
+
                                 ])),
                         Expanded(
                           child: Row(

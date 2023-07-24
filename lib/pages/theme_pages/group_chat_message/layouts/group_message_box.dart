@@ -12,8 +12,7 @@ class GroupMessageBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<GroupChatMessageController>(builder: (chatCtrl) {
-      return chatCtrl.user != null
-          ? Flexible(
+      return Flexible(
               child: chatCtrl.pId == null
                       ? Center(
                           child: CircularProgressIndicator(
@@ -33,7 +32,6 @@ class GroupMessageBox extends StatelessWidget {
                             if (!snapshot.hasData) {
                               return Container();
                             } else {
-
                               GroupMessageApi().getMessageAsPerDate(snapshot);
 
                               return ListView.builder(
@@ -44,14 +42,13 @@ class GroupMessageBox extends StatelessWidget {
                                       chatCtrl.message[index])
                                       .marginOnly(bottom: Insets.i18);
                                 },
-                                itemCount:chatCtrl.message.length,
+                                itemCount:chatCtrl.message.reversed.length,
                                 reverse: true,
                                 controller: chatCtrl.listScrollController,
                               );
                             }
                           },
-                        ))
-          : Container();
+                        ));
     });
   }
 }

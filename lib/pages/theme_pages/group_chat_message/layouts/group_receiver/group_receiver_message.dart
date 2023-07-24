@@ -34,13 +34,16 @@ class _GroupReceiverMessageState extends State<GroupReceiverMessage> {
                 bottom: Insets.i10, left: Insets.i20, right: Insets.i20,top: chatCtrl.selectedIndexId.contains(widget.docId) ? Insets
                 .i10 : 0,),
             child: Column(
+
               children: [
+
                 Row(
                   children: [
                     if (widget.document!["type"] != MessageType.messageType.name)
                     ReceiverChatImage(id: widget.document!["sender"]),
                     const HSpace(Sizes.s8),
-                    Column(children: <Widget>[
+                    Column(
+                        crossAxisAlignment:  CrossAxisAlignment.start,children: <Widget>[
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
@@ -67,6 +70,7 @@ class _GroupReceiverMessageState extends State<GroupReceiverMessage> {
                             GroupContactLayout(
                                 isReceiver: true,
                                 currentUserId: chatCtrl.user["id"],
+                                userList: chatCtrl.pData["groupData"]["users"],
                                 onLongPress: () =>
                                     chatCtrl.onLongPressFunction(widget.docId),
                                 onTap: () => GroupOnTapFunctionCall()

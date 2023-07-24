@@ -20,7 +20,9 @@ class _StatusScreenViewState extends State<StatusScreenView> {
   StoryController controller = StoryController();
   List<StoryItem> storyItems = [];
   bool FAB_visibility = true;
-  int position = 0;
+  int position = 0,
+      selectedIndex = 0,
+      lastPosition = 0;
   Status? status;
   List seenBy = [];
 
@@ -29,6 +31,7 @@ class _StatusScreenViewState extends State<StatusScreenView> {
     super.initState();
     status = Get.arguments;
     setState(() {});
+    log("status : ${status!.photoUrl!.length}");
     initStoryPageItems();
   }
 
@@ -47,8 +50,10 @@ class _StatusScreenViewState extends State<StatusScreenView> {
             backgroundColor: finalColor));
       } else if (status!.photoUrl![i].statusType == StatusType.video.name) {
         storyItems.add(
-          StoryItem.pageVideo(status!.photoUrl![i].image!,
-              controller: controller),
+          StoryItem.pageVideo(
+            status!.photoUrl![i].image!,
+            controller: controller,
+          ),
         );
       } else {
         storyItems.add(StoryItem.pageImage(
@@ -62,7 +67,9 @@ class _StatusScreenViewState extends State<StatusScreenView> {
 
   @override
   Widget build(BuildContext context) {
-    final Size _size = MediaQuery.of(context).size;
+    final Size _size = MediaQuery
+        .of(context)
+        .size;
     return GestureDetector(
       onPanEnd: (details) {
         print(details.velocity.pixelsPerSecond.dy.toString());
@@ -81,190 +88,249 @@ class _StatusScreenViewState extends State<StatusScreenView> {
         } else {
           controller.play();
         }
+        log("isSwipeUp : $isSwipeUp");
         setState(() {});
       },
       child: Scaffold(
         body: storyItems.isEmpty
             ? const CircularProgressIndicator()
             : Stack(
-                alignment: Alignment.topLeft,
-                children: [
-                  StoryView(
-                      indicatorColor: Color.fromRGBO(255, 255, 255, 0.50),
-                      onStoryShow: (s) async {
-                        log("s : $s");
-                        dynamic user = appCtrl.storage.read(session.user);
+          alignment: Alignment.topLeft,
+          children: [
+            GestureDetector(
+              onTap: () {
+                log("ONTAP");
+              },
+              behavior: HitTestBehavior.deferToChild,
+              child: StoryView(
+                indicatorColor: Color.fromRGBO(255, 255, 255, 0.50),
+                onStoryShow: (s) async {
+                  log("STATUS : ${s.reactive}");
+                  dynamic user = appCtrl.storage.read(session.user);
+                  selectedIndex = selectedIndex + 1;
+                  position = position + 1;
 
-                        position = position + 1;
-                        int lastPosition = position - 1;
-
-                        if (status!.uid != appCtrl.user["id"]) {
-                          log("CHECK L: ${(position - 1) < status!.photoUrl!.length}");
-                          if ((position - 1) < status!.photoUrl!.length) {
+                  if (status!.uid != appCtrl.user["id"]) {
+                    log("CHECK L: ${(position - 1) <
+                        status!.photoUrl!.length}");
+                    if ((position - 1) < status!.photoUrl!.length) {
+                      FirebaseFirestore.instance
+                          .collection(collectionName.users)
+                          .doc(status!.uid)
+                          .collection(collectionName.status)
+                          .limit(1)
+                          .get()
+                          .then((doc) {
+                        if (doc.docs.isNotEmpty) {
+                          Status getStatus =
+                          Status.fromJson(doc.docs[0].data());
+                          log("getStatus : ${doc.docs[0].id}");
+                          List<PhotoUrl> photoUrl = getStatus.photoUrl!;
+                          bool isSeen = photoUrl[lastPosition]
+                              .seenBy!
+                              .where((element) =>
+                          element["uid"] == appCtrl.user["id"])
+                              .isNotEmpty;
+                          if (!isSeen) {
+                            photoUrl[lastPosition].seenBy!.add({
+                              "uid": appCtrl.user["id"],
+                              "seenTime":
+                              DateTime
+                                  .now()
+                                  .millisecondsSinceEpoch
+                            });
+                            log("SEEN L %${photoUrl[lastPosition].seenBy}");
                             FirebaseFirestore.instance
                                 .collection(collectionName.users)
                                 .doc(status!.uid)
                                 .collection(collectionName.status)
-                                .limit(1)
-                                .get()
-                                .then((doc) {
-                              if (doc.docs.isNotEmpty) {
-                                Status getStatus =
-                                    Status.fromJson(doc.docs[0].data());
-                                log("getStatus : ${doc.docs[0].id}");
-                                List<PhotoUrl> photoUrl = getStatus.photoUrl!;
-                                bool isSeen = photoUrl[lastPosition]
-                                    .seenBy!
-                                    .where((element) =>
-                                        element["uid"] == appCtrl.user["id"])
-                                    .isNotEmpty;
-                                if (!isSeen) {
-                                  photoUrl[lastPosition].seenBy!.add({
-                                    "uid": appCtrl.user["id"],
-                                    "seenTime":
-                                        DateTime.now().millisecondsSinceEpoch
-                                  });
-                                  log("SEEN L %${photoUrl[lastPosition].seenBy}");
-                                  FirebaseFirestore.instance
-                                      .collection(collectionName.users)
-                                      .doc(status!.uid)
-                                      .collection(collectionName.status)
-                                      .doc(doc.docs[0].id)
-                                      .update({
-                                    "photoUrl":
-                                        photoUrl.map((e) => e.toJson()).toList()
-                                  });
-                                }
-
-                                if (position == status!.photoUrl!.length) {
-                                  List seenAll = status!.seenAllStatus ?? [];
-                                  if (!seenAll.contains(status!.uid)) {
-                                    seenAll.add(appCtrl.user["id"]);
-                                  }
-                                  FirebaseFirestore.instance
-                                      .collection(collectionName.users)
-                                      .doc(status!.uid)
-                                      .collection(collectionName.status)
-                                      .doc(doc.docs[0].id)
-                                      .update({"seenAllStatus": seenAll});
-                                }
-                              }
+                                .doc(doc.docs[0].id)
+                                .update({
+                              "photoUrl":
+                              photoUrl.map((e) => e.toJson()).toList()
                             });
                           }
-                        } else {
-                          FirebaseFirestore.instance
-                              .collection(collectionName.users)
-                              .doc(FirebaseAuth.instance.currentUser != null
-                                  ? FirebaseAuth.instance.currentUser!.uid
-                                  : user["id"])
-                              .collection(collectionName.status)
-                              .limit(1)
-                              .get()
-                              .then((doc) {
-                            if (doc.docs.isNotEmpty) {
-                              Status getStatus =
-                                  Status.fromJson(doc.docs[0].data());
-                              log("getStatus : ${doc.docs[0].id}");
-                              List<PhotoUrl> photoUrl = getStatus.photoUrl!;
-                              seenBy = photoUrl[lastPosition].seenBy!;
-                              setState(() {});
-                              log("seenBy : $seenBy");
-                            }
-                          });
-                        }
-                      },
-                      storyItems: storyItems,
-                      controller: controller,
-                      onComplete: () {
-                        Navigator.maybePop(context);
-                      },
-                      onVerticalSwipeComplete: (direction) {
-                        log("direction : $direction");
-                        if (direction == Direction.down) {
-                          Navigator.pop(context);
-                        } else if (direction == Direction.up) {
-                          dynamic user = appCtrl.storage.read(session.user);
-                          if (status!.uid ==
-                              (FirebaseAuth.instance.currentUser != null
-                                  ? FirebaseAuth.instance.currentUser!.uid
-                                  : user["id"])) {
-                            controller.pause();
 
-                            setState(() {});
-                            int lastPosition = position - 1;
+                          if (position == status!.photoUrl!.length) {
+                            List seenAll = status!.seenAllStatus ?? [];
+                            if (!seenAll.contains(status!.uid)) {
+                              seenAll.add(appCtrl.user["id"]);
+                            }
                             FirebaseFirestore.instance
                                 .collection(collectionName.users)
-                                .doc(FirebaseAuth.instance.currentUser != null
-                                    ? FirebaseAuth.instance.currentUser!.uid
-                                    : user["id"])
+                                .doc(status!.uid)
                                 .collection(collectionName.status)
-                                .limit(1)
-                                .get()
-                                .then((doc) {
-                              if (doc.docs.isNotEmpty) {
-                                Status getStatus =
-                                    Status.fromJson(doc.docs[0].data());
-
-                                List<PhotoUrl> photoUrl = getStatus.photoUrl!;
-                                log("photoUrl : $photoUrl");
-                                seenBy = photoUrl[lastPosition].seenBy!;
-                                setState(() {});
-                                log("seenBy : $seenBy");
-                              }
-                            });
-                            showModalBottomSheet(
-                              context: context,
-                              backgroundColor:
-                                  appCtrl.appTheme.transparentColor,
-                              isScrollControlled: true,
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(AppRadius.r20))),
-                              builder: (context) => buildSheet(),
-                            );
-                          } else if (direction == Direction.down) {
-                            controller.play();
-                            setState(() {});
+                                .doc(doc.docs[0].id)
+                                .update({"seenAllStatus": seenAll});
                           }
                         }
-                      }),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SvgPicture.asset(svgAssets.arrowLeft),
-                      const HSpace(Sizes.s10),
-                      CommonImage(
-                        width: Sizes.s48,
-                        height: Sizes.s48,
-                        image: status!.profilePic!,
-                        name: status!.username!,
-                      ),
-                      const HSpace(Sizes.s12),
-                      Column(
-                        children: [
-                          Text(status!.username!,
-                              style: AppCss.poppinsMedium16
-                                  .textColor(appCtrl.appTheme.white)),
-                          const VSpace(Sizes.s5),
-                          DateFormat("dd/MM/yy").format(DateTime.now()) ==
-                                  DateFormat('dd/MM/YY').format(
-                                      DateTime.fromMillisecondsSinceEpoch(
-                                          int.parse(status!
-                                              .photoUrl![position].timestamp
-                                              .toString())))
-                              ? Text(DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(int.parse(status!.photoUrl![position].timestamp.toString()))),
-                                  style: AppCss.poppinsMedium12.textColor(
-                                      Color.fromRGBO(255, 255, 255, 0.65)))
-                              : Text("Tomorrow ${DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(int.parse(status!.photoUrl![position].timestamp.toString())))}",
-                                  style: AppCss.poppinsMedium12
-                                      .textColor(Color.fromRGBO(255, 255, 255, 0.65))),
-                        ],
-                      )
-                    ],
-                  ).marginSymmetric(
-                      horizontal: Insets.i20, vertical: Insets.i75)
-                ],
+                      });
+                    }
+                  } else {
+                    FirebaseFirestore.instance
+                        .collection(collectionName.users)
+                        .doc(FirebaseAuth.instance.currentUser != null
+                        ? FirebaseAuth.instance.currentUser!.uid
+                        : user["id"])
+                        .collection(collectionName.status)
+                        .limit(1)
+                        .get()
+                        .then((doc) {
+                      if (doc.docs.isNotEmpty) {
+                        Status getStatus =
+                        Status.fromJson(doc.docs[0].data());
+                        log("getStatus : ${lastPosition}");
+                        List<PhotoUrl> photoUrl = getStatus.photoUrl!;
+                        seenBy = photoUrl[lastPosition].seenBy!;
+                        setState(() {});
+                        log("seenBy : $seenBy");
+                      }
+                    });
+                  }
+                },
+                storyItems: storyItems,
+                controller: controller,
+                onComplete: () {
+                  Navigator.maybePop(context);
+                },
+                repeat: false,
+                onVerticalSwipeComplete: (direction) {
+                  log("direction : $direction");
+                  if (direction == Direction.down) {
+                    Navigator.pop(context);
+                  } else if (direction == Direction.up) {
+                    dynamic user = appCtrl.storage.read(session.user);
+                    if (status!.uid ==
+                        (FirebaseAuth.instance.currentUser != null
+                            ? FirebaseAuth.instance.currentUser!.uid
+                            : user["id"])) {
+                      controller.pause();
+
+                      setState(() {});
+                      int lastPosition = position - 1;
+                      FirebaseFirestore.instance
+                          .collection(collectionName.users)
+                          .doc(FirebaseAuth.instance.currentUser != null
+                          ? FirebaseAuth.instance.currentUser!.uid
+                          : user["id"])
+                          .collection(collectionName.status)
+                          .limit(1)
+                          .get()
+                          .then((doc) {
+                        if (doc.docs.isNotEmpty) {
+                          Status getStatus =
+                          Status.fromJson(doc.docs[0].data());
+
+                          List<PhotoUrl> photoUrl = getStatus.photoUrl!;
+                          log("photoUrl : $photoUrl");
+                          seenBy = photoUrl[lastPosition].seenBy!;
+                          setState(() {});
+                          log("seenBy : $seenBy");
+                        }
+                      });
+                      showModalBottomSheet(
+                        context: context,
+                        backgroundColor:
+                        appCtrl.appTheme.transparentColor,
+                        isScrollControlled: true,
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(AppRadius.r20))),
+                        builder: (context) => buildSheet(),
+                      );
+                    } else if (direction == Direction.down) {
+                      controller.play();
+                      setState(() {});
+                    }
+                  }
+                },
               ),
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SvgPicture.asset(svgAssets.arrowLeft)
+                    .marginOnly(top: Insets.i12),
+                const HSpace(Sizes.s10),
+                CommonImage(
+                  width: Sizes.s48,
+                  height: Sizes.s48,
+                  image: status!.profilePic!,
+                  name: status!.username!,
+                ),
+                const HSpace(Sizes.s12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(status!.username!,
+                        style: AppCss.poppinsMedium16
+                            .textColor(appCtrl.appTheme.white)),
+                    const VSpace(Sizes.s5),
+                    DateFormat("dd/MM/yy").format(DateTime.now()) ==
+                        DateFormat('dd/MM/YY').format(
+                            DateTime.fromMillisecondsSinceEpoch(
+                                int.parse(status!
+                                    .photoUrl![lastPosition].timestamp
+                                    .toString())))
+                        ? Text(DateFormat('HH:mm a').format(
+                        DateTime.fromMillisecondsSinceEpoch(int.parse(
+                            status!.photoUrl![lastPosition].timestamp
+                                .toString()))),
+                        style: AppCss.poppinsMedium12.textColor(
+                            Color.fromRGBO(255, 255, 255, 0.65)))
+                        : Text("Tomorrow ${DateFormat('HH:mm a').format(
+                        DateTime.fromMillisecondsSinceEpoch(int.parse(
+                            status!.photoUrl![lastPosition].timestamp
+                                .toString())))}",
+                        style: AppCss.poppinsMedium12
+                            .textColor(Color.fromRGBO(255, 255, 255, 0.65))),
+                  ],
+                ).marginOnly(top: Insets.i10)
+              ],
+            ).marginSymmetric(
+                horizontal: Insets.i20, vertical: Insets.i75),
+            Align(
+                alignment: Alignment.centerLeft,
+                child: SizedBox(
+                  height: MediaQuery
+                      .of(context)
+                      .size
+                      .height,
+                  width: Sizes.s80,
+                ).inkWell(onTap: () {
+                  log("lastPosition : ${status!.photoUrl!.length}");
+                  log("lastPosition : $lastPosition");
+
+                  lastPosition = lastPosition - 1;
+                  if (lastPosition == -1) {
+                    Get.back();
+                  } else {
+                    controller.previous();
+                    setState(() {});
+                  }
+                  log("lastPositionTap : $lastPosition");
+                })),
+            Align(
+                alignment: Alignment.centerRight,
+                child: SizedBox(
+                  height: MediaQuery
+                      .of(context)
+                      .size
+                      .height,
+                  width: Sizes.s80,
+                ).inkWell(onTap: () {
+                  lastPosition = lastPosition + 1;
+
+                  if (lastPosition < status!.photoUrl!.length) {
+                    controller.next();
+                    setState(() {});
+                  } else {
+                    Get.back();
+                  }
+                })),
+          ],
+        ),
       ),
     );
   }
@@ -299,56 +365,63 @@ class _StatusScreenViewState extends State<StatusScreenView> {
             builder: (context, scrollController) {
               return StatefulBuilder(
                   builder: (BuildContext context, StateSetter setState) {
-                return Container(
-                  decoration: BoxDecoration(
-                      color: appCtrl.appTheme.whiteColor,
-                      borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(AppRadius.r20))),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.all(Insets.i20),
-                        decoration: BoxDecoration(
-                            color: appCtrl.appTheme.primary,
-                            borderRadius: const BorderRadius.vertical(
-                                top: Radius.circular(AppRadius.r20))),
-                        child: Text(
-                          "${seenBy.length} ${fonts.views.tr}",
-                          style: AppCss.poppinsMedium14
-                              .textColor(appCtrl.appTheme.whiteColor),
-                        ),
+                    return Container(
+                      decoration: BoxDecoration(
+                          color: appCtrl.appTheme.whiteColor,
+                          borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(AppRadius.r20))),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.all(Insets.i20),
+                            decoration: BoxDecoration(
+                                color: appCtrl.appTheme.primary,
+                                borderRadius: const BorderRadius.vertical(
+                                    top: Radius.circular(AppRadius.r20))),
+                            child: Text(
+                              "${seenBy.length} ${fonts.views.tr}",
+                              style: AppCss.poppinsMedium14
+                                  .textColor(appCtrl.appTheme.whiteColor),
+                            ),
+                          ),
+                          ...seenBy
+                              .asMap()
+                              .entries
+                              .map((e) {
+                            return StreamBuilder(
+                                stream: FirebaseFirestore.instance
+                                    .collection(collectionName.users)
+                                    .doc(e.value["uid"])
+                                    .snapshots(),
+                                builder: (context, snapshot) {
+                                  String image = "",
+                                      name = "";
+                                  if (snapshot.hasData) {
+                                    image =
+                                        snapshot.data!.data()!["image"] ?? "";
+                                    name = snapshot.data!.data()!["name"] ?? "";
+                                  }
+                                  return ListTile(
+                                      leading: CommonImage(
+                                          image: image,
+                                          height: Sizes.s48,
+                                          width: Sizes.s48,
+                                          name: name),
+                                      title: Text(name),
+                                      subtitle: Text(
+                                          DateFormat('HH:mm a').format(
+                                              DateTime
+                                                  .fromMillisecondsSinceEpoch(
+                                                  int.parse(e.value["seenTime"]
+                                                      .toString())))));
+                                });
+                          }).toList()
+                        ],
                       ),
-                      ...seenBy.asMap().entries.map((e) {
-                        return StreamBuilder(
-                            stream: FirebaseFirestore.instance
-                                .collection(collectionName.users)
-                                .doc(e.value["uid"])
-                                .snapshots(),
-                            builder: (context, snapshot) {
-                              String image = "", name = "";
-                              if (snapshot.hasData) {
-                                image = snapshot.data!.data()!["image"] ?? "";
-                                name = snapshot.data!.data()!["name"] ?? "";
-                              }
-                              return ListTile(
-                                  leading: CommonImage(
-                                      image: image,
-                                      height: Sizes.s48,
-                                      width: Sizes.s48,
-                                      name: name),
-                                  title: Text(name),
-                                  subtitle: Text(DateFormat('HH:mm a').format(
-                                      DateTime.fromMillisecondsSinceEpoch(
-                                          int.parse(e.value["seenTime"]
-                                              .toString())))));
-                            });
-                      }).toList()
-                    ],
-                  ),
-                );
-              });
+                    );
+                  });
             }),
       ),
     );

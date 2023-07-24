@@ -16,32 +16,18 @@ class UnRegisterUser extends StatelessWidget {
       onTap: () {
         MessageFirebaseApi().saveContact(item!, message: message);
       },
-      leading: item!.isRegister!
-          ? CachedNetworkImage(
-              imageUrl: item!.image!,
-              imageBuilder: (context, imageProvider) => CircleAvatar(
-                  backgroundColor: appCtrl.appTheme.contactBgGray,
-                  radius: Sizes.s20,
-                  backgroundImage: NetworkImage(item!.image!)),
-              placeholder: (context, url) =>
-                  const CircularProgressIndicator(strokeWidth: 2)
-                      .width(Sizes.s20)
-                      .height(Sizes.s20)
-                      .paddingAll(Insets.i15)
-                      .decorated(
-                          color: appCtrl.appTheme.grey.withOpacity(.4),
-                          shape: BoxShape.circle),
-              errorWidget: (context, url, error) => CircleAvatar(
-                      child: Text(
-                    item!.username!.length > 2
-                        ? item!.username!
-                            .replaceAll(" ", "")
-                            .substring(0, 2)
-                            .toUpperCase()
-                        : item!.username![0],
-                    style: AppCss.poppinsMedium12
-                        .textColor(appCtrl.appTheme.whiteColor),
-                  )))
+      leading: item!.isRegister == false
+          ? CircleAvatar(
+          child: Text(
+            item!.username!.length > 2
+                ? item!.username!
+                .replaceAll(" ", "")
+                .substring(0, 2)
+                .toUpperCase()
+                : item!.username![0],
+            style: AppCss.poppinsMedium12
+                .textColor(appCtrl.appTheme.whiteColor),
+          ))
           : item!.contactImage != null
               ? CircleAvatar(backgroundImage: MemoryImage(item!.contactImage!))
               : CircleAvatar(

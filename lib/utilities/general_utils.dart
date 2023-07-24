@@ -138,6 +138,7 @@ int getUnseenMessagesNumber(
       .asMap()
       .entries
       .forEach((element) {
+
     if (!element.value.data()["isSeen"]) {
       counter++;
     }

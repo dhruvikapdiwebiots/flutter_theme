@@ -216,7 +216,7 @@ class ChatController extends GetxController {
 
   //seen all message
   seenMessage() async {
-
+  log("chatIdchatId : $chatId");
     if (allData != null) {
       if (allData["senderId"] != userData["id"]) {
         await FirebaseFirestore.instance
@@ -228,7 +228,7 @@ class ChatController extends GetxController {
             .where("receiver", isEqualTo: appCtrl.user["id"])
             .get()
             .then((value) {
-
+  log("RECEIVER : ${value.docs.length}");
           value.docs.asMap().entries.forEach((element) async {
 
             await FirebaseFirestore.instance
@@ -241,15 +241,15 @@ class ChatController extends GetxController {
                 .update({"isSeen": true});
           });
         });
-        FirebaseFirestore.instance
+    await    FirebaseFirestore.instance
             .collection(collectionName.users)
             .doc(userData["id"])
             .collection(collectionName.chats)
             .where("chatId", isEqualTo: chatId)
             .get()
-            .then((value) {
+            .then((value) async{
           if (value.docs.isNotEmpty) {
-            FirebaseFirestore.instance
+          await  FirebaseFirestore.instance
                 .collection(collectionName.users)
                 .doc(userData["id"])
                 .collection(collectionName.chats)
@@ -701,6 +701,7 @@ class ChatController extends GetxController {
 
   Widget timeLayout(document) {
     List newMessageList = document["message"];
+    log("newMessageList : ${newMessageList.length}");
     return Column(
       children: [
         Text(

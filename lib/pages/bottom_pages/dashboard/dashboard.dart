@@ -21,7 +21,6 @@ class _DashboardState extends State<Dashboard>
     // TODO: implement initState
     WidgetsBinding.instance.addObserver(this);
     dashboardCtrl.initConnectivity();
-    dashboardCtrl.addContactInFirebase();
 
     super.initState();
   }

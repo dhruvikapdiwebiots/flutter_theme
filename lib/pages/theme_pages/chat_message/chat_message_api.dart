@@ -291,6 +291,7 @@ class ChatMessageApi {
 
         }
       }
+
       if (getDate(element.value.id) == "yesterday") {
         bool isExist = chatCtrl.message
             .where((element) => element["title"] == "yesterday")
@@ -368,25 +369,37 @@ class ChatMessageApi {
     List<QueryDocumentSnapshot<Object?>> todayMessage = [];
     List<QueryDocumentSnapshot<Object?>> yesterdayMessage = [];
     List<QueryDocumentSnapshot<Object?>> newMessageList = [];
+
     reveredList.asMap().entries.forEach((element) {
-
+      log.log("reveredList: ${element.value.id}");
       if (getDate(element.value.id) == "today") {
+        if(chatCtrl.message != null) {
+          bool isExist = chatCtrl.message
+              .where((element) => element["title"] == "today")
+              .isNotEmpty;
 
-        bool isExist = chatCtrl.message
-            .where((element) => element["title"] == "today")
-            .isNotEmpty;
+          if (isExist) {
+            if (!todayMessage.contains(element.value)) {
+              todayMessage.add(element.value);
+              int index = chatCtrl.message.indexWhere(
+                      (element) =>
+                  element["title"] == "today");
+              chatCtrl.message[index]["message"] =
+                  todayMessage;
+            }
+          } else {
+            if (!todayMessage.contains(element.value)) {
+              todayMessage.add(element.value);
+              var data = {
+                "title": getDate(element.value.id),
+                "message": todayMessage
+              };
 
-        if (isExist) {
-          if(!todayMessage.contains(element.value)) {
-            todayMessage.add(element.value);
-            int index = chatCtrl.message.indexWhere(
-                    (element) =>
-                element["title"] == "today");
-            chatCtrl.message[index]["message"] =
-                todayMessage;
+              chatCtrl.message = [data];
+            }
           }
-        } else {
-          if(!todayMessage.contains(element.value)) {
+        }else{
+          if (!todayMessage.contains(element.value)) {
             todayMessage.add(element.value);
             var data = {
               "title": getDate(element.value.id),
@@ -395,7 +408,6 @@ class ChatMessageApi {
 
             chatCtrl.message = [data];
           }
-
         }
       }
       if (getDate(element.value.id) == "yesterday") {

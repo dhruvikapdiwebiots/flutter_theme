@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_theme/config.dart';
 
 class GroupMessageApi {
@@ -6,16 +8,17 @@ class GroupMessageApi {
         ? Get.find<GroupChatMessageController>()
         : Get.put(GroupChatMessageController());
     List<QueryDocumentSnapshot<Object?>> message = (snapshot.data!).docs;
+    List reveredList = message.reversed.toList();
     List<QueryDocumentSnapshot<Object?>> todayMessage = [];
     List<QueryDocumentSnapshot<Object?>> yesterdayMessage = [];
     List<QueryDocumentSnapshot<Object?>> newMessageList = [];
-    List reveredList = message.reversed.toList();
+
     reveredList.asMap().entries.forEach((element) {
       if (getDate(element.value.id) == "today") {
+        log("today : ${reveredList.length}");
         bool isExist = chatCtrl.message
             .where((element) => element["title"] == "today")
             .isNotEmpty;
-
         if (isExist) {
           if (!todayMessage.contains(element.value)) {
             todayMessage.add(element.value);
@@ -35,11 +38,11 @@ class GroupMessageApi {
           }
         }
       }
+
       if (getDate(element.value.id) == "yesterday") {
         bool isExist = chatCtrl.message
             .where((element) => element["title"] == "yesterday")
             .isNotEmpty;
-
         if (isExist) {
           if (!yesterdayMessage.contains(element.value)) {
             yesterdayMessage.add(element.value);
@@ -91,35 +94,37 @@ class GroupMessageApi {
             }
           }
         }
+
       }
+
     });
+    return chatCtrl.message;
   }
 
-  saveGroupMessage(encrypted,MessageType type)async{
+  saveGroupMessage(encrypted, MessageType type) async {
     final chatCtrl = Get.isRegistered<GroupChatMessageController>()
         ? Get.find<GroupChatMessageController>()
         : Get.put(GroupChatMessageController());
-    List  userList = chatCtrl.pData["groupData"]["users"];
-      userList.asMap().entries.forEach((element)async {
-        await   FirebaseFirestore.instance
-            .collection(collectionName.users)
-            .doc(element.value["id"])
-            .collection(collectionName.groupMessage)
-            .doc(chatCtrl.pId)
-            .collection(collectionName.chat)
-            .doc(DateTime.now().millisecondsSinceEpoch.toString())
-            .set({
-          'sender': appCtrl.user["id"],
-          'senderName': appCtrl.user["name"],
-          'receiver': chatCtrl.pData["groupData"]["users"],
-          'content': encrypted,
-          "groupId": chatCtrl.pId,
-          'type': type.name,
-          'messageType': "sender",
-          "status": "",
-          'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-        });
+    List userList = chatCtrl.pData["groupData"]["users"];
+    userList.asMap().entries.forEach((element) async {
+      await FirebaseFirestore.instance
+          .collection(collectionName.users)
+          .doc(element.value["id"])
+          .collection(collectionName.groupMessage)
+          .doc(chatCtrl.pId)
+          .collection(collectionName.chat)
+          .doc(DateTime.now().millisecondsSinceEpoch.toString())
+          .set({
+        'sender': appCtrl.user["id"],
+        'senderName': appCtrl.user["name"],
+        'receiver': chatCtrl.pData["groupData"]["users"],
+        'content': encrypted,
+        "groupId": chatCtrl.pId,
+        'type': type.name,
+        'messageType': "sender",
+        "status": "",
+        'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
       });
-
+    });
   }
 }

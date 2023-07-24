@@ -55,6 +55,7 @@ class BroadcastChatController extends GetxController {
   FocusNode focusNode = FocusNode();
   late encrypt.Encrypter cryptor;
   final iv = encrypt.IV.fromLength(8);
+  List newContact = [];
 
   @override
   void onReady() {
@@ -68,6 +69,8 @@ class BroadcastChatController extends GetxController {
     broadData = data["data"];
     pId = data["broadcastId"];
     pData = broadData["receiverId"];
+    newContact = data["newContact"] ?? [];
+    log("newContact : ${newContact.length}");
     totalUser = pData.length;
 
     for (var i = 0; i < pData.length; i++) {
@@ -86,6 +89,34 @@ class BroadcastChatController extends GetxController {
 
   //get broad cast data
   getBroadcastData() async {
+    if (newContact.isNotEmpty) {
+      final key = encrypt.Key.fromUtf8('my 32 length key................');
+      final iv = encrypt.IV.fromLength(16);
+
+      final encrypter = encrypt.Encrypter(encrypt.AES(key));
+
+      final encrypted =
+          encrypter.encrypt("You created this broadcast", iv: iv).base64;
+      await FirebaseFirestore.instance
+          .collection(collectionName.users)
+          .doc(appCtrl.user["id"])
+          .collection(collectionName.broadcastMessage)
+          .doc(pId)
+          .collection(collectionName.chat)
+          .doc(DateTime.now().millisecondsSinceEpoch.toString())
+          .set({
+        'sender': appCtrl.user["id"],
+        'senderName': appCtrl.user["name"],
+        'receiver': newContact,
+        'content': encrypted,
+        "broadcastId": pId,
+        'type': MessageType.messageType.name,
+        'messageType': "sender",
+        "status": "",
+        'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+      });
+    }
+
     await FirebaseFirestore.instance
         .collection(collectionName.broadcast)
         .doc(pId)
@@ -183,15 +214,14 @@ class BroadcastChatController extends GetxController {
     });
   }
 
-
 // UPLOAD SELECTED IMAGE TO FIREBASE
-  Future uploadMultipleFile(File imageFile,MessageType messageType) async {
+  Future uploadMultipleFile(File imageFile, MessageType messageType) async {
     imageFile = imageFile;
     update();
 
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     Reference reference = FirebaseStorage.instance.ref().child(fileName);
-    var file = File( imageFile.path);
+    var file = File(imageFile.path);
     UploadTask uploadTask = reference.putFile(file);
     uploadTask.then((res) {
       res.ref.getDownloadURL().then((downloadUrl) async {
@@ -268,7 +298,6 @@ class BroadcastChatController extends GetxController {
 
   // SEND MESSAGE CLICK
   void onSendMessage(String content, MessageType type) async {
-
     if (content.trim() != '') {
       final key = encrypt.Key.fromUtf8('my 32 length key................');
       final iv = encrypt.IV.fromLength(16);
@@ -280,7 +309,7 @@ class BroadcastChatController extends GetxController {
       textEditingController.clear();
       await saveMessageInLoop(encrypted, type);
       await Future.delayed(Durations.s4);
-
+      String dateTime = DateTime.now().millisecondsSinceEpoch.toString();
 
       await FirebaseFirestore.instance
           .collection(collectionName.users)
@@ -296,18 +325,18 @@ class BroadcastChatController extends GetxController {
             .doc(snap.docs[0].id)
             .update({
           "receiverId": newpData,
-          "updateStamp": DateTime.now().millisecondsSinceEpoch.toString(),
+          "updateStamp": dateTime,
           "lastMessage": encrypted
         });
       });
 
-      FirebaseFirestore.instance
+      await FirebaseFirestore.instance
           .collection(collectionName.users)
           .doc(userData["id"])
           .collection(collectionName.broadcastMessage)
           .doc(pId)
           .collection(collectionName.chat)
-          .doc(DateTime.now().millisecondsSinceEpoch.toString())
+          .doc(dateTime)
           .set({
         'sender': userData["id"],
         'senderName': userData["name"],
@@ -317,7 +346,7 @@ class BroadcastChatController extends GetxController {
         'type': type.name,
         'messageType': "sender",
         "status": "",
-        'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+        'timestamp': dateTime,
       }).then((value) async {
         await FirebaseFirestore.instance
             .collection(collectionName.users)
@@ -331,82 +360,61 @@ class BroadcastChatController extends GetxController {
     }
   }
 
-  saveMessageInLoop(String content, MessageType type) async {
+  saveMessageInLoop(content, MessageType type) async {
     pData.asMap().entries.forEach((element) async {
-
-      if (element.value["chatId"] != null) {
-        newpData.add(element.value);
-        update();
-        await FirebaseFirestore.instance
-            .collection(collectionName.users)
-            .doc(element.value["id"])
-            .collection(collectionName.messages)
-            .doc(element.value["chatId"])
-            .collection(collectionName.chat)
-            .doc(DateTime.now().millisecondsSinceEpoch.toString())
-            .set({
-          'sender': userData["id"],
-          'receiver': element.value["id"],
-          'content': content,
-          "chatId": element.value["chatId"],
-          'type': type.name,
-          'messageType': "sender",
-          "isBlock": false,
-          "isSeen": false,
-          "isBroadcast": true,
-          "blockBy": "",
-          "blockUserId": "",
-          'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-        }).then((value) async {
-          await ChatMessageApi().saveMessageInUserCollection(
-              element.value["id"],
-              element.value["id"],
-              element.value["chatId"],
-              content,
-              isBroadcast: true,
-              userData["id"],
-              userData["name"]);
-        });
-      } else {
-        final now = DateTime.now();
-        String? newChatId = now.microsecondsSinceEpoch.toString();
-        update();
-        element.value["chatId"] = newChatId;
-        await FirebaseFirestore.instance
-            .collection(collectionName.users)
-            .doc(element.value["id"])
-            .collection(collectionName.messages)
-            .doc(element.value["chatId"])
-            .collection(collectionName.chat)
-            .doc(DateTime.now().millisecondsSinceEpoch.toString())
-            .set({
-          'sender': userData["id"],
-          'receiver': element.value["id"],
-          'content': content,
-          "chatId": element.value["chatId"],
-          'type': type.name,
-          'messageType': "sender",
-          "isBlock": false,
-          "isSeen": false,
-          "isBroadcast": true,
-          "blockBy": "",
-          "blockUserId": "",
-          'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-        }).then((value) async {
+      if (element.value["id"] != appCtrl.user["id"]) {
+        log("CHATID : ${element.value["chatId"]}");
+        if (element.value["chatId"] != null) {
           newpData.add(element.value);
           update();
-          await ChatMessageApi().saveMessageInUserCollection(
-              element.value["id"],
-              element.value["id"],
-              element.value["chatId"],
-              content,
-              isBroadcast: true,
-              userData["id"],
-              userData["name"]);
-        });
+          await ChatMessageApi()
+              .saveMessage(
+                  element.value["chatId"],
+                  pId,
+                  content,
+                  type,
+                  DateTime.now().millisecondsSinceEpoch.toString(),
+                  userData["id"],
+                  isBroadcast: true)
+              .then((value) async {
+            await ChatMessageApi().saveMessageInUserCollection(
+                element.value["id"],
+                element.value["id"],
+                element.value["chatId"],
+                content,
+                isBroadcast: true,
+                userData["id"],
+                userData["name"]);
+          });
+        } else {
+          final now = DateTime.now();
+          String? newChatId = now.microsecondsSinceEpoch.toString();
+          update();
+          element.value["chatId"] = newChatId;
+          await ChatMessageApi()
+              .saveMessage(
+                  element.value["chatId"],
+                  pId,
+                  content,
+                  type,
+                  DateTime.now().millisecondsSinceEpoch.toString(),
+                  userData["id"],
+                  isBroadcast: true)
+              .then((value) async {
+            newpData.add(element.value);
+            update();
+            await ChatMessageApi().saveMessageInUserCollection(
+                element.value["id"],
+                element.value["id"],
+                element.value["chatId"],
+                content,
+                isBroadcast: true,
+                userData["id"],
+                userData["name"]);
+          });
+        }
       }
     });
-
   }
 
   //delete chat layout
@@ -417,17 +425,16 @@ class BroadcastChatController extends GetxController {
     );
   }
 
-
   Widget timeLayout(document) {
     List newMessageList = document["message"];
     return Column(
       children: [
         Text(
-            document["title"].contains("-other")
-                ? document["title"].split("-other")[0]
-                : document["title"],
-            style:
-            AppCss.poppinsMedium14.textColor(appCtrl.appTheme.txtColor))
+                document["title"].contains("-other")
+                    ? document["title"].split("-other")[0]
+                    : document["title"],
+                style:
+                    AppCss.poppinsMedium14.textColor(appCtrl.appTheme.txtColor))
             .marginSymmetric(vertical: Insets.i5),
         ...newMessageList.asMap().entries.map((e) {
           return buildItem(e.key, e.value);
@@ -438,21 +445,23 @@ class BroadcastChatController extends GetxController {
 
 // BUILD ITEM MESSAGE BOX FOR RECEIVER AND SENDER BOX DESIGN
   Widget buildItem(int index, document) {
-   if(document['type'] == MessageType.note.name){
-     return Container(
-         margin: const EdgeInsets.only(bottom: 2.0),
-         padding: const EdgeInsets.only(left: Insets.i10, right: Insets.i10),
-         child: Column(
-           crossAxisAlignment: CrossAxisAlignment.end,
-           children: <Widget>[
-             if (document!["type"] == MessageType.note.name)
-               const Align(
-                 alignment: Alignment.center,
-                 child: CommonNoteEncrypt(),
-               ).paddingOnly(bottom: Insets.i8)
-           ],
-         ));
-   }else if (document['sender'] == userData["id"]) {
+    log("TYPE : ${document['type']}");
+    if (document['type'] == MessageType.note.name) {
+      return Container(
+          margin: const EdgeInsets.only(bottom: 2.0),
+          padding: const EdgeInsets.only(left: Insets.i10, right: Insets.i10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              if (document!["type"] == MessageType.note.name)
+                const Align(
+                  alignment: Alignment.center,
+                  child: CommonNoteEncrypt(),
+                ).paddingOnly(bottom: Insets.i8)
+            ],
+          ));
+    }
+    if (document['sender'] == userData["id"]) {
       return BroadcastSenderMessage(
         document: document,
         index: index,
@@ -485,6 +494,8 @@ class BroadcastChatController extends GetxController {
 
   deleteBroadCast() async {
     await FirebaseFirestore.instance
+        .collection(appCtrl.user["id"])
+        .doc(appCtrl.user["id"])
         .collection(collectionName.broadcastMessage)
         .doc(pId)
         .delete()
@@ -493,7 +504,22 @@ class BroadcastChatController extends GetxController {
           .collection(collectionName.broadcast)
           .doc(pId)
           .delete()
-          .then((value) {
+          .then((value) async {
+        await FirebaseFirestore.instance
+            .collection(collectionName.users)
+            .doc(appCtrl.user["id"])
+            .collection(collectionName.chats)
+            .where("broadcastId", isEqualTo: pId)
+            .limit(1)
+            .get()
+            .then((broadcastVal)async {
+      await    FirebaseFirestore.instance
+              .collection(collectionName.users)
+              .doc(appCtrl.user["id"])
+              .collection(collectionName.chats)
+              .doc(broadcastVal.docs[0].id)
+              .delete();
+        });
         Get.back();
         Get.back();
       });
@@ -570,11 +596,10 @@ class BroadcastChatController extends GetxController {
       };
       UserContactModel userContactModel = UserContactModel.fromJson(data);
       saveContact(userContactModel);
-    }else{
+    } else {
       removeUserFromGroup(value, snapshot);
     }
   }
-
 
   removeUserFromGroup(value, snapshot) async {
     await FirebaseFirestore.instance
@@ -602,19 +627,18 @@ class BroadcastChatController extends GetxController {
       child: Row(children: [
         Text(title,
             style:
-            AppCss.poppinsMedium14.textColor(appCtrl.appTheme.blackColor))
+                AppCss.poppinsMedium14.textColor(appCtrl.appTheme.blackColor))
       ]),
     );
   }
 
-
   void showBottomSheet(BuildContext context) => showModalBottomSheet<void>(
-    context: context,
-    builder: (context) => EmojiPickerWidget(onSelected: (emoji) {
-      Navigator.pop(context);
-      onEmojiTap(emoji);
-    }),
-  );
+        context: context,
+        builder: (context) => EmojiPickerWidget(onSelected: (emoji) {
+          Navigator.pop(context);
+          onEmojiTap(emoji);
+        }),
+      );
 
   onEmojiTap(emoji) {
     onSendMessage(emoji, MessageType.text);

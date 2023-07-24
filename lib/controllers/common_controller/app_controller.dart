@@ -19,7 +19,7 @@ class AppController extends GetxController {
   List<FirebaseContactModel> unRegisterContact =[];
   AppTheme get appTheme => _appTheme;
   int selectedIndex = 0;
-  bool isTheme = false,isTyping =false;
+  bool isTheme = false,isTyping =false,contactPermission = false;
   bool isBiometric = false;
   bool isRTL = false,isLoading =false;
   String languageVal = "in";

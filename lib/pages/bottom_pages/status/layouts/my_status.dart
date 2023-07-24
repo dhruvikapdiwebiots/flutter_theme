@@ -65,20 +65,31 @@ class MyStatus extends StatelessWidget {
                                                   photoUrlList;
                                               photoUrl.removeAt(e.key);
                                               log("PHOTOURL : ${photoUrl.length}");
-                                              await FirebaseFirestore.instance
-                                                  .collection(
-                                                      collectionName.users)
-                                                  .doc(FirebaseAuth.instance
-                                                      .currentUser!.uid)
-                                                  .collection(
-                                                      collectionName.status)
-                                                  .doc(
-                                                      snapshot.data!.docs[0].id)
-                                                  .update({
-                                                'photoUrl': photoUrl
-                                                    .map((e) => e.toJson())
-                                                    .toList(),
-                                              });
+                                              if(photoUrl.isEmpty){
+                                                await FirebaseFirestore.instance
+                                                    .collection(
+                                                    collectionName.users)
+                                                    .doc(appCtrl.user["id"])
+                                                    .collection(
+                                                    collectionName.status)
+                                                    .doc(
+                                                    snapshot.data!.docs[0].id).delete();
+                                                Get.back();
+                                              }else {
+                                                await FirebaseFirestore.instance
+                                                    .collection(
+                                                    collectionName.users)
+                                                    .doc(appCtrl.user["id"])
+                                                    .collection(
+                                                    collectionName.status)
+                                                    .doc(
+                                                    snapshot.data!.docs[0].id)
+                                                    .update({
+                                                  'photoUrl': photoUrl
+                                                      .map((e) => e.toJson())
+                                                      .toList(),
+                                                });
+                                              }
                                             } else if (result == 1) {
                                               Share.share(e.value.image!,
                                                   subject: 'Look what I made!');

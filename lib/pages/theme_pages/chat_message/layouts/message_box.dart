@@ -33,7 +33,9 @@ class MessageBox extends StatelessWidget {
                                 valueColor: AlwaysStoppedAnimation<Color>(
                                     appCtrl.appTheme.primary)));
                       } else {
+
                         ChatMessageApi().getMessageAsPerDate(snapshot);
+
                         return ListView.builder(
                             itemBuilder: (context, index) {
                               return chatCtrl

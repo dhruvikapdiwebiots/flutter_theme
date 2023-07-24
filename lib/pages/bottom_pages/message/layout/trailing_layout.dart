@@ -25,7 +25,7 @@ class TrailingLayout extends StatelessWidget {
                   stream: FirebaseFirestore.instance.collection(collectionName.users).doc(appCtrl.user["id"])
                       .collection(collectionName.messages)
                       .doc(document!["chatId"])
-                      .collection(collectionName.chat).where("receiver",isEqualTo: appCtrl.user["id"])
+                      .collection(collectionName.chat).where("receiver",isEqualTo:  appCtrl.user["id"])
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {

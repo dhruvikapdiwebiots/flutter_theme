@@ -90,6 +90,9 @@ class PhoneController extends GetxController {
         : Get.put(PermissionHandlerController());
     bool permissionStatus =
     await permissionHandelCtrl.permissionGranted();
+    appCtrl.contactPermission = permissionStatus;
+    appCtrl.storage.write(session.contactPermission, permissionStatus);
+    appCtrl.update();
     debugPrint("permissionStatus 1: $permissionStatus");
     if (permissionStatus == true) {
       appCtrl.contactList = await getAllContacts();
@@ -168,6 +171,7 @@ class PhoneController extends GetxController {
           }
         });
         update();
+        log("isRegister : $isRegister");
         if (isRegister) {
           var objData = {
             'name': contact.value.displayName,
@@ -239,23 +243,6 @@ class PhoneController extends GetxController {
 
     }
 
-    if (appCtrl.firebaseContact.isEmpty) {
-      await FirebaseFirestore.instance
-          .collection(collectionName.users)
-          .doc(appCtrl.user["id"])
-          .collection(collectionName.registerUser)
-          .get()
-          .then((value) {
-        List allUserList = value.docs[0].data()["contact"];
-        allUserList.asMap().entries.forEach((element) {
-          if (!appCtrl.firebaseContact.contains(element.value)) {
-            appCtrl.firebaseContact
-                .add(FirebaseContactModel.fromJson(element.value));
-          }
-        });
-      });
-      appCtrl.update();
-    }
   }
 
 

@@ -170,10 +170,9 @@ class DashboardController extends GetxController
   }
 
   checkPermission() async {
-    bool permissionStatus =
-        await statusCtrl.permissionHandelCtrl.permissionGranted();
-    debugPrint("permissionStatus 1: $permissionStatus");
-    if (permissionStatus == true) {
+
+appCtrl.contactPermission = appCtrl.storage.read(session.contactPermission) ?? false;
+    if (appCtrl.contactPermission == true) {
       contacts = await getAllContacts();
 
       appCtrl.contactList = contacts;
@@ -190,6 +189,17 @@ class DashboardController extends GetxController
         contactCtrl.update();
         Get.forceAppUpdate();
       }
+    }else{
+      log("NO PERMISSION");
+      appCtrl.contactPermission =
+      await statusCtrl.permissionHandelCtrl.permissionGranted();
+      appCtrl.storage.write(session.contactPermission,appCtrl.contactPermission);
+      if(appCtrl.contactPermission == true){
+        appCtrl.contactList = await getAllContacts();
+
+      }
+      appCtrl.update();
+
     }
   }
 
@@ -199,53 +209,57 @@ class DashboardController extends GetxController
       List<Map<String, dynamic>> unRegisterContactData = [];
 
       appCtrl.contactList.asMap().entries.forEach((contact) async {
-        if(contact.value.phones.isNotEmpty) {
-          bool isRegister = false;
-          String id = "";
-          await FirebaseFirestore.instance
-              .collection(collectionName.users)
-              .where("phone",
-              isEqualTo: phoneNumberExtension(
-                  contact.value.phones[0].number.toString()))
-              .get()
-              .then((value) {
-            if (value.docs.isEmpty) {
-              isRegister = false;
+        if(phoneNumberExtension(
+            contact.value.phones[0].number.toString()) != appCtrl.user["phone"]) {
+          if (contact.value.phones.isNotEmpty) {
+            bool isRegister = false;
+            String id = "";
+            await FirebaseFirestore.instance
+                .collection(collectionName.users)
+                .where("phone",
+                isEqualTo: phoneNumberExtension(
+                    contact.value.phones[0].number.toString()))
+                .get()
+                .then((value) {
+              if (value.docs.isEmpty) {
+                isRegister = false;
+              } else {
+                isRegister = true;
+                id = value.docs[0].id;
+              }
+            });
+            update();
+            if (isRegister) {
+              var objData = {
+                'name': contact.value.displayName,
+                'phone': contact.value.phones.isNotEmpty
+                    ? phoneNumberExtension(
+                    contact.value.phones[0].number.toString())
+                    : null,
+                "isRegister": true,
+                "image": contact.value.photo,
+                "id": id
+                // Include other necessary contact.value details
+              };
+              if (!contactsData.contains(objData)) {
+                contactsData.add(objData);
+              }
             } else {
-              isRegister = true;
-              id = value.docs[0].id;
-            }
-          });
-          update();
-          if (isRegister) {
-            var objData = {
-              'name': contact.value.displayName,
-              'phone': contact.value.phones.isNotEmpty
-                  ? phoneNumberExtension(
-                  contact.value.phones[0].number.toString())
-                  : null,
-              "isRegister": true,
-              "image": contact.value.photo,
-              "id": id
-              // Include other necessary contact.value details
-            };
-            if (!contactsData.contains(objData)) {
-              contactsData.add(objData);
-            }
-          } else {
-            var objData = {
-              'name': contact.value.displayName,
-              'phone': contact.value.phones.isNotEmpty
-                  ? phoneNumberExtension(
-                  contact.value.phones[0].number.toString())
-                  : null,
-              "isRegister": false,
-              "image": contact.value.photo,
-              "id": "0"
-              // Include other necessary contact.value details
-            };
-            if (!unRegisterContactData.contains(objData)) {
-              unRegisterContactData.add(objData);
+
+              var objData = {
+                'name': contact.value.displayName,
+                'phone': contact.value.phones.isNotEmpty
+                    ? phoneNumberExtension(
+                    contact.value.phones[0].number.toString())
+                    : null,
+                "isRegister": false,
+                "image": contact.value.photo,
+                "id": "0"
+                // Include other necessary contact.value details
+              };
+              if (!unRegisterContactData.contains(objData)) {
+                unRegisterContactData.add(objData);
+              }
             }
           }
         }
@@ -313,7 +327,10 @@ class DashboardController extends GetxController
     appCtrl.firebaseContact = [];
     appCtrl.update();
 
-    debugPrint("appCtrl.user : ${appCtrl.user}");
+
+    appCtrl.user = await appCtrl.storage.read(session.user);
+    appCtrl.update();
+    debugPrint("appCtrl.users : ${appCtrl.user}");
     await FirebaseFirestore.instance
         .collection(collectionName.users)
         .get()
@@ -351,9 +368,9 @@ class DashboardController extends GetxController
   void onInit() {
     // TODO: implement onInit
 
-    messageCtrl.onReady();
-    statusCtrl.onReady();
-    statusCtrl.update();
+    // messageCtrl.onReady();
+    // statusCtrl.onReady();
+    // statusCtrl.update();
 
     super.onInit();
   }
