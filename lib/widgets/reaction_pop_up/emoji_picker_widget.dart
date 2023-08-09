@@ -6,11 +6,12 @@ import 'package:flutter/foundation.dart';
 import '../../config.dart';
 
 class EmojiPickerWidget extends StatelessWidget {
-  const EmojiPickerWidget({Key? key, required this.onSelected})
+  const EmojiPickerWidget({Key? key, required this.onSelected,this.textEditingController})
       : super(key: key);
 
   /// Provides callback when user selects emoji.
   final StringCallback onSelected;
+  final TextEditingController? textEditingController;
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +35,7 @@ class EmojiPickerWidget extends StatelessWidget {
           ),
           Expanded(
             child: EmojiPicker(
+              textEditingController: textEditingController,
               onEmojiSelected: (category, emoji) => onSelected(emoji.emoji),
               config: Config(
                 columns: 7,

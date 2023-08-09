@@ -663,10 +663,10 @@ class ChatController extends GetxController {
           chatId: chatId,
           token: pData["pushToken"],
           pId: pId,
-          pName: pName,
+          pName: appCtrl.user["name"],
           userContactModel: userContactModel,
           image: userData["image"],
-          dataTitle: pName);
+          dataTitle: appCtrl.user["name"]);
     }
     isLoading = false;
     if (allData == null) {
@@ -869,11 +869,11 @@ class ChatController extends GetxController {
   void showBottomSheet(BuildContext context) => showModalBottomSheet<void>(
         context: context,
         builder: (context) => EmojiPickerWidget(onSelected: (emoji) {
-          Navigator.pop(context);
+          textEditingController.text = textEditingController.text + emoji;
           log("emoji : ${emoji.codeUnits}");
           log("emoji : ${emoji.characters}");
-          onEmojiTap(emoji);
-        }),
+         // onEmojiTap(emoji);
+        },textEditingController: textEditingController,),
       );
 
   //ON SELECT EMOJI SEND TO CHAT

@@ -195,7 +195,7 @@ class OnTapFunctionCall {
     chatCtrl.selectedIndexId = [];
     chatCtrl.showPopUp = false;
     chatCtrl.enableReactionPopup = false;
-    await FirebaseFirestore.instance
+    await FirebaseFirestore.instance.collection(collectionName.users).doc(appCtrl.user["id"])
         .collection(collectionName.messages)
         .doc(chatCtrl.chatId)
         .collection(collectionName.chat)

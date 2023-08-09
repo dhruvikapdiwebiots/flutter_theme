@@ -145,7 +145,7 @@ class ChatMessageApi {
                     msg: content,
                     groupId: groupId,
                     token: snap.data()!["pushToken"],
-                    dataTitle: element.value["name"]);
+                    dataTitle: appCtrl.user["name"]);
               }
             });
           }
