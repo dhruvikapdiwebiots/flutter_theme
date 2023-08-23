@@ -25,7 +25,7 @@ class EditProfileImage extends StatelessWidget {
                         cornerRadius: 22, cornerSmoothing: 1),
                   ),
                   image: DecorationImage(
-                      fit: BoxFit.fill, image: NetworkImage(editCtrl.imageUrl))),
+                      fit: BoxFit.cover, image: NetworkImage(editCtrl.imageUrl))),
             ),
             placeholder: (context, url) => Container(
               height: Sizes.s110,

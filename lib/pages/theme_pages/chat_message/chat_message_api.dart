@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'dart:developer' as log;
 
-import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import '../../../config.dart';
 
 class ChatMessageApi {
@@ -37,7 +36,7 @@ class ChatMessageApi {
 
   //save message in user
   saveMessageInUserCollection(
-      id, receiverId, newChatId, content, senderId, userName,
+      id, receiverId, newChatId, content, senderId, userName,MessageType type,
       {isBlock = false, isBroadcast = false}) async {
     final chatCtrl = Get.isRegistered<ChatController>()
         ? Get.find<ChatController>()
@@ -59,6 +58,7 @@ class ChatMessageApi {
           "updateStamp": DateTime.now().millisecondsSinceEpoch.toString(),
           "lastMessage": content,
           "senderId": senderId,
+          "messageType": type.name,
           "chatId": newChatId,
           "isSeen": false,
           "isGroup": false,
@@ -110,6 +110,7 @@ class ChatMessageApi {
     groupId,
     content,
     pData,
+      type,
   ) async {
     var user = appCtrl.storage.read(session.user);
     List receiver = pData["groupData"]["users"];
@@ -130,6 +131,7 @@ class ChatMessageApi {
               .update({
             "updateStamp": DateTime.now().millisecondsSinceEpoch.toString(),
             "lastMessage": content,
+            "messageType":type.name,
             "senderId": user["id"],
             "name": pData["groupData"]["name"]
           });
@@ -142,7 +144,7 @@ class ChatMessageApi {
               if (snap.data()!["pushToken"] != "") {
                 firebaseCtrl.sendNotification(
                     title: "Group Message",
-                    msg: content,
+                    msg: groupMessageTypeCondition(type, content),
                     groupId: groupId,
                     token: snap.data()!["pushToken"],
                     dataTitle: appCtrl.user["name"]);
@@ -175,7 +177,7 @@ class ChatMessageApi {
           channelId: channelId,
           isVideoCall: isVideoCall,
           receiver: null);
-      ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
+    //  ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
       await FirebaseFirestore.instance
           .collection(collectionName.calls)
           .doc(call.callerId)
@@ -224,7 +226,7 @@ class ChatMessageApi {
             var data = {
               "channelName": call.channelId,
               "call": call,
-              "role": role
+              "role": "role"
             };
             Get.toNamed(routeName.audioCall, arguments: data);
           } else {
@@ -239,7 +241,7 @@ class ChatMessageApi {
             var data = {
               "channelName": call.channelId,
               "call": call,
-              "role": role
+              "role": "role"
             };
 
             Get.toNamed(routeName.videoCall, arguments: data);

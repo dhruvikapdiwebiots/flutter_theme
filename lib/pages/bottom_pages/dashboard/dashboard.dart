@@ -3,7 +3,13 @@ import 'dart:developer';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_theme/config.dart';
+import 'package:flutter_theme/controllers/fetch_contact_controller.dart';
+import 'package:flutter_theme/controllers/recent_chat_controller.dart';
+import 'package:flutter_theme/models/data_model.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:provider/provider.dart';
+import 'package:scoped_model/scoped_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -19,10 +25,14 @@ class _DashboardState extends State<Dashboard>
   @override
   void initState() {
     // TODO: implement initState
+    dashboardCtrl.pref = Get.arguments;
+    dashboardCtrl.update();
+
     WidgetsBinding.instance.addObserver(this);
     dashboardCtrl.initConnectivity();
 
     super.initState();
+
   }
 
   @override
@@ -36,7 +46,8 @@ class _DashboardState extends State<Dashboard>
     log("state ; $state");
     if (state == AppLifecycleState.resumed) {
       firebaseCtrl.setIsActive();
-      dashboardCtrl.addContactInFirebase();
+
+     // dashboardCtrl.addContactInFirebase();
 
       dashboardCtrl.update();
       Get.forceAppUpdate();
@@ -45,8 +56,6 @@ class _DashboardState extends State<Dashboard>
     }
     if (state == AppLifecycleState.inactive ||
         state == AppLifecycleState.detached) {
-      log("DETATCHED");
-      firebaseCtrl.deleteContacts();
     }
 
     firebaseCtrl.statusDeleteAfter24Hours();
@@ -55,107 +64,120 @@ class _DashboardState extends State<Dashboard>
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<DashboardController>(builder: (_) {
+    return  ScopedModel<DataModel>(
+      model: appCtrl.getModel()!,
+      child: ScopedModelDescendant<DataModel>(builder: (context, child, _model) {
+        appCtrl.cachedModel = _model;
+          return Consumer<RecentChatController>(
+              builder: (context, recentChat, _child) {
 
-      return OverlaySupport.global(
-        child: AgoraToken(
-          scaffold: PickupLayout(
-            scaffold: StreamBuilder(
-                stream: Connectivity().onConnectivityChanged,
-                builder: (context, AsyncSnapshot<ConnectivityResult> snapshot) {
-                  return appCtrl.user != null
-                      ? StreamBuilder(
-                          stream: FirebaseFirestore.instance
-                              .collection(collectionName.users)
-                              .doc(appCtrl.user["id"])
-                              .snapshots(),
-                          builder: (context, snapShot) {
-                            if (snapShot.hasData) {
-                              if (snapShot.data!.exists) {
-                                bool isWebLogin =
-                                    snapShot.data!.data()!["isWebLogin"] ??
-                                        false;
-                                if (isWebLogin == true) {
-                                  if (appCtrl.contactList.isNotEmpty) {
-                                    List<Map<String, dynamic>> contactsData =
-                                        appCtrl.contactList.map((contact) {
-                                      return {
-                                        'name': contact.displayName,
-                                        'phoneNumber': contact.phones.isNotEmpty
-                                            ? phoneNumberExtension(contact
-                                                .phones[0].number
-                                                .toString())
-                                            : null,
-                                        // Include other necessary contact details
-                                      };
-                                    }).toList();
-                                    FirebaseFirestore.instance
-                                        .collection(collectionName.users)
-                                        .doc(
-                                            FirebaseAuth.instance.currentUser !=
-                                                    null
-                                                ? FirebaseAuth
-                                                    .instance.currentUser!.uid
-                                                : appCtrl.user["id"])
-                                        .collection(collectionName.userContact)
-                                        .add({'contacts': contactsData});
-                                  } else {
-                                    dashboardCtrl.checkPermission();
-                                    if (appCtrl.contactList.isNotEmpty) {
-                                      List<Map<String, dynamic>> contactsData =
+              return GetBuilder<DashboardController>(builder: (_) {
+
+                return OverlaySupport.global(
+                  child:  AgoraToken(
+                    scaffold: PickupLayout(
+                      scaffold: StreamBuilder(
+                          stream: Connectivity().onConnectivityChanged,
+                          builder: (context, AsyncSnapshot<ConnectivityResult> snapshot) {
+                            return appCtrl.user != null
+                                ? StreamBuilder(
+                                stream: FirebaseFirestore.instance
+                                    .collection(collectionName.users)
+                                    .doc(appCtrl.user["id"])
+                                    .snapshots(),
+                                builder: (context, snapShot) {
+                                  if (snapShot.hasData) {
+                                    if (snapShot.data!.exists) {
+                                      bool isWebLogin =
+                                          snapShot.data!.data()!["isWebLogin"] ??
+                                              false;
+                                      if (isWebLogin == true) {
+                                        if (appCtrl.contactList.isNotEmpty) {
+                                          List<Map<String, dynamic>> contactsData =
                                           appCtrl.contactList.map((contact) {
-                                        return {
-                                          'name': contact.displayName,
-                                          'phoneNumber':
-                                              contact.phones.isNotEmpty
+                                            return {
+                                              'name': contact.displayName,
+                                              'phoneNumber': contact.phones.isNotEmpty
                                                   ? phoneNumberExtension(contact
-                                                      .phones[0].number
-                                                      .toString())
+                                                  .phones[0].number
+                                                  .toString())
                                                   : null,
-                                          // Include other necessary contact details
-                                        };
-                                      }).toList();
-                                      FirebaseFirestore.instance
-                                          .collection(collectionName.users)
-                                          .doc(appCtrl.user["id"])
-                                          .collection(
-                                              collectionName.userContact)
-                                          .add({'contacts': contactsData});
+                                              // Include other necessary contact details
+                                            };
+                                          }).toList();
+                                          FirebaseFirestore.instance
+                                              .collection(collectionName.users)
+                                              .doc(
+                                              FirebaseAuth.instance.currentUser !=
+                                                  null
+                                                  ? FirebaseAuth
+                                                  .instance.currentUser!.uid
+                                                  : appCtrl.user["id"])
+                                              .collection(collectionName.userContact)
+                                              .add({'contacts': contactsData});
+                                        } else {
+                                          dashboardCtrl.checkPermission();
+                                          if (appCtrl.contactList.isNotEmpty) {
+                                            List<Map<String, dynamic>> contactsData =
+                                            appCtrl.contactList.map((contact) {
+                                              return {
+                                                'name': contact.displayName,
+                                                'phoneNumber':
+                                                contact.phones.isNotEmpty
+                                                    ? phoneNumberExtension(contact
+                                                    .phones[0].number
+                                                    .toString())
+                                                    : null,
+                                                // Include other necessary contact details
+                                              };
+                                            }).toList();
+                                            FirebaseFirestore.instance
+                                                .collection(collectionName.users)
+                                                .doc(appCtrl.user["id"])
+                                                .collection(
+                                                collectionName.userContact)
+                                                .add({'contacts': contactsData});
+                                          }
+                                        }
+                                      }
                                     }
                                   }
-                                }
-                              }
-                            }
-                            return WillPopScope(
-                              onWillPop: () async {
-                                if (dashboardCtrl.selectedIndex != 0) {
-                                  dashboardCtrl.onChange(0);
-                                  dashboardCtrl.controller!.index = 0;
-                                  dashboardCtrl.update();
-                                  return false;
-                                } else if (dashboardCtrl.isSearch == true) {
-                                  dashboardCtrl.isSearch = false;
-                                  dashboardCtrl.userText.text = "";
+                                  return WillPopScope(
+                                    onWillPop: () async {
+                                      if (dashboardCtrl.selectedIndex != 0) {
+                                        dashboardCtrl.onChange(0);
+                                        dashboardCtrl.controller!.index = 0;
+                                        dashboardCtrl.update();
+                                        return false;
+                                      } else if (dashboardCtrl.isSearch == true) {
+                                        dashboardCtrl.isSearch = false;
+                                        dashboardCtrl.userText.text = "";
 
-                                  dashboardCtrl.update();
-                                  return false;
-                                } else {
-                                  SystemNavigator.pop();
-                                  return true;
-                                }
-                              },
-                              child: dashboardCtrl.bottomList.isNotEmpty
-                                  ? DashboardBody(
+                                        dashboardCtrl.update();
+                                        return false;
+                                      } else {
+                                        SystemNavigator.pop();
+                                        return true;
+                                      }
+                                    },
+                                    child: dashboardCtrl.bottomList.isNotEmpty
+                                        ? DashboardBody(
                                       snapshot: snapshot,
+                                      pref: dashboardCtrl.pref,
                                     )
-                                  : Container(),
-                            );
-                          })
-                      : Container();
-                }),
-          ),
-        ),
-      );
-    });
+                                        : Container(),
+                                  );
+                                })
+                                : Container();
+                          }),
+                    ),
+                  )
+                );
+              });
+            }
+          );
+        }
+      ),
+    );
   }
 }

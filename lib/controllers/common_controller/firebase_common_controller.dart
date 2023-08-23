@@ -53,7 +53,6 @@ class FirebaseCommonController extends GetxController {
         .get()
         .then((value) {
       if (value.exists) {
-
         nameList = value.data()!["status"] ?? "";
         if (nameList != "") {
           String newName = nameList.split(" is typing")[0];
@@ -92,16 +91,16 @@ class FirebaseCommonController extends GetxController {
           .get()
           .then((value) async {
         if (value.docs.isNotEmpty) {
-          List<PhotoUrl> photoUrls =[];
+          List<PhotoUrl> photoUrls = [];
+          List<PhotoUrl> photoUrl = [];
           update();
           Status status = Status.fromJson(value.docs[0].data());
 
-          List<PhotoUrl> photoUrl = status.photoUrl!;
+          photoUrl = status.photoUrl!;
           await getPhotoUrl(status.photoUrl!).then((list) async {
-            photoUrls  = list;
+            photoUrls = list;
             update();
-          log("PHOTO URL : ${photoUrls.length}");
-          log("PHOTO URL : ${photoUrl.length}");
+
             if (photoUrls.isEmpty) {
               FirebaseFirestore.instance
                   .collection(collectionName.users)
@@ -110,9 +109,7 @@ class FirebaseCommonController extends GetxController {
                   .doc(value.docs[0].id)
                   .delete();
             } else {
-
               if (photoUrls.length <= status.photoUrl!.length) {
-
                 var statusesSnapshot = await FirebaseFirestore.instance
                     .collection(collectionName.users)
                     .doc(user["id"])
@@ -143,10 +140,8 @@ class FirebaseCommonController extends GetxController {
           .get()
           .then((value) async {
         if (value.exists) {
-
           bool isWebLogin = value.data()!["isWebLogin"] ?? false;
           if (isWebLogin == true) {
-
             if (appCtrl.contactList.isNotEmpty) {
               List<Map<String, dynamic>> contactsData =
                   appCtrl.contactList.map((contact) {
@@ -167,7 +162,6 @@ class FirebaseCommonController extends GetxController {
                   .collection(collectionName.userContact)
                   .get()
                   .then((allContact) {
-
                 if (allContact.docs.isEmpty) {
                   FirebaseFirestore.instance
                       .collection(collectionName.users)
@@ -178,9 +172,7 @@ class FirebaseCommonController extends GetxController {
                       .add({'contacts': contactsData});
                 }
               });
-
             } else {
-
               final dashboardCtrl = Get.isRegistered<DashboardController>()
                   ? Get.find<DashboardController>()
                   : Get.put(DashboardController());
@@ -203,7 +195,6 @@ class FirebaseCommonController extends GetxController {
                     .collection(collectionName.userContact)
                     .get()
                     .then((allContact) {
-
                   if (allContact.docs.isEmpty) {
                     FirebaseFirestore.instance
                         .collection(collectionName.users)
@@ -221,16 +212,21 @@ class FirebaseCommonController extends GetxController {
   }
 
   Future<List<PhotoUrl>> getPhotoUrl(List<PhotoUrl> photoUrl) async {
+    newPhotoList = [];
+    update();
     for (int i = 0; i < photoUrl.length; i++) {
       var millis = int.parse(photoUrl[i].timestamp.toString());
       DateTime dt = DateTime.fromMillisecondsSinceEpoch(millis);
       var date = DateTime.now();
 
       if (appCtrl.usageControlsVal!.statusDeleteTime!.contains(" hrs")) {
-        if(dt.day == date.day) {
+        if (dt.day == date.day) {
           newPhotoList.add(photoUrl[i]);
-        }else{
-          if(dt.day <= date.day) {
+        } else {
+
+          if (dt.day <= date.day) {
+            log("NOO 1${dt.day <= date.day}");
+          } else {
 
             if (dt.hour <= date.hour) {
               if (dt.minute <= date.minute) {
@@ -264,7 +260,6 @@ class FirebaseCommonController extends GetxController {
       userContactModel,
       pId,
       pName}) async {
-
     final data = {
       "notification": {
         "body": msg,
@@ -320,26 +315,26 @@ class FirebaseCommonController extends GetxController {
         .doc(appCtrl.user["id"])
         .collection(collectionName.registerUser)
         .get()
-        .then((value)async {
+        .then((value) async {
       if (value.docs.isNotEmpty) {
-        if(value.docs.length ==1) {
-      await    FirebaseFirestore.instance
+        if (value.docs.length == 1) {
+          await FirebaseFirestore.instance
               .collection(collectionName.users)
               .doc(appCtrl.user["id"])
               .collection(collectionName.registerUser)
               .doc(value.docs[0].id)
               .delete();
-        }else{
-
-          value.docs.asMap().entries.forEach((element) async{
-            await    FirebaseFirestore.instance
+        } else {
+          value.docs.asMap().entries.forEach((element) async {
+            await FirebaseFirestore.instance
                 .collection(collectionName.users)
                 .doc(appCtrl.user["id"])
-                .collection(collectionName.registerUser).doc(element.value.id).delete();
+                .collection(collectionName.registerUser)
+                .doc(element.value.id)
+                .delete();
           });
         }
       }
-
     });
 
     await FirebaseFirestore.instance
@@ -347,25 +342,26 @@ class FirebaseCommonController extends GetxController {
         .doc(appCtrl.user["id"])
         .collection(collectionName.unRegisterUser)
         .get()
-        .then((value) async{
+        .then((value) async {
       if (value.docs.isNotEmpty) {
-        if(value.docs.length ==1) {
+        if (value.docs.length == 1) {
           await FirebaseFirestore.instance
               .collection(collectionName.users)
               .doc(appCtrl.user["id"])
               .collection(collectionName.unRegisterUser)
               .doc(value.docs[0].id)
               .delete();
-        }else{
-          value.docs.asMap().entries.forEach((element) async{
-            await    FirebaseFirestore.instance
+        } else {
+          value.docs.asMap().entries.forEach((element) async {
+            await FirebaseFirestore.instance
                 .collection(collectionName.users)
                 .doc(appCtrl.user["id"])
-                .collection(collectionName.unRegisterUser).doc(element.value.id).delete();
+                .collection(collectionName.unRegisterUser)
+                .doc(element.value.id)
+                .delete();
           });
         }
       }
     });
   }
-
 }

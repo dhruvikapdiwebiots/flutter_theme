@@ -10,7 +10,7 @@ class IconCircle extends StatelessWidget {
         child: Icon(Icons.circle,
             color: appCtrl.appTheme.greenColor,
             size: Sizes.s12)
-            .paddingAll(Insets.i2)
+            .paddingAll(0.8)
             .decorated(
             color: appCtrl.appTheme.whiteColor,
             shape: BoxShape.circle));

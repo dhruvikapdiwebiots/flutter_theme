@@ -30,7 +30,8 @@ class BroadCastDeleteAlert extends StatelessWidget {
           TextButton(
             onPressed: () async {
                Get.back();
-                FirebaseFirestore.instance
+                FirebaseFirestore.instance .collection(collectionName.users)
+                    .doc(appCtrl.user["id"])
                     .collection(collectionName.broadcastMessage).doc(chatCtrl.pId).collection(collectionName.chat)
                     .doc(documentReference!.id)
                     .delete();
@@ -40,7 +41,8 @@ class BroadCastDeleteAlert extends StatelessWidget {
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeOut);
 
-              await FirebaseFirestore.instance
+              await FirebaseFirestore.instance .collection(collectionName.users)
+                  .doc(appCtrl.user["id"])
                   .collection(collectionName.broadcastMessage)
                   .doc(chatCtrl.pId)
                   .collection(collectionName.chat)

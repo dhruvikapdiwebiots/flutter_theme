@@ -1,7 +1,9 @@
 import 'package:flutter_theme/config.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Message extends StatefulWidget {
-  const Message({Key? key}) : super(key: key);
+  final SharedPreferences? sharedPreferences;
+  const Message({Key? key,this.sharedPreferences}) : super(key: key);
 
   @override
   State<Message> createState() => _MessageState();
@@ -16,6 +18,7 @@ class _MessageState extends State<Message>
     // TODO: implement initState
     WidgetsBinding.instance.addObserver(this);
     messageCtrl.getMessage();
+
     super.initState();
   }
 
@@ -43,7 +46,7 @@ class _MessageState extends State<Message>
               child: Scaffold(
                   key: messageCtrl.scaffoldKey,
                   backgroundColor: appCtrl.appTheme.bgColor,
-                  floatingActionButton: const MessageFloatingButton(),
+                  floatingActionButton:  MessageFloatingButton(prefs: widget.sharedPreferences!),
                   body:const ChatCard())),
         ]);
       });

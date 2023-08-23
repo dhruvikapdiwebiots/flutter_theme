@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter_theme/config.dart';
+import 'package:flutter_theme/controllers/fetch_contact_controller.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class MessageController extends GetxController {
@@ -21,9 +22,9 @@ class MessageController extends GetxController {
   List<Contact> contactUserList = [];
   List contactExistList = [];
   int unSeen = 0;
-  bool isLoading = false;
+  bool isLoading = true;
   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-
+  List message =[];
   String? groupId;
   Image? contactPhoto;
   XFile? imageFile;
@@ -84,6 +85,9 @@ class MessageController extends GetxController {
       );
     });
     _showBannerAd();
+    update();
+    await Future.delayed(Durations.s2);
+    isLoading = false;
     update();
     super.onReady();
   }
@@ -160,6 +164,7 @@ class MessageController extends GetxController {
   }
 
   Future getMessage() async {
+
     List statusData = [];
     try {
       statusData = await MessageFirebaseApi().getContactList(contactUserList);

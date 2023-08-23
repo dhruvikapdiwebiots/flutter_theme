@@ -50,8 +50,7 @@ class ContactList extends StatelessWidget {
                           .paddingSymmetric(
                               vertical: Insets.i14, horizontal: Insets.i15)
                           .inkWell(onTap: () async {
-                        contactCtrl.refreshData();
-                        contactCtrl.update();
+
                       })
                     ],
                     leading: const BackIcon()),

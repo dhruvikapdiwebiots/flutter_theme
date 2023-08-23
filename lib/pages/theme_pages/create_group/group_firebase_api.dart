@@ -51,9 +51,10 @@ class GroupFirebaseApi {
     final encrypter = encrypt.Encrypter(encrypt.AES(key));
 
     final encrypted =
-        encrypter.encrypt("${user["name"]} created this group", iv: iv).base64;
+        encrypter.encrypt("${ user["id"] == appCtrl.user["id"]? "You" : user["name"] } created this group", iv: iv).base64;
 
-    await FirebaseFirestore.instance
+    /* await FirebaseFirestore.instance .collection(collectionName.users)
+        .doc(appCtrl.user["id"])
         .collection(collectionName.groupMessage)
         .doc(id)
         .collection(collectionName.chat)
@@ -68,7 +69,8 @@ class GroupFirebaseApi {
       "status": "",
       'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
     }).then((e) {
-      FirebaseFirestore.instance
+      FirebaseFirestore.instance .collection(collectionName.users)
+          .doc(appCtrl.user["id"])
           .collection(collectionName.groupMessage)
           .doc(id)
           .collection(collectionName.chat)
@@ -83,8 +85,49 @@ class GroupFirebaseApi {
         "status": "",
         'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
       });
+    }); */
+    final note = encrypter.encrypt(fonts.noteEncrypt.tr, iv: iv).base64;
+    log("SEKEC : ${groupCtrl.selectedContact.length}");
+    groupCtrl.selectedContact.asMap().entries.forEach((e) async {
+      log("USER ID :: ${e.value["id"]}");
+      await FirebaseFirestore.instance
+          .collection(collectionName.users)
+          .doc(e.value["id"])
+          .collection(collectionName.groupMessage)
+          .doc(id)
+          .collection(collectionName.chat)
+          .doc(DateTime.now().millisecondsSinceEpoch.toString())
+          .set({
+        'sender': user["id"],
+        'senderName': user["name"],
+        'receiver': groupCtrl.selectedContact,
+        'content': note,
+        "groupId": id,
+        'type': MessageType.note.name,
+        'messageType': "sender",
+        "status": "",
+        'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+      }).then((s) {
+        FirebaseFirestore.instance
+            .collection(collectionName.users)
+            .doc(e.value["id"])
+            .collection(collectionName.groupMessage)
+            .doc(id)
+            .collection(collectionName.chat)
+            .doc(DateTime.now().millisecondsSinceEpoch.toString())
+            .set({
+          'sender': user["id"],
+          'senderName': user["name"],
+          'receiver': groupCtrl.selectedContact,
+          'content': encrypted,
+          "groupId": id,
+          'type': MessageType.messageType.name,
+          'messageType': "sender",
+          "status": "",
+          'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+        });
+      });
     });
-
     await FirebaseFirestore.instance
         .collection(collectionName.groups)
         .doc(id)
@@ -102,6 +145,7 @@ class GroupFirebaseApi {
           'chatId': "",
           'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
           "lastMessage": encrypted,
+          "messageType": MessageType.messageType.name,
           "isGroup": true,
           "isBlock": false,
           "isBroadcast": false,
@@ -128,6 +172,9 @@ class GroupFirebaseApi {
     log("back : $arg");
     Get.back();
     Get.back();
+    groupCtrl.imageUrl ="";
+    groupCtrl.imageFile =null;
+    groupCtrl.image =null;
     FirebaseFirestore.instance
         .collection(collectionName.users)
         .doc(userData["id"])

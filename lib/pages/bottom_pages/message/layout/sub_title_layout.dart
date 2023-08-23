@@ -3,7 +3,8 @@ import '../../../../config.dart';
 class SubTitleLayout extends StatelessWidget {
   final DocumentSnapshot? document;
   final String? blockBy,name;
-  const SubTitleLayout({Key? key,this.document,this.name,this.blockBy}) : super(key: key);
+  final dynamic data;
+  const SubTitleLayout({Key? key,this.document,this.name,this.blockBy,this.data}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,30 +16,11 @@ class SubTitleLayout extends StatelessWidget {
                 : appCtrl.appTheme.grey,
             size: Sizes.s16),
         const HSpace(Sizes.s10),
-        decryptMessage(document!["lastMessage"]).contains(".gif") ?const Icon(Icons.gif_box) :
+        decryptMessage(document!["lastMessage"]).contains("gif") ?const Icon(Icons.gif_box) :
         SizedBox(
           width: Sizes.s150,
           child: Text(
-              (decryptMessage(document!["lastMessage"]).contains("media")) ? "You Share Media" :   document!["isBlock"] == true &&
-                  document!["isBlock"] == "true"
-                  ? document!["blockBy"] != blockBy
-                  ? document!["blockUserMessage"]
-                  : decryptMessage(document!["lastMessage"])
-                  .contains("http")
-                  :  (decryptMessage(document!["lastMessage"]).contains(".pdf") ||
-                  decryptMessage(document!["lastMessage"])
-                      .contains(".doc") ||
-                  decryptMessage(document!["lastMessage"])
-                      .contains(".mp3") ||
-                  decryptMessage(document!["lastMessage"])
-                      .contains(".mp4") ||
-                  decryptMessage(document!["lastMessage"])
-                      .contains(".xlsx") ||
-                  decryptMessage(document!["lastMessage"])
-                      .contains(".ods"))
-                  ? decryptMessage(document!["lastMessage"])
-                  .split("-BREAK-")[0]
-                  : decryptMessage(document!["lastMessage"]),
+             data["senderMessage"],
               style: AppCss.poppinsMedium12
                   .textColor(appCtrl.appTheme.grey).textHeight(1.2),
               overflow: TextOverflow.ellipsis).width(Sizes.s150),

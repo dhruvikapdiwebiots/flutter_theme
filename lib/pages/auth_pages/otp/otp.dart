@@ -1,15 +1,18 @@
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/widgets/loading_component.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Otp extends StatelessWidget {
+  final SharedPreferences? pref;
   final otpCtrl = Get.put(OtpController());
 
-  Otp({Key? key}) : super(key: key);
+  Otp({Key? key,this.pref}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<OtpController>(builder: (_) {
-
+otpCtrl.pref =pref;
+otpCtrl.update();
       return Scaffold(
         backgroundColor: appCtrl.appTheme.whiteColor,
         body: LoadingComponent(

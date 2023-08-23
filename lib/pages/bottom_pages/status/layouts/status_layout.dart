@@ -1,4 +1,5 @@
 import 'dart:developer' as log;
+import 'dart:ui';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:video_player/video_player.dart';
@@ -26,7 +27,7 @@ class _StatusLayoutState extends State<StatusLayout> {
 
     Status status = Status.fromJson((widget.snapshot!.data!).docs[0].data());
     List<PhotoUrl> photoUrl = status.photoUrl!;
-    if(photoUrl.isNotEmpty) {
+    if (photoUrl.isNotEmpty) {
       if (photoUrl.isNotEmpty) {
         if ((widget.snapshot!.data!).docs[0]["photoUrl"][
         (widget.snapshot!.data!).docs[0]["photoUrl"].length == 0
@@ -80,96 +81,186 @@ class _StatusLayoutState extends State<StatusLayout> {
           style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.txtColor)),
       leading: DottedBorder(
         color: appCtrl.appTheme.primary,
-        padding: const EdgeInsets.all(Insets.i2),
+
         borderType: BorderType.RRect,
-        strokeCap: StrokeCap.round,
+
         radius: const SmoothRadius(
           cornerRadius: 15,
           cornerSmoothing: 1,
         ),
+
         dashPattern: status!.photoUrl!.length == 1
             ? [
-                //one status
-                (2 * pi * (radius + 2)),
-                0,
-              ]
+          //one status
+          (2 * pi * (radius + 2)),
+          0,
+        ]
             : [
-                //multiple status
-                colorWidth(radius + 2, status!.photoUrl!.length,
-                    separation(status!.photoUrl!.length)),
-                separation(status!.photoUrl!.length),
-              ],
+          //multiple status
+          colorWidth(radius + 2, status!.photoUrl!.length,
+              separation(status!.photoUrl!.length)),
+          separation(status!.photoUrl!.length),
+        ],
         strokeWidth: 1,
         child: Stack(
           alignment: Alignment.bottomRight,
           children: [
             (widget.snapshot!.data!).docs[0]["photoUrl"]
-                            [(widget.snapshot!.data!).docs[0]["photoUrl"].length - 1]
-                        ["statusType"] ==
-                    StatusType.text.name
+            [(widget.snapshot!.data!).docs[0]["photoUrl"].length - 1]
+            ["statusType"] ==
+                StatusType.text.name
                 ? Container(
+              padding: const EdgeInsets.symmetric(horizontal: Insets.i4),
+              height: Sizes.s50,
+              width: Sizes.s50,
+              alignment: Alignment.center,
+              decoration: ShapeDecoration(
+                  color: Color(int.parse(
+                      (widget.snapshot!.data!).docs[0]["photoUrl"][
+                      (widget.snapshot!.data!)
+                          .docs[0]["photoUrl"]
+                          .length -
+                          1]['statusBgColor'],
+                      radix: 16)),
+                  shape: SmoothRectangleBorder(
+                    borderRadius: SmoothBorderRadius(
+                        cornerRadius: 12, cornerSmoothing: 1),
+                  )),
+              child: Text(
+                (widget.snapshot!.data!).docs[0]["photoUrl"][
+                (widget.snapshot!.data!).docs[0]["photoUrl"].length -
+                    1]["statusText"],
+                textAlign: TextAlign.center,
+                style: AppCss.poppinsMedium8
+                    .textColor(appCtrl.appTheme.whiteColor),
+              ),
+            )
+                : (widget.snapshot!.data!).docs[0]["photoUrl"]
+            [(widget.snapshot!.data!).docs[0]["photoUrl"].length - 1]
+            ["statusType"] ==
+                StatusType.image.name
+                ? /*CommonImage(
+                height: Sizes.s50,
+                width: Sizes.s50,
+                image: (widget.snapshot!.data!)
+                    .docs[0]["photoUrl"]
+                [(widget.snapshot!.data!).docs[0]["photoUrl"].length - 1]
+                ["image"]
+                    .toString(),
+                name: (widget.snapshot!.data!).docs[0]["username"])*/
+            CachedNetworkImage(
+                imageUrl: (widget.snapshot!.data!)
+                    .docs[0]["photoUrl"]
+                [(widget.snapshot!.data!).docs[0]["photoUrl"].length - 1]
+                ["image"]
+                    .toString(),
+                imageBuilder: (context, imageProvider) =>
+                    Container(
+                        height: Sizes.s50,
+                        width: Sizes.s50,
+                        alignment: Alignment.center,
+
+                      /*  decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                                fit: BoxFit.cover, image: NetworkImage((widget
+                                .snapshot!.data!)
+                                .docs[0]["photoUrl"]
+                            [(widget.snapshot!.data!).docs[0]["photoUrl"]
+                                .length - 1]
+                            ["image"]
+                                .toString()))
+                        )*/
+                      decoration: ShapeDecoration(
+                          color: const Color(0xff3282B8),
+                          image: DecorationImage(
+                              fit: BoxFit.cover, image: NetworkImage((widget
+                              .snapshot!.data!)
+                              .docs[0]["photoUrl"]
+                          [(widget.snapshot!.data!).docs[0]["photoUrl"]
+                              .length - 1]
+                          ["image"]
+                              .toString())),
+                          shape: SmoothRectangleBorder(
+                            borderRadius:
+                            SmoothBorderRadius(cornerRadius: 12, cornerSmoothing: 1),
+
+                          )),
+                    ),
+                placeholder: (context, url) =>
+                    Container(
+                      height: Sizes.s50,
+                      width: Sizes.s50,
+                      alignment: Alignment.center,
+                      decoration: ShapeDecoration(
+                          color: const Color(0xff3282B8),
+                          shape: SmoothRectangleBorder(
+                            borderRadius:
+                            SmoothBorderRadius(cornerRadius: 12, cornerSmoothing: 1),
+                          )),
+                      child: Text(
+                          (widget.snapshot!.data!).docs[0]["username"] != null
+                              ? (widget.snapshot!.data!).docs[0]["username"]
+                              .length > 2
+                              ? (widget.snapshot!.data!).docs[0]["username"]
+                              .replaceAll(" ", "")
+                              .substring(0, 2)
+                              .toUpperCase()
+                              : (widget.snapshot!.data!)
+                              .docs[0]["username"][0]
+                              : "C",
+                          style: AppCss.poppinsblack16
+                              .textColor(appCtrl.appTheme.white)),
+                    ),
+                errorWidget: (context, url, error) =>
+                    Container(
+                      height: Sizes.s50,
+                      width: Sizes.s50,
+                      alignment: Alignment.center,
+                      decoration: ShapeDecoration(
+                          color: const Color(0xff3282B8),
+                          shape: SmoothRectangleBorder(
+                            borderRadius:
+                            SmoothBorderRadius(cornerRadius: 12, cornerSmoothing: 1),
+                          )),
+                      child: Text(
+                        (widget.snapshot!.data!).docs[0]["username"].length >
+                            2
+                            ? (widget.snapshot!.data!).docs[0]["username"]
+                            .replaceAll(" ", "")
+                            .substring(0, 2)
+                            .toUpperCase()
+                            : (widget.snapshot!.data!).docs[0]["username"][0],
+                        style:
+                        AppCss.poppinsBold12.textColor(
+                            appCtrl.appTheme.white),
+                      ),
+                    ))
+                : ClipRRect(
+                borderRadius:
+                SmoothBorderRadius(cornerRadius: 12, cornerSmoothing: 1),
+                child: videoController!.value.isInitialized
+                    ? AspectRatio(
+                  aspectRatio: videoController!.value.aspectRatio,
+                  // Use the VideoPlayer widget to display the video.
+                  child: VideoPlayer(videoController!),
+                ).height(Sizes.s50).width(Sizes.s50)
+                    : Container(
                     padding: const EdgeInsets.symmetric(horizontal: Insets.i4),
                     height: Sizes.s50,
                     width: Sizes.s50,
                     alignment: Alignment.center,
                     decoration: ShapeDecoration(
-                        color: Color(int.parse(
-                            (widget.snapshot!.data!).docs[0]["photoUrl"][
-                                (widget.snapshot!.data!)
-                                        .docs[0]["photoUrl"]
-                                        .length -
-                                    1]['statusBgColor'],
-                            radix: 16)),
+                        color: appCtrl.appTheme.primary,
                         shape: SmoothRectangleBorder(
                           borderRadius: SmoothBorderRadius(
                               cornerRadius: 12, cornerSmoothing: 1),
                         )),
-                    child: Text(
-                      (widget.snapshot!.data!).docs[0]["photoUrl"][
-                          (widget.snapshot!.data!).docs[0]["photoUrl"].length -
-                              1]["statusText"],
-                      textAlign: TextAlign.center,
-                      style: AppCss.poppinsMedium8
-                          .textColor(appCtrl.appTheme.whiteColor),
-                    ),
-                  )
-                : (widget.snapshot!.data!).docs[0]["photoUrl"]
-                                [(widget.snapshot!.data!).docs[0]["photoUrl"].length - 1]
-                            ["statusType"] ==
-                        StatusType.image.name
-                    ? CommonImage(
-                        height: Sizes.s50,
-                        width: Sizes.s50,
-                        image: (widget.snapshot!.data!)
-                            .docs[0]["photoUrl"]
-                                [(widget.snapshot!.data!).docs[0]["photoUrl"].length - 1]
-                                ["image"]
-                            .toString(),
-                        name: (widget.snapshot!.data!).docs[0]["username"])
-                    : ClipRRect(
-                        borderRadius:
-                            SmoothBorderRadius(cornerRadius: 12, cornerSmoothing: 1),
-                        child: videoController!.value.isInitialized
-                            ? AspectRatio(
-                                aspectRatio: videoController!.value.aspectRatio,
-                                // Use the VideoPlayer widget to display the video.
-                                child: VideoPlayer(videoController!),
-                              ).height(Sizes.s50).width(Sizes.s50)
-                            : Container(
-                                padding: const EdgeInsets.symmetric(horizontal: Insets.i4),
-                                height: Sizes.s50,
-                                width: Sizes.s50,
-                                alignment: Alignment.center,
-                                decoration: ShapeDecoration(
-                                    color: appCtrl.appTheme.primary,
-                                    shape: SmoothRectangleBorder(
-                                      borderRadius: SmoothBorderRadius(
-                                          cornerRadius: 12, cornerSmoothing: 1),
-                                    )),
-                                child: const Text("C"))),
+                    child: const Text("C"))),
           ],
         ),
       ),
+
     );
   }
 }

@@ -17,6 +17,7 @@ class CommonAssetImage extends StatelessWidget {
         child: Image.asset(imageAssets.user,
             height: height,
             width: width,
+
             color: appCtrl.appTheme.whiteColor)
             .paddingAll(Insets.i15));
   }

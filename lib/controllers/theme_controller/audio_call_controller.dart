@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:audioplayers/audioplayers.dart' as audio_players;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_theme/common/language/en.dart';
@@ -14,7 +13,7 @@ class AudioCallController extends GetxController {
   Call? call;
   bool localUserJoined = false;
   bool isSpeaker = true, switchCamera = false;
-  late RtcEngine engine;
+  //late RtcEngine engine;
   final _infoStrings = <String>[];
   Stream<int>? timerStream;
   int? remoteUId;
@@ -24,7 +23,7 @@ class AudioCallController extends GetxController {
   bool muted = false;
   final _users = <int>[];
   bool isAlreadyEnded = false;
-  ClientRoleType? role;
+  //ClientRoleType? role;
   dynamic userData;
   Stream<DocumentSnapshot>? stream;
   audio_players.AudioPlayer? player;
@@ -83,9 +82,9 @@ class AudioCallController extends GetxController {
   }
 
   Future<void> _dispose() async {
-    await engine.leaveChannel();
+    /*await engine.leaveChannel();
     await engine.release();
-
+*/
   }
 
   @override
@@ -94,7 +93,7 @@ class AudioCallController extends GetxController {
     var data = Get.arguments;
     channelName = data["channelName"];
     call = data["call"];
-    role = data["role"];
+  //  role = data["role"];
     userData = appCtrl.storage.read(session.user);
     update();
 
@@ -136,7 +135,7 @@ class AudioCallController extends GetxController {
   Future<void> initAgora() async {
     dynamic agoraToken = appCtrl.storage.read(session.agoraToken);
 
-    engine = createAgoraRtcEngine();
+    /*engine = createAgoraRtcEngine();
     await engine.initialize(RtcEngineContext(
       appId: agoraToken["agoraAppId"],
       channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
@@ -324,7 +323,7 @@ update();
         },
       ),
     );
-
+*/
 
   }
 
@@ -332,7 +331,7 @@ update();
   void onToggleSpeaker() {
     isSpeaker = !isSpeaker;
     update();
-    engine.setEnableSpeakerphone(isSpeaker);
+   // engine.setEnableSpeakerphone(isSpeaker);
   }
 
 
@@ -341,7 +340,7 @@ update();
     muted = !muted;
     update();
 
-    engine.muteLocalAudioStream(muted);
+   // engine.muteLocalAudioStream(muted);
     FirebaseFirestore.instance
         .collection(collectionName.calls)
         .doc(userData["id"])
@@ -356,7 +355,7 @@ update();
     bool isShowSpeaker,
     String? status,
   ) {
-    if (role == ClientRoleType.clientRoleAudience) return Container();
+   // if (role == ClientRoleType.clientRoleAudience) return Container();
     return AudioToolBar(
       status: status,
       isShowSpeaker: isShowSpeaker,

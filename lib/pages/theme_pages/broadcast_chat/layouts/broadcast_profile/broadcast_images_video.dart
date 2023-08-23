@@ -13,7 +13,8 @@ class BroadcastImagesVideos extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return StreamBuilder(
-      stream: FirebaseFirestore.instance
+      stream: FirebaseFirestore.instance .collection(collectionName.users)
+          .doc(appCtrl.user["id"])
           .collection(collectionName.broadcastMessage)
           .doc(chatId)
           .collection(collectionName.chat)

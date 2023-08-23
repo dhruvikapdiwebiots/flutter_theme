@@ -1,10 +1,12 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:flutter_theme/models/data_model.dart';
 import 'package:flutter_theme/models/firebase_contact_model.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_theme/models/user_setting_model.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../config.dart';
 import '../../models/usage_control_model.dart';
@@ -19,6 +21,14 @@ class AppController extends GetxController {
   List<FirebaseContactModel> unRegisterContact =[];
   AppTheme get appTheme => _appTheme;
   int selectedIndex = 0;
+SharedPreferences? pref;
+
+
+  Map<String?, String?> cachedContacts = {};
+  Map<String?, String?>? allContacts =  <String, String>{};
+  List<JoinedUserModel> availableContact = [];
+
+
   bool isTheme = false,isTyping =false,contactPermission = false;
   bool isBiometric = false;
   bool isRTL = false,isLoading =false;
@@ -36,6 +46,8 @@ class AppController extends GetxController {
   );
   UsageControlModel? usageControlsVal;
   var deviceData = <String, dynamic>{};
+
+  DataModel? cachedModel;
 
 //list of bottommost page
   List<Widget> widgetOptions = <Widget>[];
@@ -57,6 +69,17 @@ class AppController extends GetxController {
 
     super.onReady();
   }
+
+
+  DataModel? getModel() {
+
+    cachedModel ??= DataModel(appCtrl.user["phone"]);
+
+    debugPrint("NEW DATA ${cachedModel!.userData}");
+
+    return cachedModel;
+  }
+
 
   //get data from storage
   getData() async {
@@ -149,4 +172,31 @@ language() async {
     },
     transitionDuration: const Duration(milliseconds: 300),
   );
+}
+
+
+class JoinedUserModel {
+  final String phone;
+  final String? name,id;
+
+  JoinedUserModel({
+    required this.phone,
+    this.name,
+    this.id,
+  });
+
+  factory JoinedUserModel.fromJson(Map<String, dynamic> jsonData) {
+    return JoinedUserModel(
+      phone: jsonData['phone'],
+      name: jsonData['name'],
+      id: jsonData['id'],
+    );
+  }
+
+  static Map<String, dynamic> toMap(JoinedUserModel contact) => {
+    'phone': contact.phone,
+    'name': contact.name,
+    'id': contact.id,
+  };
+
 }

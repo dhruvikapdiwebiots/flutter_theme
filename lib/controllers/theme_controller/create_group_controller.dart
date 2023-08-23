@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_theme/config.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
+import 'package:flutter_theme/controllers/fetch_contact_controller.dart';
 
 class CreateGroupController extends GetxController {
   List<Contact>? contacts;
@@ -125,8 +126,8 @@ class CreateGroupController extends GetxController {
             return const CreateGroup();
           });
     } else {
-     /* isLoading = true;
-      update();*/
+      isLoading = true;
+      update();
       String broadcastId = DateTime.now().millisecondsSinceEpoch.toString();
       final dateTime = DateTime.now().millisecondsSinceEpoch.toString();
       final key = encrypt.Key.fromUtf8('my 32 length key................');
@@ -142,7 +143,9 @@ class CreateGroupController extends GetxController {
       await checkChatAvailable();
       await Future.delayed(Durations.s6);
       log("newContact SS: ${newContact.length}");
-      await FirebaseFirestore.instance
+      isLoading = false;
+      update();
+          await FirebaseFirestore.instance
           .collection(collectionName.broadcast)
           .doc(broadcastId)
           .set({
@@ -244,13 +247,11 @@ class CreateGroupController extends GetxController {
   //check chat available with contacts
   Future<List> checkChatAvailable() async {
     newContact = [];
-    int count=0;
-    int dddd=0;
+    int count = 0;
+    int dddd = 0;
     final user = appCtrl.storage.read(session.user);
-    log("selectedContact : ${selectedContact.length}");
     selectedContact.asMap().entries.forEach((e) async {
-      log("e.value : ${e.value["chatId"]}");
-      count ++;
+      count++;
       await FirebaseFirestore.instance
           .collection(collectionName.users)
           .doc(user["id"])
@@ -261,7 +262,6 @@ class CreateGroupController extends GetxController {
         if (value.docs.isNotEmpty) {
           dddd++;
           value.docs.asMap().entries.forEach((element) {
-            log("element.value : ${element.value.data()}");
             if (element.value.data()["senderId"] == user["id"] &&
                     element.value.data()["receiverId"] == e.value["id"] ||
                 element.value.data()["senderId"] == e.value["id"] &&
@@ -271,7 +271,11 @@ class CreateGroupController extends GetxController {
               if (!newContact.contains(e.value)) {
                 newContact.add(e.value);
               }
-
+            } else {
+              e.value["chatId"] = null;
+              if (!newContact.contains(e.value)) {
+                newContact.add(e.value);
+              }
             }
 
             update();
@@ -291,12 +295,12 @@ class CreateGroupController extends GetxController {
   }
 
   //select user function
-  selectUserTap(value) {
+  selectUserTap(DeviceContactIdAndName value) {
     var data = {
-      "id": value["id"],
-      "name": value["name"],
-      "phone": value["phone"],
-      "image": value["image"]
+      "id": value.id,
+      "name": value.name,
+      "phone": value.phone,
+      "image": value.image
     };
     bool exists = selectedContact.any((file) => file["phone"] == data["phone"]);
     log("exists : $exists");

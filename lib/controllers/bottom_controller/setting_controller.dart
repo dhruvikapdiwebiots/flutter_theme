@@ -92,7 +92,7 @@ class SettingController extends GetxController {
       await appCtrl.storage.remove(session.languageCode);
       await appCtrl.storage.remove(session.languageCode);
       await appCtrl.storage.erase();
-      Get.offAllNamed(routeName.phone);
+      Get.offAllNamed(routeName.phone,arguments: appCtrl.pref);
     }
   }
 
@@ -138,7 +138,8 @@ class SettingController extends GetxController {
                     borderRadius: BorderRadius.circular(AppRadius.r25)),
           ).inkWell(onTap: () async {
             var user = appCtrl.storage.read(session.user);
-            Get.offAllNamed(routeName.phone);
+            Get.offAllNamed(routeName.phone,arguments: appCtrl.pref);
+            Get.offAllNamed(routeName.phone,arguments: appCtrl.pref);
             await FirebaseFirestore.instance
                 .collection(collectionName.users)
                 .doc(user["id"])

@@ -19,11 +19,13 @@ class GroupProfileBody extends StatelessWidget {
             if (snapshot.hasData) {
               if (snapshot.data!.exists) {
                 chatCtrl.allData = snapshot.data!.data();
-                chatCtrl.userList = chatCtrl.allData != null
-                    ? chatCtrl.allData["users"].length < 5
-                        ? chatCtrl.allData["users"]
-                        : chatCtrl.allData["users"].getRange(0, 5)
-                    : [];
+                if (chatCtrl.allData != null) {
+                  List user = chatCtrl.allData["users"];
+                  log("UUUU : ${user.length}");
+                  chatCtrl.userList = user.length <= 5
+                      ? user
+                      : chatCtrl.allData["users"].getRange(0, 5);
+                }
                 chatCtrl.isThere = chatCtrl.userList.any(
                     (element) => element["id"].contains(chatCtrl.user["id"]));
                 log("userList : ${chatCtrl.allData}");
@@ -398,7 +400,8 @@ class GroupProfileBody extends StatelessWidget {
                           name: fonts.reportGroup.tr,
                           onTap: () async {
                             accessDenied(
-                                "Are you sure you want to report ${chatCtrl.pName} group?. Once you report this group you will be remove from this group without notify anyone",onTap: ()async{
+                                "Are you sure you want to report ${chatCtrl.pName} group?. Once you report this group you will be remove from this group without notify anyone",
+                                onTap: () async {
                               await FirebaseFirestore.instance
                                   .collection(collectionName.groups)
                                   .doc(chatCtrl.pId)
@@ -407,30 +410,31 @@ class GroupProfileBody extends StatelessWidget {
                                 if (value.exists) {
                                   List users = value.data()!["users"];
                                   users.removeWhere((element) =>
-                                  element["id"] == chatCtrl.user["id"]);
+                                      element["id"] == chatCtrl.user["id"]);
                                   FirebaseFirestore.instance
                                       .collection(collectionName.groups)
                                       .doc(chatCtrl.pId)
                                       .update({"users": users}).then(
                                           (value) async {
-                                        await FirebaseFirestore.instance
+                                    await FirebaseFirestore.instance
+                                        .collection(collectionName.users)
+                                        .doc(chatCtrl.user["id"])
+                                        .collection(collectionName.chats)
+                                        .where("groupId",
+                                            isEqualTo: chatCtrl.pId)
+                                        .limit(1)
+                                        .get()
+                                        .then((userChat) {
+                                      if (userChat.docs.isNotEmpty) {
+                                        FirebaseFirestore.instance
                                             .collection(collectionName.users)
                                             .doc(chatCtrl.user["id"])
                                             .collection(collectionName.chats)
-                                            .where("groupId", isEqualTo: chatCtrl.pId)
-                                            .limit(1)
-                                            .get()
-                                            .then((userChat) {
-                                          if (userChat.docs.isNotEmpty) {
-                                            FirebaseFirestore.instance
-                                                .collection(collectionName.users)
-                                                .doc(chatCtrl.user["id"])
-                                                .collection(collectionName.chats)
-                                                .doc(userChat.docs[0].id)
-                                                .delete();
-                                          }
-                                        });
-                                      });
+                                            .doc(userChat.docs[0].id)
+                                            .delete();
+                                      }
+                                    });
+                                  });
                                 }
                               });
                               await FirebaseFirestore.instance
@@ -439,7 +443,8 @@ class GroupProfileBody extends StatelessWidget {
                                 "reportFrom": chatCtrl.user["id"],
                                 "reportTo": chatCtrl.pId,
                                 "isSingleChat": false,
-                                "timestamp": DateTime.now().millisecondsSinceEpoch
+                                "timestamp":
+                                    DateTime.now().millisecondsSinceEpoch
                               }).then((value) {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(SnackBar(

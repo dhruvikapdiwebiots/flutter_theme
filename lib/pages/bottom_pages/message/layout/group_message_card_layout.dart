@@ -7,16 +7,14 @@ import '../../../../config.dart';
 class GroupMessageCardLayout extends StatelessWidget {
   final DocumentSnapshot? document;
   final String? currentUserId;
-  final AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>? userSnapShot,
-      snapshot;
+  final dynamic data;
 
-  const GroupMessageCardLayout(
-      {Key? key,
-      this.document,
-      this.currentUserId,
-      this.userSnapShot,
-      this.snapshot})
-      : super(key: key);
+  const GroupMessageCardLayout({
+    Key? key,
+    this.document,
+    this.currentUserId,
+    this.data,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,25 +23,32 @@ class GroupMessageCardLayout extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(children: [
-            CommonImage(
-                image: snapshot!.data!.exists ? (snapshot!.data!)["image"] :"",
-                name: snapshot!.data!.exists ?  (snapshot!.data!)["name"] :"C"),
+            StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection(collectionName.groups)
+                    .doc(document!["groupId"])
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  return CommonImage(
+                    image: snapshot.hasData? snapshot.data!.exists ? (snapshot.data!)["image"] :"" :"",
+                    name: document!["name"]);
+                }
+              ),
             const HSpace(Sizes.s12),
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(snapshot!.data!.exists ? snapshot!.data!["name"]:"",
+              Text(document!["name"] ?? "GROUP",
                   style: AppCss.poppinsblack14
                       .textColor(appCtrl.appTheme.blackColor)),
               const VSpace(Sizes.s5),
-              document!["lastMessage"] != ""
-                  ? GroupCardSubTitle(
-                      currentUserId: currentUserId,
-                      name: userSnapShot!.data!["name"],
-                      document: document,
-                      hasData: userSnapShot!.hasData)
-                  : Container(height: Sizes.s15)
+              GroupCardSubTitle(
+                  currentUserId: currentUserId,
+                  name: document!["name"],
+                  data: data,
+                  document: document,
+                  hasData: true)
             ])
           ]),
-          StreamBuilder(
+            StreamBuilder(
               stream:  FirebaseFirestore.instance.collection(collectionName.users).doc(appCtrl.user["id"])
                   .collection(collectionName.groupMessage)
                   .doc(document!["groupId"])
@@ -57,9 +62,7 @@ class GroupMessageCardLayout extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                          DateFormat('HH:mm a').format(
-                              DateTime.fromMillisecondsSinceEpoch(
-                                  int.parse(document!['updateStamp']))),
+                          data["time"],
                           style: AppCss.poppinsMedium12
                               .textColor(currentUserId == document!["senderId"]
                                   ? appCtrl.appTheme.txtColor

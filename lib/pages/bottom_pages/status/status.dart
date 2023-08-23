@@ -43,11 +43,11 @@ class _StatusListState extends State<StatusList>
               floatingActionButton: const StatusFloatingButton(),
               body: SafeArea(
                   child: Stack(children: [
-                AdCommonLayout(
+                /*AdCommonLayout(
                     bannerAdIsLoaded: statusCtrl.bannerAdIsLoaded,
                     bannerAd: statusCtrl.bannerAd,
                     currentAd: statusCtrl.currentAd),
-
+*/
                  const   StatusListBodyLayout()
               ]))));
     });

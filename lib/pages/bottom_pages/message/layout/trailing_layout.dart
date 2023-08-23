@@ -7,9 +7,9 @@ import '../../../../config.dart';
 class TrailingLayout extends StatelessWidget {
   final DocumentSnapshot? document;
   final String? currentUserId, unSeenMessage;
-
+final dynamic data;
   const TrailingLayout(
-      {Key? key, this.document, this.currentUserId, this.unSeenMessage})
+      {Key? key, this.document, this.currentUserId, this.unSeenMessage,this.data})
       : super(key: key);
 
   @override
@@ -19,7 +19,6 @@ class TrailingLayout extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-
 
               StreamBuilder(
                   stream: FirebaseFirestore.instance.collection(collectionName.users).doc(appCtrl.user["id"])
@@ -35,12 +34,10 @@ class TrailingLayout extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                              DateFormat('HH:mm a').format(
-                                  DateTime.fromMillisecondsSinceEpoch(
-                                      int.parse(document!['updateStamp']))),
-                              style: AppCss.poppinsMedium12.textColor(currentUserId == document!["senderId"] ? appCtrl.appTheme.txtColor: number == 0? appCtrl.appTheme.txtColor : appCtrl.appTheme.primary)),
-                          if(appCtrl.user["id"] != document!["senderId"])
-                          number == 0
+                          data["time"],
+                              style: AppCss.poppinsMedium12.textColor(document!["senderId"] == currentUserId ? appCtrl.appTheme.txtColor: number == 0? appCtrl.appTheme.txtColor : appCtrl.appTheme.primary)),
+                          if(document!["senderId"] != currentUserId)
+                            number == 0
                               ? Container()
                               : Container(
                                   height: Sizes.s20,

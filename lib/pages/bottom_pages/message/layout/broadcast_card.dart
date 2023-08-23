@@ -49,7 +49,7 @@ class BroadCastMessageCard extends StatelessWidget {
                           int.parse(document!['updateStamp']))),
                   style: AppCss.poppinsMedium12
                       .textColor(appCtrl.appTheme.txtColor))
-              .paddingOnly(top: Insets.i8)
+
         ])
         .paddingSymmetric(vertical: Insets.i10)
         .paddingSymmetric(horizontal: Insets.i15, vertical: Insets.i5)

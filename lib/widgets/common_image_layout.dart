@@ -29,10 +29,10 @@ class CommonImage extends StatelessWidget {
                       color: appCtrl.appTheme.contactBgGray,
                       shape: SmoothRectangleBorder(
                         borderRadius: SmoothBorderRadius(
-                            cornerRadius: 12, cornerSmoothing: 1),
+                            cornerRadius: 12, cornerSmoothing: 1)
                       ),
                       image: DecorationImage(
-                          fit: BoxFit.fill, image: NetworkImage('$image'))),
+                          fit: BoxFit.cover, image:imageProvider)),
                 ).inkWell(onTap: (){
                   Get.to(CommonPhotoView(image: image));
             }),

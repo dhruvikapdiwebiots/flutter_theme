@@ -1,39 +1,42 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_theme/config.dart';
+import 'package:flutter_theme/controllers/fetch_contact_controller.dart';
 import 'package:flutter_theme/models/firebase_contact_model.dart';
 import 'package:flutter_theme/models/usage_control_model.dart';
 import 'package:flutter_theme/models/user_setting_model.dart';
 import 'package:flutter_theme/utilities/helper.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OtpController extends GetxController {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final focusNode = FocusNode();
-  Duration myDuration = Duration(seconds: 60);
+  Duration myDuration = const Duration(seconds: 60);
   TextEditingController otp = TextEditingController();
   double val = 0;
   bool isCodeSent = false, isCountDown = true;
   String? verificationCode, mobileNumber, dialCodeVal;
   bool isValid = false;
+  SharedPreferences? pref;
   Timer? countdownTimer;
 
   @override
   void onReady() {
     // TODO: implement onReady
-    mobileNumber = Get.arguments;
 
-    update();
     super.onReady();
   }
 
   void startTimer() {
     countdownTimer =
-        Timer.periodic(Duration(seconds: 1), (_) => setCountDown());
+        Timer.periodic(const Duration(seconds: 1), (_) => setCountDown());
   }
 
   void setCountDown() {
-    final reduceSecondsBy = 1;
+    const reduceSecondsBy = 1;
     final seconds = myDuration.inSeconds - reduceSecondsBy;
     if (seconds < 0) {
       isCountDown = false;
@@ -52,198 +55,34 @@ class OtpController extends GetxController {
 
   //navigate to dashboard
   homeNavigation(user) async {
-
-    appCtrl.storage.write(session.id, user["id"]);
-    await appCtrl.storage.write(session.user, user);
-    appCtrl.user = user;
+    final FetchContactController availableContacts =
+    Provider.of<FetchContactController>(Get.context!,
+        listen: false);
+    log("INIT PAGE");
+    availableContacts.fetchContacts(
+        Get.context!, appCtrl.user["phone"], pref!, false);
+    helper.showLoading();
+    update();
+    appCtrl.pref = pref;
     appCtrl.update();
+
+
     await appCtrl.storage.write(session.isIntro, true);
     Get.forceAppUpdate();
-helper.hideLoading();
+
     final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
     firebaseMessaging.getToken().then((token) async {
       await FirebaseFirestore.instance
           .collection(collectionName.users)
           .doc(user["id"])
           .update({'status': "Online", "pushToken": token, "isActive": true});
+      await Future.delayed(Durations.s6);
+      helper.hideLoading();
+      update();
 
-      Get.toNamed(routeName.dashboard);
-      await checkPermission();
+      Get.toNamed(routeName.dashboard,arguments:  pref);
+
     });
-  }
-
-  checkPermission() async {
-    final permissionHandelCtrl = Get.isRegistered<PermissionHandlerController>()
-        ? Get.find<PermissionHandlerController>()
-        : Get.put(PermissionHandlerController());
-    bool permissionStatus =
-    await permissionHandelCtrl.permissionGranted();
-    debugPrint("permissionStatus 1: $permissionStatus");
-    if (permissionStatus == true) {
-      appCtrl.contactList = await getAllContacts();
-
-      appCtrl.storage.write(session.contactList, appCtrl.contactList);
-      appCtrl.update();
-      debugPrint("PERR : ${appCtrl.contactList.length}");
-      await checkContactList();
-
-      if (appCtrl.contactList.isNotEmpty) {
-        await addContactInFirebase();
-        final contactCtrl = Get.isRegistered<ContactListController>()
-            ? Get.find<ContactListController>()
-            : Get.put(ContactListController());
-        contactCtrl.getAllData();
-        contactCtrl.getAllUnRegisterUser();
-        contactCtrl.onReady();
-
-        contactCtrl.update();
-        Get.forceAppUpdate();
-      }
-    }
-  }
-
-  checkContactList() async {
-    appCtrl.userContactList = [];
-    appCtrl.firebaseContact = [];
-    appCtrl.update();
-
-    debugPrint("appCtrl.user : ${appCtrl.user}");
-    await FirebaseFirestore.instance
-        .collection(collectionName.users)
-        .get()
-        .then((value) async {
-      if (appCtrl.contactList.isNotEmpty) {
-        value.docs.asMap().entries.forEach((users) {
-          if (users.value["phone"] != appCtrl.user["phone"]) {
-            appCtrl.contactList.asMap().entries.forEach((element) {
-              if (element.value.phones.isNotEmpty) {
-                if (users.value.data()["phone"] ==
-                    phoneNumberExtension(
-                        element.value.phones[0].number.toString())) {
-                  appCtrl.userContactList.add(element.value);
-                }
-              }
-            });
-          }
-          appCtrl.update();
-        });
-      }
-    });
-    debugPrint("appCtrl.userContactList : ${appCtrl.userContactList}");
-    update();
-  }
-
-  addContactInFirebase() async {
-    if (appCtrl.contactList.isNotEmpty) {
-      List<Map<String, dynamic>> contactsData = [];
-      List<Map<String, dynamic>> unRegisterContactData = [];
-
-      appCtrl.contactList.asMap().entries.forEach((contact) async {
-        bool isRegister = false;
-        String id = "";
-        await FirebaseFirestore.instance
-            .collection(collectionName.users)
-            .where("phone",
-            isEqualTo: phoneNumberExtension(
-                contact.value.phones[0].number.toString()))
-            .get()
-            .then((value) {
-          if (value.docs.isEmpty) {
-            isRegister = false;
-          } else {
-            isRegister = true;
-            id = value.docs[0].id;
-          }
-        });
-        update();
-        if (isRegister) {
-          var objData = {
-            'name': contact.value.displayName,
-            'phone': contact.value.phones.isNotEmpty
-                ? phoneNumberExtension(
-                contact.value.phones[0].number.toString())
-                : null,
-            "isRegister": true,
-            "image": contact.value.photo,
-            "id": id
-            // Include other necessary contact.value details
-          };
-          if (!contactsData.contains(objData)) {
-            contactsData.add(objData);
-          }
-        } else {
-          var objData = {
-            'name': contact.value.displayName,
-            'phone': contact.value.phones.isNotEmpty
-                ? phoneNumberExtension(
-                contact.value.phones[0].number.toString())
-                : null,
-            "isRegister": false,
-            "image": contact.value.photo,
-            "id": "0"
-            // Include other necessary contact.value details
-          };
-          if (!unRegisterContactData.contains(objData)) {
-            unRegisterContactData.add(objData);
-          }
-        }
-      });
-
-      await FirebaseFirestore.instance
-          .collection(collectionName.users)
-          .doc(appCtrl.user["id"])
-          .collection(collectionName.registerUser)
-          .get()
-          .then((value) async {
-        if (value.docs.isEmpty) {
-
-          await FirebaseFirestore.instance
-              .collection(collectionName.users)
-              .doc(appCtrl.user["id"])
-              .collection(collectionName.registerUser)
-              .add({"contact": contactsData});
-        } else {
-          log("ALREADY COLLECTION");
-        }
-      });
-
-      await FirebaseFirestore.instance
-          .collection(collectionName.users)
-          .doc(appCtrl.user["id"])
-          .collection(collectionName.unRegisterUser)
-          .get()
-          .then((value) async {
-        if (value.docs.isEmpty) {
-
-          await FirebaseFirestore.instance
-              .collection(collectionName.users)
-              .doc(appCtrl.user["id"])
-              .collection(collectionName.unRegisterUser)
-              .add({"contact": unRegisterContactData});
-        } else {
-          log("ALREADY COLLECTION");
-        }
-      }).then((value) => checkContactList());
-
-    }
-
-    if (appCtrl.firebaseContact.isEmpty) {
-      await FirebaseFirestore.instance
-          .collection(collectionName.users)
-          .doc(appCtrl.user["id"])
-          .collection(collectionName.registerUser)
-          .get()
-          .then((value) {
-        List allUserList = value.docs[0].data()["contact"];
-        allUserList.asMap().entries.forEach((element) {
-          if (!appCtrl.firebaseContact.contains(element.value)) {
-            appCtrl.firebaseContact
-                .add(FirebaseContactModel.fromJson(element.value));
-          }
-        });
-      });
-      appCtrl.update();
-    }
   }
 
 
@@ -328,10 +167,16 @@ helper.hideLoading();
               if (value.docs[0].data()["name"] == "") {
                 Get.toNamed(routeName.editProfile, arguments: {
                   "resultData": value.docs[0].data(),
-                  "isPhoneLogin": true
+                  "isPhoneLogin": true,
+                  "pref":pref
                 });
               } else {
                 await appCtrl.storage.write(session.user, value.docs[0].data());
+
+                appCtrl.storage.write(session.id, value.docs[0].data()["id"]);
+                appCtrl.user = value.docs[0].data();
+                appCtrl.update();
+
                 homeNavigation(value.docs[0].data());
               }
             } else {
@@ -341,18 +186,21 @@ helper.hideLoading();
               if (resultData["name"] == "") {
                 Get.toNamed(routeName.editProfile, arguments: {
                   "resultData": resultData,
-                  "isPhoneLogin": true
+                  "isPhoneLogin": true,
+                  "pref":pref
                 });
                 await appCtrl.storage.write(session.user, value.docs[0].data());
               } else {
                 await appCtrl.storage.write(session.user, resultData);
+                await appCtrl.storage.write(session.user, resultData);
+
+                appCtrl.storage.write(session.id, resultData["id"]);
+                appCtrl.user = resultData;
+                appCtrl.update();
                 homeNavigation(resultData);
               }
             }
-            helper.hideLoading();
             update();
-          }).catchError((err) {
-            log("get : $err");
           });
         } on FirebaseAuthException catch (e) {
           helper.hideLoading();

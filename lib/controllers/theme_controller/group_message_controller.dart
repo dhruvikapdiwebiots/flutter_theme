@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:developer' as log;
 import 'dart:io';
 import 'dart:math';
-import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:dartx/dartx_io.dart';
 import 'package:drishya_picker/drishya_picker.dart';
 import 'package:flutter_theme/config.dart';
@@ -37,10 +36,10 @@ class GroupChatMessageController extends GetxController {
   int pageSize = 20;
   String? wallPaperType;
   XFile? imageFile, videoFile;
-  List userList = [],
-      searchUserList = [],
-      selectedIndexId = [],
-      searchChatId = [];
+  List userList = [];
+  List searchUserList = [];
+  List selectedIndexId = [];
+  List searchChatId = [];
   List<DrishyaEntity>? entities;
   File? image;
   bool isLoading = true,
@@ -105,7 +104,6 @@ class GroupChatMessageController extends GetxController {
         .doc(pId)
         .get()
         .then((value) async {
-
       if (value.exists) {
         allData = value.data();
         update();
@@ -122,15 +120,15 @@ class GroupChatMessageController extends GetxController {
               .collection(collectionName.chat)
               .get()
               .then((value) {
-
-            value.docs.asMap().entries.forEach((element)async {
+            value.docs.asMap().entries.forEach((element) async {
               if (element.value.exists) {
                 if (element.value.data()["sender"] != user["id"]) {
                   List seenMessageList =
                       element.value.data()["seenMessageList"] ?? [];
 
                   bool isAvailable = seenMessageList
-                      .where((availableElement) => availableElement["userId"] == user["id"])
+                      .where((availableElement) =>
+                          availableElement["userId"] == user["id"])
                       .isNotEmpty;
                   if (!isAvailable) {
                     var data = {
@@ -139,9 +137,8 @@ class GroupChatMessageController extends GetxController {
                     };
 
                     seenMessageList.add(data);
-
                   }
-                await  FirebaseFirestore.instance
+                  await FirebaseFirestore.instance
                       .collection(collectionName.users)
                       .doc(appCtrl.user["id"])
                       .collection(collectionName.groupMessage)
@@ -150,16 +147,16 @@ class GroupChatMessageController extends GetxController {
                       .doc(element.value.id)
                       .update({"seenMessageList": seenMessageList});
 
-                  await   FirebaseFirestore.instance
+                  await FirebaseFirestore.instance
                       .collection(collectionName.users)
                       .doc(user["id"])
                       .collection(collectionName.chats)
                       .where("groupId", isEqualTo: pId)
                       .limit(1)
                       .get()
-                      .then((userChat) async{
+                      .then((userChat) async {
                     if (userChat.docs.isNotEmpty) {
-                      await  FirebaseFirestore.instance
+                      await FirebaseFirestore.instance
                           .collection(collectionName.users)
                           .doc(user["id"])
                           .collection(collectionName.chats)
@@ -173,7 +170,6 @@ class GroupChatMessageController extends GetxController {
           });
         }
       }
-
     });
     user = appCtrl.storage.read(session.user);
     if (backgroundImage != null || backgroundImage != "") {
@@ -190,6 +186,8 @@ class GroupChatMessageController extends GetxController {
     }
 
     FirebaseFirestore.instance
+        .collection(collectionName.users)
+        .doc(appCtrl.user["id"])
         .collection(collectionName.groupMessage)
         .doc(pId)
         .collection(collectionName.chat)
@@ -433,7 +431,7 @@ class GroupChatMessageController extends GetxController {
       id = user["id"];
       await GroupMessageApi().saveGroupMessage(encrypted, type);
 
-      await ChatMessageApi().saveGroupData(id, pId, encrypted, pData);
+      await ChatMessageApi().saveGroupData(id, pId, encrypted, pData, type);
 
       isLoading = false;
       videoFile = null;
@@ -484,36 +482,36 @@ class GroupChatMessageController extends GetxController {
 
 // BUILD ITEM MESSAGE BOX FOR RECEIVER AND SENDER BOX DESIGN
   Widget buildItem(int index, DocumentSnapshot document, docId) {
-
     return Column(children: [
       document["type"] == MessageType.note.name
-          ? const CommonNoteEncrypt() : Container(),
-        (document['sender'] == user["id"])
-              ? GroupSenderMessage(
-                      document: document,
-                      docId: docId,
-                      index: index,
-                      currentUserId: user["id"])
-                  .inkWell(onTap: () {
+          ? const CommonNoteEncrypt()
+          : Container(),
+      (document['sender'] == user["id"])
+          ? GroupSenderMessage(
+                  document: document,
+                  docId: docId,
+                  index: index,
+                  currentUserId: user["id"])
+              .inkWell(onTap: () {
+              enableReactionPopup = false;
+              showPopUp = false;
+              selectedIndexId = [];
+              update();
+            })
+          : document['sender'] != user["id"]
+              ?
+              // RECEIVER MESSAGE
+              GroupReceiverMessage(
+                  document: document,
+                  index: index,
+                  docId: docId,
+                ).inkWell(onTap: () {
                   enableReactionPopup = false;
                   showPopUp = false;
                   selectedIndexId = [];
                   update();
                 })
-              : document['sender'] != user["id"]
-                  ?
-                  // RECEIVER MESSAGE
-                  GroupReceiverMessage(
-                      document: document,
-                      index: index,
-                      docId: docId,
-                    ).inkWell(onTap: () {
-                      enableReactionPopup = false;
-                      showPopUp = false;
-                      selectedIndexId = [];
-                      update();
-                    })
-                  : Container()
+              : Container()
     ]);
   }
 
@@ -523,7 +521,7 @@ class GroupChatMessageController extends GetxController {
       var userData = appCtrl.storage.read(session.user);
 
       String channelId = Random().nextInt(1000).toString();
-      ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
+      //ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
       int timestamp = DateTime.now().millisecondsSinceEpoch;
       List receiver = pData["groupData"]["users"];
 
@@ -595,7 +593,7 @@ class GroupChatMessageController extends GetxController {
                 var data = {
                   "channelName": call.channelId,
                   "call": call,
-                  "role": role
+                  "role": "role"
                 };
                 Get.toNamed(routeName.audioCall, arguments: data);
               } else {
@@ -610,7 +608,7 @@ class GroupChatMessageController extends GetxController {
                 var data = {
                   "channelName": call.channelId,
                   "call": call,
-                  "role": role,
+                  "role": "role",
                 };
 
                 Get.toNamed(routeName.videoCall, arguments: data);
@@ -630,7 +628,9 @@ class GroupChatMessageController extends GetxController {
     appCtrl.isTyping = false;
     appCtrl.update();
     firebaseCtrl.groupTypingStatus(pId, false);
-    FirebaseFirestore.instance.collection(collectionName.users).doc(appCtrl.user["id"])
+    FirebaseFirestore.instance
+        .collection(collectionName.users)
+        .doc(appCtrl.user["id"])
         .collection(collectionName.messages)
         .doc(pId)
         .collection(collectionName.chat)
@@ -638,7 +638,9 @@ class GroupChatMessageController extends GetxController {
         .then((value) {
       if (value.docs.isNotEmpty) {
         if (value.docs.length == 1) {
-          FirebaseFirestore.instance.collection(collectionName.users).doc(appCtrl.user["id"])
+          FirebaseFirestore.instance
+              .collection(collectionName.users)
+              .doc(appCtrl.user["id"])
               .collection(collectionName.messages)
               .doc(pId)
               .collection(collectionName.chat)
@@ -688,9 +690,9 @@ class GroupChatMessageController extends GetxController {
         .where("groupId", isEqualTo: pId)
         .limit(1)
         .get()
-        .then((value)async {
+        .then((value) async {
       if (value.docs.isNotEmpty) {
-   await     FirebaseFirestore.instance
+        await FirebaseFirestore.instance
             .collection(collectionName.users)
             .doc(user["id"])
             .collection(collectionName.chats)

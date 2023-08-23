@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-
-import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:audioplayers/audioplayers.dart' as audio_players;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_theme/common/language/en.dart';
@@ -15,7 +13,7 @@ class VideoCallController extends GetxController {
   Call? call;
   bool localUserJoined = false, isFullScreen = false;
   bool isSpeaker = true, switchCamera = false;
-  late RtcEngine engine;
+  //late RtcEngine engine;
   Stream<int>? timerStream;
   int? remoteUId;
   final users = <int>[];
@@ -26,7 +24,7 @@ class VideoCallController extends GetxController {
   bool muted = false;
   bool isAlreadyEndedCall = false;
   String nameList = "";
-  ClientRoleType? role;
+  //ClientRoleType? role;
   dynamic userData;
   Stream<DocumentSnapshot>? stream;
   audio_players.AudioPlayer? player;
@@ -97,7 +95,7 @@ class VideoCallController extends GetxController {
       infoStrings.add('Agora Engine is not starting');
       return;
     }
-
+/*
     log("permis : $infoStrings");
     //create the engine
     engine = createAgoraRtcEngine();
@@ -119,13 +117,13 @@ class VideoCallController extends GetxController {
     );
     update();
 
-    log("ENABLE : $engine");
+    log("ENABLE : $engine");*/
   }
 
 
 
   agoraHandelEvent() {
-    engine.registerEventHandler(
+  /*  engine.registerEventHandler(
       RtcEngineEventHandler(
         onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
           debugPrint("local user ${connection.localUid} joined");
@@ -406,21 +404,21 @@ class VideoCallController extends GetxController {
           update();
         },
       ),
-    );
+    );*/
   }
 
   //on speaker off on
   void onToggleSpeaker() {
     isSpeaker = !isSpeaker;
     update();
-    engine.setEnableSpeakerphone(isSpeaker);
+   // engine.setEnableSpeakerphone(isSpeaker);
   }
 
   //mute - unMute toggle
   void onToggleMute() {
     muted = !muted;
     update();
-    engine.muteLocalAudioStream(muted);
+    //engine.muteLocalAudioStream(muted);
     FirebaseFirestore.instance
         .collection(collectionName.calls)
         .doc(userData["id"])
@@ -436,8 +434,8 @@ class VideoCallController extends GetxController {
   }
 
   Future<void> _dispose() async {
-    await engine.leaveChannel();
-    await engine.release();
+  /*  await engine.leaveChannel();
+    await engine.release();*/
   }
 
   //bottom toolbar
@@ -445,7 +443,7 @@ class VideoCallController extends GetxController {
     bool isShowSpeaker,
     String? status,
   ) {
-    if (role == ClientRoleType.clientRoleAudience) return Container();
+  //  if (role == ClientRoleType.clientRoleAudience) return Container();
     return VideoToolBar(
       isShowSpeaker: isShowSpeaker,
       status: status,
@@ -454,7 +452,7 @@ class VideoCallController extends GetxController {
 
   //switch camera
   Future<void> onSwitchCamera() async {
-    engine.switchCamera();
+   // engine.switchCamera();
 
     update();
   }
@@ -462,7 +460,7 @@ class VideoCallController extends GetxController {
   //end call delete after end call
   Future<bool> endCall({required Call call}) async {
     try {
-      log("endCallDelete");
+      //log("endCallDelete");
       if (call.receiver != null) {
         List receiver = call.receiver!;
         receiver.asMap().entries.forEach((element) async {
@@ -579,13 +577,13 @@ class VideoCallController extends GetxController {
                 SetOptions(merge: true)).then((value) {
           remoteUId = null;
           channelName = "";
-          role = null;
+        //  role = null;
           update();
         });
       }
       remoteUId = null;
       channelName = "";
-      role = null;
+    //  role = null;
       update();
     });
 

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter_theme/config.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class IntroController extends GetxController {
   var pageController = PageController(initialPage: 0);
@@ -18,10 +19,13 @@ class IntroController extends GetxController {
   bool isAnimate3 = false;
   late Timer sliderTimer;
   var currentShowIndex = 0;
+  SharedPreferences? pref;
 
   @override
   void onReady() {
     // TODO: implement onReady
+    pref = Get.arguments;
+    update();
     pageViewModelData.add(PageViewData(
       titleText: intro1,
       subtitleText: fonts.introDesc1,
@@ -60,7 +64,7 @@ class IntroController extends GetxController {
 //navigate to Login
   navigateToLogin() async{
     await storage.write(session.isIntro, true);
-    Get.toNamed(routeName.phone);
+    Get.toNamed(routeName.phone,arguments: pref);
     log("isIntro : ${storage.read(session.isIntro)}");
   }
 

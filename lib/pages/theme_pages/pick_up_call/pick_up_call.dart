@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 //import 'package:camera/camera.dart';
-import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:camera/camera.dart';
 
 import '../../../config.dart';
@@ -23,7 +22,7 @@ class _PickupLayoutState extends State<PickupLayout>
   AnimationController? controller;
   Animation? colorAnimation;
   CameraController? cameraController;
-ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
+//ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
   Animation? sizeAnimation;
 
   @override
@@ -89,7 +88,6 @@ ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
                 if (call.hasDialled!) {
 
                   return PickupBody(
-                    role: role,
                     call: call,
                     cameraController: cameraController,
                     imageUrl: snapshot.data!.docs[0].data()["callerPic"]

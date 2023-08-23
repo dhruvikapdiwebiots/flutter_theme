@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter_theme/config.dart';
@@ -20,9 +19,7 @@ class CallListController extends GetxController {
     height: 0.0,
   );
   DateTime now = DateTime.now();
-  final permissionHandelCtrl = Get.isRegistered<PermissionHandlerController>()
-      ? Get.find<PermissionHandlerController>()
-      : Get.put(PermissionHandlerController());
+
 
   @override
   void onReady() {
@@ -196,7 +193,7 @@ class CallListController extends GetxController {
           channelId: channelId,
           isVideoCall: isVideoCall,
           receiver: null);
-      ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
+      //ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
       await FirebaseFirestore.instance
           .collection(collectionName.calls)
           .doc(call.callerId)
@@ -245,7 +242,7 @@ class CallListController extends GetxController {
             var data = {
               "channelName": call.channelId,
               "call": call,
-              "role": role
+              "role": "role"
             };
             Get.toNamed(routeName.audioCall, arguments: data);
           } else {
@@ -260,7 +257,7 @@ class CallListController extends GetxController {
             var data = {
               "channelName": call.channelId,
               "call": call,
-              "role": role
+              "role": "role"
             };
 
             Get.toNamed(routeName.videoCall, arguments: data);

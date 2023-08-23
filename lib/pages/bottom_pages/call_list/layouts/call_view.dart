@@ -20,8 +20,11 @@ class CallView extends StatelessWidget {
               dense: true,
               horizontalTitleGap: 12,
               onTap: ()async{
+                final permissionHandelCtrl = Get.isRegistered<PermissionHandlerController>()
+                    ? Get.find<PermissionHandlerController>()
+                    : Get.put(PermissionHandlerController());
                 if(snapshot!.data!.docs[index!].data()["isVideoCall"]){
-                  await callList.permissionHandelCtrl
+                  await permissionHandelCtrl
                       .getCameraMicrophonePermissions()
                       .then((value) {
 
@@ -32,7 +35,7 @@ class CallView extends StatelessWidget {
                     }
                   });
                 }else {
-                  await callList.permissionHandelCtrl
+                  await permissionHandelCtrl
                       .getCameraMicrophonePermissions()
                       .then((value) {
                     if (value == true) {

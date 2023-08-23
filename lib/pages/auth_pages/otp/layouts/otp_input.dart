@@ -19,7 +19,7 @@ class OtpInput extends StatelessWidget {
         defaultPinTheme: OtpCommon().defaultPinTheme,
         hapticFeedbackType: HapticFeedbackType.lightImpact,
         onCompleted: (pin) {
-otpCtrl.onFormSubmitted();
+          otpCtrl.onFormSubmitted();
           debugPrint('onCompleted: $pin');
         },
         onChanged: (value) {
@@ -49,9 +49,8 @@ otpCtrl.onFormSubmitted();
                     color: appCtrl.isTheme
                         ? appCtrl.appTheme.white
                         : appCtrl.appTheme.primary))),
-        errorPinTheme: OtpCommon()
-            .defaultPinTheme
-            .copyBorderWith(border: Border.all(color: appCtrl.appTheme.redColor)),
+        errorPinTheme: OtpCommon().defaultPinTheme.copyBorderWith(
+            border: Border.all(color: appCtrl.appTheme.redColor)),
       );
     });
   }

@@ -3,10 +3,13 @@ import 'dart:developer';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/controllers/common_controller/ad_controller.dart';
+import 'package:flutter_theme/models/data_model.dart';
 import 'package:flutter_theme/models/firebase_contact_model.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DashboardController extends GetxController
     with GetSingleTickerProviderStateMixin {
@@ -20,6 +23,7 @@ class DashboardController extends GetxController
   bool isLoading = true;
   bool isSearch = false;
   int counter = 0;
+  SharedPreferences? pref;
 
   List<ContactModel> contactList = [];
   List<UserContactModel>? searchContactList = [];
@@ -56,11 +60,15 @@ class DashboardController extends GetxController
   late StreamSubscription<ConnectivityResult> connectivitySubscription;
 
 //list of bottommost page
-  List<Widget> widgetOptions = <Widget>[
+  /* List<Widget> widgetOptions = <Widget>[
     const Message(),
     const StatusList(),
     CallList()
-  ];
+  ];*/
+
+  List<Widget> widgetOptions(prefs) {
+    return [Message(sharedPreferences: prefs), const StatusList(), CallList()];
+  }
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initConnectivity() async {
@@ -117,11 +125,11 @@ class DashboardController extends GetxController
           .limit(15)
           .snapshots();
     } else {
-      Stream<QuerySnapshot<Map<String, dynamic>>>? snapshots =FirebaseFirestore.instance
+      Stream<QuerySnapshot<Map<String, dynamic>>>? snapshots = FirebaseFirestore
+          .instance
           .collection(collectionName.calls)
           .doc(appCtrl.user["id"])
           .collection(collectionName.collectionCallHistory)
-
           .where("callerName", isEqualTo: val)
           .orderBy("timestamp", descending: true)
           .snapshots();
@@ -129,8 +137,9 @@ class DashboardController extends GetxController
     }
   }
 
-  Stream callData(val){
-    Stream<QuerySnapshot<Map<String, dynamic>>>? snapshots =FirebaseFirestore.instance
+  Stream callData(val) {
+    Stream<QuerySnapshot<Map<String, dynamic>>>? snapshots = FirebaseFirestore
+        .instance
         .collection(collectionName.calls)
         .doc(appCtrl.user["id"])
         .collection(collectionName.collectionCallHistory)
@@ -143,7 +152,11 @@ class DashboardController extends GetxController
   @override
   void onReady() async {
     // TODO: implement onReady
-
+    //checkPermission();
+    messageCtrl.message =
+        MessageFirebaseApi().chatListWidget(appCtrl.cachedModel!.userData);
+    log("message = : ${messageCtrl.message}");
+    messageCtrl.update();
     final addCtrl = Get.isRegistered<AdController>()
         ? Get.find<AdController>()
         : Get.put(AdController());
@@ -157,49 +170,82 @@ class DashboardController extends GetxController
     firebaseCtrl.setIsActive();
     controller!.addListener(() {
       selectedIndex = controller!.index;
-
+      log("selectedIndex :: ${selectedIndex}");
+      if (selectedIndex == 1) {
+        statusCtrl.getAllStatus();
+      }
     });
     user = appCtrl.storage.read(session.user);
     appCtrl.update();
+
     //statusCtrl.update();
     update();
     // await Future.delayed(Durations.s3);
-    //checkPermission();
+
     //checkContactList();
+
     super.onReady();
   }
 
   checkPermission() async {
+    Completer<Map<String?, String?>> completer =
+        Completer<Map<String?, String?>>();
 
-appCtrl.contactPermission = appCtrl.storage.read(session.contactPermission) ?? false;
-    if (appCtrl.contactPermission == true) {
-      contacts = await getAllContacts();
-
-      appCtrl.contactList = contacts;
-      appCtrl.storage.write(session.contactList, contacts);
+    appCtrl.contactPermission =
+        appCtrl.storage.read(session.contactPermission) ?? false;
+    debugPrint("CHECK PERMISSION :: ${appCtrl.contactPermission}");
+    if (appCtrl.contactPermission == false) {
+      final permissionHandelCtrl =
+          Get.isRegistered<PermissionHandlerController>()
+              ? Get.find<PermissionHandlerController>()
+              : Get.put(PermissionHandlerController());
+      bool permissionStatus = await permissionHandelCtrl.permissionGranted();
+      appCtrl.contactPermission = permissionStatus;
+      appCtrl.storage.write(session.contactPermission, permissionStatus);
+      checkPermission();
+    } else {
       appCtrl.update();
-      debugPrint("PERR : ${appCtrl.contactList.length}");
-      await checkContactList();
+      debugPrint("appCtrl.contactPermission: ${appCtrl.contactPermission}");
+      if (appCtrl.contactPermission == true) {
+        await FlutterContacts.getContacts(
+                withPhoto: true, withProperties: true, withThumbnail: true)
+            .then((contacts) async {
+          appCtrl.contactList = contacts;
+          appCtrl.update();
 
-      if (appCtrl.contactList.isNotEmpty) {
-        await addContactInFirebase();
-       await getFirebaseContact();
+          contacts.where((c) => c.phones.isNotEmpty).forEach((Contact p) {
+            if (p.displayName.isNotEmpty && p.phones.isNotEmpty) {
+              List<String?> numbers = p.phones
+                  .map((number) {
+                    String? phone =
+                        phoneNumberExtension(number.normalizedNumber);
 
+                    return phone;
+                  })
+                  .toList()
+                  .where((s) => s.isNotEmpty)
+                  .toList();
 
-        contactCtrl.update();
-        Get.forceAppUpdate();
+              numbers.asMap().entries.forEach((number) {
+                appCtrl.cachedContacts[number.value] = p.displayName;
+              });
+              appCtrl.update();
+            }
+          });
+          completer.complete(appCtrl.cachedContacts);
+          update();
+          completer.future.then((c) {
+            appCtrl.allContacts = c;
+          });
+          appCtrl.update();
+          appCtrl.storage.write(session.contactList, appCtrl.contactList);
+          appCtrl.update();
+          checkContactList();
+
+          debugPrint("PERR : ${appCtrl.contactList.length}");
+          debugPrint("PERR : ${appCtrl.allContacts}");
+        });
       }
-    }else{
-      log("NO PERMISSION");
-      appCtrl.contactPermission =
-      await statusCtrl.permissionHandelCtrl.permissionGranted();
-      appCtrl.storage.write(session.contactPermission,appCtrl.contactPermission);
-      if(appCtrl.contactPermission == true){
-        appCtrl.contactList = await getAllContacts();
-
-      }
-      appCtrl.update();
-
     }
   }
 
@@ -209,58 +255,53 @@ appCtrl.contactPermission = appCtrl.storage.read(session.contactPermission) ?? f
       List<Map<String, dynamic>> unRegisterContactData = [];
 
       appCtrl.contactList.asMap().entries.forEach((contact) async {
-        if(phoneNumberExtension(
-            contact.value.phones[0].number.toString()) != appCtrl.user["phone"]) {
-          if (contact.value.phones.isNotEmpty) {
-            bool isRegister = false;
-            String id = "";
-            await FirebaseFirestore.instance
-                .collection(collectionName.users)
-                .where("phone",
+        bool isRegister = false;
+        String id = "", name = "";
+        await FirebaseFirestore.instance
+            .collection(collectionName.users)
+            .where("phone",
                 isEqualTo: phoneNumberExtension(
                     contact.value.phones[0].number.toString()))
-                .get()
-                .then((value) {
-              if (value.docs.isEmpty) {
-                isRegister = false;
-              } else {
-                isRegister = true;
-                id = value.docs[0].id;
-              }
-            });
-            update();
-            if (isRegister) {
-              var objData = {
-                'name': contact.value.displayName,
-                'phone': contact.value.phones.isNotEmpty
-                    ? phoneNumberExtension(
+            .get()
+            .then((value) {
+          if (value.docs.isEmpty) {
+            isRegister = false;
+          } else {
+            isRegister = true;
+            id = value.docs[0].id;
+            name = value.docs[0].data()["name"];
+          }
+        });
+        update();
+        if (isRegister) {
+          var objData = {
+            'name': name,
+            'phone': contact.value.phones.isNotEmpty
+                ? phoneNumberExtension(
                     contact.value.phones[0].number.toString())
-                    : null,
-                "isRegister": true,
-                "image": contact.value.photo,
-                "id": id
-                // Include other necessary contact.value details
-              };
-              if (!contactsData.contains(objData)) {
-                contactsData.add(objData);
-              }
-            } else {
-
-              var objData = {
-                'name': contact.value.displayName,
-                'phone': contact.value.phones.isNotEmpty
-                    ? phoneNumberExtension(
+                : null,
+            "isRegister": true,
+            "image": contact.value.photo,
+            "id": id
+            // Include other necessary contact.value details
+          };
+          if (!contactsData.contains(objData)) {
+            contactsData.add(objData);
+          }
+        } else {
+          var objData = {
+            'name': contact.value.displayName,
+            'phone': contact.value.phones.isNotEmpty
+                ? phoneNumberExtension(
                     contact.value.phones[0].number.toString())
-                    : null,
-                "isRegister": false,
-                "image": contact.value.photo,
-                "id": "0"
-                // Include other necessary contact.value details
-              };
-              if (!unRegisterContactData.contains(objData)) {
-                unRegisterContactData.add(objData);
-              }
-            }
+                : null,
+            "isRegister": false,
+            "image": contact.value.photo,
+            "id": "0"
+            // Include other necessary contact.value details
+          };
+          if (!unRegisterContactData.contains(objData)) {
+            unRegisterContactData.add(objData);
           }
         }
       });
@@ -272,14 +313,12 @@ appCtrl.contactPermission = appCtrl.storage.read(session.contactPermission) ?? f
           .get()
           .then((value) async {
         if (value.docs.isEmpty) {
-
           await FirebaseFirestore.instance
               .collection(collectionName.users)
               .doc(appCtrl.user["id"])
               .collection(collectionName.registerUser)
               .add({"contact": contactsData});
         } else {
-
           log("ALREADY COLLECTION");
         }
       });
@@ -291,7 +330,6 @@ appCtrl.contactPermission = appCtrl.storage.read(session.contactPermission) ?? f
           .get()
           .then((value) async {
         if (value.docs.isEmpty) {
-
           await FirebaseFirestore.instance
               .collection(collectionName.users)
               .doc(appCtrl.user["id"])
@@ -301,29 +339,66 @@ appCtrl.contactPermission = appCtrl.storage.read(session.contactPermission) ?? f
           log("ALREADY COLLECTION");
         }
       });
-
-      contactCtrl.onReady();
-      contactCtrl.update();
-    }else{
-      checkPermission();
     }
 
-
+    /*  if (appCtrl.firebaseContact.isEmpty) {
+      await FirebaseFirestore.instance
+          .collection(collectionName.users)
+          .doc(appCtrl.user["id"])
+          .collection(collectionName.registerUser)
+          .get()
+          .then((value) {
+        List allUserList = value.docs[0].data()["contact"];
+        allUserList.asMap().entries.forEach((element) {
+          if (!appCtrl.firebaseContact.contains(element.value)) {
+            appCtrl.firebaseContact
+                .add(FirebaseContactModel.fromJson(element.value));
+          }
+        });
+      });
+      appCtrl.update();
+    }*/
   }
 
   getFirebaseContact() async {
-
     final contactCtrl = Get.isRegistered<ContactListController>()
         ? Get.find<ContactListController>()
         : Get.put(ContactListController());
     contactCtrl.getAllData();
     contactCtrl.getAllUnRegisterUser();
     contactCtrl.onReady();
-
   }
 
   checkContactList() async {
-    appCtrl.userContactList = [];
+    appCtrl.availableContact = [];
+
+    debugPrint("FILTERD :: ${appCtrl.allContacts!.length}");
+    if (appCtrl.allContacts!.isNotEmpty) {
+      appCtrl.allContacts!.forEach((key, value) async {
+        await FirebaseFirestore.instance
+            .collection(collectionName.users)
+            .where("phone", isEqualTo: key)
+            .get()
+            .then((docs) async {
+          if (docs.docs.isNotEmpty) {
+            // print('FOUND CONTACT $key');
+
+            appCtrl.availableContact.add(JoinedUserModel(
+                phone: docs.docs[0].data()["phone"] ?? '',
+                name: value ?? docs.docs[0].data()["name"],
+                id: docs.docs[0].id));
+            debugPrint("FOUND CONTACY : ${docs.docs.length}");
+            appCtrl.update();
+          }
+        });
+      });
+      appCtrl.update();
+      Get.forceAppUpdate();
+    } else {
+      checkPermission();
+    }
+    debugPrint("appCtrl.availableContact : ${appCtrl.availableContact.length}");
+/*    appCtrl.userContactList = [];
     appCtrl.firebaseContact = [];
     appCtrl.update();
 
@@ -354,7 +429,7 @@ appCtrl.contactPermission = appCtrl.storage.read(session.contactPermission) ?? f
     });
 
     debugPrint("appCtrl.userContactList : ${appCtrl.userContactList}");
-    update();
+    update();*/
   }
 
   @override
@@ -362,17 +437,6 @@ appCtrl.contactPermission = appCtrl.storage.read(session.contactPermission) ?? f
     // TODO: implement dispose
     timer!.cancel();
     super.dispose();
-  }
-
-  @override
-  void onInit() {
-    // TODO: implement onInit
-
-    // messageCtrl.onReady();
-    // statusCtrl.onReady();
-    // statusCtrl.update();
-
-    super.onInit();
   }
 
   onMenuItemSelected(int value) async {
@@ -384,8 +448,7 @@ appCtrl.contactPermission = appCtrl.storage.read(session.contactPermission) ?? f
       debugPrint("CONTACT LIST IS EMPTY : ${appCtrl.contactList.isEmpty}");
       if (appCtrl.contactList.isEmpty) {
         Get.toNamed(routeName.groupChat, arguments: false);
-        await checkPermission();
-        await checkContactList();
+
         final groupChatCtrl = Get.isRegistered<CreateGroupController>()
             ? Get.find<CreateGroupController>()
             : Get.put(CreateGroupController());
@@ -406,30 +469,16 @@ appCtrl.contactPermission = appCtrl.storage.read(session.contactPermission) ?? f
         Get.toNamed(routeName.groupChat, arguments: false);
       }
     } else if (value == 1) {
-      if (appCtrl.contactList.isEmpty) {
-        await checkPermission();
-        await checkContactList();
-        final groupChatCtrl = Get.isRegistered<CreateGroupController>()
-            ? Get.find<CreateGroupController>()
-            : Get.put(CreateGroupController());
-        groupChatCtrl.isGroup = false;
-        groupChatCtrl.isAddUser = false;
+      final groupChatCtrl = Get.isRegistered<CreateGroupController>()
+          ? Get.find<CreateGroupController>()
+          : Get.put(CreateGroupController());
+      groupChatCtrl.isGroup = true;
+      groupChatCtrl.isAddUser = false;
 
-        groupChatCtrl.refreshContacts();
+      //   groupChatCtrl.refreshContacts();
 
-        Get.back();
-        Get.toNamed(routeName.groupChat, arguments: true);
-      } else {
-        final groupChatCtrl = Get.isRegistered<CreateGroupController>()
-            ? Get.find<CreateGroupController>()
-            : Get.put(CreateGroupController());
-        groupChatCtrl.isGroup = false;
-        groupChatCtrl.isAddUser = false;
-        if (groupChatCtrl.contactList.isEmpty) {
-          groupChatCtrl.getFirebaseContact();
-        }
-        Get.toNamed(routeName.groupChat, arguments: true);
-      }
+      Get.back();
+      Get.toNamed(routeName.groupChat, arguments: true);
     } else if (value == 3) {
       await FirebaseFirestore.instance
           .collection("calls")
@@ -450,6 +499,4 @@ appCtrl.contactPermission = appCtrl.storage.read(session.contactPermission) ?? f
       Get.toNamed(routeName.setting);
     }
   }
-
-
 }

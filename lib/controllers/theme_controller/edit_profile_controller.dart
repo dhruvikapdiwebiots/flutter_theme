@@ -2,8 +2,11 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter_theme/config.dart';
+import 'package:flutter_theme/controllers/fetch_contact_controller.dart';
 import 'package:flutter_theme/models/firebase_contact_model.dart';
 import 'package:flutter_theme/utilities/helper.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EditProfileController extends GetxController {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -25,6 +28,7 @@ class EditProfileController extends GetxController {
   final FocusNode phoneFocus = FocusNode();
   final FocusNode statusFocus = FocusNode();
   final FocusNode passwordFocus = FocusNode();
+  SharedPreferences? pref;
 
 
   final storage = GetStorage();
@@ -49,13 +53,21 @@ class EditProfileController extends GetxController {
   var userId = '';
 
   homeNavigation(userid) async {
+    final FetchContactController availableContacts =
+    Provider.of<FetchContactController>(Get.context!,
+        listen: false);
+    log("INIT PAGE");
+    availableContacts.fetchContacts(
+        Get.context!, appCtrl.user["phone"], pref!, false);
+    await appCtrl.storage.write(session.isIntro, true);
+    await Future.delayed(Durations.s3);
     helper.hideLoading();
     await storage.write(session.id, userid);
     FirebaseFirestore.instance
         .collection('users')
         .doc(user["id"])
         .update({'status': "Online"});
-    Get.offAllNamed(routeName.dashboard);
+    Get.offAllNamed(routeName.dashboard,arguments: pref);
     if(isPhoneLogin ==true){
       log("CHACNGE");
       await checkPermission();
@@ -69,12 +81,15 @@ class EditProfileController extends GetxController {
     bool permissionStatus =
     await permissionHandelCtrl.permissionGranted();
     debugPrint("permissionStatus 1: $permissionStatus");
+    appCtrl.contactPermission = permissionStatus;
+    appCtrl.storage.write(session.contactPermission, permissionStatus);
+    appCtrl.update();
     if (permissionStatus == true) {
       appCtrl.contactList = await getAllContacts();
 
       appCtrl.storage.write(session.contactList, appCtrl.contactList);
       appCtrl.update();
-      debugPrint("PERR : ${appCtrl.contactList.length}");
+
       await checkContactList();
 
       if (appCtrl.contactList.isNotEmpty) {
@@ -97,7 +112,6 @@ class EditProfileController extends GetxController {
     appCtrl.firebaseContact = [];
     appCtrl.update();
 
-    debugPrint("appCtrl.user : ${appCtrl.user}");
     await FirebaseFirestore.instance
         .collection(collectionName.users)
         .get()
@@ -130,7 +144,7 @@ class EditProfileController extends GetxController {
 
       appCtrl.contactList.asMap().entries.forEach((contact) async {
         bool isRegister = false;
-        String id = "";
+        String id = "",name = "";
         await FirebaseFirestore.instance
             .collection(collectionName.users)
             .where("phone",
@@ -143,12 +157,13 @@ class EditProfileController extends GetxController {
           } else {
             isRegister = true;
             id = value.docs[0].id;
+            name = value.docs[0].data()["name"];
           }
         });
         update();
         if (isRegister) {
           var objData = {
-            'name': contact.value.displayName,
+            'name': name,
             'phone': contact.value.phones.isNotEmpty
                 ? phoneNumberExtension(
                 contact.value.phones[0].number.toString())
@@ -161,6 +176,9 @@ class EditProfileController extends GetxController {
           if (!contactsData.contains(objData)) {
             contactsData.add(objData);
           }
+
+
+
         } else {
           var objData = {
             'name': contact.value.displayName,
@@ -175,9 +193,13 @@ class EditProfileController extends GetxController {
           };
           if (!unRegisterContactData.contains(objData)) {
             unRegisterContactData.add(objData);
+
           }
+
         }
+
       });
+
 
       await FirebaseFirestore.instance
           .collection(collectionName.users)
@@ -186,7 +208,7 @@ class EditProfileController extends GetxController {
           .get()
           .then((value) async {
         if (value.docs.isEmpty) {
-          log("AGAIN ADD");
+
           await FirebaseFirestore.instance
               .collection(collectionName.users)
               .doc(appCtrl.user["id"])
@@ -204,7 +226,7 @@ class EditProfileController extends GetxController {
           .get()
           .then((value) async {
         if (value.docs.isEmpty) {
-          log("AGAIN ADD");
+
           await FirebaseFirestore.instance
               .collection(collectionName.users)
               .doc(appCtrl.user["id"])
@@ -213,7 +235,7 @@ class EditProfileController extends GetxController {
         } else {
           log("ALREADY COLLECTION");
         }
-      }).then((value) => checkContactList());
+      })/*.then((value) => checkContactList())*/;
 
     }
 
@@ -291,6 +313,12 @@ class EditProfileController extends GetxController {
                 })
                 .then((result) async {
               debugPrint("new USer true");
+              final FetchContactController availableContacts =
+              Provider.of<FetchContactController>(Get.context!,
+                  listen: false);
+              log("INIT PAGE");
+              availableContacts.fetchContacts(
+                  Get.context!, appCtrl.user["phone"], pref!, false);
               FirebaseFirestore.instance.collection(collectionName.users)
                   .doc(user["id"])
                   .get()
@@ -300,8 +328,8 @@ class EditProfileController extends GetxController {
                 appCtrl.user = value.data();
                 appCtrl.update();
               });
-
-              Get.toNamed(routeName.dashboard);
+              await Future.delayed(Durations.s3);
+              Get.toNamed(routeName.dashboard,arguments: pref);
               if(isPhoneLogin ==true){
                 await checkPermission();
               }
@@ -330,6 +358,12 @@ class EditProfileController extends GetxController {
                 "isActive":true
               }).then((result) async {
             debugPrint("new USer true");
+            final FetchContactController availableContacts =
+            Provider.of<FetchContactController>(Get.context!,
+                listen: false);
+            log("INIT PAGE");
+            availableContacts.fetchContacts(
+                Get.context!, appCtrl.user["phone"], pref!, false);
             FirebaseFirestore.instance.collection(collectionName.users).doc(user["id"])
                 .get()
                 .then((value) async {
@@ -338,7 +372,8 @@ class EditProfileController extends GetxController {
               appCtrl.user = value.data();
               appCtrl.update();
             });
-            Get.toNamed(routeName.dashboard);
+            await Future.delayed(Durations.s3);
+            Get.toNamed(routeName.dashboard,arguments: pref);
           }).catchError((onError) {
             debugPrint("onError");
           });
@@ -355,12 +390,15 @@ class EditProfileController extends GetxController {
     statusText.text = "Hello, I am using Chatter";
     var data = Get.arguments;
     user = data["resultData"];
+    pref = data["pref"];
     isPhoneLogin = data["isPhoneLogin"];
     nameText.text = user["name"] ?? "";
     emailText.text = user["email"] ?? "";
     phoneText.text = user["phone"] ?? "";
     statusText.text = user["statusDesc"] ?? "";
     imageUrl = user["image"] ?? "";
+    appCtrl.pref = pref;
+    appCtrl.update();
     update();
     super.onReady();
   }

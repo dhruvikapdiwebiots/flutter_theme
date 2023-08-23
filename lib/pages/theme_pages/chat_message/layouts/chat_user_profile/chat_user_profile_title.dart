@@ -52,7 +52,7 @@ class ChatUserProfileTitle extends StatelessWidget {
                                 borderRadius: SmoothBorderRadius(
                                     cornerRadius: 13, cornerSmoothing: 1)),
                             image: DecorationImage(
-                                fit: BoxFit.fill,
+                                fit: BoxFit.cover,
                                 image: NetworkImage('$image')))).inkWell(onTap: ()=> Get.to(CommonPhotoView(image: image,))),
                     placeholder: (context, url) => Container(
                         height: Sizes.s45,

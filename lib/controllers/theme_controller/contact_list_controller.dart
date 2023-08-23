@@ -5,7 +5,7 @@ import 'package:flutter_theme/models/firebase_contact_model.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class ContactListController extends GetxController {
-  bool isLoading = false;
+  bool isLoading = true;
   static const pageSize = 20;
   final PagingController<int, UserContactModel> pagingController =
       PagingController(firstPageKey: 0);
@@ -18,7 +18,17 @@ class ContactListController extends GetxController {
   @override
   void onReady() {
     // TODO: implement onReady
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      timerSet();
+    });
     super.onReady();
+  }
+
+  timerSet()async{
+    Future.delayed(const Duration(milliseconds: 300), () {
+      isLoading =false;
+      update();
+    });
   }
 
   fetchRegisterData(pageKey) async {

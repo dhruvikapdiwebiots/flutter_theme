@@ -1,18 +1,24 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
+import 'package:flutter_theme/controllers/fetch_contact_controller.dart';
+import 'package:flutter_theme/controllers/recent_chat_controller.dart';
+import 'package:flutter_theme/models/data_model.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/usage_control_model.dart';
 import '../../models/user_setting_model.dart';
 
-
 class SplashController extends GetxController {
-
   final storage = GetStorage();
   final Connectivity connectivity = Connectivity();
   late encrypt.Encrypter cryptor;
   final iv = encrypt.IV.fromLength(8);
+  SharedPreferences? pref;
 
   @override
   void onReady() {
@@ -24,7 +30,8 @@ class SplashController extends GetxController {
 
     final encrypter = encrypt.Encrypter(encrypt.AES(key));
 
-    final encrypted = encrypter.encrypt("Jenish created this group", iv: iv).base64;
+    final encrypted =
+        encrypter.encrypt("Jenish created this group", iv: iv).base64;
     log("ENCRYP : $encrypted}");
     super.onReady();
   }
@@ -35,7 +42,8 @@ class SplashController extends GetxController {
 
     result = await connectivity.checkConnectivity();
     if (result == ConnectivityResult.none) {
-      return Get.to(NoInternet(connectionStatus: result),transition: Transition.downToUp);
+      return Get.to(NoInternet(connectionStatus: result),
+          transition: Transition.downToUp);
     } else {
       var duration =
           const Duration(seconds: 3); // time delay to display splash screen
@@ -45,12 +53,16 @@ class SplashController extends GetxController {
 
   //navigate to login page
   loginNavigation() async {
+    /*await checkPermission();
+    await Future.delayed(Durations.s1);*/
     var user = storage.read(session.user) ?? "";
 
     if (user == "" || user == null) {
-      Get.offAllNamed(routeName.phone);
+      Get.offAllNamed(routeName.phone, arguments: pref);
     } else {
-      Get.offAllNamed(routeName.dashboard);
+      log("PRED : $pref");
+
+      Get.offAllNamed(routeName.dashboard, arguments: pref);
     }
 
     appCtrl.update();
@@ -60,7 +72,7 @@ class SplashController extends GetxController {
 
   //check whether user login or not
   void navigationPage() async {
-   await getAdminPermission();
+    //await getAdminPermission();
 
     //language
     appCtrl.languageVal = storage.read(session.languageCode) ?? "en";
@@ -105,24 +117,48 @@ class SplashController extends GetxController {
     bool isBiometric = storage.read(session.isBiometric) ?? false;
     log("isIntro : $isIntro");
     log("isBiometric : $isBiometric");
+    log("isBiometric : $user");
 
     if (user == "" && user == null) {
       // Checking if user is already login or not
-      Get.toNamed(routeName.phone);
+      Get.toNamed(routeName.phone, arguments: pref);
     } else {
       appCtrl.user = user;
       appCtrl.update();
-      if (isIntro == true && isIntro.toString() == "true") {
-        if(isBiometric == true){
-          Get.toNamed(routeName.fingerLock);
+      //
+      PermissionStatus permission = await Permission.contacts.status;
+      log("permissionpermission :: $user");
+      final RecentChatController recentChatController =
+          Provider.of<RecentChatController>(Get.context!, listen: false);
+      if (user != null) {
+        recentChatController.getModel(user);
+      }
+      if (permission.isGranted) {
+        final FetchContactController availableContacts =
+            Provider.of<FetchContactController>(Get.context!, listen: false);
+        availableContacts.fetchContacts(
+            Get.context!, appCtrl.user["phone"], pref!, false);
 
-        }else {
+        await Future.delayed(Durations.s1);
+      }
+
+      if (isIntro == true && isIntro.toString() == "true") {
+        if (isBiometric == true) {
+          Get.toNamed(routeName.fingerLock, arguments: pref);
+        } else {
           loginNavigation(); // navigate to homepage if user id is not null
         }
       } else {
-        Get.toNamed(routeName.intro);
+        Get.toNamed(routeName.intro, arguments: pref);
       }
     }
+  }
+
+  DataModel? getModel(user) {
+    appCtrl.cachedModel ??= DataModel(user["phone"]);
+
+    appCtrl.update();
+    return appCtrl.cachedModel;
   }
 
   getAdminPermission() async {
@@ -131,7 +167,8 @@ class SplashController extends GetxController {
         .doc(collectionName.usageControls)
         .get();
     log("admin 3: ${usageControls.data()}");
-    appCtrl.usageControlsVal = UsageControlModel.fromJson(usageControls.data()!);
+    appCtrl.usageControlsVal =
+        UsageControlModel.fromJson(usageControls.data()!);
 
     appCtrl.update();
     appCtrl.storage.write(session.usageControls, usageControls.data());
@@ -141,12 +178,13 @@ class SplashController extends GetxController {
         .doc(collectionName.userAppSettings)
         .get();
     log("admin 4: ${userAppSettings.data()}");
-    appCtrl.userAppSettingsVal = UserAppSettingModel.fromJson(userAppSettings.data()!);
+    appCtrl.userAppSettingsVal =
+        UserAppSettingModel.fromJson(userAppSettings.data()!);
     final agoraToken = await FirebaseFirestore.instance
         .collection(collectionName.config)
         .doc(collectionName.agoraToken)
         .get();
-    await   appCtrl.storage.write(session.agoraToken, agoraToken.data());
+    await appCtrl.storage.write(session.agoraToken, agoraToken.data());
     log("admin 5: ${agoraToken.data()}");
     log("admin 6: ${appCtrl.usageControlsVal!.statusDeleteTime!.replaceAll(" hrs", "")}");
     update();

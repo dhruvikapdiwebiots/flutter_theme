@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter_theme/pages/bottom_pages/status/layouts/my_status_video.dart';
+import 'package:flutter_theme/pages/theme_pages/contact_list/new_contact_check.dart';
 import 'package:flutter_theme/widgets/common_app_bar.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
@@ -32,12 +33,12 @@ class MyStatus extends StatelessWidget {
               } else {
                 Status? status;
                 List<PhotoUrl> photoUrlList = [];
-                log("LENGTH : ${snapshot.data!.docs.length}");
+
                 if (snapshot.data!.docs.isNotEmpty) {
                   status = Status.fromJson(snapshot.data!.docs[0].data());
 
                   photoUrlList = status.photoUrl!;
-                  log("photoUrlList : ${photoUrlList.length}");
+
                   return SingleChildScrollView(
                     child: SizedBox(
                         child: Column(
@@ -51,7 +52,7 @@ class MyStatus extends StatelessWidget {
                               child: Column(
                                 children: [
                                   ...photoUrlList.asMap().entries.map((e) {
-                                    log("photoUrlList : ${photoUrlList.length}");
+
                                     return ListTile(
                                         horizontalTitleGap: 10,
                                         trailing: PopupMenuButton(
@@ -59,12 +60,12 @@ class MyStatus extends StatelessWidget {
                                           padding: EdgeInsets.zero,
                                           iconSize: Sizes.s20,
                                           onSelected: (result) async {
-                                            log("RESULT : R${photoUrlList.length}");
+
                                             if (result == 0) {
                                               List<PhotoUrl> photoUrl =
                                                   photoUrlList;
                                               photoUrl.removeAt(e.key);
-                                              log("PHOTOURL : ${photoUrl.length}");
+
                                               if(photoUrl.isEmpty){
                                                 await FirebaseFirestore.instance
                                                     .collection(
@@ -92,9 +93,9 @@ class MyStatus extends StatelessWidget {
                                               }
                                             } else if (result == 1) {
                                               Share.share(e.value.image!,
-                                                  subject: 'Look what I made!');
+                                                  subject: 'Look what I share!');
                                             } else {
-                                              Get.to(() => ContactList(message: e.value,));
+                                              Get.to(() => NewContact(message: e.value,));
                                             }
                                           },
                                           shape: RoundedRectangleBorder(

@@ -102,7 +102,7 @@ class MessageFirebaseApi {
           Get.back();
           Get.toNamed(routeName.chat, arguments: data);
         } else {
-          value.docs.asMap().entries.forEach((element) { 
+          value.docs.asMap().entries.forEach((element) {
             if(element.value.data()["senderId"]  == userContact.uid ||
                 element.value.data()["receiverId"] == userContact.uid){
               var data = {"chatId": element.value.data()["chatId"], "data": userContact,"message":message};
@@ -110,7 +110,7 @@ class MessageFirebaseApi {
               Get.toNamed(routeName.chat,arguments: data);
             }
           });
-          
+
           //
         }
       });
@@ -140,10 +140,10 @@ class MessageFirebaseApi {
   //chat list
 
   List chatListWidget(
-  AsyncSnapshot<dynamic> snapshot) {
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> snapshot) {
     List message = [];
-    for (int a = 0; a < snapshot.data!.docs.length; a++) {
-      message.add(snapshot.data!.docs[a]);
+    for (int a = 0; a < snapshot.length; a++) {
+      message.add(snapshot[a]);
     }
     return message;
   }

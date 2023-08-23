@@ -3,66 +3,72 @@ import '../../../../config.dart';
 class MessageCard extends StatelessWidget {
   final DocumentSnapshot? document;
   final String? currentUserId, blockBy;
-
-  const MessageCard({Key? key, this.document, this.currentUserId, this.blockBy})
+final dynamic data;
+  const MessageCard({Key? key, this.document, this.currentUserId, this.blockBy,this.data})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection(collectionName.users)
-            .doc(document!["senderId"])
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Container();
-          } else {
-            return Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                  Row(children: [
-                    ImageLayout(id: document!["senderId"]),
-                    const HSpace(Sizes.s12),
-                    Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(snapshot.data!["name"],
-                              style: AppCss.poppinsblack14
-                                  .textColor(appCtrl.appTheme.blackColor)),
-                          const VSpace(Sizes.s6),
-                          document!["lastMessage"] != null
-                              ? decryptMessage(document!["lastMessage"])
-                                      .contains(".gif")
+    return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(children: [
+            ImageLayout(id: document!["senderId"],height: Sizes.s45,width: Sizes.s45,),
+            const HSpace(Sizes.s12),
+            Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(document!["name"],
+                      style: AppCss.poppinsblack14
+                          .textColor(appCtrl.appTheme.blackColor)),
+                  const VSpace(Sizes.s6),
+                     data!["receiverMessage"] != null
+                              ? data!["receiverMessage"]
+                                      .contains("gif")
                                   ? const Icon(Icons.gif_box)
                                   : MessageCardSubTitle(
+                         data: data,
                                       blockBy: blockBy,
-                                      name: snapshot.data!["name"],
+                                      name: document!["name"],
                                       document: document,
                                       currentUserId: currentUserId)
                               : Container()
-                        ])
-                  ]),
-                  Expanded(
-                      child: TrailingLayout(
-                          currentUserId: currentUserId, document: document))
                 ])
-                .width(MediaQuery.of(context).size.width)
-                .paddingSymmetric(horizontal: Insets.i15, vertical: Insets.i12)
-                .commonDecoration()
-                .marginSymmetric(horizontal: Insets.i10)
-                .inkWell(onTap: () {
-              UserContactModel userContact = UserContactModel(
-                  username: snapshot.data!["name"],
-                  uid: document!["senderId"],
-                  phoneNumber: snapshot.data!["phone"],
-                  image: snapshot.data!["image"],
-                  isRegister: true);
-              var data = {"chatId": document!["chatId"], "data": userContact};
-              Get.toNamed(routeName.chat, arguments: data);
-            });
-          }
-        });
+          ]),
+           Expanded(
+                      child: TrailingLayout(
+                        data: data,
+                          currentUserId: currentUserId, document: document))
+        ]) .width(MediaQuery.of(context).size.width)
+        .paddingSymmetric(horizontal: Insets.i15, vertical: Insets.i12)
+        .commonDecoration()
+        .marginSymmetric(horizontal: Insets.i10)  .inkWell(onTap: () async{
+          await FirebaseFirestore.instance
+              .collection(collectionName.users)
+              .doc(document!["senderId"]).get().then((value)async {
+                if(value.exists){
+                  UserContactModel userContact = UserContactModel(
+                      username: document!["name"],
+                      uid: document!["senderId"],
+                      phoneNumber: value.data()!["phone"],
+                      image: value.data()!["image"],
+                      isRegister: true);
+
+                  await FirebaseFirestore.instance.collection(collectionName.users).doc(appCtrl.user["id"]).collection(collectionName.messages).get().then((value) {
+                    if(value.docs.isNotEmpty){
+
+                      var data = {"chatId": document!["chatId"], "data": userContact,"allMessage": value.docs};
+                      Get.toNamed(routeName.chat, arguments: data);
+                    }else{
+                      var data = {"chatId": document!["chatId"], "data": userContact,"allMessage": ""};
+                      Get.toNamed(routeName.chat, arguments: data);
+                    }
+                  });
+
+                }
+          });
+
+    });
   }
 }

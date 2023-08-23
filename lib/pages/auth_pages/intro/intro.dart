@@ -22,6 +22,7 @@ class _IntroState extends State<Intro> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<IntroController>(builder: (_) {
+
       return Scaffold(
           resizeToAvoidBottomInset: false,
           backgroundColor: appCtrl.appTheme.whiteColor,

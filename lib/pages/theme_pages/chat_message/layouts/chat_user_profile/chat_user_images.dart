@@ -8,7 +8,8 @@ class ChatUserImagesVideos extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: FirebaseFirestore.instance
+      stream: FirebaseFirestore.instance .collection(collectionName.users)
+          .doc(appCtrl.user["id"])
           .collection(collectionName.messages)
           .doc(chatId)
           .collection(collectionName.chat)

@@ -26,7 +26,7 @@ class ChatController extends GetxController {
   List message = [];
   dynamic pData, allData, userData;
   List<DrishyaEntity>? entities;
-
+  List<QueryDocumentSnapshot<Map<String, dynamic>>> allMessages = [];
   UserContactModel? userContactModel;
   bool positionStreamStarted = false;
   bool isUserAvailable = true;
@@ -76,6 +76,7 @@ class ChatController extends GetxController {
       pId = userContactModel!.uid;
       pName = userContactModel!.username;
       chatId = data["chatId"];
+      getAllDataLocally(data);
       isUserAvailable = true;
       update();
     }
@@ -84,6 +85,13 @@ class ChatController extends GetxController {
 
     super.onReady();
   }
+
+  getAllDataLocally(data)async{
+
+    allMessages = data["allMessage"];
+  //  allMessages.add(value)
+  }
+
 
   //get chat data
   getChatData() async {
@@ -106,8 +114,8 @@ class ChatController extends GetxController {
 
       final encrypter = encrypt.Encrypter(encrypt.AES(key));
 
-      final encrypted = encrypter.encrypt(fonts.noteEncrypt.tr, iv: iv).base64;
-      await FirebaseFirestore.instance
+     // final encrypted = encrypter.encrypt(fonts.noteEncrypt.tr, iv: iv).base64;
+      /*await FirebaseFirestore.instance
           .collection(collectionName.users)
           .doc(appCtrl.user["id"])
           .collection(collectionName.messages)
@@ -140,9 +148,7 @@ class ChatController extends GetxController {
             'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
           }, SetOptions(merge: true));
         }
-      });
-    } else {
-      onSendMessage(fonts.noteEncrypt.tr, MessageType.note);
+      });*/
     }
     seenMessage();
     await FirebaseFirestore.instance
@@ -216,48 +222,82 @@ class ChatController extends GetxController {
 
   //seen all message
   seenMessage() async {
-  log("chatIdchatId : $chatId");
     if (allData != null) {
-      if (allData["senderId"] != userData["id"]) {
-        await FirebaseFirestore.instance
-            .collection(collectionName.users)
-            .doc(appCtrl.user["id"])
-            .collection(collectionName.messages)
-            .doc(chatId)
-            .collection(collectionName.chat)
-            .where("receiver", isEqualTo: appCtrl.user["id"])
-            .get()
-            .then((value) {
-  log("RECEIVER : ${value.docs.length}");
-          value.docs.asMap().entries.forEach((element) async {
+      await FirebaseFirestore.instance
+          .collection(collectionName.users)
+          .doc(appCtrl.user["id"])
+          .collection(collectionName.messages)
+          .doc(chatId)
+          .collection(collectionName.chat)
+          .where("receiver", isEqualTo: appCtrl.user["id"])
+          .get()
+          .then((value) {
+        log("RECEIVER : ${value.docs.length}");
+        value.docs.asMap().entries.forEach((element) async {
+          await FirebaseFirestore.instance
+              .collection(collectionName.users)
+              .doc(appCtrl.user["id"])
+              .collection(collectionName.messages)
+              .doc(chatId)
+              .collection(collectionName.chat)
+              .doc(element.value.id)
+              .update({"isSeen": true});
+        });
+      });
+      await FirebaseFirestore.instance
+          .collection(collectionName.users)
+          .doc(userData["id"])
+          .collection(collectionName.chats)
+          .where("chatId", isEqualTo: chatId)
+          .get()
+          .then((value) async {
+        if (value.docs.isNotEmpty) {
+          await FirebaseFirestore.instance
+              .collection(collectionName.users)
+              .doc(userData["id"])
+              .collection(collectionName.chats)
+              .doc(value.docs[0].id)
+              .update({"isSeen": true});
+        }
+      });
 
-            await FirebaseFirestore.instance
-                .collection(collectionName.users)
-                .doc(appCtrl.user["id"])
-                .collection(collectionName.messages)
-                .doc(chatId)
-                .collection(collectionName.chat)
-                .doc(element.value.id)
-                .update({"isSeen": true});
-          });
+      await FirebaseFirestore.instance
+          .collection(collectionName.users)
+          .doc(pId)
+          .collection(collectionName.messages)
+          .doc(chatId)
+          .collection(collectionName.chat)
+          .where("receiver", isEqualTo: appCtrl.user["id"])
+          .get()
+          .then((value) {
+        log("RECEIVER : ${value.docs.length}");
+        value.docs.asMap().entries.forEach((element) async {
+          await FirebaseFirestore.instance
+              .collection(collectionName.users)
+              .doc(pId)
+              .collection(collectionName.messages)
+              .doc(chatId)
+              .collection(collectionName.chat)
+              .doc(element.value.id)
+              .update({"isSeen": true});
         });
-    await    FirebaseFirestore.instance
-            .collection(collectionName.users)
-            .doc(userData["id"])
-            .collection(collectionName.chats)
-            .where("chatId", isEqualTo: chatId)
-            .get()
-            .then((value) async{
-          if (value.docs.isNotEmpty) {
-          await  FirebaseFirestore.instance
-                .collection(collectionName.users)
-                .doc(userData["id"])
-                .collection(collectionName.chats)
-                .doc(value.docs[0].id)
-                .update({"isSeen": true});
-          }
-        });
-      }
+      });
+      await FirebaseFirestore.instance
+          .collection(collectionName.users)
+          .doc(pId)
+          .collection(collectionName.chats)
+          .where("chatId", isEqualTo: chatId)
+          .get()
+          .then((value) async {
+        if (value.docs.isNotEmpty) {
+          await FirebaseFirestore.instance
+              .collection(collectionName.users)
+              .doc(pId)
+              .collection(collectionName.chats)
+              .doc(value.docs[0].id)
+              .update({"isSeen": true});
+        }
+      });
     }
   }
 
@@ -351,9 +391,9 @@ class ChatController extends GetxController {
           pId,
           newChatId,
           encrypted,
-          isBlock: false,
           userData["id"],
-          userData["name"]);
+          userData["name"],MessageType.messageType,
+        isBlock: false,);
     } else {
       final encrypted =
           encrypter.encrypt("You block this contact", iv: iv).base64;
@@ -371,9 +411,9 @@ class ChatController extends GetxController {
           pData["id"],
           newChatId,
           encrypted,
-          isBlock: true,
           userData["id"],
-          userData["name"]);
+          userData["name"],MessageType.messageType,
+        isBlock: true,);
     }
     getChatData();
   }
@@ -553,7 +593,7 @@ class ChatController extends GetxController {
               update();
               Get.forceAppUpdate();
               await ChatMessageApi().saveMessageInUserCollection(pData["id"],
-                  userData["id"], newChatId, encrypted, userData["id"], pName);
+                  userData["id"], newChatId, encrypted, userData["id"], pName,type);
             }).then((value) {
               isLoading = false;
               update();
@@ -581,9 +621,9 @@ class ChatController extends GetxController {
               Get.forceAppUpdate();
 
               await ChatMessageApi().saveMessageInUserCollection(userData["id"],
-                  pId, newChatId, encrypted, userData["id"], pName);
+                  pId, newChatId, encrypted, userData["id"], pName,type);
               await ChatMessageApi().saveMessageInUserCollection(pId, pId,
-                  newChatId, encrypted, userData["id"], userData["name"]);
+                  newChatId, encrypted, userData["id"], userData["name"],type);
             }).then((value) {
               isLoading = false;
               update();
@@ -617,9 +657,9 @@ class ChatController extends GetxController {
 
 
             await ChatMessageApi().saveMessageInUserCollection(userData["id"],
-                pId, newChatId, encrypted, userData["id"], pName);
+                pId, newChatId, encrypted, userData["id"], pName,type);
             await ChatMessageApi().saveMessageInUserCollection(pId, pId,
-                newChatId, encrypted, userData["id"], userData["name"]);
+                newChatId, encrypted, userData["id"], userData["name"],type);
           }).then((value) {
             isLoading = false;
             update();
@@ -659,7 +699,7 @@ class ChatController extends GetxController {
     if (pData["pushToken"] != "") {
       firebaseCtrl.sendNotification(
           title: "Single Message",
-          msg: content,
+          msg: messageTypeCondition(type,content),
           chatId: chatId,
           token: pData["pushToken"],
           pId: pId,
@@ -771,7 +811,8 @@ class ChatController extends GetxController {
   Future<bool> onBackPress() {
     appCtrl.isTyping = false;
     appCtrl.update();
-    FirebaseFirestore.instance
+    FirebaseFirestore.instance .collection(collectionName.users)
+        .doc(appCtrl.user["id"])
         .collection(collectionName.messages)
         .doc(chatId)
         .collection(collectionName.chat)
@@ -779,7 +820,8 @@ class ChatController extends GetxController {
         .then((value) {
       if (value.docs.isNotEmpty) {
         if (value.docs.length == 1) {
-          FirebaseFirestore.instance
+          FirebaseFirestore.instance .collection(collectionName.users)
+              .doc(appCtrl.user["id"])
               .collection(collectionName.messages)
               .doc(chatId)
               .collection(collectionName.chat)
@@ -816,6 +858,7 @@ class ChatController extends GetxController {
         count = null;
         searchChatId = [];
         selectedIndexId = [];
+        log("message :: $message");
         message.asMap().entries.forEach((e) {
           if (decryptMessage(e.value.data()["content"])
               .toLowerCase()

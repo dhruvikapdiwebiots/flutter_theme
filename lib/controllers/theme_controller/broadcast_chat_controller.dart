@@ -382,9 +382,9 @@ class BroadcastChatController extends GetxController {
                 element.value["id"],
                 element.value["chatId"],
                 content,
-                isBroadcast: true,
+
                 userData["id"],
-                userData["name"]);
+                userData["name"],type, isBroadcast: true,);
           });
         } else {
           final now = DateTime.now();
@@ -408,9 +408,9 @@ class BroadcastChatController extends GetxController {
                 element.value["id"],
                 element.value["chatId"],
                 content,
-                isBroadcast: true,
+
                 userData["id"],
-                userData["name"]);
+                userData["name"],type,                isBroadcast: true,);
           });
         }
       }
@@ -494,7 +494,7 @@ class BroadcastChatController extends GetxController {
 
   deleteBroadCast() async {
     await FirebaseFirestore.instance
-        .collection(appCtrl.user["id"])
+        .collection(collectionName.users)
         .doc(appCtrl.user["id"])
         .collection(collectionName.broadcastMessage)
         .doc(pId)

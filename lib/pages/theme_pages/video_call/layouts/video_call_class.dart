@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import '../../../../config.dart';
 
 class VideoCallClass {
@@ -68,7 +67,7 @@ log("views : ${views.length}");
 
   //user view
   List<Widget> _getRenderViews(VideoCallController? videoCallCtrl) {
-    final List<AgoraVideoView> list = [
+   /* final List<AgoraVideoView> list = [
       AgoraVideoView(
           controller: VideoViewController.remote(
               rtcEngine: videoCallCtrl!.engine,
@@ -85,8 +84,8 @@ log("views : ${views.length}");
                   connection: RtcConnection(channelId: videoCallCtrl.channelName)),
             )));
 
-    log("AGORA : $list");
-    return list;
+    log("AGORA : $list");*/
+    return [];
   }
 
   //video view

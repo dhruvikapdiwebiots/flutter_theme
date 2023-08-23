@@ -242,3 +242,50 @@ getWhen(date) {
   }
   return when;
 }
+
+String messageTypeCondition(MessageType type, content){
+
+  if(type == MessageType.image || type == MessageType.imageArray) {
+    return "\u{1F4F8} Photo";
+  } else if(type == MessageType.video) {
+    return "\u{1F3A5} Video";
+  } else if(type == MessageType.audio) {
+    return "\u{1F3A4} Audio";
+  } else if(type == MessageType.doc) {
+    return "\u{1f4c4} Document";
+  } else if(type == MessageType.location) {
+    return "\u{1F4CD} Location";
+  } else if(type == MessageType.link) {
+    return "\u{1F517} Link";
+  } else if(type == MessageType.contact) {
+    return "\u{1F464} ${content.toString().split("-BREAK-")[0]}";
+  }else if(type == MessageType.gif) {
+    return "\u{1F47E} GIF";
+  } else{
+    return content;
+  }
+
+}
+String groupMessageTypeCondition(MessageType type, content){
+
+  if(type == MessageType.image || type == MessageType.imageArray) {
+    return "${appCtrl.user["name"]} shared \u{1F4F8} Photo";
+  } else if(type == MessageType.video) {
+    return "${appCtrl.user["name"]} shared \u{1F3A5} Video";
+  } else if(type == MessageType.audio) {
+    return "${appCtrl.user["name"]} shared \u{1F3A4} Audio";
+  } else if(type == MessageType.doc) {
+    return "${appCtrl.user["name"]} shared \u{1f4c4} Document";
+  } else if(type == MessageType.location) {
+    return "${appCtrl.user["name"]} shared \u{1F4CD} Location";
+  } else if(type == MessageType.link) {
+    return "${appCtrl.user["name"]} shared \u{1F517} Link";
+  } else if(type == MessageType.contact) {
+    return "${appCtrl.user["name"]} shared \u{1F464} ${content.toString().split("-BREAK-")[0]}";
+  }else if(type == MessageType.gif) {
+    return "${appCtrl.user["name"]} shared \u{1F47E} GIF";
+  } else{
+    return content;
+  }
+
+}
