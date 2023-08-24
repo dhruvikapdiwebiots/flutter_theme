@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import '../../../../config.dart';
 
 class ReceiverMessageCard extends StatelessWidget {
@@ -59,7 +61,7 @@ class ReceiverMessageCard extends StatelessWidget {
             .collection(collectionName.users)
             .doc(document!["senderId"])
             .get()
-            .then((value) {
+            .then((value)async {
           if (value.exists) {
             UserContactModel userContact = UserContactModel(
                 username: value.data()!["name"],
@@ -67,8 +69,17 @@ class ReceiverMessageCard extends StatelessWidget {
                 phoneNumber: value.data()!["phone"],
                 image: value.data()!["image"],
                 isRegister: true);
-            var data = {"chatId": document!["chatId"], "data": userContact};
-            Get.toNamed(routeName.chat, arguments: data);
+            await FirebaseFirestore.instance.collection(collectionName.users).doc(appCtrl.user["id"]).collection(collectionName.messages).doc(document!["chatId"]).collection(collectionName.chat).get().then((value) {
+              log("value.docs : ${value.docs.length}");
+              if(value.docs.isNotEmpty){
+
+                var data = {"chatId": document!["chatId"], "data": userContact};
+                Get.toNamed(routeName.chat, arguments: data);
+              }else{
+                var data = {"chatId": document!["chatId"], "data": userContact};
+                Get.toNamed(routeName.chat, arguments: data);
+              }
+            });
           }
         });
       });

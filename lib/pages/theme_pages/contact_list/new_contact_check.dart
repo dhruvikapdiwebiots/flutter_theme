@@ -6,7 +6,8 @@ import 'package:share_plus/share_plus.dart';
 
 class NewContact extends StatefulWidget {
   final PhotoUrl? message;
-  const NewContact({super.key,this.message});
+
+  const NewContact({super.key, this.message});
 
   @override
   State<NewContact> createState() => _NewContactState();
@@ -213,100 +214,90 @@ class _NewContactState extends State<NewContact> {
                                       if (snapshot.hasData &&
                                           snapshot.data.exists) {
                                         return ListTile(
-                                          tileColor: Colors.white,
-                                          leading: CachedNetworkImage(
-                                              imageUrl: snapshot.data['image'],
-                                              imageBuilder: (context, imageProvider) => CircleAvatar(
-                                                  backgroundColor:
-                                                      const Color(0xffE6E6E6),
-                                                  radius: Sizes.s20,
-                                                  backgroundImage: NetworkImage(
-                                                      '${snapshot.data['image']}')),
-                                              placeholder: (context, url) => const CircleAvatar(
-                                                  backgroundColor:
-                                                      Color(0xffE6E6E6),
-                                                  radius: Sizes.s20,
-                                                  child: Icon(Icons.person,
-                                                      color:
-                                                          Color(0xffCCCCCC))),
-                                              errorWidget: (context, url, error) =>
-                                                  const CircleAvatar(
-                                                      backgroundColor:
-                                                          Color(0xffE6E6E6),
-                                                      radius: AppRadius.r20,
-                                                      child: Icon(Icons.person,
-                                                          color:
-                                                              Color(0xffCCCCCC)))),
-                                          title: Text(snapshot.data["name"],
-                                              style: AppCss.poppinsSemiBold14
-                                                  .textColor(appCtrl
-                                                      .appTheme.blackColor)),
-                                          subtitle: Text(
-                                              snapshot.data["statusDesc"],
-                                              style: AppCss.poppinsMedium14
-                                                  .textColor(appCtrl
-                                                      .appTheme.txtColor)),
-                                          contentPadding:
-                                              const EdgeInsets.symmetric(
-                                                  horizontal: 22.0,
-                                                  vertical: 0.0),
-                                          onTap: () async {
-                                            log("DATA ss");
-                                            await FirebaseFirestore.instance
-                                                .collection(
-                                                    collectionName.users)
-                                                .doc(appCtrl.user['id'])
-                                                .collection(
-                                                    collectionName.chats)
-                                                .get()
-                                                .then((value) {
-                                              if (value.docs.isNotEmpty) {
-                                                value.docs
-                                                    .asMap()
-                                                    .forEach((key, value) {
-                                                  if (value.data()[
-                                                                  "receiverId"] ==
-                                                              appCtrl
-                                                                  .user["id"] &&
-                                                          value.data()[
-                                                                  "senderId"] ==
-                                                              snapshot
-                                                                  .data["id"] ||
-                                                      value.data()[
-                                                                  "senderId"] ==
-                                                              appCtrl
-                                                                  .user["id"] &&
-                                                          value.data()[
-                                                                  "receiverId"] ==
-                                                              snapshot
-                                                                  .data["id"]) {
-
-                                                    UserContactModel
-                                                        userContact =
-                                                        UserContactModel(
-                                                            username: snapshot
-                                                                .data!["name"],
-                                                            uid: value.data()[
-                                                                "senderId"],
-                                                            phoneNumber:
-                                                                snapshot.data![
-                                                                    "phone"],
-                                                            image: snapshot
-                                                                .data!["image"],
-                                                            isRegister: true);
-                                                    var data = {
-                                                      "chatId": value
-                                                          .data()["chatId"],
-                                                      "data": userContact
-                                                    };
-                                                    Get.toNamed(routeName.chat,
-                                                        arguments: data);
-                                                  }
-                                                });
-                                              }
+                                            tileColor: Colors.white,
+                                            leading: CachedNetworkImage(
+                                                imageUrl:
+                                                    snapshot.data['image'],
+                                                imageBuilder: (context, imageProvider) => CircleAvatar(
+                                                    backgroundColor:
+                                                        const Color(0xffE6E6E6),
+                                                    radius: Sizes.s20,
+                                                    backgroundImage: NetworkImage(
+                                                        '${snapshot.data['image']}')),
+                                                placeholder: (context, url) =>
+                                                    const CircleAvatar(
+                                                        backgroundColor:
+                                                            Color(0xffE6E6E6),
+                                                        radius: Sizes.s20,
+                                                        child: Icon(Icons.person,
+                                                            color: Color(
+                                                                0xffCCCCCC))),
+                                                errorWidget: (context, url, error) =>
+                                                    const CircleAvatar(
+                                                        backgroundColor: Color(0xffE6E6E6),
+                                                        radius: AppRadius.r20,
+                                                        child: Icon(Icons.person, color: Color(0xffCCCCCC)))),
+                                            title: Text(snapshot.data["name"], style: AppCss.poppinsSemiBold14.textColor(appCtrl.appTheme.blackColor)),
+                                            subtitle: Text(snapshot.data["statusDesc"], style: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.txtColor)),
+                                            contentPadding: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 0.0),
+                                            onTap: () async {
+                                              log("DATA ss");
+                                              await FirebaseFirestore.instance
+                                                  .collection(
+                                                      collectionName.users)
+                                                  .doc(appCtrl.user['id'])
+                                                  .collection(
+                                                      collectionName.chats)
+                                                  .get()
+                                                  .then((value) {
+                                                if (value.docs.isNotEmpty) {
+                                                  value.docs
+                                                      .asMap()
+                                                      .forEach((key, value) {
+                                                    if (value.data()[
+                                                                    "receiverId"] ==
+                                                                appCtrl.user[
+                                                                    "id"] &&
+                                                            value.data()[
+                                                                    "senderId"] ==
+                                                                snapshot.data[
+                                                                    "id"] ||
+                                                        value.data()[
+                                                                    "senderId"] ==
+                                                                appCtrl.user[
+                                                                    "id"] &&
+                                                            value.data()[
+                                                                    "receiverId"] ==
+                                                                snapshot.data[
+                                                                    "id"]) {
+                                                      UserContactModel
+                                                          userContact =
+                                                          UserContactModel(
+                                                              username: snapshot
+                                                                      .data![
+                                                                  "name"],
+                                                              uid: value.data()[
+                                                                  "senderId"],
+                                                              phoneNumber:
+                                                                  snapshot.data![
+                                                                      "phone"],
+                                                              image: snapshot
+                                                                      .data![
+                                                                  "image"],
+                                                              isRegister: true);
+                                                      var data = {
+                                                        "chatId": value
+                                                            .data()["chatId"],
+                                                        "data": userContact
+                                                      };
+                                                      Get.toNamed(
+                                                          routeName.chat,
+                                                          arguments: data);
+                                                    }
+                                                  });
+                                                }
+                                              });
                                             });
-                                          }
-                                        );
                                       } else {
                                         return Container();
                                       }
@@ -364,16 +355,18 @@ class _NewContactState extends State<NewContact> {
                                               color: appCtrl.appTheme.primary)
                                           .inkWell(onTap: () async {
                                         if (Platform.isAndroid) {
-                                         /* final uri = Uri(
+                                          final uri = Uri(
                                               scheme: "sms",
                                               path: phoneNumberExtension(phone),
                                               queryParameters: <String, String>{
                                                 'body': Uri.encodeComponent(
                                                     'Download the ChatBox App'),
                                               });
-                                          await launchUrl(uri);*/
+                                          await launchUrl(uri);
 
-                                          Share.share(" 'Download the ChatBox App'");                                        }
+                                          Share.share(
+                                              " 'Download the ChatBox App'");
+                                        }
                                       }))
                                 ]);
                         })

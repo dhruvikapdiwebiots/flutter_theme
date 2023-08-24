@@ -1,9 +1,10 @@
+import 'package:flutter_theme/models/message_model.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../config.dart';
 
 class GifLayout extends StatelessWidget {
-  final dynamic document;
+  final MessageModel? document;
   final GestureLongPressCallback? onLongPress;
   final GestureTapCallback? onTap;
   final bool isReceiver, isGroup;
@@ -24,7 +25,7 @@ class GifLayout extends StatelessWidget {
     List seen = [];
     if(isGroup){
 
-      seen = document!.data().toString().contains('seenMessageList') ? document['seenMessageList'] : [];
+     // seen = document!.data().toString().contains('seenMessageList') ? document['seenMessageList'] : [];
     }
     return InkWell(
         onLongPress: onLongPress,
@@ -34,11 +35,11 @@ class GifLayout extends StatelessWidget {
           children: [
             if (isGroup)
               if (isReceiver)
-                if (document!["sender"] != currentUserId)
+                if (document!.sender != currentUserId)
                   Align(
                       alignment: Alignment.topLeft,
                       child: Column(children: [
-                        Text(document!['senderName'],
+                        Text(document!.senderName.toString(),
                                 style: AppCss.poppinsMedium12
                                     .textColor(appCtrl.appTheme.primary))
                             .paddingSymmetric(
@@ -51,13 +52,14 @@ class GifLayout extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Image.network(decryptMessage(document!["content"]),
+                Image.network(decryptMessage(document!.content),
                     height: Sizes.s100),
                 IntrinsicHeight(
                         child: Row(
                   children: [
-                    if (document!.data().toString().contains('isFavourite'))
-                      if (appCtrl.user["id"] != document.data()["senderId"])
+                    if (document!.isFavourite !=null)
+                    if (document!.isFavourite ==true)
+                      if (appCtrl.user["id"] != document!.sender)
                         Icon(Icons.star,
                             color: appCtrl.appTheme.txtColor, size: Sizes.s10),
                     const HSpace(Sizes.s3),
@@ -68,14 +70,14 @@ class GifLayout extends StatelessWidget {
                             : appCtrl.appTheme.gray) :
                     Icon(Icons.done_all_outlined,
                         size: Sizes.s15,
-                        color: document!['isSeen'] == true
+                        color: document!.isSeen == true
                             ? appCtrl.appTheme.primary
                             : appCtrl.appTheme.gray),
                     const HSpace(Sizes.s5),
                     Text(
                       DateFormat('HH:mm a').format(
                           DateTime.fromMillisecondsSinceEpoch(
-                              int.parse(document!['timestamp']))),
+                              int.parse(document!.timestamp.toString()))),
                       style: AppCss.poppinsMedium12
                           .textColor(appCtrl.appTheme.txtColor),
                     )

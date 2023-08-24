@@ -295,7 +295,7 @@ class StatusController extends GetxController {
                 log("ELE : ${element["uid"]}");
                 return element["uid"] == appCtrl.user["id"];
               }).isEmpty;
-              log("isExist :: $isExist");
+
               if (isExist) {
                 if (!statusList.contains(status)) {
                   statusList.add(status);
@@ -306,7 +306,7 @@ class StatusController extends GetxController {
 
             if (status.seenAllStatus != null) {
               bool isExist = status.seenAllStatus!.contains(appCtrl.user["id"]);
-              log("isExist :%$isExist");
+
               if (isExist) {
                 if (!allViewStatusList.contains(status)) {
                   allViewStatusList.add(status);

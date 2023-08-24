@@ -1,40 +1,133 @@
+import 'dart:developer';
 
-class MessageModel {
-  final String sender;
-  final String receiver;
-  final String content;
-  final String timestamp;
-  final String type;
-  final String messageType;
+import 'package:flutter_theme/config.dart';
 
-  MessageModel({
-    required this.sender,
-    required this.receiver,
-    required this.content,
-    required this.timestamp,
-    required this.type,
-    required this.messageType,
+class DateTimeChip {
+  String? time;
+  List<MessageModel>? message;
+
+  DateTimeChip({
+    this.time,
+    this.message,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'sender': sender,
-      'receiver': receiver,
-      'content': content,
-      'timestamp': timestamp,
-      'type': type,
-      'messageType': messageType,
-    };
+  DateTimeChip.fromJson(Map<String, dynamic> json) {
+    time = json['time'];
+    if (json['message'] != null) {
+      message = <MessageModel>[];
+      json['message'].forEach((v) {
+        message!.add(MessageModel.fromJson(v));
+      });
+    }
   }
 
-  factory MessageModel.fromMap(Map<String, dynamic> map) {
-    return MessageModel(
-      sender: map['sender'] ?? '',
-      receiver: map['receiver'] ?? '',
-      content: map['content'] ?? '',
-      timestamp: map['timestamp'],
-      type: map['type'] ?? '',
-      messageType: map['messageType'] ?? "",
-    );
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['time'] = time;
+    if (message != null) {
+      data['message'] = message!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class MessageModel {
+  String? sender, senderName;
+  String? receiver;
+  String? content;
+  String? timestamp;
+  String? type, groupId;
+  String? messageType, chatId, blockBy, blockUserId, emoji, favouriteId, docId;
+  bool? isBlock, isSeen, isBroadcast, isFavourite;
+  List? receiverList, seenMessageList;
+
+  MessageModel(
+      {this.sender,
+      this.senderName,
+      this.receiverList,
+      this.content,
+      this.timestamp,
+      this.type,
+      this.chatId,
+      this.messageType,
+      this.blockBy,
+      this.blockUserId,
+      this.isBlock = false,
+      this.isBroadcast = false,
+      this.isSeen = false,
+      this.emoji,
+      this.isFavourite = false,
+      this.favouriteId,
+      this.docId,
+      this.groupId,
+      this.seenMessageList,
+      this.receiver});
+
+  MessageModel.fromJson(Map<String, dynamic> json) {
+    sender = json["sender"];
+    senderName = json['senderName'] ?? '';
+    if (!json.containsKey("groupId")) {
+      receiver = json['receiver'] ?? '';
+    }
+    content = json['content'] ?? '';
+    timestamp = json['timestamp'];
+    docId = json['docId'];
+    type = json['type'] ?? '';
+    chatId = json['chatId'] ?? '';
+    messageType = json['messageType'] ?? "";
+    blockBy = json['blockBy'] ?? "";
+    blockUserId = json['blockUserId'] ?? "";
+    if (json.containsKey("emoji")) {
+      emoji = json['emoji'] ?? "";
+    }
+    if (json.containsKey("favouriteId")) {
+      favouriteId = json['favouriteId'] ?? "";
+    }
+    if (json.containsKey("isBlock")) {
+      isBlock = json['isBlock'] ?? "";
+    } else {
+      isBlock = false;
+    }
+    isBroadcast = json['isBroadcast'] ?? false;
+    isSeen = json['isSeen'] ?? false;
+    if (json.containsKey("isFavourite")) {
+      isFavourite = json['isFavourite'] ?? false;
+    }
+    if (json.containsKey("groupId")) {
+      if (json.containsKey("receiver")) {
+        receiverList = json['receiver'] ?? [];
+      }
+    }
+    if (json.containsKey("groupId")) {
+      groupId = json['groupId'] ?? "";
+    }
+    if (json.containsKey("seenMessageList")) {
+      seenMessageList = json['seenMessageList'] ?? "";
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['sender'] = sender;
+    data['senderName'] = senderName;
+    data['receiver'] = receiver;
+    data['content'] = content;
+    data['timestamp'] = timestamp;
+    data['docId'] = docId;
+    data['type'] = type;
+    data['chatId'] = chatId;
+    data['messageType'] = messageType;
+    data['blockBy'] = blockBy;
+    data['blockUserId'] = blockUserId;
+    data['emoji'] = emoji;
+    data['favouriteId'] = favouriteId;
+    data['isBlock'] = isBlock;
+    data['isBroadcast'] = isBroadcast;
+    data['isSeen'] = isSeen;
+    data['isFavourite'] = isFavourite;
+    data['receiverList'] = receiverList;
+    data['groupId'] = groupId;
+    data['seenMessageList'] = seenMessageList;
+    return data;
   }
 }

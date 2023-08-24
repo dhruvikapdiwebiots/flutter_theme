@@ -1,9 +1,10 @@
+import 'package:flutter_theme/models/message_model.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../config.dart';
 
 class GroupContactLayout extends StatelessWidget {
-  final DocumentSnapshot? document;
+  final MessageModel? document;
   final VoidCallback? onLongPress,onTap;
   final String? currentUserId;
   final bool isReceiver;
@@ -19,7 +20,7 @@ class GroupContactLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List seen = [];
-    seen = document!.data().toString().contains('seenMessageList') ? document!['seenMessageList'] : [];
+    seen = document!.seenMessageList ?? [];
 
     return InkWell(
         onLongPress: onLongPress,
@@ -50,9 +51,9 @@ class GroupContactLayout extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      if (document!["sender"] != currentUserId)
+                      if (document!.sender != currentUserId)
                         Column(children: [
-                          Text(document!['senderName'],
+                          Text(document!.senderName!,
                               style: AppCss.poppinsMedium12
                                   .textColor(appCtrl.appTheme.primary)).paddingAll(Insets.i5).decorated(color: appCtrl.appTheme.whiteColor,borderRadius: BorderRadius.circular(AppRadius.r20)),
 
@@ -79,11 +80,11 @@ class GroupContactLayout extends StatelessWidget {
                                 UserContactModel user = UserContactModel(
                                     uid: "0",
                                     isRegister: false,
-                                    image: decryptMessage(document!['content']).split('-BREAK-')[2],
+                                    image: decryptMessage(document!.content).split('-BREAK-')[2],
                                     username:
-                                    decryptMessage(document!['content']).split('-BREAK-')[0],
+                                    decryptMessage(document!.content).split('-BREAK-')[0],
                                     phoneNumber: phoneNumberExtension(
-                                        decryptMessage(document!['content']).split('-BREAK-')[1]),
+                                        decryptMessage(document!.content).split('-BREAK-')[1]),
                                     description: "");
                                 MessageFirebaseApi().saveContact(user);
                               },
@@ -100,8 +101,9 @@ class GroupContactLayout extends StatelessWidget {
                                 mainAxisSize: MainAxisSize.min,
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  if (document!.data().toString().contains('isFavourite'))
-                                    if(appCtrl.user["id"] == document!["favouriteId"])
+                                  if (document!.isFavourite != null)
+                                  if (document!.isFavourite == true)
+                                    if(appCtrl.user["id"] == document!.favouriteId.toString())
                                     Icon(Icons.star,color: appCtrl.appTheme.txtColor,size: Sizes.s10),
                                   const HSpace(Sizes.s3),
                                   Icon(Icons.done_all_outlined,
@@ -112,7 +114,7 @@ class GroupContactLayout extends StatelessWidget {
                                   const HSpace(Sizes.s3),
                                   Text(
                                     DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(
-                                        int.parse(document!['timestamp']))),
+                                        int.parse(document!.timestamp.toString()))),
                                     style:
                                     AppCss.poppinsMedium12.textColor(appCtrl.appTheme.txtColor),
                                   ),
@@ -122,8 +124,8 @@ class GroupContactLayout extends StatelessWidget {
                         ],
                       )
                     ])),
-            if (document!.data().toString().contains('emoji'))
-              EmojiLayout(emoji: document!["emoji"])
+            if (document!.emoji != null)
+              EmojiLayout(emoji: document!.emoji)
           ],
         )
 

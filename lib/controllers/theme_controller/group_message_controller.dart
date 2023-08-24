@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:dartx/dartx_io.dart';
 import 'package:drishya_picker/drishya_picker.dart';
 import 'package:flutter_theme/config.dart';
+import 'package:flutter_theme/models/message_model.dart';
 import 'package:flutter_theme/pages/theme_pages/group_chat_message/group_message_api.dart';
 import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/clear_dialog.dart';
 import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_chat_wall_paper.dart';
@@ -66,7 +67,9 @@ class GroupChatMessageController extends GetxController {
   bool enableReactionPopup = false;
   bool showPopUp = false;
   int? count;
-
+  StreamSubscription? messageSub;
+  List<QueryDocumentSnapshot<Map<String, dynamic>>> allMessages = [];
+  List<DateTimeChip> localMessage = [];
   late encrypt.Encrypter cryptor;
   Offset tapPosition = Offset.zero;
   final iv = encrypt.IV.fromLength(8);
@@ -82,10 +85,11 @@ class GroupChatMessageController extends GetxController {
 
     var data = Get.arguments;
     pData = data;
-    pId = pData["message"]["groupId"];
-    pName = pData["groupData"]["name"];
-    groupImage = pData["groupData"]["image"];
-
+    if(pData != null) {
+      pId = pData["message"]["groupId"];
+      pName = pData["groupData"]["name"];
+      groupImage = pData["groupData"]["image"];
+    }
     update();
     getPeerStatus();
 
@@ -171,6 +175,26 @@ class GroupChatMessageController extends GetxController {
         }
       }
     });
+
+
+    messageSub = FirebaseFirestore.instance
+        .collection(collectionName.users)
+        .doc(appCtrl.user["id"])
+        .collection(collectionName.groupMessage)
+        .doc(pId)
+        .collection(collectionName.chat)
+        .snapshots()
+        .listen((event) async {
+      allMessages = event.docs;
+      update();
+
+      ChatMessageApi().getLocalGroupMessage();
+
+      isLoading = false;
+      update();
+    });
+    isLoading = false;
+    update();
     user = appCtrl.storage.read(session.user);
     if (backgroundImage != null || backgroundImage != "") {
       FirebaseFirestore.instance
@@ -429,6 +453,44 @@ class GroupChatMessageController extends GetxController {
     if (content.trim() != '') {
       var user = appCtrl.storage.read(session.user);
       id = user["id"];
+      String time = DateTime.now().millisecondsSinceEpoch.toString();
+      MessageModel messageModel = MessageModel(
+          blockBy: allData != null ? allData["blockBy"] : "",
+          blockUserId: allData != null ? allData["blockUserId"] : "",
+          chatId: pId,
+          content: encrypted,
+          docId: time,
+          isBlock: false,
+          isBroadcast: false,
+          isFavourite: false,
+          isSeen: false,
+          messageType: "sender",
+          receiver: pId,
+          sender: appCtrl.user["id"],
+          timestamp: time,
+          type: type.name);
+      bool isEmpty =
+          localMessage.where((element) => element.time == "Today").isEmpty;
+      if (isEmpty) {
+        List<MessageModel>? message = [];
+        if (message.isNotEmpty) {
+          message.add(messageModel);
+          message[0].docId = time;
+        } else {
+          message = [messageModel];
+          message[0].docId = time;
+        }
+        DateTimeChip dateTimeChip =
+        DateTimeChip(time: getDate(time), message: message);
+        localMessage.add(dateTimeChip);
+      } else {
+        int index =
+        localMessage.indexWhere((element) => element.time == "Today");
+
+        if (!localMessage[index].message!.contains(messageModel)) {
+          localMessage[index].message!.add(messageModel);
+        }
+      }
       await GroupMessageApi().saveGroupMessage(encrypted, type);
 
       await ChatMessageApi().saveGroupData(id, pId, encrypted, pData, type);
@@ -462,35 +524,40 @@ class GroupChatMessageController extends GetxController {
         context: Get.context!, builder: (_) => const GroupDeleteAlert());
   }
 
-  Widget timeLayout(document) {
-    List newMessageList = document["message"];
+  Widget timeLayout(DateTimeChip document) {
+    List<MessageModel> newMessageList = document.message!;
     return Column(
       children: [
         Text(
-                document["title"].contains("-other")
-                    ? document["title"].split("-other")[0]
-                    : document["title"],
+                document.time!.contains("-other")
+                    ? document.time!.split("-other")[0]
+                    : document.time!,
                 style:
                     AppCss.poppinsMedium14.textColor(appCtrl.appTheme.txtColor))
             .marginSymmetric(vertical: Insets.i5),
         ...newMessageList.asMap().entries.map((e) {
-          return buildItem(e.key, e.value, e.value.id);
+          return buildItem( e.key,
+              e.value,
+              e.value.docId,
+              document.time!.contains("-other")
+                  ? document.time!.split("-other")[0]
+                  : document.time!);
         }).toList()
       ],
     );
   }
 
 // BUILD ITEM MESSAGE BOX FOR RECEIVER AND SENDER BOX DESIGN
-  Widget buildItem(int index, DocumentSnapshot document, docId) {
+  Widget buildItem(int index, MessageModel document, docId, title) {
     return Column(children: [
-      document["type"] == MessageType.note.name
+      document.type == MessageType.note.name
           ? const CommonNoteEncrypt()
           : Container(),
-      (document['sender'] == user["id"])
+      (document.sender == user["id"])
           ? GroupSenderMessage(
                   document: document,
                   docId: docId,
-                  index: index,
+                  index: index,title: title,
                   currentUserId: user["id"])
               .inkWell(onTap: () {
               enableReactionPopup = false;
@@ -498,11 +565,11 @@ class GroupChatMessageController extends GetxController {
               selectedIndexId = [];
               update();
             })
-          : document['sender'] != user["id"]
+          : document.sender != user["id"]
               ?
               // RECEIVER MESSAGE
               GroupReceiverMessage(
-                  document: document,
+                  document: document,title: title,
                   index: index,
                   docId: docId,
                 ).inkWell(onTap: () {
@@ -852,7 +919,7 @@ class GroupChatMessageController extends GetxController {
         count = null;
         searchChatId = [];
         selectedIndexId = [];
-        message.asMap().entries.forEach((e) {
+       /* message.asMap().entries.forEach((e) {
           if (decryptMessage(e.value.data()["content"])
               .toLowerCase()
               .contains(val)) {
@@ -863,6 +930,18 @@ class GroupChatMessageController extends GetxController {
             }
           }
           update();
+        });*/
+
+        localMessage.asMap().entries.forEach((element) {
+          element.value.message!.asMap().entries.forEach((e) {
+            if(decryptMessage(e.value.content).toString().toLowerCase().contains(txtChatSearch.text)){
+              if (!searchChatId.contains(e.value.docId)) {
+                searchChatId.add(e.value.docId);
+              } else {
+                searchChatId.remove(e.value.docId);
+              }
+            }
+          });
         });
       },
 

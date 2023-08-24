@@ -169,9 +169,7 @@ Get.back();
           .then((value) {
         if (value.docs.isNotEmpty) {
           value.docs.asMap().entries.forEach((element) {
-            log("element.value : ${element.value.data()}");
-            log("exist : ${element.value.data()["senderId"] == user["id"] && element.value.data()["receiverId"] == e.value["id"] || element.value.data()["senderId"] == e.value["id"] && element.value.data()["receiverId"] == user["id"]}");
-            if (element.value.data()["senderId"] == user["id"] &&
+         if (element.value.data()["senderId"] == user["id"] &&
                     element.value.data()["receiverId"] == e.value["id"] ||
                 element.value.data()["senderId"] == e.value["id"] &&
                     element.value.data()["receiverId"] == user["id"]) {

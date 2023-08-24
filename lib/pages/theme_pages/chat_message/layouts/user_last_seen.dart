@@ -23,16 +23,13 @@ class UserLastSeen extends StatelessWidget {
                 if (!snapshot.hasData) {
                   return Container();
                 } else {
-
-                  log("CHEC : ${snapshot.data!.data()}");
-
                   return chatCtrl.pId ==  "0" ? Container(): Text(
-                    snapshot.data!.data()!["status"] == "Offline"
+                      snapshot.data!.exists?   snapshot.data!.data()!["status"] == "Offline"
                         ? DateFormat('HH:mm a').format(
                         DateTime.fromMillisecondsSinceEpoch(
                             int.parse(snapshot.data!.data()!
                             ['lastSeen'])))
-                        : snapshot.data!.data()!["status"],
+                        : snapshot.data!.data()!["status"] : "Offline",
                     textAlign: TextAlign.center,
                     style: AppCss.poppinsLight14
                         .textColor(appCtrl.appTheme.txtColor),

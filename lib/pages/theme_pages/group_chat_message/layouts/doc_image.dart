@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:flutter_theme/models/message_model.dart';
 import 'package:intl/intl.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
@@ -8,7 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import '../../../../config.dart';
 
 class DocImageLayout extends StatelessWidget {
-  final dynamic document;
+  final MessageModel? document;
   final GestureLongPressCallback? onLongPress;
   final GestureTapCallback? onTap;
   final bool isReceiver, isGroup, isBroadcast;
@@ -39,11 +40,11 @@ class DocImageLayout extends StatelessWidget {
               children: [
                 if (isGroup)
                   if (isReceiver)
-                    if (document!["sender"] != currentUserId)
+                    if (document!.sender != currentUserId)
                       Align(
                           alignment: Alignment.topLeft,
                           child: Column(children: [
-                            Text(document!['senderName'],
+                            Text(document!.senderName.toString(),
                                 style: AppCss.poppinsMedium12
                                     .textColor(appCtrl.appTheme.primary)),
                             const VSpace(Sizes.s8)
@@ -57,7 +58,8 @@ class DocImageLayout extends StatelessWidget {
                         const HSpace(Sizes.s10),
                         Expanded(
                           child: Text(
-                            decryptMessage(document!["content"]).split("-BREAK-")[0],
+                            decryptMessage(document!.content)
+                                .split("-BREAK-")[0],
                             textAlign: TextAlign.start,
                             style: AppCss.poppinsMedium12.textColor(isReceiver
                                 ? appCtrl.appTheme.lightBlackColor
@@ -83,28 +85,32 @@ class DocImageLayout extends StatelessWidget {
                               if (!isReceiver && !isBroadcast)
                                 Icon(Icons.done_all_outlined,
                                     size: Sizes.s15,
-                                    color: document!['isSeen'] == true
+                                    color: document!.isSeen == true
                                         ? appCtrl.appTheme.primary
                                         : appCtrl.appTheme.gray),
                             const HSpace(Sizes.s5),
                             IntrinsicHeight(
                                 child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    if (document!.data().toString().contains('isFavourite'))
-                                      if(appCtrl.user["id"] == document["favouriteId"])
-                                      Icon(Icons.star,color: appCtrl.appTheme.txtColor,size: Sizes.s10),
-                                    const HSpace(Sizes.s3),
-                                    Text(
-                                      DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(
-                                          int.parse(document!['timestamp']))),
-                                      style:
-                                      AppCss.poppinsMedium12.textColor(appCtrl.appTheme.txtColor),
-                                    ),
-                                  ],
-                                )
-                            )
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (document!.isFavourite != null)
+                                  if (document!.isFavourite == true)
+                                    if (appCtrl.user["id"] ==
+                                        document!.favouriteId)
+                                      Icon(Icons.star,
+                                          color: appCtrl.appTheme.txtColor,
+                                          size: Sizes.s10),
+                                const HSpace(Sizes.s3),
+                                Text(
+                                  DateFormat('HH:mm a').format(
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                          int.parse(document!.timestamp.toString()))),
+                                  style: AppCss.poppinsMedium12
+                                      .textColor(appCtrl.appTheme.txtColor),
+                                ),
+                              ],
+                            ))
                           ]).marginSymmetric(
                           vertical: Insets.i3, horizontal: Insets.i10),
                     )
@@ -112,8 +118,8 @@ class DocImageLayout extends StatelessWidget {
                 )
               ],
             ),
-            if (document!.data().toString().contains('emoji'))
-              EmojiLayout(emoji: document!["emoji"])
+            if (document!.emoji != null)
+              EmojiLayout(emoji: document!.emoji)
           ])
         ],
       )

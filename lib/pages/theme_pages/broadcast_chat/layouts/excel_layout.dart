@@ -1,9 +1,11 @@
 
 
+import 'package:flutter_theme/models/message_model.dart';
+
 import '../../../../config.dart';
 
 class ExcelLayout extends StatelessWidget {
-  final dynamic document;
+  final MessageModel? document;
   final GestureLongPressCallback? onLongPress;
   final GestureTapCallback? onTap;
   final bool isReceiver, isGroup, isBroadcast;
@@ -34,12 +36,12 @@ class ExcelLayout extends StatelessWidget {
                DocContent(isReceiver: isReceiver,isBroadcast: isBroadcast,document: document,currentUserId: currentUserId,isGroup: isGroup),
                 const VSpace(Sizes.s2),
                 BroadcastClass().timeFavouriteLayout(
-                    document!.data().toString().contains('isFavourite'),
-                    document!['timestamp'],
+                    document!.isFavourite ??false,
+                    document!.timestamp,
                     isGroup,
                     isReceiver,
                     isBroadcast,
-                    document!.data().toString().contains('isSeen') ? document!['isSeen'] : false,document["favouriteId"] ?? "")
+                    document!.isSeen != null? document!.isSeen! : false,document!.favouriteId.toString())
               ],
             )
                 .paddingAll(Insets.i8)
@@ -49,8 +51,8 @@ class ExcelLayout extends StatelessWidget {
                         : appCtrl.appTheme.primary,
                     borderRadius: BorderRadius.circular(AppRadius.r8))
                 .marginSymmetric(horizontal: Insets.i10, vertical: Insets.i5),
-            if (document!.data().toString().contains('emoji'))
-              EmojiLayout(emoji: document!["emoji"]),
+            if (document!.emoji != null)
+              EmojiLayout(emoji: document!.emoji),
           ],
         ));
   }

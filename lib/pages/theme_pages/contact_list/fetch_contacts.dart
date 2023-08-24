@@ -1,8 +1,10 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_theme/controllers/fetch_contact_controller.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../config.dart';
@@ -189,6 +191,7 @@ class _FetchContactState extends State<FetchContact> {
                               contentPadding: EdgeInsets.symmetric(
                                   horizontal: 22.0, vertical: 0.0),
                               onTap: ()async {
+                                log("DATA ss");
                                 await FirebaseFirestore.instance
                                     .collection(
                                     collectionName.users)
@@ -239,6 +242,25 @@ class _FetchContactState extends State<FetchContact> {
                                             arguments: data);
                                       }
                                     });
+                                  }else{
+                                    UserContactModel
+                                    userContact =
+                                    UserContactModel(
+                                        username: snapshot
+                                            .data!.name,
+                                        uid: snapshot.data!.id,
+                                        phoneNumber:
+                                        snapshot.data!.idVariants,
+                                        image: snapshot
+                                            .data!.photoURL,
+                                        isRegister: true);
+                                    var data = {
+                                      "chatId": "0",
+                                      "data": userContact,
+                                      "allMessage":""
+                                    };
+                                    Get.toNamed(routeName.chat,
+                                        arguments: data);
                                   }
                                 });
                               },
@@ -300,13 +322,19 @@ class _FetchContactState extends State<FetchContact> {
                             ),
                             contentPadding: EdgeInsets.symmetric(
                                 horizontal: 22.0, vertical: 0.0),
-                            onTap: () {},
+
                           ),
                           Positioned(
                             right: 19,
                             bottom: 19,
                             child: InkWell(
-                                onTap: () {},
+                                onTap: () {
+                                  if (Platform.isAndroid) {
+
+                                    Share.share(
+                                        " 'Download the ChatBox App'");
+                                  }
+                                },
                                 child: Icon(
                                   Icons.person_add_alt,
                                 )),

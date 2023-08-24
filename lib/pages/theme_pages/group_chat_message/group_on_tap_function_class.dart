@@ -190,11 +190,15 @@ class GroupOnTapFunctionCall {
   }
 
   //on emoji select
-  onEmojiSelect(GroupChatMessageController chatCtrl,docId,emoji) async {
+  onEmojiSelect(GroupChatMessageController chatCtrl,docId,emoji,title) async {
     chatCtrl.selectedIndexId = [];
     chatCtrl.showPopUp = false;
     chatCtrl.enableReactionPopup = false;
     chatCtrl.update();
+    int index = chatCtrl.localMessage.indexWhere((element) => element.time == title);
+
+    int messageIndex =   chatCtrl.localMessage[index].message!.indexWhere((element) => element.docId == docId);
+    chatCtrl.localMessage[index].message![messageIndex].emoji = emoji;
     await FirebaseFirestore.instance
         .collection(collectionName.users)
         .doc(appCtrl.user["id"])

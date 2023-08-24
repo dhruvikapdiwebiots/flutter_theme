@@ -1,10 +1,11 @@
 
+import 'package:flutter_theme/models/message_model.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../../config.dart';
 
 class ReceiverContent extends StatelessWidget {
-  final dynamic document;
+  final MessageModel? document;
   final GestureLongPressCallback? onLongPress;
   final GestureTapCallback? onTap;
 
@@ -22,7 +23,7 @@ class ReceiverContent extends StatelessWidget {
           Stack(
             clipBehavior: Clip.none,
             children: [
-              decryptMessage(document!["content"]).length > 40
+              decryptMessage(document!.content).length > 40
                   ?    Container(
                   padding: const EdgeInsets.symmetric(
                       horizontal: Insets.i12, vertical: Insets.i14),
@@ -40,7 +41,7 @@ class ReceiverContent extends StatelessWidget {
                               cornerSmoothing: 1
                             ))),
                   ),
-                  child: Text(decryptMessage(document!["content"]),
+                  child: Text(decryptMessage(document!.content),
                       style: AppCss.poppinsMedium14
                           .textColor(appCtrl.appTheme.blackColor)
                           .letterSpace(.2)
@@ -61,33 +62,34 @@ class ReceiverContent extends StatelessWidget {
                                 cornerSmoothing: 1
                             ))),
                   ),
-                  child: Text(decryptMessage(document!["content"]),
+                  child: Text(decryptMessage(document!.content),
                       style: AppCss.poppinsMedium14
                           .textColor(appCtrl.appTheme.blackColor)
                           .letterSpace(.2)
                           .textHeight(1.2))),
-              if (document!.data().toString().contains('emoji'))
-                EmojiLayout(emoji: document!["emoji"])
+              if (document!.emoji !=null )
+                EmojiLayout(emoji: document!.emoji)
             ],
           ),
-          const VSpace(Sizes.s5),
+           VSpace( document!.emoji !=null  ? Sizes.s15:Sizes.s5),
           IntrinsicHeight(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                if (document!.data().toString().contains('isFavourite'))
-                  if(appCtrl.user["id"] == document["favouriteId"])
+                if (document!.isFavourite != null)
+                  if(appCtrl.user["id"] == document!.favouriteId)
                     Icon(Icons.star,
                         color: appCtrl.appTheme.txtColor, size: Sizes.s10),
+
                 const HSpace(Sizes.s3),
-                if (document!['isBroadcast'])
+                if (document!.isBroadcast!)
 
                   const Icon(Icons.volume_down, size: Sizes.s15),
                 const HSpace(Sizes.s5),
                 Text(
                   DateFormat('HH:mm a').format(
                       DateTime.fromMillisecondsSinceEpoch(
-                          int.parse(document!['timestamp']))),
+                          int.parse(document!.timestamp!))),
                   textAlign: TextAlign.end,
                   style: AppCss.poppinsMedium12
                       .textColor(appCtrl.appTheme.txtColor),

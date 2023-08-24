@@ -1,7 +1,9 @@
+import 'package:flutter_theme/models/message_model.dart';
+
 import '../../../../config.dart';
 
 class DocContent extends StatelessWidget {
-  final dynamic document;
+  final MessageModel? document;
   final bool isReceiver, isGroup, isBroadcast,isDoc;
   final String? currentUserId;
   const DocContent({Key? key, this.document,
@@ -18,11 +20,11 @@ class DocContent extends StatelessWidget {
         children: [
           if (isGroup)
             if (isReceiver)
-              if (document!["sender"] != currentUserId)
+              if (document!.sender != currentUserId)
                 Align(
                     alignment: Alignment.topLeft,
                     child: Column(children: [
-                      Text(document!['senderName'],
+                      Text(document!.senderName.toString(),
                           style: AppCss.poppinsMedium12
                               .textColor(appCtrl.appTheme.primary)),
                       const VSpace(Sizes.s8)
@@ -38,7 +40,7 @@ class DocContent extends StatelessWidget {
             const HSpace(Sizes.s10),
             Expanded(
                 child: Text(
-                    decryptMessage(document!["content"])
+                    decryptMessage(document!.content)
                         .split("-BREAK-")[0],
                     textAlign: TextAlign.start,
                     style: AppCss.poppinsMedium12.textColor(isReceiver

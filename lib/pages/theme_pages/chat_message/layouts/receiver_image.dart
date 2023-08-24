@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import '../../../../config.dart';
 
 class ReceiverChatImage extends StatelessWidget {
@@ -12,6 +14,7 @@ class ReceiverChatImage extends StatelessWidget {
             .where("id", isEqualTo: id)
             .snapshots(),
         builder: (context, snapshot) {
+
           if (snapshot.data != null) {
             if (!snapshot.data!.docs.isNotEmpty) {
               return Stack(
@@ -29,6 +32,7 @@ class ReceiverChatImage extends StatelessWidget {
                 ],
               );
             } else {
+              log("IMAGE :${snapshot.data!.docs[0].data()["image"]}");
               return CachedNetworkImage(
                   imageUrl: snapshot.data!.docs[0].data()["image"],
                   imageBuilder: (context, imageProvider) => Container(

@@ -90,24 +90,7 @@ class GroupFirebaseApi {
     log("SEKEC : ${groupCtrl.selectedContact.length}");
     groupCtrl.selectedContact.asMap().entries.forEach((e) async {
       log("USER ID :: ${e.value["id"]}");
-      await FirebaseFirestore.instance
-          .collection(collectionName.users)
-          .doc(e.value["id"])
-          .collection(collectionName.groupMessage)
-          .doc(id)
-          .collection(collectionName.chat)
-          .doc(DateTime.now().millisecondsSinceEpoch.toString())
-          .set({
-        'sender': user["id"],
-        'senderName': user["name"],
-        'receiver': groupCtrl.selectedContact,
-        'content': note,
-        "groupId": id,
-        'type': MessageType.note.name,
-        'messageType': "sender",
-        "status": "",
-        'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-      }).then((s) {
+
         FirebaseFirestore.instance
             .collection(collectionName.users)
             .doc(e.value["id"])
@@ -123,9 +106,7 @@ class GroupFirebaseApi {
           "groupId": id,
           'type': MessageType.messageType.name,
           'messageType': "sender",
-          "status": "",
           'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-        });
       });
     });
     await FirebaseFirestore.instance

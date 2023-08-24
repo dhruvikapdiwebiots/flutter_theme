@@ -1,7 +1,9 @@
+import 'package:flutter_theme/models/message_model.dart';
+
 import '../../../../config.dart';
 
 class PdfContentLayout extends StatelessWidget {
-  final dynamic document;
+  final MessageModel? document;
   final bool isReceiver, isGroup, isBroadcast;
   final String? currentUserId;
   final PDFDocument? doc;
@@ -30,11 +32,11 @@ class PdfContentLayout extends StatelessWidget {
               if (isGroup)
                 if (isReceiver)
                   if (currentUserId != null)
-                    if (document!["sender"] != currentUserId)
+                    if (document!.sender != currentUserId)
                       Align(
                           alignment: Alignment.topLeft,
                           child: Column(children: [
-                            Text(document!['senderName'],
+                            Text(document!.senderName!,
                                 style: AppCss.poppinsMedium12
                                     .textColor(appCtrl.appTheme.primary)),
                             const VSpace(Sizes.s8)
@@ -52,8 +54,7 @@ class PdfContentLayout extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                       Text(
-                          decryptMessage(document!["content"])
-                              .split("-BREAK-")[0],
+                          decryptMessage(document!.content),
                           textAlign: TextAlign.start,
                           style: AppCss.poppinsMedium12
                               .textColor(isReceiver

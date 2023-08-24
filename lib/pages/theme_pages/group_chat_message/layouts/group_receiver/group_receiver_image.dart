@@ -1,11 +1,12 @@
 import 'dart:developer';
 
+import 'package:flutter_theme/models/message_model.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../../config.dart';
 
 class GroupReceiverImage extends StatelessWidget {
-  final DocumentSnapshot? document;
+  final MessageModel? document;
   final GestureLongPressCallback? onLongPress;
   final GestureTapCallback? onTap;
 
@@ -15,7 +16,7 @@ class GroupReceiverImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log("RECEIVER : ${document!['content']}");
+    log("RECEIVER : ${document!.content}");
     return InkWell(
       onLongPress: onLongPress,
       onTap: onTap,
@@ -36,7 +37,7 @@ class GroupReceiverImage extends StatelessWidget {
               ),
               child:
                   Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                Text(document!['senderName'],
+                Text(document!.senderName.toString(),
                         style: AppCss.poppinsSemiBold12
                             .textColor(appCtrl.appTheme.txtColor))
                     .paddingOnly(
@@ -62,7 +63,7 @@ class GroupReceiverImage extends StatelessWidget {
                                           BorderRadius.circular(AppRadius.r8),
                                     ),
                                     child: Container()),
-                                imageUrl: decryptMessage(document!['content']),
+                                imageUrl: decryptMessage(document!.content),
                                 width: Sizes.s160,
                                 height: Sizes.s150,
                                 fit: BoxFit.cover))
@@ -74,13 +75,14 @@ class GroupReceiverImage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (document!.data().toString().contains('isFavourite'))
-                    if(appCtrl.user["id"] == document!["favouriteId"])
+                  if (document!.isFavourite != null)
+                  if (document!.isFavourite == true)
+                    if(appCtrl.user["id"] == document!.favouriteId.toString())
                     Icon(Icons.star,color: appCtrl.appTheme.txtColor,size: Sizes.s10),
                   const HSpace(Sizes.s3),
                   Text(
                     DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(
-                        int.parse(document!['timestamp']))),
+                        int.parse(document!.timestamp.toString()))),
                     style:
                     AppCss.poppinsMedium12.textColor(appCtrl.appTheme.txtColor),
                   ),

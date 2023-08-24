@@ -1,11 +1,12 @@
 import 'dart:developer';
 
+import 'package:flutter_theme/models/message_model.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../../config.dart';
 
 class GroupSenderImage extends StatelessWidget {
-  final DocumentSnapshot? document;
+  final MessageModel? document;
   final VoidCallback? onPressed, onLongPress;
   final List? userList;
   const GroupSenderImage(
@@ -15,7 +16,7 @@ class GroupSenderImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List seen = [];
-    seen = document!.data().toString().contains('seenMessageList') ? document!['seenMessageList'] : [];
+    seen = document!.seenMessageList ?? [];
     return InkWell(
         onLongPress: onLongPress,
         onTap: onPressed,
@@ -55,13 +56,13 @@ class GroupSenderImage extends StatelessWidget {
                                                         cornerSmoothing: 1))),
                                         child: Container()),
                                     imageUrl:
-                                        decryptMessage(document!['content']),
+                                        decryptMessage(document!.content),
                                     width: Sizes.s160,
                                     height: Sizes.s150,
                                     fit: BoxFit.cover))
                             .paddingAll(Insets.i10))),
-                if (document!.data().toString().contains('emoji'))
-                  EmojiLayout(emoji: document!["emoji"])
+                if (document!.emoji !=null)
+                  EmojiLayout(emoji: document!.emoji)
               ],
             ),
             const VSpace(Sizes.s2),
@@ -70,8 +71,9 @@ class GroupSenderImage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                  if (document!.data().toString().contains('isFavourite'))
-                    if(appCtrl.user["id"] == document!["favouriteId"])
+                  if (document!.isFavourite != null)
+                  if (document!.isFavourite == true)
+                    if(appCtrl.user["id"] == document!.favouriteId.toString())
                     Icon(Icons.star,
                         color: appCtrl.appTheme.txtColor, size: Sizes.s10),
                   const HSpace(Sizes.s3),
@@ -84,7 +86,7 @@ class GroupSenderImage extends StatelessWidget {
                   Text(
                     DateFormat('HH:mm a').format(
                         DateTime.fromMillisecondsSinceEpoch(
-                            int.parse(document!['timestamp']))),
+                            int.parse(document!.timestamp.toString()))),
                     style: AppCss.poppinsMedium12
                         .textColor(appCtrl.appTheme.txtColor),
                   ).marginOnly(right: Insets.i12),

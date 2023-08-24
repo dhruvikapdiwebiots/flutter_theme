@@ -25,6 +25,7 @@ class ImageLayout extends StatelessWidget {
                     height: height ?? (isImageLayout ? Sizes.s40 : Sizes.s48),
                     width: width ?? (isImageLayout ? Sizes.s40 : Sizes.s48)),
                 if (isLastSeen)
+                  if(snapshot.data!.exists)
                   if ((snapshot.data!).data()!["status"] != "Offline")
                     const Positioned(right: 3, bottom: 10, child: IconCircle())
               ]);

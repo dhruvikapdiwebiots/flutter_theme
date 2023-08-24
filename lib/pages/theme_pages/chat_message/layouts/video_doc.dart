@@ -2,14 +2,22 @@ import 'package:intl/intl.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../../config.dart';
+import '../../../../models/message_model.dart';
 
 class VideoDoc extends StatefulWidget {
-  final dynamic document;
-final  bool isBroadcast,isReceiver;
+  final MessageModel? document;
+  final bool isBroadcast, isReceiver;
   final GestureTapCallback? onTap;
   final VoidCallback? onLongPress;
 
-  const VideoDoc({Key? key, this.document,this.isBroadcast = false,this.isReceiver = false,this.onTap,this.onLongPress}) : super(key: key);
+  const VideoDoc(
+      {Key? key,
+      this.document,
+      this.isBroadcast = false,
+      this.isReceiver = false,
+      this.onTap,
+      this.onLongPress})
+      : super(key: key);
 
   @override
   State<VideoDoc> createState() => _VideoDocState();
@@ -23,9 +31,11 @@ class _VideoDocState extends State<VideoDoc> {
   @override
   void initState() {
     // TODO: implement initState
-    if (widget.document!["type"] == MessageType.video.name) {
+    if (widget.document!.type == MessageType.video.name) {
       videoController = VideoPlayerController.network(
-          decryptMessage(widget.document!["content"]).contains("-BREAK-") ? decryptMessage(widget.document!["content"]).split("-BREAK-")[1] :decryptMessage(widget.document!["content"]),
+        decryptMessage(widget.document!.content).contains("-BREAK-")
+            ? decryptMessage(widget.document!.content).split("-BREAK-")[1]
+            : decryptMessage(widget.document!.content),
       );
       initializeVideoPlayerFuture = videoController!.initialize();
     }
@@ -47,7 +57,7 @@ class _VideoDocState extends State<VideoDoc> {
               onLongPress: widget.onLongPress,
               onTap: widget.onTap,
               child: Column(
-crossAxisAlignment: CrossAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Stack(
                     clipBehavior: Clip.none,
@@ -59,7 +69,10 @@ crossAxisAlignment: CrossAxisAlignment.end,
                             aspectRatio: videoController!.value.aspectRatio,
                             // Use the VideoPlayer widget to display the video.
                             child: VideoPlayer(videoController!),
-                          ).height(Sizes.s250).width(Sizes.s250).clipRRect(all: AppRadius.r8),
+                          )
+                              .height(Sizes.s250)
+                              .width(Sizes.s250)
+                              .clipRRect(all: AppRadius.r8),
                           IconButton(
                               icon: Icon(
                                       videoController!.value.isPlaying
@@ -79,38 +92,43 @@ crossAxisAlignment: CrossAxisAlignment.end,
                                 }
                                 setState(() {});
                               }),
-
                         ],
                       ),
-                      if (widget.document!.data().toString().contains('emoji'))
-                        EmojiLayout(emoji: widget.document!["emoji"]),
+                      if (widget.document!.emoji != null)
+                        EmojiLayout(emoji: widget.document!.emoji),
                     ],
                   ),
-
                   const VSpace(Sizes.s2),
                   IntrinsicHeight(
-                      child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                        if (widget.document!.data().toString().contains('isFavourite'))
-                          if(appCtrl.user["id"] == widget.document["favouriteId"])
-                          Icon(Icons.star,
-                              color: appCtrl.appTheme.txtColor, size: Sizes.s10),
+                      child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                        if (widget.document!.isFavourite != null)
+                          if (widget.document!.isFavourite == true)
+                            if (appCtrl.user["id"] ==
+                                widget.document!.favouriteId)
+                              Icon(Icons.star,
+                                  color: appCtrl.appTheme.txtColor,
+                                  size: Sizes.s10),
                         const HSpace(Sizes.s3),
                         if (!widget.isBroadcast && !widget.isReceiver)
                           Icon(Icons.done_all_outlined,
                               size: Sizes.s15,
-                              color: widget.document!['isSeen'] == true
+                              color: widget.document!.isSeen == true
                                   ? appCtrl.appTheme.primary
                                   : appCtrl.appTheme.gray),
                         const HSpace(Sizes.s5),
                         Text(
                             DateFormat('HH:mm a').format(
                                 DateTime.fromMillisecondsSinceEpoch(
-                                    int.parse(widget.document!['timestamp']))),
-                            style:
-                            AppCss.poppinsMedium12.textColor(appCtrl.appTheme.txtColor))
+                                    int.parse(widget.document!.timestamp!))),
+                            style: AppCss.poppinsMedium12
+                                .textColor(appCtrl.appTheme.txtColor))
                       ]))
                 ],
-              ).paddingSymmetric(horizontal: Insets.i8,vertical: Insets.i8).inkWell(onTap: widget.onTap),
+              )
+                  .paddingSymmetric(horizontal: Insets.i8, vertical: Insets.i8)
+                  .inkWell(onTap: widget.onTap),
             );
           } else {
             // If the VideoPlayerController is still initializing, show a

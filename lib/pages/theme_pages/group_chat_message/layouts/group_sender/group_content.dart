@@ -1,9 +1,10 @@
+import 'package:flutter_theme/models/message_model.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../../config.dart';
 
 class GroupContent extends StatelessWidget {
-  final DocumentSnapshot? document;
+  final MessageModel? document;
   final GestureLongPressCallback? onLongPress;
   final GestureTapCallback? onTap;
   final bool isSearch;
@@ -15,7 +16,7 @@ class GroupContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List seen = [];
-    seen = document!.data().toString().contains('seenMessageList') ? document!['seenMessageList'] : [];
+    seen =  document!.seenMessageList ?? [];
     return InkWell(
         onLongPress: onLongPress,
         onTap: onTap,
@@ -25,7 +26,7 @@ class GroupContent extends StatelessWidget {
             Stack(
               clipBehavior: Clip.none,
               children: [
-                document!['content'].length > 40
+                document!.content!.length > 40
                     ? Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: Insets.i12, vertical: Insets.i14),
@@ -41,7 +42,7 @@ class GroupContent extends StatelessWidget {
                                   bottomLeft: SmoothRadius(
                                       cornerRadius: 20, cornerSmoothing: 1))),
                         ),
-                        child: Text(decryptMessage(document!['content']),
+                        child: Text(decryptMessage(document!.content),
                             overflow: TextOverflow.clip,
                             style: AppCss.poppinsMedium13
                                 .textColor(appCtrl.appTheme.white)
@@ -61,24 +62,25 @@ class GroupContent extends StatelessWidget {
                                     bottomLeft: SmoothRadius(
                                         cornerRadius: 18,
                                         cornerSmoothing: 1)))),
-                        child: Text(decryptMessage(document!['content']),
+                        child: Text(decryptMessage(document!.content),
                             overflow: TextOverflow.clip,
                             style: AppCss.poppinsMedium13
                                 .textColor(appCtrl.appTheme.white)
                                 .letterSpace(.2)
                                 .textHeight(1.2))),
-                if (document!.data().toString().contains('emoji'))
-                  EmojiLayout(emoji: document!["emoji"])
+                if (document!.emoji != null)
+                  EmojiLayout(emoji: document!.emoji)
               ],
             ),
-             VSpace(document!.data().toString().contains('emoji')? Sizes.s10: Sizes.s5),
+             VSpace(document!.emoji != null? Sizes.s18: Sizes.s5),
             IntrinsicHeight(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (document!.data().toString().contains('isFavourite'))
-                    if(appCtrl.user["id"] == document!["favouriteId"])
+                  if (document!.isFavourite != null)
+                  if (document!.isFavourite == true)
+                    if(appCtrl.user["id"] == document!.favouriteId.toString())
                     Icon(Icons.star,color: appCtrl.appTheme.txtColor,size: Sizes.s10),
                   const HSpace(Sizes.s3),
                   Icon(Icons.done_all_outlined,
@@ -89,7 +91,7 @@ class GroupContent extends StatelessWidget {
                   const HSpace(Sizes.s3),
                   Text(
                     DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(
-                        int.parse(document!['timestamp']))),
+                        int.parse(document!.timestamp!.toString()))),
                     style:
                         AppCss.poppinsMedium12.textColor(appCtrl.appTheme.txtColor),
                   ),

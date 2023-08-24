@@ -6,6 +6,7 @@ import 'package:drishya_picker/drishya_picker.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:dartx/dartx_io.dart';
 import 'package:flutter_theme/config.dart';
+import 'package:flutter_theme/models/message_model.dart';
 import 'package:flutter_theme/pages/theme_pages/broadcast_chat/layouts/broadcast_file_list.dart';
 import 'package:flutter_theme/widgets/common_note_encrypt.dart';
 import 'package:flutter_theme/widgets/reaction_pop_up/emoji_picker_widget.dart';
@@ -56,6 +57,9 @@ class BroadcastChatController extends GetxController {
   late encrypt.Encrypter cryptor;
   final iv = encrypt.IV.fromLength(8);
   List newContact = [];
+  List<QueryDocumentSnapshot<Map<String, dynamic>>> allMessages = [];
+  StreamSubscription? messageSub;
+  List<DateTimeChip> localMessage = [];
 
   @override
   void onReady() {
@@ -116,7 +120,24 @@ class BroadcastChatController extends GetxController {
         'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
       });
     }
-
+    await FirebaseFirestore.instance
+        .collection(collectionName.users)
+        .doc(appCtrl.user["id"])
+        .collection(collectionName.broadcastMessage)
+        .doc(chatId)
+        .collection(collectionName.chat)
+        .get()
+        .then((value) {
+      if (value.docs.isNotEmpty) {
+        allMessages = value.docs;
+        update();
+        log("allMessages ::: $allMessages");
+        ChatMessageApi().getLocalBroadcastMessage();
+        update();
+        isLoading = false;
+        update();
+      }
+    });
     await FirebaseFirestore.instance
         .collection(collectionName.broadcast)
         .doc(pId)
@@ -425,35 +446,40 @@ class BroadcastChatController extends GetxController {
     );
   }
 
-  Widget timeLayout(document) {
-    List newMessageList = document["message"];
+  Widget timeLayout(DateTimeChip document) {
+    List<MessageModel> newMessageList = document.message!;
     return Column(
       children: [
         Text(
-                document["title"].contains("-other")
-                    ? document["title"].split("-other")[0]
-                    : document["title"],
+                document.time!.contains("-other")
+                    ? document.time!.split("-other")[0]
+                    : document.time!,
                 style:
                     AppCss.poppinsMedium14.textColor(appCtrl.appTheme.txtColor))
             .marginSymmetric(vertical: Insets.i5),
         ...newMessageList.asMap().entries.map((e) {
-          return buildItem(e.key, e.value);
+          return buildItem( e.key,
+              e.value,
+              e.value.docId,
+              document.time!.contains("-other")
+                  ? document.time!.split("-other")[0]
+                  : document.time!);
         }).toList()
       ],
     );
   }
 
 // BUILD ITEM MESSAGE BOX FOR RECEIVER AND SENDER BOX DESIGN
-  Widget buildItem(int index, document) {
-    log("TYPE : ${document['type']}");
-    if (document['type'] == MessageType.note.name) {
+  Widget buildItem(int index, MessageModel document, documentId, title) {
+
+    if (document.type == MessageType.note.name) {
       return Container(
           margin: const EdgeInsets.only(bottom: 2.0),
           padding: const EdgeInsets.only(left: Insets.i10, right: Insets.i10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
-              if (document!["type"] == MessageType.note.name)
+              if (document.type == MessageType.note.name)
                 const Align(
                   alignment: Alignment.center,
                   child: CommonNoteEncrypt(),
@@ -461,7 +487,7 @@ class BroadcastChatController extends GetxController {
             ],
           ));
     }
-    if (document['sender'] == userData["id"]) {
+    if (document.sender == userData["id"]) {
       return BroadcastSenderMessage(
         document: document,
         index: index,

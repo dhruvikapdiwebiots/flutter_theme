@@ -60,37 +60,21 @@ class _ChatCardState extends State<ChatCard> {
 
               return ScopedModel<DataModel>(
                 model: recentChat.getModel(appCtrl.user)!,
-                child: StreamBuilder(
-                    stream: FirebaseFirestore.instance.collection(collectionName.users).doc(appCtrl.user["id"]).collection(collectionName.chats).snapshots(),
-                    builder: (context,snapshot) {
+                child: ScopedModelDescendant<DataModel>(builder: (context, child, _model) {
+                  appCtrl.cachedModel = _model;
+                    return recentChat.userData.isNotEmpty
+                        ? ListView(controller: scrollController, children: [
+                      Column(
+                        children: [
 
-                    return ScopedModelDescendant<DataModel>(builder: (context, child, _model) {
-                      appCtrl.cachedModel = _model;
-                        return recentChat.userData.isNotEmpty
-                            ? ListView(controller: scrollController, children: [
-                          Column(
-                            children: [
-
-                              ...recentChat.messageWidgetList.asMap().entries.map((e) => e.value).toList()
-                              /* ListView.builder(
-                                        shrinkWrap: true,
-                                        physics: const NeverScrollableScrollPhysics(),
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: Insets.i20, horizontal: Insets.i10),
-                                        itemBuilder: (context, index) {
-                                          return recentChat.messageWidgetList[index];
-                                        },
-                                        itemCount: recentChat.messageWidgetList.length),
-*/
-                            ],
-                          ).marginSymmetric(vertical: Insets.i20, horizontal: Insets.i10)
-                        ])
-                            : CommonEmptyLayout(
-                            gif: gifAssets.message,
-                            title: fonts.emptyMessageTitle.tr,
-                            desc: fonts.emptyMessageDesc.tr);
-                      }
-                    );
+                          ...recentChat.messageWidgetList.asMap().entries.map((e) => e.value).toList()
+                        ],
+                      ).marginSymmetric(vertical: Insets.i20, horizontal: Insets.i10)
+                    ])
+                        : CommonEmptyLayout(
+                        gif: gifAssets.message,
+                        title: fonts.emptyMessageTitle.tr,
+                        desc: fonts.emptyMessageDesc.tr);
                   }
                 ),
               );

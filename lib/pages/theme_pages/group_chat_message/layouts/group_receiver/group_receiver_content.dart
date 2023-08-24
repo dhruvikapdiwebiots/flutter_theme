@@ -1,11 +1,12 @@
 import 'dart:developer';
 
+import 'package:flutter_theme/models/message_model.dart';
 import 'package:intl/intl.dart';
 import 'dart:math' as math;
 import '../../../../../config.dart';
 
 class GroupReceiverContent extends StatelessWidget {
-  final DocumentSnapshot? document;
+  final MessageModel? document;
   final GestureLongPressCallback? onLongPress;
   final GestureTapCallback? onTap;
 final bool isSearch;
@@ -17,7 +18,7 @@ final bool isSearch;
     return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection("users")
-            .doc(document!['sender'])
+            .doc(document!.sender)
             .snapshots(),
         builder: (context, snapshot) {
           return InkWell(
@@ -29,7 +30,7 @@ final bool isSearch;
                 Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    decryptMessage(document!['content']).length > 40
+                    decryptMessage(document!.content).length > 40
                         ? Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: Insets.i12, vertical: Insets.i14),
@@ -49,11 +50,11 @@ final bool isSearch;
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [ Text("${document!['senderName']}",
+                          children: [ Text("${document!.senderName}",
                               style: AppCss.poppinsSemiBold12
                                   .textColor(appCtrl.appTheme.primary)),
                             const VSpace(Sizes.s6),
-                            Text(decryptMessage(document!['content']),
+                            Text(decryptMessage(document!.content),
                                 style: AppCss.poppinsMedium14
                                     .textColor(appCtrl.appTheme.blackColor)
                                     .letterSpace(.2)
@@ -77,34 +78,35 @@ final bool isSearch;
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [ Text("${document!['senderName']}",
+                          children: [ Text("${document!.senderName}",
                               style: AppCss.poppinsSemiBold12
                                   .textColor(appCtrl.appTheme.primary)),
                             const VSpace(Sizes.s6),
-                            Text(decryptMessage(document!['content']),
+                            Text(decryptMessage(document!.content),
                                 style: AppCss.poppinsMedium14
                                     .textColor(appCtrl.appTheme.blackColor)
                                     .letterSpace(.2)
                                     .textHeight(1.2)).alignment(Alignment.centerLeft),
                           ],
                         )),
-                    if (document!.data().toString().contains('emoji'))
-                      EmojiLayout(emoji: document!["emoji"])
+                    if (document!.emoji != null)
+                      EmojiLayout(emoji: document!.emoji)
                   ],
                 ),
-                const VSpace(Sizes.s5),
+                 VSpace(document!.emoji != null ?Sizes.s18 : Sizes.s5),
                 IntrinsicHeight(
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        if (document!.data().toString().contains('isFavourite'))
-                          if(appCtrl.user["id"] == document!["favouriteId"])
+                        if (document!.isFavourite != null)
+                        if (document!.isFavourite == true)
+                          if(appCtrl.user["id"] == document!.favouriteId.toString())
                           Icon(Icons.star,color: appCtrl.appTheme.txtColor,size: Sizes.s10),
                         const HSpace(Sizes.s3),
                         Text(
                           DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(
-                              int.parse(document!['timestamp']))),
+                              int.parse(document!.timestamp.toString()))),
                           style:
                           AppCss.poppinsMedium12.textColor(appCtrl.appTheme.txtColor),
                         ),

@@ -1,12 +1,13 @@
 import 'dart:developer';
 
+import 'package:flutter_theme/models/message_model.dart';
 import 'package:intl/intl.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../../config.dart';
 
 class GroupVideoDoc extends StatefulWidget {
-  final DocumentSnapshot? document;
+  final MessageModel? document;
 final VoidCallback? onLongPress,onTap;
 final bool isReceiver;
 final String? currentUserId;
@@ -24,11 +25,10 @@ class GroupVideoDocState extends State<GroupVideoDoc> {
   @override
   void initState() {
     // TODO: implement initState
-    log(widget.document!["content"]);
-    log(widget.document!["content"]);
-    if (widget.document!["type"] == MessageType.video.name) {
+
+    if (widget.document!.type == MessageType.video.name) {
       videoController = VideoPlayerController.network(
-        widget.document!["content"].contains("-BREAK-") ? widget.document!["content"].split("-BREAK-")[1] :widget.document!["content"],
+        widget.document!.content!.contains("-BREAK-") ? widget.document!.content!.split("-BREAK-")[1] :widget.document!.content!,
       );
       initializeVideoPlayerFuture = videoController!.initialize();
     }
@@ -58,9 +58,9 @@ class GroupVideoDocState extends State<GroupVideoDoc> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           if (widget.isReceiver)
-                            if (widget.document!["sender"] != widget.currentUserId)
+                            if (widget.document!.sender != widget.currentUserId)
                               Column(children: [
-                                Text(widget.document!['senderName'],
+                                Text(widget.document!.senderName!,
                                     style: AppCss.poppinsMedium12
                                         .textColor(appCtrl.appTheme.primary)).paddingAll(Insets.i5).decorated(color: appCtrl.appTheme.whiteColor,borderRadius: BorderRadius.circular(AppRadius.r20)),
 
@@ -76,13 +76,14 @@ class GroupVideoDocState extends State<GroupVideoDoc> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  if (widget.document!.data().toString().contains('isFavourite'))
-                                    if(appCtrl.user["id"] == widget.document!["favouriteId"])
+                                  if (widget.document!.isFavourite != null)
+                                  if (widget.document!.isFavourite == true)
+                                    if(appCtrl.user["id"] == widget.document!.favouriteId.toString())
                                     Icon(Icons.star,color: appCtrl.appTheme.txtColor,size: Sizes.s10),
                                   const HSpace(Sizes.s3),
                                   Text(
                                     DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(
-                                        int.parse(widget.document!['timestamp']))),
+                                        int.parse(widget.document!.timestamp.toString()))),
                                     style:
                                     AppCss.poppinsMedium12.textColor(appCtrl.appTheme.txtColor),
                                   )
@@ -91,8 +92,8 @@ class GroupVideoDocState extends State<GroupVideoDoc> {
                           )
                         ],
                       ),
-                      if (widget.document!.data().toString().contains('emoji'))
-                        EmojiLayout(emoji: widget.document!["emoji"])
+                      if (widget.document!.emoji != null)
+                        EmojiLayout(emoji: widget.document!.emoji)
                     ],
                   ),
 

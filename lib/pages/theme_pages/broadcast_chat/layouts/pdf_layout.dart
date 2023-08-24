@@ -1,9 +1,10 @@
 import 'dart:developer';
 import 'package:intl/intl.dart';
 import '../../../../config.dart';
+import '../../../../models/message_model.dart';
 
 class PdfLayout extends StatefulWidget {
-  final dynamic document;
+  final MessageModel? document;
   final GestureLongPressCallback? onLongPress;
   final GestureTapCallback? onTap;
   final bool isReceiver, isGroup, isBroadcast;
@@ -37,9 +38,9 @@ class _PdfLayoutState extends State<PdfLayout> {
   }
 
   getData() async {
-    isSeen = widget.document!['isSeen'] ?? false;
-    log("LINK : ${decryptMessage(widget.document!["content"]).split("-BREAK-")[1]}");
-    doc = await PDFDocument.fromURL(decryptMessage(widget.document!["content"])
+    isSeen = widget.document!.isSeen ?? false;
+    log("LINK : ${decryptMessage(widget.document!.content).split("-BREAK-")[1]}");
+    doc = await PDFDocument.fromURL(decryptMessage(widget.document!.content)
         .split("-BREAK-")[1]
         .toString());
     setState(() {});
@@ -60,14 +61,17 @@ class _PdfLayoutState extends State<PdfLayout> {
               document: widget.document,
               isBroadcast: widget.isBroadcast,
               isReceiver: widget.isReceiver),
-          if (widget.document!.data().toString().contains('emoji'))
-            EmojiLayout(emoji: widget.document!["emoji"])
+          if (widget.document!.emoji != null)
+            EmojiLayout(emoji: widget.document!.emoji)
         ]),
         IntrinsicHeight(
             child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-          if (widget.document!.data().toString().contains('isFavourite'))
-            if(appCtrl.user["id"].toString() == widget.document["favouriteId"].toString())
-            Icon(Icons.star, color: appCtrl.appTheme.txtColor, size: Sizes.s10),
+          if (widget.document!.isFavourite != null)
+            if (widget.document!.isFavourite == true)
+              if (appCtrl.user["id"].toString() ==
+                  widget.document!.favouriteId.toString())
+                Icon(Icons.star,
+                    color: appCtrl.appTheme.txtColor, size: Sizes.s10),
           const HSpace(Sizes.s3),
           if (!widget.isGroup)
             if (!widget.isReceiver || !widget.isBroadcast)
@@ -79,7 +83,7 @@ class _PdfLayoutState extends State<PdfLayout> {
           const HSpace(Sizes.s5),
           Text(
               DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(
-                  int.parse(widget.document!['timestamp']))),
+                  int.parse(widget.document!.timestamp.toString()))),
               style:
                   AppCss.poppinsMedium12.textColor(appCtrl.appTheme.txtColor))
         ]).marginSymmetric(vertical: Insets.i3))

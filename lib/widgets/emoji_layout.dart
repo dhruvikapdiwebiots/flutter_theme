@@ -8,6 +8,7 @@ class EmojiLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Positioned(
         bottom: -15,
+        left: 12,
         child: Text(emoji!,style: AppCss.poppinsLight12,)
             .paddingAll(Insets.i6)
             .decorated(

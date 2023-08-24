@@ -16,11 +16,11 @@ class SubTitleLayout extends StatelessWidget {
                 : appCtrl.appTheme.grey,
             size: Sizes.s16),
         const HSpace(Sizes.s10),
-        decryptMessage(document!["lastMessage"]).contains("gif") ?const Icon(Icons.gif_box) :
+        data["senderMessage"].contains("gif") ?const Icon(Icons.gif_box) :
         SizedBox(
           width: Sizes.s150,
           child: Text(
-             data["senderMessage"],
+             data["senderMessage"] != "" ? data["senderMessage"]:"",
               style: AppCss.poppinsMedium12
                   .textColor(appCtrl.appTheme.grey).textHeight(1.2),
               overflow: TextOverflow.ellipsis).width(Sizes.s150),

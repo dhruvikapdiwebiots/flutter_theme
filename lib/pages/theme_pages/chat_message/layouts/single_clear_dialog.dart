@@ -98,46 +98,7 @@ class SingleClearDialog extends StatelessWidget {
                                         }
 
                                       });
-                                      final key = encrypt.Key.fromUtf8('my 32 length key................');
-                                      final iv = encrypt.IV.fromLength(16);
 
-                                      final encrypter = encrypt.Encrypter(encrypt.AES(key));
-
-                                      final encrypted = encrypter.encrypt(fonts.noteEncrypt.tr, iv: iv).base64;
-                                      await FirebaseFirestore.instance
-                                          .collection(collectionName.users)
-                                          .doc(appCtrl.user["id"])
-                                          .collection(collectionName.messages)
-                                          .doc(chatCtrl.chatId)
-                                          .collection(collectionName.chat)
-                                          .where("type", isEqualTo: MessageType.note.name).limit(1)
-                                          .get()
-                                          .then((value) async {
-                                        if (value.docs.isEmpty) {
-
-                                          await FirebaseFirestore.instance
-                                              .collection(collectionName.users)
-                                              .doc(appCtrl.user["id"])
-                                              .collection(collectionName.messages)
-                                              .doc(chatCtrl.chatId)
-                                              .collection(collectionName.chat)
-                                              .doc(DateTime.now().millisecondsSinceEpoch.toString())
-                                              .set({
-                                            'sender': chatCtrl.userData["id"],
-                                            'receiver': chatCtrl.pId,
-                                            'content': encrypted,
-                                            "chatId": chatCtrl.chatId,
-                                            'type': MessageType.note.name,
-                                            'messageType': "sender",
-                                            "isBlock": false,
-                                            "isSeen": true,
-                                            "isBroadcast": false,
-                                            "blockBy": "",
-                                            "blockUserId": "",
-                                            'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-                                          }, SetOptions(merge: true));
-                                        }
-                                      });
                                       chatCtrl.message = [];
                                       chatCtrl.update();
 

@@ -220,9 +220,9 @@ getDate(date) {
   String when;
   DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(int.parse(date));
   if (dateTime.day == now.day) {
-    when = 'today';
+    when = 'Today';
   } else if (dateTime.day == now.subtract(Duration(days: 1)).day) {
-    when = 'yesterday';
+    when = 'Yesterday';
   } else {
     when = "${DateFormat.MMMd().format(dateTime)}-other";
   }
@@ -234,9 +234,9 @@ getWhen(date) {
   String when;
   DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(int.parse(date));
   if (dateTime.day == now.day) {
-    when = 'today';
+    when = 'Today';
   } else if (dateTime.day == now.subtract(Duration(days: 1)).day) {
-    when = 'yesterday';
+    when = 'Yesterday';
   } else {
     when = "${DateFormat.MMMd().format(dateTime)}";
   }

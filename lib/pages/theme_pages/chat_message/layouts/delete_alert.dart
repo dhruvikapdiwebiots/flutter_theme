@@ -25,6 +25,18 @@ class DeleteAlert extends StatelessWidget {
             onPressed: () async {
               dynamic  userData = appCtrl.storage.read(session.user);
               Get.back();
+              int index =0;
+              chatCtrl.selectedIndexId.asMap().entries.forEach((e) {
+                chatCtrl.localMessage.asMap().entries.forEach((element) {
+                  index = element.value.message!.indexWhere((element) => element.docId == e.value );
+                  log("index : ${e.key}");
+                  if(index >0) {
+                   chatCtrl.localMessage[element.key].message!.removeAt(index);
+                  }
+                });
+                chatCtrl.update();
+
+              });
               chatCtrl.selectedIndexId.asMap().entries.forEach((element)async {
                 log("ONNN : ${element.value}");
                await FirebaseFirestore.instance

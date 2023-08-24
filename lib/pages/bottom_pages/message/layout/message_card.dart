@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import '../../../../config.dart';
 
 class MessageCard extends StatelessWidget {
@@ -55,17 +57,13 @@ final dynamic data;
                       image: value.data()!["image"],
                       isRegister: true);
 
-                  await FirebaseFirestore.instance.collection(collectionName.users).doc(appCtrl.user["id"]).collection(collectionName.messages).get().then((value) {
-                    if(value.docs.isNotEmpty){
-
-                      var data = {"chatId": document!["chatId"], "data": userContact,"allMessage": value.docs};
-                      Get.toNamed(routeName.chat, arguments: data);
-                    }else{
-                      var data = {"chatId": document!["chatId"], "data": userContact,"allMessage": ""};
-                      Get.toNamed(routeName.chat, arguments: data);
-                    }
-                  });
-
+                  var data = {"chatId": document!["chatId"], "data": userContact};
+                  log("IMAGE : ${userContact.image}");
+                  Get.toNamed(routeName.chat, arguments: data);
+                  final chatCtrl = Get.isRegistered<ChatController>()
+                      ? Get.find<ChatController>()
+                      : Get.put(ChatController());
+                  chatCtrl.onReady();
                 }
           });
 

@@ -1,13 +1,14 @@
 import 'dart:developer';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter_theme/models/message_model.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../config.dart';
 
 class GroupAudioDoc extends StatefulWidget {
   final VoidCallback? onLongPress, onTap;
-  final DocumentSnapshot? document;
+  final MessageModel? document;
 
   final bool isReceiver;
   final String? currentUserId;
@@ -39,9 +40,9 @@ class _GroupAudioDocState extends State<GroupAudioDoc>
 
   void play() async {
     log("play");
-    String url = decryptMessage(widget.document!['content']).contains("-BREAK")
-        ? decryptMessage(widget.document!['content']).split("-BREAK-")[1]
-        : decryptMessage(widget.document!['content']);
+    String url = decryptMessage(widget.document!.content).contains("-BREAK")
+        ? decryptMessage(widget.document!.content).split("-BREAK-")[1]
+        : decryptMessage(widget.document!.content);
 
     log("time : ${value.minutes}");
     audioPlayer.play(UrlSource(url));
@@ -86,9 +87,9 @@ class _GroupAudioDocState extends State<GroupAudioDoc>
       log("state : $state");
       isPlaying = state == PlayerState.playing;
     });
-    String url = decryptMessage(widget.document!['content']).contains("-BREAK")
-        ? decryptMessage(widget.document!['content']).split("-BREAK-")[1]
-        : decryptMessage(widget.document!['content']);
+    String url = decryptMessage(widget.document!.content).contains("-BREAK")
+        ? decryptMessage(widget.document!.content).split("-BREAK-")[1]
+        : decryptMessage(widget.document!.content);
 
     audioPlayer.setSourceUrl(url);
 
@@ -158,13 +159,13 @@ class _GroupAudioDocState extends State<GroupAudioDoc>
                       crossAxisAlignment: widget.isReceiver ? CrossAxisAlignment.start :CrossAxisAlignment.end ,
                       children: [
                         if (widget.isReceiver)
-                          if (widget.document!["sender"] !=
+                          if (widget.document!.sender !=
                               widget.currentUserId)
                             Align(
                                 alignment: Alignment.topLeft,
                                 child: Column(children: [
                                   const VSpace(Sizes.s2),
-                                  Text(widget.document!['senderName'],
+                                  Text(widget.document!.senderName!,
                                       style: AppCss.poppinsMedium12
                                           .textColor(appCtrl.appTheme.primary)),
 
@@ -177,7 +178,7 @@ class _GroupAudioDocState extends State<GroupAudioDoc>
                               if (!widget.isReceiver)
                                 Row(
                                   children: [
-                                    decryptMessage(widget.document!['content'])
+                                    decryptMessage(widget.document!.content)
                                             .contains("-BREAK-")
                                         ? SvgPicture.asset(svgAssets.headPhone)
                                             .paddingAll(Insets.i10)
@@ -242,7 +243,7 @@ class _GroupAudioDocState extends State<GroupAudioDoc>
                                 Row(
                                   children: [
                                     const HSpace(Sizes.s10),
-                                    decryptMessage(widget.document!['content'])
+                                    decryptMessage(widget.document!.content)
                                             .contains("-BREAK-")
                                         ? SvgPicture.asset(svgAssets.headPhone)
                                             .paddingAll(Insets.i10)
@@ -274,13 +275,14 @@ class _GroupAudioDocState extends State<GroupAudioDoc>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                if (widget.document!.data().toString().contains('isFavourite'))
-                                  if(appCtrl.user["id"] == widget.document!["favouriteId"])
+                                if (widget.document!.isFavourite != null)
+                                if (widget.document!.isFavourite == true)
+                                  if(appCtrl.user["id"] == widget.document!.favouriteId.toString())
                                   Icon(Icons.star,color: appCtrl.appTheme.txtColor,size: Sizes.s10),
                                 const HSpace(Sizes.s3),
                                 Text(
                                   DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(
-                                      int.parse(widget.document!['timestamp']))),
+                                      int.parse(widget.document!.timestamp.toString()))),
                                   style:
                                   AppCss.poppinsMedium12.textColor(appCtrl.appTheme.txtColor),
                                 ),
@@ -289,8 +291,8 @@ class _GroupAudioDocState extends State<GroupAudioDoc>
                         )
                       ],
                     )),
-                if (widget.document!.data().toString().contains('emoji'))
-                  EmojiLayout(emoji: widget.document!["emoji"])
+                if (widget.document!.emoji != null)
+                  EmojiLayout(emoji: widget.document!.emoji)
               ],
             ),
           ],

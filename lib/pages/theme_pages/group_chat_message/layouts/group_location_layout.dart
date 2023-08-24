@@ -1,3 +1,4 @@
+import 'package:flutter_theme/models/message_model.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../../config.dart';
@@ -5,7 +6,7 @@ import '../../../../../config.dart';
 class GroupLocationLayout extends StatelessWidget {
   final GestureTapCallback? onTap;
   final VoidCallback? onLongPress;
-  final DocumentSnapshot? document;
+  final MessageModel? document;
   final String? currentUserId;
   final bool isReceiver;
 
@@ -54,8 +55,8 @@ class GroupLocationLayout extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         if (isReceiver)
-                          if (document!["sender"] != currentUserId)
-                            Text(document!['senderName'],
+                          if (document!.sender != currentUserId)
+                            Text(document!.senderName!,
                                     style: AppCss.poppinsMedium14.textColor(
                                         isReceiver
                                             ? appCtrl.appTheme.primary
@@ -71,8 +72,8 @@ class GroupLocationLayout extends StatelessWidget {
                   ],
                 ).paddingSymmetric(horizontal: Insets.i8),
               ),
-              if (document!.data().toString().contains('emoji'))
-                EmojiLayout(emoji: document!["emoji"])
+              if (document!.emoji != null)
+                EmojiLayout(emoji: document!.emoji)
             ],
           ),
           const VSpace(Sizes.s10),
@@ -81,13 +82,14 @@ class GroupLocationLayout extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (document!.data().toString().contains('isFavourite'))
-                    if(appCtrl.user["id"] == document!["favouriteId"])
+                  if (document!.isFavourite != null)
+                  if (document!.isFavourite == true)
+                    if(appCtrl.user["id"] == document!.favouriteId.toString())
                     Icon(Icons.star,color: appCtrl.appTheme.txtColor,size: Sizes.s10),
                   const HSpace(Sizes.s3),
                   Text(
                     DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(
-                        int.parse(document!['timestamp']))),
+                        int.parse(document!.timestamp.toString()))),
                     style:
                     AppCss.poppinsMedium12.textColor(appCtrl.appTheme.txtColor),
                   ),

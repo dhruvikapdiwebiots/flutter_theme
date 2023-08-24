@@ -72,7 +72,7 @@ class SplashController extends GetxController {
 
   //check whether user login or not
   void navigationPage() async {
-    //await getAdminPermission();
+    await getAdminPermission();
 
     //language
     appCtrl.languageVal = storage.read(session.languageCode) ?? "en";

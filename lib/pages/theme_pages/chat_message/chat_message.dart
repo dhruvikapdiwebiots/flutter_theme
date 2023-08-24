@@ -82,50 +82,55 @@ class _ChatState extends State<Chat>
                             : false,
                       ),
                       backgroundColor: appCtrl.appTheme.bgColor,
-                      body: chatCtrl.allData != null
-                          ? Stack(children: <Widget>[
-                              chatCtrl.allData["backgroundImage"] != null
-                                  ? Column(children: <Widget>[
-                                      // List of messages
-                                      const MessageBox(),
-                                      // Sticker
-                                      Container(),
-                                      // Input content
-                                      const InputBox()
-                                    ])
-                                      .decorated(
-                                          color: appCtrl.appTheme.bgColor,
-                                          image: DecorationImage(
-                                              fit: BoxFit.fill,
-                                              image: NetworkImage(chatCtrl
-                                                  .allData["backgroundImage"])))
-                                      .inkWell(onTap: () {
-                                      chatCtrl.enableReactionPopup = false;
-                                      chatCtrl.showPopUp = false;
-                                      chatCtrl.update();
+                      body: Stack(
+                        children: [
+                          chatCtrl.allData != null
+                              ? Stack(children: <Widget>[
+                                  chatCtrl.allData["backgroundImage"] != null
+                                      ? Column(children: <Widget>[
+                                          // List of messages
+                                          const MessageBox(),
+                                          // Sticker
+                                          Container(),
+                                          // Input content
+                                          const InputBox()
+                                        ])
+                                          .decorated(
+                                              color: appCtrl.appTheme.bgColor,
+                                              image: DecorationImage(
+                                                  fit: BoxFit.fill,
+                                                  image: NetworkImage(chatCtrl
+                                                      .allData["backgroundImage"])))
+                                          .inkWell(onTap: () {
+                                          chatCtrl.enableReactionPopup = false;
+                                          chatCtrl.showPopUp = false;
+                                          chatCtrl.update();
 
-                                    })
-                                  : Column(children: <Widget>[
-                                      // List of messages
-                                      const MessageBox(),
-                                      // Sticker
-                                      Container(),
-                                      // Input content
-                                      const InputBox()
-                                    ]).inkWell(onTap: () {
-                                      chatCtrl.enableReactionPopup = false;
-                                      chatCtrl.showPopUp = false;
-                                      chatCtrl.update();
-                                    }),
-                              // Loading
-                              if (chatCtrl.isLoading)
-                                CommonLoader(isLoading: chatCtrl.isLoading),
-                              GetBuilder<AppController>(builder: (appCtrl) {
-                                return CommonLoader(
-                                    isLoading: appCtrl.isLoading);
-                              })
-                            ])
-                          : Container())
+                                        })
+                                      : Column(children: <Widget>[
+                                          // List of messages
+                                          const MessageBox(),
+                                          // Sticker
+                                          Container(),
+                                          // Input content
+                                          const InputBox()
+                                        ]).inkWell(onTap: () {
+                                          chatCtrl.enableReactionPopup = false;
+                                          chatCtrl.showPopUp = false;
+                                          chatCtrl.update();
+                                        }),
+                                  // Loading
+
+                                  GetBuilder<AppController>(builder: (appCtrl) {
+                                    return CommonLoader(
+                                        isLoading: appCtrl.isLoading);
+                                  })
+                                ])
+                              : Container(),
+                          if (chatCtrl.isLoading)
+                            CommonLoader(isLoading: chatCtrl.isLoading,),
+                        ],
+                      ))
                   : const Scaffold()),
         ),
       );

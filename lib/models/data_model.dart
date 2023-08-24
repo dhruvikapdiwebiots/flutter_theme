@@ -103,7 +103,9 @@ class DataModel extends Model {
 
             _chatsWith.docs.asMap().entries.forEach((element) {
               debugPrint("_chatsWith : ${element.value.data()}");
-              peers.add(element.value);
+              if(!peers.contains(element.value)) {
+                peers.add(element.value);
+              }
             });
 
             users = peers;

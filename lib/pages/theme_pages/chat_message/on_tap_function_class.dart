@@ -191,15 +191,24 @@ class OnTapFunctionCall {
   }
 
   //on emoji select
-  onEmojiSelect(ChatController chatCtrl,docId,emoji) async {
+  onEmojiSelect(ChatController chatCtrl,docId,emoji,title) async {
+    log("ddff");
     chatCtrl.selectedIndexId = [];
     chatCtrl.showPopUp = false;
     chatCtrl.enableReactionPopup = false;
+
+    int index = chatCtrl.localMessage.indexWhere((element) => element.time == title);
+
+  int messageIndex =   chatCtrl.localMessage[index].message!.indexWhere((element) => element.docId == docId);
+    chatCtrl.localMessage[index].message![messageIndex].emoji = emoji;
     await FirebaseFirestore.instance.collection(collectionName.users).doc(appCtrl.user["id"])
         .collection(collectionName.messages)
         .doc(chatCtrl.chatId)
         .collection(collectionName.chat)
         .doc(docId)
         .update({"emoji": emoji});
+
+    chatCtrl.update();
+    log("LLLLL : ${chatCtrl.localMessage[index].message![messageIndex].emoji}");
   }
 }

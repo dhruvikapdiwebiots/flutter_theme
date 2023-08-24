@@ -74,6 +74,7 @@ class DashboardBody extends StatelessWidget {
                                   color: appCtrl.appTheme.blackColor,
                                 ),
                                 onSelected: (result) {
+
                                   dashboardCtrl.onMenuItemSelected(result);
                                 },
                                 offset: Offset(0.0, appBarHeight),
@@ -151,8 +152,13 @@ class DashboardBody extends StatelessWidget {
                                             AppRadius.r8)),
                                     keyboardType: TextInputType.multiline,
                                     onChanged: (val) {
-                                      dashboardCtrl.onSearch(val);
-                                      dashboardCtrl.update();
+                                      if(dashboardCtrl.selectedIndex == 0){
+                                        dashboardCtrl.recentMessageSearch();
+                                      }else {
+
+                                        dashboardCtrl.onSearch(val);
+                                        dashboardCtrl.update();
+                                      }
                                     },
                                     suffixIcon: dashboardCtrl
                                             .userText.text.isNotEmpty

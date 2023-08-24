@@ -1,8 +1,10 @@
+import 'package:flutter_theme/models/message_model.dart';
+
 import '../../../../../config.dart';
 import '../broad_cast_on_tap_class.dart';
 
 class BroadcastSenderMessage extends StatefulWidget {
-  final dynamic document;
+  final MessageModel? document;
   final int? index;
   final String? docId;
 
@@ -29,7 +31,7 @@ class _BroadcastSenderMessage extends State<BroadcastSenderMessage> {
                 Column(crossAxisAlignment: CrossAxisAlignment.end, children: <
                     Widget>[
               Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
-                if (widget.document!["type"] == MessageType.text.name)
+                if (widget.document!.type == MessageType.text.name)
                   // Text
                   Content(
                     isBroadcast: true,
@@ -38,7 +40,7 @@ class _BroadcastSenderMessage extends State<BroadcastSenderMessage> {
                       onLongPress: () =>
                           chatCtrl.onLongPressFunction(widget.docId),
                       document: widget.document),
-                if (widget.document!["type"] == MessageType.image.name)
+                if (widget.document!.type == MessageType.image.name)
                   SenderImage(
                     isBroadcast: true,
                     document: widget.document,
@@ -47,7 +49,7 @@ class _BroadcastSenderMessage extends State<BroadcastSenderMessage> {
                     onLongPress: () =>
                         chatCtrl.onLongPressFunction(widget.docId),
                   ),
-                if (widget.document!["type"] == MessageType.contact.name)
+                if (widget.document!.type == MessageType.contact.name)
                   ContactLayout(
                       isBroadcast: true,
                           onTap: () => BroadcastOnTapFunctionCall()
@@ -56,7 +58,7 @@ class _BroadcastSenderMessage extends State<BroadcastSenderMessage> {
                               chatCtrl.onLongPressFunction(widget.docId),
                           document: widget.document)
                       .paddingSymmetric(vertical: Insets.i8),
-                if (widget.document!["type"] == MessageType.location.name)
+                if (widget.document!.type == MessageType.location.name)
                   LocationLayout(
                       isBroadcast: true,
                       document: widget.document,
@@ -64,7 +66,7 @@ class _BroadcastSenderMessage extends State<BroadcastSenderMessage> {
                           .locationTap(chatCtrl, widget.docId, widget.document),
                       onLongPress: () =>
                           chatCtrl.onLongPressFunction(widget.docId)),
-                if (widget.document!["type"] == MessageType.video.name)
+                if (widget.document!.type == MessageType.video.name)
                   VideoDoc(
                       document: widget.document,
                       isBroadcast: true,
@@ -72,7 +74,7 @@ class _BroadcastSenderMessage extends State<BroadcastSenderMessage> {
                           .locationTap(chatCtrl, widget.docId, widget.document),
                       onLongPress: () =>
                           chatCtrl.onLongPressFunction(widget.docId)),
-                if (widget.document!["type"] == MessageType.audio.name)
+                if (widget.document!.type == MessageType.audio.name)
                   AudioDoc(
                       isBroadcast: true,
                       document: widget.document,
@@ -80,8 +82,8 @@ class _BroadcastSenderMessage extends State<BroadcastSenderMessage> {
                           .locationTap(chatCtrl, widget.docId, widget.document),
                       onLongPress: () =>
                           chatCtrl.onLongPressFunction(widget.docId)),
-                if (widget.document!["type"] == MessageType.doc.name)
-                  (widget.document!["content"].contains(".pdf"))
+                if (widget.document!.type == MessageType.doc.name)
+                  (widget.document!.content!.contains(".pdf"))
                       ? PdfLayout(
                           isBroadcast: true,
                           document: widget.document,
@@ -89,7 +91,7 @@ class _BroadcastSenderMessage extends State<BroadcastSenderMessage> {
                               .pdfTap(chatCtrl, widget.docId, widget.document),
                           onLongPress: () =>
                               chatCtrl.onLongPressFunction(widget.docId))
-                      : (widget.document!["content"].contains(".doc"))
+                      : (widget.document!.content!.contains(".doc"))
                           ? DocxLayout(
                               isBroadcast: true,
                               document: widget.document,
@@ -97,7 +99,7 @@ class _BroadcastSenderMessage extends State<BroadcastSenderMessage> {
                                   chatCtrl, widget.docId, widget.document),
                               onLongPress: () =>
                                   chatCtrl.onLongPressFunction(widget.docId))
-                          : (widget.document!["content"].contains(".xlsx"))
+                          : (widget.document!.content!.contains(".xlsx"))
                               ? ExcelLayout(
                                   isBroadcast: true,
                                   onTap: () => BroadcastOnTapFunctionCall()
@@ -107,12 +109,12 @@ class _BroadcastSenderMessage extends State<BroadcastSenderMessage> {
                                       .onLongPressFunction(widget.docId),
                                   document: widget.document,
                                 )
-                              : (widget.document!["content"].contains(".jpg") ||
-                                      widget.document!["content"]
+                              : (widget.document!.content!.contains(".jpg") ||
+                                      widget.document!.content!
                                           .contains(".png") ||
-                                      widget.document!["content"]
+                                      widget.document!.content!
                                           .contains(".heic") ||
-                                      widget.document!["content"]
+                                      widget.document!.content!
                                           .contains(".jpeg"))
                                   ? DocImageLayout(
                                       document: widget.document,
@@ -122,7 +124,7 @@ class _BroadcastSenderMessage extends State<BroadcastSenderMessage> {
                                       onLongPress: () => chatCtrl
                                           .onLongPressFunction(widget.docId))
                                   : Container(),
-                if (widget.document!["type"] == MessageType.gif.name)
+                if (widget.document!.type == MessageType.gif.name)
                   GifLayout(
                       onTap: () => BroadcastOnTapFunctionCall()
                           .contentTap(chatCtrl, widget.docId),
@@ -130,10 +132,10 @@ class _BroadcastSenderMessage extends State<BroadcastSenderMessage> {
                           chatCtrl.onLongPressFunction(widget.docId),
                       document: widget.document)
               ]),
-              if (widget.document!["type"] == MessageType.messageType.name)
+              if (widget.document!.type == MessageType.messageType.name)
                 Align(
                         alignment: Alignment.center,
-                        child: Text(decryptMessage(widget.document!["content"]))
+                        child: Text(decryptMessage(widget.document!.content))
                             .paddingSymmetric(
                                 horizontal: Insets.i8, vertical: Insets.i10)
                             .decorated(

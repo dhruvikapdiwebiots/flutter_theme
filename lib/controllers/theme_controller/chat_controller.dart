@@ -5,6 +5,7 @@ import 'package:dartx/dartx_io.dart';
 import 'package:drishya_picker/drishya_picker.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter_theme/config.dart';
+import 'package:flutter_theme/models/message_model.dart';
 import 'package:flutter_theme/pages/theme_pages/chat_message/layouts/chat_wall_paper.dart';
 import 'package:flutter_theme/pages/theme_pages/chat_message/layouts/single_clear_dialog.dart';
 import 'package:flutter_theme/widgets/common_note_encrypt.dart';
@@ -24,6 +25,7 @@ class ChatController extends GetxController {
       videoUrl,
       blockBy;
   List message = [];
+  List<DateTimeChip> localMessage = [];
   dynamic pData, allData, userData;
   List<DrishyaEntity>? entities;
   List<QueryDocumentSnapshot<Map<String, dynamic>>> allMessages = [];
@@ -39,7 +41,7 @@ class ChatController extends GetxController {
   File? image;
   File? video;
   int? count;
-  bool isLoading = false;
+  bool isLoading = true;
   bool enableReactionPopup = false, isChatSearch = false;
   bool showPopUp = false;
   List selectedIndexId = [];
@@ -56,6 +58,8 @@ class ChatController extends GetxController {
   TextEditingController txtChatSearch = TextEditingController();
   ScrollController listScrollController = ScrollController();
   FocusNode focusNode = FocusNode();
+  StreamSubscription? messageSub;
+
   late encrypt.Encrypter cryptor;
   final iv = encrypt.IV.fromLength(8);
 
@@ -64,15 +68,15 @@ class ChatController extends GetxController {
     // TODO: implement onReady
 
     groupId = '';
-    isLoading = false;
     imageUrl = '';
     userData = appCtrl.storage.read(session.user);
     var data = Get.arguments;
-
+    log("data : $data");
     if (data == "No User") {
       isUserAvailable = false;
     } else {
       userContactModel = data["data"];
+
       pId = userContactModel!.uid;
       pName = userContactModel!.username;
       chatId = data["chatId"];
@@ -86,18 +90,38 @@ class ChatController extends GetxController {
     super.onReady();
   }
 
-  getAllDataLocally(data)async{
-
-    allMessages = data["allMessage"];
-  //  allMessages.add(value)
+  getAllDataLocally(data) async {
+    await FirebaseFirestore.instance
+        .collection(collectionName.users)
+        .doc(appCtrl.user["id"])
+        .collection(collectionName.messages)
+        .doc(chatId)
+        .collection(collectionName.chat)
+        .get()
+        .then((value) {
+      if (value.docs.isNotEmpty) {
+        allMessages = value.docs;
+        update();
+        log("allMessages ::: $allMessages");
+        ChatMessageApi().getLocalMessage();
+        update();
+        isLoading = false;
+        update();
+      }
+    });
+    /*  if (data["allMessage"] != "") {
+      allMessages = data["allMessage"];
+      update();
+      ChatMessageApi().getLocalMessage();
+      update();
+    }*/
+    //  allMessages.add(value)
   }
-
 
   //get chat data
   getChatData() async {
-
+    log("ALL MESSAGE:${chatId} ");
     if (chatId != "0") {
-      update();
       await FirebaseFirestore.instance
           .collection(collectionName.users)
           .doc(userData["id"])
@@ -105,50 +129,31 @@ class ChatController extends GetxController {
           .where("chatId", isEqualTo: chatId)
           .get()
           .then((value) {
-
         allData = value.docs[0].data();
         update();
       });
-      final key = encrypt.Key.fromUtf8('my 32 length key................');
-      final iv = encrypt.IV.fromLength(16);
 
-      final encrypter = encrypt.Encrypter(encrypt.AES(key));
-
-     // final encrypted = encrypter.encrypt(fonts.noteEncrypt.tr, iv: iv).base64;
-      /*await FirebaseFirestore.instance
+      messageSub = FirebaseFirestore.instance
           .collection(collectionName.users)
           .doc(appCtrl.user["id"])
           .collection(collectionName.messages)
           .doc(chatId)
           .collection(collectionName.chat)
-          .where("type", isEqualTo: MessageType.note.name).limit(1)
-          .get()
-          .then((value) async {
-        if (value.docs.isEmpty) {
+          .snapshots()
+          .listen((event) async {
+        allMessages = event.docs;
+        update();
 
-          await FirebaseFirestore.instance
-              .collection(collectionName.users)
-              .doc(appCtrl.user["id"])
-              .collection(collectionName.messages)
-              .doc(chatId)
-              .collection(collectionName.chat)
-              .doc(DateTime.now().millisecondsSinceEpoch.toString())
-              .set({
-            'sender': userData["id"],
-            'receiver': pId,
-            'content': encrypted,
-            "chatId": chatId,
-            'type': MessageType.note.name,
-            'messageType': "sender",
-            "isBlock": isBlock,
-            "isSeen": true,
-            "isBroadcast": false,
-            "blockBy": "",
-            "blockUserId": "",
-            'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-          }, SetOptions(merge: true));
-        }
-      });*/
+        ChatMessageApi().getLocalMessage();
+
+        isLoading = false;
+        update();
+      });
+      isLoading = false;
+      update();
+    } else {
+      isLoading = false;
+      update();
     }
     seenMessage();
     await FirebaseFirestore.instance
@@ -159,9 +164,7 @@ class ChatController extends GetxController {
       pData = value.data();
 
       update();
-
     });
-
 
     if (allData != null) {
       if (allData["backgroundImage"] != null ||
@@ -186,7 +189,6 @@ class ChatController extends GetxController {
     var data = Get.arguments;
 
     if (data["message"] != null) {
-
       onSendMessage(
           data["message"].statusType == StatusType.text.name
               ? data["message"].statusText!
@@ -201,7 +203,6 @@ class ChatController extends GetxController {
 
   //audio and video call tap
   audioVideoCallTap(isVideoCall) async {
-
     await ChatMessageApi()
         .audioAndVideoCallApi(toData: pData, isVideoCall: isVideoCall);
   }
@@ -338,7 +339,6 @@ class ChatController extends GetxController {
     Get.back();
 
     await permissionHandelCtrl.getCurrentPosition().then((value) async {
-
       var locationString =
           'https://www.google.com/maps/search/?api=1&query=${value!.latitude},${value.longitude}';
       onSendMessage(locationString, MessageType.location);
@@ -363,7 +363,6 @@ class ChatController extends GetxController {
 
   //block user
   blockUser() async {
-
     DateTime now = DateTime.now();
     String? newChatId =
         chatId == "0" ? now.microsecondsSinceEpoch.toString() : chatId;
@@ -387,13 +386,15 @@ class ChatController extends GetxController {
           userData["id"]);
 
       await ChatMessageApi().saveMessageInUserCollection(
-          userData["id"],
-          pId,
-          newChatId,
-          encrypted,
-          userData["id"],
-          userData["name"],MessageType.messageType,
-        isBlock: false,);
+        userData["id"],
+        pId,
+        newChatId,
+        encrypted,
+        userData["id"],
+        userData["name"],
+        MessageType.messageType,
+        isBlock: false,
+      );
     } else {
       final encrypted =
           encrypter.encrypt("You block this contact", iv: iv).base64;
@@ -407,13 +408,15 @@ class ChatController extends GetxController {
           userData["id"]);
 
       await ChatMessageApi().saveMessageInUserCollection(
-          userData["id"],
-          pData["id"],
-          newChatId,
-          encrypted,
-          userData["id"],
-          userData["name"],MessageType.messageType,
-        isBlock: true,);
+        userData["id"],
+        pData["id"],
+        newChatId,
+        encrypted,
+        userData["id"],
+        userData["name"],
+        MessageType.messageType,
+        isBlock: true,
+      );
     }
     getChatData();
   }
@@ -571,9 +574,46 @@ class ChatController extends GetxController {
       chatId = newChatId;
       update();
       imageUrl = "";
-
+      String time = DateTime.now().millisecondsSinceEpoch.toString();
       update();
+      log("allData:: $allData");
+      MessageModel messageModel = MessageModel(
+          blockBy: allData != null ? allData["blockBy"] : "",
+          blockUserId: allData != null ? allData["blockUserId"] : "",
+          chatId: chatId,
+          content: encrypted,
+          docId: time,
+          isBlock: false,
+          isBroadcast: false,
+          isFavourite: false,
+          isSeen: false,
+          messageType: "sender",
+          receiver: pId,
+          sender: appCtrl.user["id"],
+          timestamp: time,
+          type: type.name);
+      bool isEmpty =
+          localMessage.where((element) => element.time == "Today").isEmpty;
+      if (isEmpty) {
+        List<MessageModel>? message = [];
+        if (message.isNotEmpty) {
+          message.add(messageModel);
+          message[0].docId = time;
+        } else {
+          message = [messageModel];
+          message[0].docId = time;
+        }
+        DateTimeChip dateTimeChip =
+            DateTimeChip(time: getDate(time), message: message);
+        localMessage.add(dateTimeChip);
+      } else {
+        int index =
+            localMessage.indexWhere((element) => element.time == "Today");
 
+        if (!localMessage[index].message!.contains(messageModel)) {
+          localMessage[index].message!.add(messageModel);
+        }
+      }
       if (allData != null && allData != "") {
         if (allData["isBlock"] == true) {
           if (allData["blockUserId"] == pId) {
@@ -582,18 +622,19 @@ class ChatController extends GetxController {
           } else {
             await ChatMessageApi()
                 .saveMessage(
-                    newChatId,
-                    pId,
-                    encrypted,
-                    type,
-                    DateTime.now().millisecondsSinceEpoch.toString(),
-                    userData["id"])
+                    newChatId, pId, encrypted, type, time, userData["id"])
                 .then((snap) async {
               isLoading = false;
               update();
               Get.forceAppUpdate();
-              await ChatMessageApi().saveMessageInUserCollection(pData["id"],
-                  userData["id"], newChatId, encrypted, userData["id"], pName,type);
+              await ChatMessageApi().saveMessageInUserCollection(
+                  pData["id"],
+                  userData["id"],
+                  newChatId,
+                  encrypted,
+                  userData["id"],
+                  pName,
+                  type);
             }).then((value) {
               isLoading = false;
               update();
@@ -621,9 +662,9 @@ class ChatController extends GetxController {
               Get.forceAppUpdate();
 
               await ChatMessageApi().saveMessageInUserCollection(userData["id"],
-                  pId, newChatId, encrypted, userData["id"], pName,type);
+                  pId, newChatId, encrypted, userData["id"], pName, type);
               await ChatMessageApi().saveMessageInUserCollection(pId, pId,
-                  newChatId, encrypted, userData["id"], userData["name"],type);
+                  newChatId, encrypted, userData["id"], userData["name"], type);
             }).then((value) {
               isLoading = false;
               update();
@@ -655,11 +696,10 @@ class ChatController extends GetxController {
             update();
             Get.forceAppUpdate();
 
-
             await ChatMessageApi().saveMessageInUserCollection(userData["id"],
-                pId, newChatId, encrypted, userData["id"], pName,type);
+                pId, newChatId, encrypted, userData["id"], pName, type);
             await ChatMessageApi().saveMessageInUserCollection(pId, pId,
-                newChatId, encrypted, userData["id"], userData["name"],type);
+                newChatId, encrypted, userData["id"], userData["name"], type);
           }).then((value) {
             isLoading = false;
             update();
@@ -678,13 +718,28 @@ class ChatController extends GetxController {
           .where("chatId", isEqualTo: chatId)
           .get()
           .then((value) {
-
         allData = value.docs[0].data();
 
         update();
       });
     }
-
+    log("chatId :: R$chatId");
+    await FirebaseFirestore.instance
+        .collection(collectionName.users)
+        .doc(appCtrl.user["id"])
+        .collection(collectionName.messages)
+        .doc(chatId)
+        .collection(collectionName.chat)
+        .get()
+        .then((value) {
+      if (value.docs.isNotEmpty) {
+        allMessages = value.docs;
+        update();
+        ChatMessageApi().getLocalMessage();
+        update();
+      }
+    });
+    log("allMessages : $allMessages");
     seenMessage();
     await FirebaseFirestore.instance
         .collection(collectionName.users)
@@ -694,12 +749,11 @@ class ChatController extends GetxController {
       pData = value.data();
 
       update();
-
     });
     if (pData["pushToken"] != "") {
       firebaseCtrl.sendNotification(
           title: "Single Message",
-          msg: messageTypeCondition(type,content),
+          msg: messageTypeCondition(type, content),
           chatId: chatId,
           token: pData["pushToken"],
           pId: pId,
@@ -725,9 +779,7 @@ class ChatController extends GetxController {
   wallPaperConfirmation(image) async {
     Get.generalDialog(
       pageBuilder: (context, anim1, anim2) {
-        return ChatWallPaper(
-          image: image,
-        );
+        return ChatWallPaper(image: image);
       },
       transitionBuilder: (context, anim1, anim2, child) {
         return SlideTransition(
@@ -739,63 +791,57 @@ class ChatController extends GetxController {
     );
   }
 
-  Widget timeLayout(document) {
-    List newMessageList = document["message"];
+  Widget timeLayout(DateTimeChip document) {
+    List<MessageModel> newMessageList = document.message!;
     log("newMessageList : ${newMessageList.length}");
     return Column(
       children: [
         Text(
-                document["title"].contains("-other")
-                    ? document["title"].split("-other")[0]
-                    : document["title"],
+                document.time!.contains("-other")
+                    ? document.time!.split("-other")[0]
+                    : document.time!,
                 style:
                     AppCss.poppinsMedium14.textColor(appCtrl.appTheme.txtColor))
             .marginSymmetric(vertical: Insets.i5),
         ...newMessageList.asMap().entries.map((e) {
-          return buildItem(e.key, e.value, e.value.id);
+          return buildItem(
+              e.key,
+              e.value,
+              e.value.docId,
+              document.time!.contains("-other")
+                  ? document.time!.split("-other")[0]
+                  : document.time!);
         }).toList()
       ],
     );
   }
 
   // BUILD ITEM MESSAGE BOX FOR RECEIVER AND SENDER BOX DESIGN
-  Widget buildItem(int index, document, documentId) {
-    if (document["type"] == MessageType.note.name) {
-      return Container(
-          margin: const EdgeInsets.only(bottom: 2.0),
-          padding: const EdgeInsets.only(left: Insets.i10, right: Insets.i10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
-              if (document!["type"] == MessageType.note.name)
-                const Align(
-                  alignment: Alignment.center,
-                  child: CommonNoteEncrypt(),
-                ).paddingOnly(bottom: Insets.i8)
-            ],
-          ));
-    }
-    if (document['sender'] == userData["id"]) {
+  Widget buildItem(int index, MessageModel document, documentId, title) {
+    if (document.sender == userData["id"]) {
       return SenderMessage(
-        document: document,
-        index: index,
-        docId: documentId,
-      ).inkWell(onTap: () {
+              document: document,
+              index: index,
+              docId: document.docId,
+              title: title)
+          .inkWell(onTap: () {
         enableReactionPopup = false;
         showPopUp = false;
         selectedIndexId = [];
         update();
-
       });
-    } else if (document['sender'] != userData["id"]) {
+    } else if (document.sender != userData["id"]) {
       // RECEIVER MESSAGE
-      return document["type"] == MessageType.messageType.name
+      return document.type! == MessageType.messageType.name
           ? Container()
-          : document["isBlock"]
+          : document.isBlock!
               ? Container()
               : ReceiverMessage(
-                      document: document, index: index, docId: documentId)
-                  .inkWell(onTap: () {
+                  document: document,
+                  index: index,
+                  docId: document.docId,
+                  title: title,
+                ).inkWell(onTap: () {
                   enableReactionPopup = false;
                   showPopUp = false;
                   selectedIndexId = [];
@@ -811,25 +857,7 @@ class ChatController extends GetxController {
   Future<bool> onBackPress() {
     appCtrl.isTyping = false;
     appCtrl.update();
-    FirebaseFirestore.instance .collection(collectionName.users)
-        .doc(appCtrl.user["id"])
-        .collection(collectionName.messages)
-        .doc(chatId)
-        .collection(collectionName.chat)
-        .get()
-        .then((value) {
-      if (value.docs.isNotEmpty) {
-        if (value.docs.length == 1) {
-          FirebaseFirestore.instance .collection(collectionName.users)
-              .doc(appCtrl.user["id"])
-              .collection(collectionName.messages)
-              .doc(chatId)
-              .collection(collectionName.chat)
-              .doc(value.docs[0].id)
-              .delete();
-        }
-      }
-    });
+
     Get.back();
     return Future.value(false);
   }
@@ -859,19 +887,17 @@ class ChatController extends GetxController {
         searchChatId = [];
         selectedIndexId = [];
         log("message :: $message");
-        message.asMap().entries.forEach((e) {
-          if (decryptMessage(e.value.data()["content"])
-              .toLowerCase()
-              .contains(val)) {
-            if (!searchChatId.contains(e.key)) {
-              searchChatId.add(e.key);
-            } else {
-              searchChatId.remove(e.key);
+        localMessage.asMap().entries.forEach((element) {
+          element.value.message!.asMap().entries.forEach((e) {
+            if(decryptMessage(e.value.content).toString().toLowerCase().contains(txtChatSearch.text)){
+              if (!searchChatId.contains(e.value.docId)) {
+                searchChatId.add(e.value.docId);
+              } else {
+                searchChatId.remove(e.value.docId);
+              }
             }
-          }
-          update();
+          });
         });
-
       },
 
       //Display the keyboard when TextField is displayed
@@ -911,12 +937,15 @@ class ChatController extends GetxController {
   //ON TAP EMOJI BOTTOM SHEET OPEN
   void showBottomSheet(BuildContext context) => showModalBottomSheet<void>(
         context: context,
-        builder: (context) => EmojiPickerWidget(onSelected: (emoji) {
-          textEditingController.text = textEditingController.text + emoji;
-          log("emoji : ${emoji.codeUnits}");
-          log("emoji : ${emoji.characters}");
-         // onEmojiTap(emoji);
-        },textEditingController: textEditingController,),
+        builder: (context) => EmojiPickerWidget(
+          onSelected: (emoji) {
+            textEditingController.text = textEditingController.text + emoji;
+            log("emoji : ${emoji.codeUnits}");
+            log("emoji : ${emoji.characters}");
+            // onEmojiTap(emoji);
+          },
+          textEditingController: textEditingController,
+        ),
       );
 
   //ON SELECT EMOJI SEND TO CHAT

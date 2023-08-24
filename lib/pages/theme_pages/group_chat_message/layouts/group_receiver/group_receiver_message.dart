@@ -1,15 +1,16 @@
 import 'dart:developer';
 
+import 'package:flutter_theme/models/message_model.dart';
 import 'package:flutter_theme/pages/theme_pages/chat_message/layouts/receiver_image.dart';
 import '../../../../../config.dart';
 import '../../group_on_tap_function_class.dart';
 
 class GroupReceiverMessage extends StatefulWidget {
-  final DocumentSnapshot? document;
-  final String? docId;
+  final MessageModel? document;
+  final String? docId,title;
   final int? index;
 
-  const GroupReceiverMessage({Key? key, this.index, this.document, this.docId})
+  const GroupReceiverMessage({Key? key, this.index, this.document, this.docId,this.title})
       : super(key: key);
 
   @override
@@ -39,8 +40,54 @@ class _GroupReceiverMessageState extends State<GroupReceiverMessage> {
 
                 Row(
                   children: [
-                    if (widget.document!["type"] != MessageType.messageType.name)
-                    ReceiverChatImage(id: widget.document!["sender"]),
+                    if (widget.document!.type != MessageType.messageType.name)
+                      CachedNetworkImage(
+                          imageUrl: chatCtrl.groupImage!,
+                          imageBuilder: (context, imageProvider) => Container(
+                            height: Sizes.s35,
+                            width: Sizes.s35,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                color: appCtrl.appTheme.contactBgGray,
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    fit: BoxFit.fill, image: imageProvider)),
+                          ),
+                          placeholder: (context, url) => Container(
+                            height: Sizes.s35,
+                            width: Sizes.s35,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                color: const Color(0xff3282B8),
+                                shape: BoxShape.circle),
+                            child: Text(
+                                chatCtrl.pName!.length > 2
+                                    ? chatCtrl.pName!
+                                    .replaceAll(" ", "")
+                                    .substring(0, 2)
+                                    .toUpperCase()
+                                    : chatCtrl.pName![0],
+                                style: AppCss.poppinsblack16
+                                    .textColor(appCtrl.appTheme.white)),
+                          ),
+                          errorWidget: (context, url, error) => Container(
+                            height: Sizes.s35,
+                            width: Sizes.s35,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                color: const Color(0xff3282B8),
+                                shape: BoxShape.circle),
+                            child: Text(
+                              chatCtrl.pName!.length > 2
+                                  ? chatCtrl.pName!
+                                  .replaceAll(" ", "")
+                                  .substring(0, 2)
+                                  .toUpperCase()
+                                  : chatCtrl.pName![0],
+                              style:
+                              AppCss.poppinsblack16.textColor(appCtrl.appTheme.white),
+                            ),
+                          )),
                     const HSpace(Sizes.s8),
                     Column(
                         crossAxisAlignment:  CrossAxisAlignment.start,children: <Widget>[
@@ -48,7 +95,7 @@ class _GroupReceiverMessageState extends State<GroupReceiverMessage> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           // MESSAGE BOX FOR TEXT
-                          if (widget.document!["type"] == MessageType.text.name)
+                          if (widget.document!.type == MessageType.text.name)
                             GroupReceiverContent(
                                 isSearch:chatCtrl.searchChatId.contains(widget.index) ,
                                 onTap: () => GroupOnTapFunctionCall()
@@ -58,7 +105,7 @@ class _GroupReceiverMessageState extends State<GroupReceiverMessage> {
                                 document: widget.document),
 
                           // MESSAGE BOX FOR IMAGE
-                          if (widget.document!["type"] == MessageType.image.name)
+                          if (widget.document!.type == MessageType.image.name)
                             GroupReceiverImage(
                                 document: widget.document,
                                 onTap: () => GroupOnTapFunctionCall().imageTap(
@@ -66,7 +113,7 @@ class _GroupReceiverMessageState extends State<GroupReceiverMessage> {
                                 onLongPress: () =>
                                     chatCtrl.onLongPressFunction(widget.docId)),
 
-                          if (widget.document!["type"] == MessageType.contact.name)
+                          if (widget.document!.type == MessageType.contact.name)
                             GroupContactLayout(
                                 isReceiver: true,
                                 currentUserId: chatCtrl.user["id"],
@@ -76,7 +123,7 @@ class _GroupReceiverMessageState extends State<GroupReceiverMessage> {
                                 onTap: () => GroupOnTapFunctionCall()
                                     .contentTap(chatCtrl, widget.docId),
                                 document: widget.document),
-                          if (widget.document!["type"] == MessageType.location.name)
+                          if (widget.document!.type == MessageType.location.name)
                             GroupLocationLayout(
                                 isReceiver: true,
                                 document: widget.document,
@@ -85,7 +132,7 @@ class _GroupReceiverMessageState extends State<GroupReceiverMessage> {
                                     chatCtrl.onLongPressFunction(widget.docId),
                                 onTap: () => GroupOnTapFunctionCall().locationTap(
                                     chatCtrl, widget.docId, widget.document)),
-                          if (widget.document!["type"] == MessageType.video.name)
+                          if (widget.document!.type == MessageType.video.name)
                             GroupVideoDoc(
                                 isReceiver: true,
                                 currentUserId: chatCtrl.user["id"],
@@ -94,7 +141,7 @@ class _GroupReceiverMessageState extends State<GroupReceiverMessage> {
                                     chatCtrl.onLongPressFunction(widget.docId),
                                 onTap: () => GroupOnTapFunctionCall().locationTap(
                                     chatCtrl, widget.docId, widget.document)),
-                          if (widget.document!["type"] == MessageType.audio.name)
+                          if (widget.document!.type == MessageType.audio.name)
                             GroupAudioDoc(
                                 isReceiver: true,
                                 currentUserId: chatCtrl.user["id"],
@@ -103,19 +150,19 @@ class _GroupReceiverMessageState extends State<GroupReceiverMessage> {
                                     chatCtrl.onLongPressFunction(widget.docId),
                                 onTap: () => GroupOnTapFunctionCall().locationTap(
                                     chatCtrl, widget.docId, widget.document)),
-                          if (widget.document!["type"] == MessageType.doc.name)
-                            (decryptMessage(widget.document!["content"]).contains(".pdf"))
+                          if (widget.document!.type == MessageType.doc.name)
+                            (decryptMessage(widget.document!.content).contains(".pdf"))
                                 ? PdfLayout(
                                     isReceiver: true,
                                     isGroup: true,
-                                    document: widget.document,
+                                   // document: widget.document,
                                     onLongPress: () =>
                                         chatCtrl.onLongPressFunction(widget.docId),
                                     onTap: () => GroupOnTapFunctionCall().pdfTap(
                                         chatCtrl, widget.docId, widget.document))
-                                : (decryptMessage(widget.document!["content"]).contains(".doc"))
+                                : (decryptMessage(widget.document!.content).contains(".doc"))
                                     ? DocxLayout(
-                                        document: widget.document,
+                                       // document: widget.document,
                                         isReceiver: true,
                                         isGroup: true,
                                         onLongPress: () => chatCtrl
@@ -123,7 +170,7 @@ class _GroupReceiverMessageState extends State<GroupReceiverMessage> {
                                         onTap: () => GroupOnTapFunctionCall()
                                             .docTap(chatCtrl, widget.docId,
                                                 widget.document))
-                                    : (decryptMessage(widget.document!["content"])
+                                    : (decryptMessage(widget.document!.content)
                                             .contains(".xlsx"))
                                         ? ExcelLayout(
                                             currentUserId: chatCtrl.user["id"],
@@ -134,30 +181,30 @@ class _GroupReceiverMessageState extends State<GroupReceiverMessage> {
                                             onTap: () => GroupOnTapFunctionCall()
                                                 .excelTap(chatCtrl, widget.docId,
                                                     widget.document),
-                                            document: widget.document,
+                                          //  document: widget.document,
                                           )
-                                        : (decryptMessage(widget.document!["content"]).contains(".jpg") ||
-                                                decryptMessage(widget.document!["content"])
+                                        : (decryptMessage(widget.document!.content).contains(".jpg") ||
+                                                decryptMessage(widget.document!.content)
                                                     .contains(".png") ||
-                                                decryptMessage(widget.document!["content"])
+                                                decryptMessage(widget.document!.content)
                                                     .contains(".heic") ||
-                                                decryptMessage(widget.document!["content"])
+                                                decryptMessage(widget.document!.content)
                                                     .contains(".jpeg"))
                                             ? DocImageLayout(
                                                 currentUserId: chatCtrl.user["id"],
                                                 isGroup: true,
                                                 isReceiver: true,
-                                                document: widget.document,
+                                               // document: widget.document,
                                                 onLongPress: () => chatCtrl.onLongPressFunction(widget.docId),
                                                 onTap: () => GroupOnTapFunctionCall().docImageTap(chatCtrl, widget.docId, widget.document))
                                             : Container(),
 
-                          if (widget.document!["type"] == MessageType.gif.name)
+                          if (widget.document!.type == MessageType.gif.name)
                             GifLayout(
                                 currentUserId: chatCtrl.user["id"],
                                 isGroup: true,
                                 isReceiver: true,
-                                document: widget.document,
+                        //        document: widget.document,
                                 onLongPress: () =>
                                     chatCtrl.onLongPressFunction(widget.docId),
                                 onTap: () => GroupOnTapFunctionCall()
@@ -168,10 +215,10 @@ class _GroupReceiverMessageState extends State<GroupReceiverMessage> {
                     ]),
                   ],
                 ),
-                if (widget.document!["type"] == MessageType.messageType.name)
+                if (widget.document!.type == MessageType.messageType.name)
                   Align(
                     alignment: Alignment.center,
-                    child: Text(decryptMessage(widget.document!["content"]))
+                    child: Text(decryptMessage(widget.document!.content))
                         .paddingSymmetric(
                         horizontal: Insets.i8, vertical: Insets.i10)
                         .decorated(
@@ -192,7 +239,7 @@ class _GroupReceiverMessageState extends State<GroupReceiverMessage> {
                       shadow: BoxShadow(
                           color: Colors.grey.shade400, blurRadius: 20)),
                   onEmojiTap: (val) => GroupOnTapFunctionCall()
-                      .onEmojiSelect(chatCtrl, widget.docId, val),
+                      .onEmojiSelect(chatCtrl, widget.docId, val,widget.title),
                   showPopUp: chatCtrl.showPopUp,
                 ))
         ],

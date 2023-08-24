@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:figma_squircle/figma_squircle.dart';
+import 'package:flutter_theme/models/message_model.dart';
 import 'package:intl/intl.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
@@ -9,7 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import '../../../../../config.dart';
 
 class SenderImage extends StatelessWidget {
-  final dynamic document;
+  final MessageModel? document;
   final VoidCallback? onPressed, onLongPress;
   final bool isBroadcast;
   final String? userId;
@@ -54,36 +55,36 @@ class SenderImage extends StatelessWidget {
                                   borderRadius:SmoothBorderRadius(cornerRadius: 10,cornerSmoothing: 1)),
                             ),
                             child: Container()),
-                        imageUrl: decryptMessage(document!["content"]),
+                        imageUrl: decryptMessage(document!.content),
                         width: Sizes.s160,
                         height: Sizes.s150,
-                        fit: BoxFit.cover,
+                        fit: BoxFit.fill,
                       ),
                     ).paddingAll(Insets.i10),
                   ),
                 ),
-                if (document!.data().toString().contains('emoji'))
-                  EmojiLayout(emoji: document!["emoji"])
+                if (document!.emoji != null)
+                  EmojiLayout(emoji: document!.emoji)
               ],
             ),
             Row(
               children: [
-                if (document!.data().toString().contains('isFavourite'))
-                  if(appCtrl.user["id"]  != document.data()["senderId"])
+                if (document!.isFavourite != null)
+                  if(appCtrl.user["id"]  != document!.sender)
                   Icon(Icons.star,
                       color: appCtrl.appTheme.txtColor, size: Sizes.s10),
                 const HSpace(Sizes.s3),
                 if (!isBroadcast)
                   Icon(Icons.done_all_outlined,
                       size: Sizes.s15,
-                      color: document!['isSeen'] == true
+                      color: document!.isSeen == true
                           ? appCtrl.appTheme.primary
                           : appCtrl.appTheme.gray),
                 const HSpace(Sizes.s5),
                 Text(
                   DateFormat('HH:mm a').format(
                       DateTime.fromMillisecondsSinceEpoch(
-                          int.parse(document!['timestamp']))),
+                          int.parse(document!.timestamp.toString()))),
                   style: AppCss.poppinsMedium12
                       .textColor(appCtrl.appTheme.txtColor),
                 )

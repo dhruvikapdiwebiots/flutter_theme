@@ -6,9 +6,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/controllers/common_controller/ad_controller.dart';
+import 'package:flutter_theme/controllers/recent_chat_controller.dart';
 import 'package:flutter_theme/models/data_model.dart';
 import 'package:flutter_theme/models/firebase_contact_model.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DashboardController extends GetxController
@@ -106,6 +108,12 @@ class DashboardController extends GetxController
     }
   }
 
+  recentMessageSearch()async{
+    final RecentChatController recentChatController =
+    Provider.of<RecentChatController>(Get.context!, listen: false);
+    recentChatController.getMessageList(name: userText.text);
+  }
+
   Stream onSearch(val) {
     if (selectedIndex == 0) {
       return FirebaseFirestore.instance
@@ -174,6 +182,7 @@ class DashboardController extends GetxController
       if (selectedIndex == 1) {
         statusCtrl.getAllStatus();
       }
+      update();
     });
     user = appCtrl.storage.read(session.user);
     appCtrl.update();

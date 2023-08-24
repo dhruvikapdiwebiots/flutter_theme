@@ -140,6 +140,24 @@ class ChatMessageAppBar extends StatelessWidget implements PreferredSizeWidget {
                                   : CommonSvgIcon(icon: svgAssets.star)
                                       .marginSymmetric(vertical: Insets.i22)
                                       .inkWell(onTap: () {
+                                        int index =0;
+                                      chatCtrl.selectedIndexId.asMap().entries.forEach((e) {
+                                        chatCtrl.localMessage.asMap().entries.forEach((element) {
+                                          index = element.value.message!.indexWhere((element) => element.docId == e.value );
+                                          log("index : $index");
+                                          if(index >0) {
+                                            chatCtrl.localMessage[element.key]
+                                                .message![index].isFavourite =
+                                                true;
+                                            chatCtrl.localMessage[element.key]
+                                                .message![index].favouriteId =
+                                            appCtrl.user["id"];
+                                          }
+                                        });
+                                        chatCtrl.update();
+
+                                      });
+
                                       chatCtrl.showPopUp = false;
                                       chatCtrl.enableReactionPopup = false;
                                       chatCtrl.selectedIndexId
@@ -171,7 +189,7 @@ class ChatMessageAppBar extends StatelessWidget implements PreferredSizeWidget {
                           : PopupMenuButton(
                               color: appCtrl.appTheme.whiteColor,
                               padding: EdgeInsets.zero,
-                              constraints: BoxConstraints(maxWidth: Sizes.s170),
+                              constraints: const BoxConstraints(maxWidth: Sizes.s170),
                               iconSize: Sizes.s20,
                               onSelected: onSelected,
                               offset: Offset(0.0, appBarHeight),

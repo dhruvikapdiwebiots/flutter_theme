@@ -1,11 +1,12 @@
 import 'package:intl/intl.dart';
 
 import '../../../../config.dart';
+import '../../../../models/message_model.dart';
 
 class LocationLayout extends StatelessWidget {
   final GestureTapCallback? onTap;
   final VoidCallback? onLongPress;
-  final dynamic document;
+  final MessageModel? document;
   final bool isReceiver, isBroadcast;
 
   const LocationLayout(
@@ -48,29 +49,29 @@ class LocationLayout extends StatelessWidget {
                             cornerRadius: 15, cornerSmoothing: 1),
                         child: Image.asset(imageAssets.map, height: Sizes.s150))
                   ]).paddingAll(Insets.i5)),
-              if (document!.data().toString().contains('emoji'))
-                EmojiLayout(emoji: document!["emoji"])
+              if (document!.emoji != null)
+                EmojiLayout(emoji: document!.emoji)
             ],
           ),
           const VSpace(Sizes.s2),
           IntrinsicHeight(
               child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                if (document!.data().toString().contains('isFavourite'))
-                  if(appCtrl.user["id"] == document["favouriteId"])
+                if (document!.isFavourite != null)
+                  if(appCtrl.user["id"] == document!.favouriteId)
                   Icon(Icons.star,
                       color: appCtrl.appTheme.txtColor, size: Sizes.s10),
                 const HSpace(Sizes.s3),
             if (!isBroadcast && !isReceiver)
               Icon(Icons.done_all_outlined,
                   size: Sizes.s15,
-                  color: document!['isSeen'] == true
+                  color: document!.isSeen == true
                       ? appCtrl.appTheme.primary
                       : appCtrl.appTheme.gray),
             const HSpace(Sizes.s5),
             Text(
                 DateFormat('HH:mm a').format(
                     DateTime.fromMillisecondsSinceEpoch(
-                        int.parse(document!['timestamp']))),
+                        int.parse(document!.timestamp!.toString()))),
                 style:
                     AppCss.poppinsMedium12.textColor(appCtrl.appTheme.txtColor))
           ])).marginSymmetric(horizontal: Insets.i8)
