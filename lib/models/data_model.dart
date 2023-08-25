@@ -83,6 +83,7 @@ class DataModel extends Model {
         .doc(appCtrl.user["id"])
         .snapshots()
         .listen((user) {
+          log("ISERR");
       _currentUser = user.data();
       notifyListeners();
     });

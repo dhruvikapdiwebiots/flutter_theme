@@ -257,7 +257,6 @@ class _FetchContactState extends State<FetchContact> {
                                     var data = {
                                       "chatId": "0",
                                       "data": userContact,
-                                      "allMessage":""
                                     };
                                     Get.toNamed(routeName.chat,
                                         arguments: data);
