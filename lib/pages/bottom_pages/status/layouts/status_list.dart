@@ -19,20 +19,14 @@ class _StatusListLayoutState extends State<StatusListLayout> {
       return GetBuilder<DashboardController>(builder: (dashboardCtrl) {
         return GetBuilder<AppController>(builder: (appCtrl) {
           return Consumer<FetchContactController>(
-              builder: (context, availableContacts, _child) {
-
+              builder: (context, registerAvailableContact, _child) {
             return Stack(
               children: [
                 Container(
                     alignment: Alignment.topCenter,
                     width: MediaQuery.of(context).size.width,
                     child: Column(mainAxisSize: MainAxisSize.min, children: [
-                 /*     ...availableContacts.alreadyJoinedSavedUsersPhoneNameAsInServer
-                          .asMap()
-                          .entries
-                          .map((e) {
-                        return StatusListStream(id: e.value.id);
-                      }),*/
+
                       ListView.builder(
                           itemCount: statusCtrl.statusList.length,
                           shrinkWrap: true,
@@ -49,13 +43,6 @@ class _StatusListLayoutState extends State<StatusListLayout> {
                             );
                           })
                     ]))
-
-/*                 if (!statusCtrl.isData)
-                        CommonEmptyLayout(
-                          gif: gifAssets.status,
-                          title: fonts.emptyStatusTitle.tr,
-                          desc: fonts.emptyStatusDesc,
-                        ).height(MediaQuery.of(context).size.height / 2)*/
               ],
             );
           });

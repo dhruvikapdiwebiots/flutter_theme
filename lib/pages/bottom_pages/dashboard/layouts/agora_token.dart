@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter_theme/config.dart';
 
@@ -21,37 +20,7 @@ class AgoraToken extends StatelessWidget {
                 appCtrl.storage
                     .write(session.agoraToken, snapshot.data!.data());
               }
-              return StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection(collectionName.users)
-                      .doc(appCtrl.user["id"])
-                      .collection(collectionName.registerUser)
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      final contactCtrl =
-                          Get.isRegistered<ContactListController>()
-                              ? Get.find<ContactListController>()
-                              : Get.put(ContactListController());
-                      //contactCtrl.getAllData(snapshot);
-                    }
-                    return StreamBuilder(
-                        stream: FirebaseFirestore.instance
-                            .collection(collectionName.users)
-                            .doc(appCtrl.user["id"])
-                            .collection(collectionName.unRegisterUser)
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            final contactCtrl =
-                                Get.isRegistered<ContactListController>()
-                                    ? Get.find<ContactListController>()
-                                    : Get.put(ContactListController());
-                          //  contactCtrl.getAllUnRegisterUser(snapshot);
-                          }
-                          return scaffold!;
-                        });
-                  });
+              return scaffold!;
             },
           )
         : scaffold!;

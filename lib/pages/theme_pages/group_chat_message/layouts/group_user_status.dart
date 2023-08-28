@@ -10,14 +10,21 @@ class GroupUserLastSeen extends StatelessWidget {
     return GetBuilder<GroupChatMessageController>(builder: (chatCtrl) {
       return StreamBuilder(
           stream: FirebaseFirestore.instance
-              .collection("groups")
+              .collection(collectionName.groups)
               .doc(chatCtrl.pId)
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              log("USERID : ${chatCtrl.pId}");
+              String nameList = "";
               List userList =
                   snapshot.data!.exists ? snapshot.data!.data()!["users"] : [];
+              for (var i = 0; i < userList.length; i++) {
+                if (nameList != "") {
+                  nameList = "$nameList, ${userList[i]["name"]}";
+                } else {
+                  nameList = userList[i]["name"];
+                }
+              }
               String status = snapshot.data!.exists
                   ? snapshot.data!.data()!["status"] ?? ""
                   : "";
@@ -42,20 +49,23 @@ class GroupUserLastSeen extends StatelessWidget {
                           style: AppCss.poppinsMedium14
                               .textColor(appCtrl.appTheme.txtColor),
                         )
-                  :snapshot.data!.exists? snapshot.data!.data()!["users"] != ""
-                      ? Text(
-                          "${userList.length == 1 ? 1 : (userList.length - 1).toString()} ${fonts.people.tr}",
-                          textAlign: TextAlign.center,
-                          style: AppCss.poppinsMedium14
-                              .textColor(appCtrl.appTheme.txtColor),
-                        )
+                  : snapshot.data!.exists
+                      ? snapshot.data!.data()!["users"] != ""
+                          ? Text(
+                              nameList,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              style: AppCss.poppinsMedium14
+                                  .textColor(appCtrl.appTheme.txtColor),
+                            )
+                          : Text(
+                              chatCtrl.nameList!.length.toString(),
+                              textAlign: TextAlign.center,
+                              style: AppCss.poppinsMedium14
+                                  .textColor(appCtrl.appTheme.txtColor),
+                            )
                       : Text(
-                          chatCtrl.nameList!.length.toString(),
-                          textAlign: TextAlign.center,
-                          style: AppCss.poppinsMedium14
-                              .textColor(appCtrl.appTheme.txtColor),
-                        ) : Text(
-                "${userList.length == 1 ? 1 : (userList.length - 1).toString()} ${fonts.people.tr}",
+                          "${userList.length == 1 ? 1 : (userList.length - 1).toString()} ${fonts.people.tr}",
                           textAlign: TextAlign.center,
                           style: AppCss.poppinsMedium14
                               .textColor(appCtrl.appTheme.txtColor),

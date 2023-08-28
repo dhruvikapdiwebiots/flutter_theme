@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/services.dart';
-import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/controllers/fetch_contact_controller.dart';
 import 'package:flutter_theme/controllers/recent_chat_controller.dart';
@@ -12,7 +11,6 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../models/firebase_contact_model.dart';
 
 class PhoneController extends GetxController {
   bool mobileNumber = false;
@@ -33,12 +31,15 @@ SharedPreferences? pref;
   // CHECK VALIDATION
 
   void checkValidation() async {
-
+    var otpCtrl = Get.isRegistered<OtpController>()
+        ? Get.find<OtpController>()
+        : Get.put(OtpController());
+    isLoading = true;
+    update();
     try {
       if (phone.text.isNotEmpty) {
         if (phone.text == "8141833594") {
-          isLoading = true;
-          update();
+
           log("GOO");
           await FirebaseFirestore.instance
               .collection(collectionName.users)
@@ -50,14 +51,13 @@ SharedPreferences? pref;
             }
           });
         } else {
-          var otpCtrl = Get.isRegistered<OtpController>()
-              ? Get.find<OtpController>()
-              : Get.put(OtpController());
+          otpCtrl.onVerifyCode(phone.text, dialCode);
           dismissKeyboard();
           mobileNumber = false;
-          otpCtrl.onVerifyCode(phone.text, dialCode);
+
           appCtrl.pref = pref;
           appCtrl.update();
+          isLoading =false;
           Get.to(() => Otp(pref: pref),
               transition: Transition.downToUp, arguments: phone.text);
         }
@@ -95,11 +95,11 @@ SharedPreferences? pref;
 
     recentChatController.getModel(appCtrl.user);
 
-    final FetchContactController availableContacts =
+    final FetchContactController registerAvailableContact =
     Provider.of<FetchContactController>(Get.context!,
         listen: false);
     log("INIT PAGE");
-    availableContacts.fetchContacts(
+    registerAvailableContact.fetchContacts(
         Get.context!, appCtrl.user["phone"], pref!, false);
     await getAdminPermission();
 
@@ -123,8 +123,8 @@ SharedPreferences? pref;
     });
   }
 
-  DataModel? getModel() {
-    appCtrl.cachedModel ??= DataModel(appCtrl.user["phone"]);
+  ContactModel? getModel() {
+    appCtrl.cachedModel ??= ContactModel(appCtrl.user["phone"]);
 
     debugPrint("NEW DATA ${appCtrl.cachedModel!.userData}");
 appCtrl.update();

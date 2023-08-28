@@ -17,6 +17,8 @@ class CreateGroupController extends GetxController {
   bool isLoading = false, isGroup = true, isAddUser = false;
   dynamic user;
   int counter = 0;
+  int count = 0;
+  int dddd = 0;
 
   late encrypt.Encrypter cryptor;
   final iv = encrypt.IV.fromLength(8);
@@ -229,6 +231,7 @@ class CreateGroupController extends GetxController {
           .where("broadcastId", isEqualTo: broadcastId)
           .get()
           .then((value) async {
+            log("ALLL : ${value.docs[0].data()}");
         var data = {
           "broadcastId": broadcastId,
           "data": value.docs[0].data(),
@@ -247,8 +250,9 @@ class CreateGroupController extends GetxController {
   //check chat available with contacts
   Future<List> checkChatAvailable() async {
     newContact = [];
-    int count = 0;
-    int dddd = 0;
+    count = 0;
+    dddd = 0;
+
     final user = appCtrl.storage.read(session.user);
     selectedContact.asMap().entries.forEach((e) async {
       count++;
@@ -295,7 +299,7 @@ class CreateGroupController extends GetxController {
   }
 
   //select user function
-  selectUserTap(DeviceContactIdAndName value) {
+  selectUserTap(RegisterContactDetail value) {
     var data = {
       "id": value.id,
       "name": value.name,

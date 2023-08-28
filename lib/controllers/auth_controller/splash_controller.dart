@@ -25,14 +25,7 @@ class SplashController extends GetxController {
     // TODO: implement onReady
     //Firebase.initializeApp();
     startTime();
-    final key = encrypt.Key.fromUtf8('my 32 length key................');
-    final iv = encrypt.IV.fromLength(16);
 
-    final encrypter = encrypt.Encrypter(encrypt.AES(key));
-
-    final encrypted =
-        encrypter.encrypt("Jenish created this group", iv: iv).base64;
-    log("ENCRYP : $encrypted}");
     super.onReady();
   }
 
@@ -53,21 +46,20 @@ class SplashController extends GetxController {
 
   //navigate to login page
   loginNavigation() async {
-    /*await checkPermission();
-    await Future.delayed(Durations.s1);*/
-    var user = storage.read(session.user) ?? "";
 
+    var user = storage.read(session.user) ?? "";
+    appCtrl.pref = pref;
+    appCtrl.update();
     if (user == "" || user == null) {
       Get.offAllNamed(routeName.phone, arguments: pref);
     } else {
-      log("PRED : $pref");
 
       Get.offAllNamed(routeName.dashboard, arguments: pref);
     }
 
     appCtrl.update();
     Get.forceAppUpdate();
-    log("SPLASH : ${appCtrl.contactList}");
+
   }
 
   //check whether user login or not
@@ -127,16 +119,16 @@ class SplashController extends GetxController {
       appCtrl.update();
       //
       PermissionStatus permission = await Permission.contacts.status;
-      log("permissionpermission :: $user");
+
       final RecentChatController recentChatController =
           Provider.of<RecentChatController>(Get.context!, listen: false);
       if (user != null) {
         recentChatController.getModel(user);
       }
       if (permission.isGranted) {
-        final FetchContactController availableContacts =
+        final FetchContactController registerAvailableContact =
             Provider.of<FetchContactController>(Get.context!, listen: false);
-        availableContacts.fetchContacts(
+        registerAvailableContact.fetchContacts(
             Get.context!, appCtrl.user["phone"], pref!, false);
 
         await Future.delayed(Durations.s1);
@@ -154,8 +146,8 @@ class SplashController extends GetxController {
     }
   }
 
-  DataModel? getModel(user) {
-    appCtrl.cachedModel ??= DataModel(user["phone"]);
+  ContactModel? getModel(user) {
+    appCtrl.cachedModel ??= ContactModel(user["phone"]);
 
     appCtrl.update();
     return appCtrl.cachedModel;
@@ -185,8 +177,7 @@ class SplashController extends GetxController {
         .doc(collectionName.agoraToken)
         .get();
     await appCtrl.storage.write(session.agoraToken, agoraToken.data());
-    log("admin 5: ${agoraToken.data()}");
-    log("admin 6: ${appCtrl.usageControlsVal!.statusDeleteTime!.replaceAll(" hrs", "")}");
+
     update();
     appCtrl.update();
     Get.forceAppUpdate();

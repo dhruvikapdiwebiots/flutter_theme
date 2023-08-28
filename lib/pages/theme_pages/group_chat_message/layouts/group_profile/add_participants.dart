@@ -1,6 +1,9 @@
 import 'dart:developer';
 
+import 'package:provider/provider.dart';
+
 import '../../../../../config.dart';
+import '../../../../../controllers/fetch_contact_controller.dart';
 
 class AddParticipants extends StatelessWidget {
   final groupChatCtrl = Get.isRegistered<AddParticipantsController>()
@@ -12,11 +15,7 @@ class AddParticipants extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AddParticipantsController>(builder: (_) {
-      var data = Get.arguments ?? "";
-      log("data : $data");
-      groupChatCtrl.existsUser = data["exitsUser"];
-      groupChatCtrl.groupId = data["groupId"];
-      groupChatCtrl.update();
+
       return AgoraToken(
         scaffold: PickupLayout(
           scaffold: WillPopScope(
@@ -32,13 +31,7 @@ class AddParticipants extends StatelessWidget {
                   appBar: AppBar(
                       centerTitle: false,
                       automaticallyImplyLeading: false,
-                      actions: [
-                        Icon(
-                          Icons.refresh,
-                          color: appCtrl.appTheme.white,
-                        ).marginSymmetric(horizontal: Insets.i15).inkWell(
-                            onTap: () => groupChatCtrl.getFirebaseContact())
-                      ],
+
                       leading: Icon(Icons.arrow_back,
                               color: appCtrl.appTheme.whiteColor)
                           .inkWell(onTap: () => Get.back()),
@@ -57,7 +50,7 @@ class AddParticipants extends StatelessWidget {
                       : Container(),
                   body: Stack(children: [
                     SingleChildScrollView(
-                        child: Column(
+                        child: /*Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                           if (groupChatCtrl.selectedContact.isNotEmpty)
@@ -122,7 +115,58 @@ class AddParticipants extends StatelessWidget {
                                 );
                               }).toList()
                             ])
-                        ])),
+                        ])*/Consumer<FetchContactController>(
+                            builder: (context, registerAvailableContact, _child) {
+
+                              return Stack(children: [
+                                SingleChildScrollView(
+                                    child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          if (groupChatCtrl.selectedContact.isNotEmpty)
+                                            SingleChildScrollView(
+                                              scrollDirection: Axis.horizontal,
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                children: groupChatCtrl.selectedContact.asMap().entries.map((e) {
+                                                  return e.value["phone"] != appCtrl.user["phone"]?   SelectedUsers(
+                                                    data: e.value,
+                                                    onTap: () {
+                                                      groupChatCtrl.selectedContact.remove(e.value);
+                                                      groupChatCtrl.update();
+                                                    },
+                                                  ):Container();
+                                                }).toList(),
+                                              ),
+                                            ),
+                                          if (registerAvailableContact.registerContactUser.isNotEmpty)
+                                            Column(children: [
+                                              ...registerAvailableContact.registerContactUser
+                                                  .asMap()
+                                                  .entries
+                                                  .map((e) {
+                                                return AllRegisteredContact(
+                                                    onTap: () =>
+                                                        groupChatCtrl.selectUserTap(e.value),
+                                                    isExist: groupChatCtrl.selectedContact.any(
+                                                            (file) =>
+                                                        file["phone"] == e.value.phone),
+                                                    data: e.value);
+                                              }).toList()
+                                            ])
+                                        ])),
+                                if (groupChatCtrl.isLoading)
+                                  Container(
+                                    height: MediaQuery.of(context).size.height,
+                                    color: appCtrl.appTheme.grey.withOpacity(.2),
+                                    child: Center(
+                                        child: CircularProgressIndicator(
+                                            valueColor: AlwaysStoppedAnimation<Color>(
+                                                appCtrl.appTheme.primary))),
+                                  )
+                              ]);
+                            }
+                        )),
                     if (groupChatCtrl.isLoading)
                       Container(
                         height: MediaQuery.of(context).size.height,

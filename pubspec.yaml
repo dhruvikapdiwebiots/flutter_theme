@@ -87,7 +87,7 @@ dependencies:
   image_cropper: ^4.0.0
   giphy_get: ^3.0.0
   figma_squircle: ^0.5.3
-  #agora_rtc_engine: ^6.1.0
+  #agora_rtc_engine: ^6.2.2
   wakelock: ^0.6.2
   overlay_support: ^2.1.0
   #camera: ^0.10.5+1
@@ -114,6 +114,7 @@ dependencies:
   shared_preferences: ^2.2.0
   localstorage: ^4.0.1+4
   scoped_model: ^2.0.0
+  async: ^2.11.0
 
 
 

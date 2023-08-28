@@ -7,18 +7,26 @@ import 'package:open_filex/open_filex.dart';
 class BroadcastOnTapFunctionCall {
   //contentTap
   contentTap(BroadcastChatController chatCtrl, docId) {
-    if (!chatCtrl.selectedIndexId.contains(docId)) {
-      chatCtrl.selectedIndexId.add(docId);
-    } else {
-      chatCtrl.selectedIndexId.remove(docId);
+
+    if (chatCtrl.selectedIndexId.isNotEmpty) {
+      chatCtrl.enableReactionPopup = false;
+      chatCtrl.showPopUp = false;
+      if (!chatCtrl.selectedIndexId.contains(docId)) {
+        chatCtrl.selectedIndexId.add(docId);
+      } else {
+        chatCtrl.selectedIndexId.remove(docId);
+      }
+      chatCtrl.update();
     }
-    chatCtrl.update();
   }
 
   //image tap
   imageTap(BroadcastChatController chatCtrl, docId, document) async {
     if (chatCtrl.selectedIndexId.isNotEmpty) {
-
+      if (chatCtrl.selectedIndexId.isNotEmpty) {
+        chatCtrl.enableReactionPopup = false;
+        chatCtrl.showPopUp = false;
+      }
       if (!chatCtrl.selectedIndexId.contains(docId)) {
         chatCtrl.selectedIndexId.add(docId);
       } else {
@@ -49,7 +57,10 @@ class BroadcastOnTapFunctionCall {
   //location tap
   locationTap(BroadcastChatController chatCtrl, docId, document) {
     if (chatCtrl.selectedIndexId.isNotEmpty) {
-
+      if (chatCtrl.selectedIndexId.isNotEmpty) {
+        chatCtrl.enableReactionPopup = false;
+        chatCtrl.showPopUp = false;
+      }
       if (!chatCtrl.selectedIndexId.contains(docId)) {
         chatCtrl.selectedIndexId.add(docId);
       } else {
@@ -64,7 +75,10 @@ class BroadcastOnTapFunctionCall {
   //pdf tap
   pdfTap(BroadcastChatController chatCtrl, docId, document) async {
     if (chatCtrl.selectedIndexId.isNotEmpty) {
-
+      if (chatCtrl.selectedIndexId.isNotEmpty) {
+        chatCtrl.enableReactionPopup = false;
+        chatCtrl.showPopUp = false;
+      }
       if (!chatCtrl.selectedIndexId.contains(docId)) {
         chatCtrl.selectedIndexId.add(docId);
       } else {
@@ -90,7 +104,10 @@ class BroadcastOnTapFunctionCall {
   //doc tap
   docTap(BroadcastChatController chatCtrl, docId, document) async {
     if (chatCtrl.selectedIndexId.isNotEmpty) {
-
+      if (chatCtrl.selectedIndexId.isNotEmpty) {
+        chatCtrl.enableReactionPopup = false;
+        chatCtrl.showPopUp = false;
+      }
       if (!chatCtrl.selectedIndexId.contains(docId)) {
         chatCtrl.selectedIndexId.add(docId);
       } else {
@@ -116,7 +133,10 @@ class BroadcastOnTapFunctionCall {
   //excel tap
   excelTap(BroadcastChatController chatCtrl, docId, document) async {
     if (chatCtrl.selectedIndexId.isNotEmpty) {
-
+      if (chatCtrl.selectedIndexId.isNotEmpty) {
+        chatCtrl.enableReactionPopup = false;
+        chatCtrl.showPopUp = false;
+      }
       if (!chatCtrl.selectedIndexId.contains(docId)) {
         chatCtrl.selectedIndexId.add(docId);
       } else {
@@ -143,7 +163,10 @@ class BroadcastOnTapFunctionCall {
   //doc image tap
   docImageTap(BroadcastChatController chatCtrl, docId, document) async {
     if (chatCtrl.selectedIndexId.isNotEmpty) {
-
+      if (chatCtrl.selectedIndexId.isNotEmpty) {
+        chatCtrl.enableReactionPopup = false;
+        chatCtrl.showPopUp = false;
+      }
       if (!chatCtrl.selectedIndexId.contains(docId)) {
         chatCtrl.selectedIndexId.add(docId);
       } else {

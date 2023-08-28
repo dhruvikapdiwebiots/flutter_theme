@@ -1,10 +1,9 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/controllers/fetch_contact_controller.dart';
-import 'package:flutter_theme/models/firebase_contact_model.dart';
+import 'package:flutter_theme/controllers/recent_chat_controller.dart';
 import 'package:flutter_theme/models/usage_control_model.dart';
 import 'package:flutter_theme/models/user_setting_model.dart';
 import 'package:flutter_theme/utilities/helper.dart';
@@ -55,11 +54,21 @@ class OtpController extends GetxController {
 
   //navigate to dashboard
   homeNavigation(user) async {
-    final FetchContactController availableContacts =
+
+    final RecentChatController recentChatController =
+    Provider.of<RecentChatController>(Get.context!,
+        listen: false);
+    log("INIT PAGE");
+
+    recentChatController.getModel(appCtrl.user);
+
+    final FetchContactController registerAvailableContact =
     Provider.of<FetchContactController>(Get.context!,
         listen: false);
     log("INIT PAGE");
-    availableContacts.fetchContacts(
+
+
+    registerAvailableContact.fetchContacts(
         Get.context!, appCtrl.user["phone"], pref!, false);
     helper.showLoading();
     update();
@@ -145,7 +154,7 @@ class OtpController extends GetxController {
     helper.showLoading();
     update();
 
-    log("verificationCode : $verificationCode");
+    debugPrint("verificationCode : $verificationCode");
     PhoneAuthCredential authCredential = PhoneAuthProvider.credential(
         verificationId: verificationCode!, smsCode: otp.text);
 
@@ -255,7 +264,7 @@ class OtpController extends GetxController {
           "phone": mobileNumber,
           "email": user.email,
           "deviceName": appCtrl.deviceName,
-          "isActive": true,
+          "isActive": false,
           "device": appCtrl.device,
           "statusDesc": "Hello, I am using Chatter"
         }).catchError((err) {

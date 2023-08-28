@@ -73,6 +73,7 @@ class GroupChatMessageAppBar extends StatelessWidget
                   children: [
                     SvgPicture.asset(svgAssets.search).inkWell(
                         onTap: () async {
+log("CHECLL");
                           FocusScope.of(context).unfocus();
                           if (chatCtrl.txtChatSearch.text.isEmpty) {
                             chatCtrl.isChatSearch = false;
@@ -84,7 +85,7 @@ class GroupChatMessageAppBar extends StatelessWidget
                             if (chatCtrl.count! >= chatCtrl.searchChatId.length) {
                               chatCtrl.count = 0;
                             }
-
+                           
                             final contentSize = chatCtrl.listScrollController
                                 .position.viewportDimension +
                                 chatCtrl.listScrollController.position
@@ -92,13 +93,19 @@ class GroupChatMessageAppBar extends StatelessWidget
 
                             final target = contentSize *
                                 chatCtrl.searchChatId[chatCtrl.count!] /
-                                chatCtrl.message.length;
+                                chatCtrl.localMessage.length;
 
+                            log("DOCID L ${chatCtrl.searchChatId[chatCtrl.count!]}");
                             if (!chatCtrl.selectedIndexId.contains(
-                                chatCtrl.searchChatId[chatCtrl.count!])) {
-                              chatCtrl.selectedIndexId.add(chatCtrl
-                                  .message[chatCtrl.searchChatId[chatCtrl.count!]]
-                                  .id);
+                              chatCtrl.searchChatId[chatCtrl.count!])) {
+                            chatCtrl.localMessage.asMap().entries.forEach((element) {
+                              element.value.message!.asMap().entries.forEach((e) {
+                                if(e.key ==chatCtrl.searchChatId[chatCtrl.count!] ) {
+                                  chatCtrl.selectedIndexId.add(e.value.docId);
+                                }
+                              });
+                            });
+
                             }
                             // Scroll to that position.
                             chatCtrl.listScrollController.position.animateTo(
@@ -117,6 +124,7 @@ class GroupChatMessageAppBar extends StatelessWidget
                               chatCtrl.update();
                             });
                             chatCtrl.update();
+                            chatCtrl.getPeerStatus();
 
                           }
                         }),
@@ -130,6 +138,23 @@ class GroupChatMessageAppBar extends StatelessWidget
                       : CommonSvgIcon(icon: svgAssets.star)
                       .marginSymmetric(vertical: Insets.i22)
                       .inkWell(onTap: () {
+                    int index =0;
+                    chatCtrl.selectedIndexId.asMap().entries.forEach((e) {
+                      chatCtrl.localMessage.asMap().entries.forEach((element) {
+                        index = element.value.message!.indexWhere((element) => element.docId == e.value );
+                        log("index : $index");
+                        if(index >0) {
+                          chatCtrl.localMessage[element.key]
+                              .message![index].isFavourite =
+                          true;
+                          chatCtrl.localMessage[element.key]
+                              .message![index].favouriteId =
+                          appCtrl.user["id"];
+                        }
+                      });
+                      chatCtrl.update();
+
+                    });
                     chatCtrl.showPopUp = false;
                     chatCtrl.enableReactionPopup = false;
                     chatCtrl.selectedIndexId
@@ -229,7 +254,7 @@ class GroupChatMessageAppBar extends StatelessWidget
                       chatCtrl.update();
                     }else if (result == 2) {
                       Get.toNamed(routeName.backgroundList,
-                          arguments: {"chatId": chatCtrl.pId})!
+                          arguments: {"groupId": chatCtrl.pId})!
                           .then((value) {
 
                         if (value != null && value != "") {

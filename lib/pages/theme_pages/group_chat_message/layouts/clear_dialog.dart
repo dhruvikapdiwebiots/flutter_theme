@@ -85,56 +85,6 @@ class ClearDialog extends StatelessWidget {
                                       await FirebaseFirestore.instance
                                           .collection(collectionName.users)
                                           .doc(appCtrl.user["id"])
-                                          .collection(collectionName.groupMessage)
-                                          .doc(chatCtrl.pId)
-                                          .collection(collectionName.chat)
-                                          .get()
-                                          .then((value) async {
-                                        if (value.docs.isEmpty) {
-                                          List userList = chatCtrl.pData["groupData"]["users"];
-                                          final key = encrypt.Key.fromUtf8('my 32 length key................');
-                                          final iv = encrypt.IV.fromLength(16);
-
-                                          final encrypter = encrypt.Encrypter(encrypt.AES(key));
-
-                                          final encrypted =
-                                              encrypter.encrypt(fonts.noteEncrypt.tr, iv: iv).base64;
-                                          await FirebaseFirestore.instance
-                                              .collection(collectionName.users)
-                                              .doc(appCtrl.user["id"])
-                                              .collection(collectionName.groupMessage)
-                                              .doc(chatCtrl.pId)
-                                              .collection(collectionName.chat)
-                                              .where("type", isEqualTo: MessageType.note.name)
-                                              .limit(1)
-                                              .get()
-                                              .then((noteMessage) async {
-                                            if (noteMessage.docs.isEmpty) {
-                                              await FirebaseFirestore.instance
-                                                  .collection(collectionName.users)
-                                                  .doc(appCtrl.user["id"])
-                                                  .collection(collectionName.groupMessage)
-                                                  .doc(chatCtrl.pId)
-                                                  .collection(collectionName.chat)
-                                                  .doc(DateTime.now().millisecondsSinceEpoch.toString())
-                                                  .set({
-                                                'sender': appCtrl.user["id"],
-                                                'senderName': appCtrl.user["name"],
-                                                'receiver': chatCtrl.pData["groupData"]["users"],
-                                                'content': encrypted,
-                                                "groupId":chatCtrl.pId,
-                                                'type': MessageType.note.name,
-                                                'messageType': "sender",
-                                                "status": "",
-                                                'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-                                              });
-                                            }
-                                          });
-                                        }
-                                      });
-                                      await FirebaseFirestore.instance
-                                          .collection(collectionName.users)
-                                          .doc(appCtrl.user["id"])
                                           .collection(collectionName.chats)
                                           .where("groupId",
                                               isEqualTo: chatCtrl.pId)
@@ -152,7 +102,12 @@ class ClearDialog extends StatelessWidget {
                                           });
                                         }
                                         chatCtrl.update();
+
                                       });
+
+                                      chatCtrl.localMessage = [];
+                                      chatCtrl.update();
+
                                     });
                                   },
                                   title: fonts.clearChat.tr,

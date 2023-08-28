@@ -155,14 +155,14 @@ class _GroupReceiverMessageState extends State<GroupReceiverMessage> {
                                 ? PdfLayout(
                                     isReceiver: true,
                                     isGroup: true,
-                                   // document: widget.document,
+                                   document: widget.document,
                                     onLongPress: () =>
                                         chatCtrl.onLongPressFunction(widget.docId),
                                     onTap: () => GroupOnTapFunctionCall().pdfTap(
                                         chatCtrl, widget.docId, widget.document))
                                 : (decryptMessage(widget.document!.content).contains(".doc"))
                                     ? DocxLayout(
-                                       // document: widget.document,
+                                        document: widget.document,
                                         isReceiver: true,
                                         isGroup: true,
                                         onLongPress: () => chatCtrl
@@ -181,7 +181,7 @@ class _GroupReceiverMessageState extends State<GroupReceiverMessage> {
                                             onTap: () => GroupOnTapFunctionCall()
                                                 .excelTap(chatCtrl, widget.docId,
                                                     widget.document),
-                                          //  document: widget.document,
+                                            document: widget.document,
                                           )
                                         : (decryptMessage(widget.document!.content).contains(".jpg") ||
                                                 decryptMessage(widget.document!.content)
@@ -194,7 +194,7 @@ class _GroupReceiverMessageState extends State<GroupReceiverMessage> {
                                                 currentUserId: chatCtrl.user["id"],
                                                 isGroup: true,
                                                 isReceiver: true,
-                                               // document: widget.document,
+                                                document: widget.document,
                                                 onLongPress: () => chatCtrl.onLongPressFunction(widget.docId),
                                                 onTap: () => GroupOnTapFunctionCall().docImageTap(chatCtrl, widget.docId, widget.document))
                                             : Container(),
@@ -204,7 +204,7 @@ class _GroupReceiverMessageState extends State<GroupReceiverMessage> {
                                 currentUserId: chatCtrl.user["id"],
                                 isGroup: true,
                                 isReceiver: true,
-                        //        document: widget.document,
+                                document: widget.document,
                                 onLongPress: () =>
                                     chatCtrl.onLongPressFunction(widget.docId),
                                 onTap: () => GroupOnTapFunctionCall()

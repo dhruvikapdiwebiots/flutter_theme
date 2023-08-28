@@ -28,7 +28,7 @@ class GroupChat extends StatelessWidget {
             },
             child: GetBuilder<AppController>(builder: (appCtrl) {
               return  Consumer<FetchContactController>(
-                  builder: (context, availableContacts, _child) {
+                  builder: (context, registerAvailableContact, child) {
 
                     return Scaffold(
                       backgroundColor: appCtrl.appTheme.whiteColor,
@@ -64,9 +64,9 @@ class GroupChat extends StatelessWidget {
                                 children: [
                               if (groupChatCtrl.selectedContact.isNotEmpty)
                                 const SelectedContactList(),
-                              if (availableContacts.alreadyJoinedSavedUsersPhoneNameAsInServer.isNotEmpty)
+                              if (registerAvailableContact.registerContactUser.isNotEmpty)
                                 Column(children: [
-                                  ...availableContacts.alreadyJoinedSavedUsersPhoneNameAsInServer
+                                  ...registerAvailableContact.registerContactUser
                                       .asMap()
                                       .entries
                                       .map((e) {

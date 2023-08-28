@@ -10,13 +10,14 @@ class RecentChatController with ChangeNotifier {
   List<QueryDocumentSnapshot<Map<String, dynamic>>> userData = [];
   List<Widget> messageWidgetList = [];
 
-  DataModel? getModel(user) {
-    appCtrl.cachedModel ??= DataModel(user["phone"]);
-    Future.delayed(Durations.s1).then((value) {
-      userData = appCtrl.cachedModel!.userData;
-      getMessageList();
-    });
-    //notifyListeners();
+  ContactModel? getModel(user) {
+    if(appCtrl.isSearch ==false) {
+      appCtrl.cachedModel ??= ContactModel(user["phone"]);
+      Future.delayed(Durations.s1).then((value) {
+        userData = appCtrl.cachedModel!.userData;
+        getMessageList();
+      });
+    }
     return appCtrl.cachedModel;
   }
 

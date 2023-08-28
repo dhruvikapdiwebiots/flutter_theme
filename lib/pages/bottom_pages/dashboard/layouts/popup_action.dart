@@ -26,7 +26,7 @@ class PopUpAction extends StatelessWidget {
               child: SvgPicture.asset(
                 svgAssets.more,
                 height: Sizes.s22,
-                color: appCtrl.appTheme.blackColor,
+                  colorFilter:ColorFilter.mode(appCtrl.appTheme.blackColor,BlendMode.srcIn)
               ).paddingAll(Insets.i10),
             )
           : dashboardCtrl.selectedIndex == 1

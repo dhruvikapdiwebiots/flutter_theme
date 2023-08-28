@@ -265,10 +265,12 @@ class ChatMessageApi {
         ? Get.find<ChatController>()
         : Get.put(ChatController());
     List<QueryDocumentSnapshot<Object?>> message = chatCtrl.allMessages;
-    List reveredList = message.toList();
+    List reveredList = message.reversed.toList();
     chatCtrl.localMessage = [];
 
+
     reveredList.asMap().entries.forEach((element) {
+      log.log("getDate(element.value.id) ; %${getDate(element.value.id)}");
       MessageModel messageModel = MessageModel(
           blockBy: element.value.data()["blockBy"],
           blockUserId: element.value.data()["blockUserId"],
@@ -337,6 +339,32 @@ class ChatMessageApi {
           }
         }
       }
+
+      if (getDate(element.value.id).contains("-other")) {
+        bool isEmpty = chatCtrl.localMessage
+            .where((element) => element.time!.contains("-other"))
+            .isEmpty;
+        if (isEmpty) {
+          List<MessageModel>? message = [];
+          if (message.isNotEmpty) {
+            message.add(MessageModel.fromJson(element.value.data()));
+            message[0].docId = element.value.id;
+          } else {
+            message = [MessageModel.fromJson(element.value.data())];
+            message[0].docId = element.value.id;
+          }
+          DateTimeChip dateTimeChip =
+          DateTimeChip(time: getDate(element.value.id), message: message);
+          chatCtrl.localMessage.add(dateTimeChip);
+        } else {
+          int index = chatCtrl.localMessage
+              .indexWhere((element) => element.time!.contains("-other"));
+
+          if (!chatCtrl.localMessage[index].message!.contains(messageModel)) {
+            chatCtrl.localMessage[index].message!.add(messageModel);
+          }
+        }
+      }
     });
 
     chatCtrl.update();
@@ -347,7 +375,7 @@ class ChatMessageApi {
         ? Get.find<GroupChatMessageController>()
         : Get.put(GroupChatMessageController());
     List<QueryDocumentSnapshot<Object?>> message = chatCtrl.allMessages;
-    List reveredList = message.toList();
+    List reveredList = message.reversed.toList();
     chatCtrl.localMessage = [];
 
     reveredList.asMap().entries.forEach((element) {
@@ -421,6 +449,31 @@ class ChatMessageApi {
           }
         }
       }
+      if (getDate(element.value.id).contains("-other")) {
+        bool isEmpty = chatCtrl.localMessage
+            .where((element) => element.time!.contains("-other"))
+            .isEmpty;
+        if (isEmpty) {
+          List<MessageModel>? message = [];
+          if (message.isNotEmpty) {
+            message.add(MessageModel.fromJson(element.value.data()));
+            message[0].docId = element.value.id;
+          } else {
+            message = [MessageModel.fromJson(element.value.data())];
+            message[0].docId = element.value.id;
+          }
+          DateTimeChip dateTimeChip =
+          DateTimeChip(time: getDate(element.value.id), message: message);
+          chatCtrl.localMessage.add(dateTimeChip);
+        } else {
+          int index = chatCtrl.localMessage
+              .indexWhere((element) => element.time!.contains("-other"));
+
+          if (!chatCtrl.localMessage[index].message!.contains(messageModel)) {
+            chatCtrl.localMessage[index].message!.add(messageModel);
+          }
+        }
+      }
     });
 
     chatCtrl.update();
@@ -431,14 +484,15 @@ class ChatMessageApi {
         ? Get.find<BroadcastChatController>()
         : Get.put(BroadcastChatController());
     List<QueryDocumentSnapshot<Object?>> message = chatCtrl.allMessages;
-    List reveredList = message.toList();
+    List reveredList = message.reversed.toList();
     chatCtrl.localMessage = [];
 
     reveredList.asMap().entries.forEach((element) {
+      log.log("BROOOOO : ${element.value.data()}");
       MessageModel messageModel = MessageModel(
-          blockBy: element.value.data()["blockBy"],
-          blockUserId: element.value.data()["blockUserId"],
-          chatId: element.value.data()["chatId"],
+          blockBy: "",
+          blockUserId: "",
+          broadcastId: element.value.data()["broadcastId"],
           content: element.value.data()["content"],
           docId: element.value.id,
           emoji: element.value.data()["emoji"],
@@ -448,7 +502,7 @@ class ChatMessageApi {
           isFavourite: element.value.data()["isFavourite"],
           isSeen: element.value.data()["isSeen"],
           messageType: element.value.data()["messageType"],
-          receiver: element.value.data()["receiver"],
+          receiverList: element.value.data()["receiverId"],
           sender: element.value.data()["sender"],
           timestamp: element.value.data()["timestamp"],
           type: element.value.data()["type"]);
@@ -497,6 +551,31 @@ class ChatMessageApi {
         } else {
           int index = chatCtrl.localMessage
               .indexWhere((element) => element.time == "Yesterday");
+
+          if (!chatCtrl.localMessage[index].message!.contains(messageModel)) {
+            chatCtrl.localMessage[index].message!.add(messageModel);
+          }
+        }
+      }
+      if (getDate(element.value.id).contains("-other")) {
+        bool isEmpty = chatCtrl.localMessage
+            .where((element) => element.time!.contains("-other"))
+            .isEmpty;
+        if (isEmpty) {
+          List<MessageModel>? message = [];
+          if (message.isNotEmpty) {
+            message.add(MessageModel.fromJson(element.value.data()));
+            message[0].docId = element.value.id;
+          } else {
+            message = [MessageModel.fromJson(element.value.data())];
+            message[0].docId = element.value.id;
+          }
+          DateTimeChip dateTimeChip =
+          DateTimeChip(time: getDate(element.value.id), message: message);
+          chatCtrl.localMessage.add(dateTimeChip);
+        } else {
+          int index = chatCtrl.localMessage
+              .indexWhere((element) => element.time!.contains("-other"));
 
           if (!chatCtrl.localMessage[index].message!.contains(messageModel)) {
             chatCtrl.localMessage[index].message!.add(messageModel);

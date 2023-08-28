@@ -56,7 +56,7 @@ class _ChatUserProfileState extends State<ChatUserProfile> {
                       name: chatCtrl.pData["name"])
                 ];
               },
-              body: const SingleChildScrollView(child: ChatUserProfileBody())),
+              body:  SingleChildScrollView(child:const ChatUserProfileBody().height(MediaQuery.of(context).size.height))),
           CenterPositionImage(
               image: chatCtrl.pData["image"],
               name: chatCtrl.pData["name"],

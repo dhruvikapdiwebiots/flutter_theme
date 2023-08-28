@@ -97,14 +97,19 @@ class ChatMessageAppBar extends StatelessWidget implements PreferredSizeWidget {
 
                                 final target = contentSize *
                                     chatCtrl.searchChatId[chatCtrl.count!] /
-                                    chatCtrl.message.length;
-
+                                    chatCtrl.localMessage.length;
+log("DOCID L ${chatCtrl.selectedIndexId}");
+log("DOCID L ${chatCtrl.searchChatId[chatCtrl.count!]}");
                                 if (!chatCtrl.selectedIndexId.contains(
                                     chatCtrl.searchChatId[chatCtrl.count!])) {
-                                  chatCtrl.selectedIndexId.add(chatCtrl
-                                      .message[chatCtrl
-                                          .searchChatId[chatCtrl.count!]]
-                                      .id);
+                                  chatCtrl.localMessage.asMap().entries.forEach((element) {
+                                    element.value.message!.asMap().entries.forEach((e) {
+                                      if(e.key ==chatCtrl.searchChatId[chatCtrl.count!] ) {
+                                        chatCtrl.selectedIndexId.add(e.value.docId);
+                                      }
+                                    });
+                                  });
+
                                 }
                                 // Scroll to that position.
                                 chatCtrl.listScrollController.position

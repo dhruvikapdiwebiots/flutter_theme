@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import '../../../../config.dart';
-import 'package:light_compressor/light_compressor.dart' as light;
 
 class CurrentUserStatus extends StatelessWidget {
   final String? currentUserId;

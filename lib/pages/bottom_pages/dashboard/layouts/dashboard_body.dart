@@ -1,9 +1,6 @@
-import 'dart:developer';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_theme/models/usage_control_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../config.dart';
@@ -39,7 +36,7 @@ class DashboardBody extends StatelessWidget {
                                 SvgPicture.asset(
                                   svgAssets.search,
                                   height: Sizes.s20,
-                                  color: appCtrl.appTheme.blackColor,
+                                  colorFilter:ColorFilter.mode(appCtrl.appTheme.blackColor,BlendMode.srcIn)
                                 )
                                     .paddingAll(Insets.i10)
                                     .decorated(
@@ -71,7 +68,7 @@ class DashboardBody extends StatelessWidget {
                                   svgAssets.more,
                                   height: Sizes.s20,
                                   fit: BoxFit.fill,
-                                  color: appCtrl.appTheme.blackColor,
+                                  colorFilter:ColorFilter.mode(appCtrl.appTheme.blackColor,BlendMode.srcIn)
                                 ),
                                 onSelected: (result) {
 
@@ -154,6 +151,8 @@ class DashboardBody extends StatelessWidget {
                                     onChanged: (val) {
                                       if(dashboardCtrl.selectedIndex == 0){
                                         dashboardCtrl.recentMessageSearch();
+                                      } else if(dashboardCtrl.selectedIndex == 1){
+                                        dashboardCtrl.statusSearch();
                                       }else {
 
                                         dashboardCtrl.onSearch(val);

@@ -77,23 +77,54 @@ class GroupProfileBody extends StatelessWidget {
                                   color: appCtrl.appTheme.txtColor,
                                 ).paddingOnly(bottom: Insets.i2).inkWell(
                                     onTap: () async {
-                                  chatCtrl.isTextBox = !chatCtrl.isTextBox;
-                                  chatCtrl.textNameController.text =
-                                      chatCtrl.pName!;
-                                  chatCtrl.update();
-                                  if (chatCtrl.textNameController.text !=
-                                      chatCtrl.pName) {
-                                    await FirebaseFirestore.instance
-                                        .collection(collectionName.groups)
-                                        .doc(chatCtrl.pId)
-                                        .update({
-                                      "name": chatCtrl.textNameController.text
-                                    }).then((value) {
-                                      chatCtrl.pName =
-                                          chatCtrl.textNameController.text;
-                                      chatCtrl.update();
-                                    });
-                                  }
+                                      if(chatCtrl.isTextBox ==false){
+                                        chatCtrl.isTextBox =
+                                        !chatCtrl.isTextBox;
+                                        chatCtrl.update();
+                                      }else {
+                                        chatCtrl.isTextBox =
+                                        !chatCtrl.isTextBox;
+                                        chatCtrl.update();
+                                        if (chatCtrl.textNameController.text !=
+                                            chatCtrl.pName) {
+                                          await FirebaseFirestore.instance
+                                              .collection(collectionName.groups)
+                                              .doc(chatCtrl.pId)
+                                              .update({
+                                            "name": chatCtrl.textNameController
+                                                .text
+                                          }).then((value) async {
+                                            chatCtrl.pName =
+                                                chatCtrl.textNameController
+                                                    .text;
+                                            chatCtrl.update();
+                                            await FirebaseFirestore.instance
+                                                .collection(
+                                                collectionName.users).doc(
+                                                appCtrl.user["id"])
+                                                .collection(
+                                                collectionName.chats)
+                                                .where("groupId",
+                                                isEqualTo: chatCtrl.pId).limit(
+                                                1).get().then((
+                                                chatBroadcast) async {
+                                              if (chatBroadcast.docs
+                                                  .isNotEmpty) {
+                                                await FirebaseFirestore.instance
+                                                    .collection(
+                                                    collectionName.users).doc(
+                                                    appCtrl.user["id"])
+                                                    .collection(
+                                                    collectionName.chats)
+                                                    .doc(
+                                                    chatBroadcast.docs[0].id)
+                                                    .update(
+                                                    {"name": chatCtrl.pName});
+                                              }
+                                            });
+                                          });
+                                        }
+                                      }
                                 })
                               ],
                             ).marginSymmetric(horizontal: Insets.i20),
@@ -250,6 +281,51 @@ class GroupProfileBody extends StatelessWidget {
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                Row(
+                                  children: [
+                                    SvgPicture.asset(svgAssets.add,color: appCtrl.appTheme.blackColor,height: Sizes.s20,).inkWell(onTap: ()=>Get.toNamed(routeName.broadcastSearchUser,arguments: chatCtrl.userList)),
+                                    const HSpace(Sizes.s8),
+                                    Text(
+                                        fonts.addContact.tr,
+                                        style: AppCss.poppinsSemiBold16
+                                            .textColor(
+                                            appCtrl.appTheme.blackColor)),
+
+                                  ],
+                                ).inkWell(onTap: ()async{
+
+                                  if (appCtrl.contactList.isEmpty) {
+
+                                    final groupChatCtrl = Get.isRegistered<AddParticipantsController>()
+                                        ? Get.find<AddParticipantsController>()
+                                        : Get.put(AddParticipantsController());
+
+
+                                    groupChatCtrl.refreshContacts();
+                                    var data ={
+                                      "exitsUser":chatCtrl.userList,
+                                      "groupId":chatCtrl.pId,
+                                      "isGroup": true
+                                    };
+
+                                    Get.toNamed(routeName.addParticipants,arguments: data);
+                                  } else {
+                                    final groupChatCtrl = Get.isRegistered<AddParticipantsController>()
+                                        ? Get.find<AddParticipantsController>()
+                                        : Get.put(AddParticipantsController());
+                                    if (groupChatCtrl.contactList.isEmpty) {
+                                      groupChatCtrl.getFirebaseContact();
+                                    }
+                                    var data ={
+                                      "exitsUser":chatCtrl.userList,
+                                      "groupId":chatCtrl.pId,
+                                      "isGroup": true
+                                    };
+
+                                    Get.toNamed(routeName.addParticipants,arguments: data);
+                                  }
+                                }),
+                                const VSpace(Sizes.s20),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -455,7 +531,10 @@ class GroupProfileBody extends StatelessWidget {
                             });
                           }),
                       const VSpace(Sizes.s35)
-                    ]));
+                    ])).inkWell(onTap: (){
+              chatCtrl.isTextBox =false;
+              chatCtrl.update();
+            });
           });
     });
   }

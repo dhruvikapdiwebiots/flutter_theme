@@ -153,5 +153,6 @@ class Fonts{
   final clearChat = "clearChat";
   final deleteOption = "deleteOption";
   final clearChatId = "clearChatId";
+  final existGroup = "existGroup";
   String unblockUser(val) => "unblockUser".trParams({'pName':val});
 }

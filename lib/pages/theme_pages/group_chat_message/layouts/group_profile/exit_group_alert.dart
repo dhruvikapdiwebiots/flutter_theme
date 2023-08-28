@@ -1,5 +1,3 @@
-
-
 import '../../../../../config.dart';
 
 class ExitGroupAlert extends StatelessWidget {
@@ -16,7 +14,7 @@ class ExitGroupAlert extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text("Are your sure, you want to exit from this group?"),
+            Text(fonts.existGroup.tr),
           ],
         ),
         actions: <Widget>[
@@ -24,7 +22,7 @@ class ExitGroupAlert extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text('Close'),
+            child: Text(fonts.close.tr),
           ),
           TextButton(
             onPressed: () async {
@@ -35,22 +33,20 @@ class ExitGroupAlert extends StatelessWidget {
                   .then((value) async {
                 if (value.exists) {
                   List userList = value.data()!["users"];
-                  userList.removeWhere((element) =>
-                  element["id"] ==
-                      appCtrl.user["id"]);
+                  userList.removeWhere(
+                      (element) => element["id"] == appCtrl.user["id"]);
 
                   await FirebaseFirestore.instance
-                          .collection(collectionName.groups)
-                          .doc(chatCtrl.pId)
-                          .update({"users": userList}).then((value) {
-                            chatCtrl.getPeerStatus();
+                      .collection(collectionName.groups)
+                      .doc(chatCtrl.pId)
+                      .update({"users": userList}).then((value) {
+                    chatCtrl.getPeerStatus();
                   });
                 }
               });
               Get.back();
-
             },
-            child: const Text('Exit'),
+            child: Text(fonts.existGroup.tr),
           ),
         ],
       );

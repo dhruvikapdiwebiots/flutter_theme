@@ -161,7 +161,7 @@ final dynamic en = {
   "clearLog": "Clear Log",
   "addGroupDescription": "Add Group Description",
   "searchUser": "Search User",
-  "viewUpdate": "View Updates",
+  "viewUpdate": "View All Updates",
   "reportSend": "Report Send Successfully",
   "messageInfo": "Message Info",
   "views": "views",
@@ -176,4 +176,5 @@ final dynamic en = {
   "deleteOption": "Also delete media received in this chat from your device",
   "noteEncrypt":
       "Message, Audio, Video, Media, etc share end-to-end encryption so that no one, can read your conversation.",
+  "existGroup": "Are your sure, you want to exit from this group?",
 };

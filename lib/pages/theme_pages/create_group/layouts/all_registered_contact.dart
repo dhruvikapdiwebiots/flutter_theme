@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+
 import 'package:flutter_theme/controllers/fetch_contact_controller.dart';
 
 import '../../../../config.dart';
@@ -7,7 +8,7 @@ import '../../../../config.dart';
 class AllRegisteredContact extends StatelessWidget {
   final GestureTapCallback? onTap;
   final bool? isExist;
-  final DeviceContactIdAndName? data;
+  final RegisterContactDetail? data;
 
   const AllRegisteredContact({Key? key, this.onTap, this.data, this.isExist})
       : super(key: key);

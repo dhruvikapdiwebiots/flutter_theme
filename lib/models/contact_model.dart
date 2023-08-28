@@ -1,34 +1,6 @@
 
 import 'package:flutter/services.dart';
 
-class ContactModel {
-  String? title;
-  List<UserContactModel>? userTitle;
-
-  ContactModel(
-      {this.title,
-        this.userTitle});
-
-  ContactModel.fromJson(Map<String, dynamic> json) {
-    title = json['title'];
-    if (json['userTitle'] != null) {
-      userTitle = <UserContactModel>[];
-      json['userTitle'].forEach((v) {
-        userTitle!.add(UserContactModel.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['title'] = title;
-    if (userTitle != null) {
-      data['userTitle'] = userTitle!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
-
 class UserContactModel {
   String? uid;
   String? username;

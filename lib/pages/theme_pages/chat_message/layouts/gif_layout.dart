@@ -25,7 +25,7 @@ class GifLayout extends StatelessWidget {
     List seen = [];
     if(isGroup){
 
-     // seen = document!.data().toString().contains('seenMessageList') ? document['seenMessageList'] : [];
+      seen = document!.seenMessageList != null ? document!.seenMessageList! : [];
     }
     return InkWell(
         onLongPress: onLongPress,

@@ -26,7 +26,7 @@ class StatusFloatingButton extends StatelessWidget {
                     })),
           ),
           FloatingActionButton(
-            onPressed: ()=> statusCtrl.pickAssets(),
+            onPressed: ()=> statusCtrl.imagePickerOption(context),
             backgroundColor: appCtrl.appTheme.primary,
             child: Container(
               width: Sizes.s52,

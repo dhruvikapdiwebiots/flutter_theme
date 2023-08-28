@@ -8,6 +8,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../config.dart';
+import '../../../controllers/recent_chat_controller.dart';
 
 class FetchContact extends StatefulWidget {
   final SharedPreferences? prefs;
@@ -57,7 +58,9 @@ class _FetchContactState extends State<FetchContact> {
   @override
   Widget build(BuildContext context) {
     return Consumer<FetchContactController>(
-        builder: (context, availableContacts, _child) {
+        builder: (context, registerAvailableContact, child) {
+      return Consumer<RecentChatController>(
+          builder: (context, recentChat, child) {
         return Scaffold(
             backgroundColor: appCtrl.appTheme.bgColor,
             appBar: AppBar(
@@ -67,8 +70,8 @@ class _FetchContactState extends State<FetchContact> {
                 elevation: 0,
                 backgroundColor: appCtrl.appTheme.bgColor,
                 title: Text(fonts.contact.tr,
-                    style:
-                        AppCss.poppinsMedium16.textColor(appCtrl.appTheme.primary)),
+                    style: AppCss.poppinsMedium16
+                        .textColor(appCtrl.appTheme.primary)),
                 centerTitle: true,
                 actions: [
                   const Icon(Icons.sync)
@@ -84,279 +87,339 @@ class _FetchContactState extends State<FetchContact> {
                                 color: Color.fromRGBO(0, 0, 0, 0.08))
                           ],
                           color: appCtrl.appTheme.whiteColor)
-                      .marginSymmetric(horizontal: Insets.i20, vertical: Insets.i20)
+                      .marginSymmetric(
+                          horizontal: Insets.i20, vertical: Insets.i20)
                       .inkWell(onTap: () async {
-                    final FetchContactController
-                    contactsProvider = Provider.of<
-                        FetchContactController>(
-                        context,
-                        listen: false);
+                    final FetchContactController contactsProvider =
+                        Provider.of<FetchContactController>(context,
+                            listen: false);
 
                     contactsProvider.fetchContacts(
-                        context,
-                        appCtrl.user["phone"],
-                        widget.prefs!,
-                        true);
+                        context, appCtrl.user["phone"], widget.prefs!, true);
                   }),
                 ],
                 leading: const BackIcon()),
-            body: availableContacts.searchingcontactsindatabase == true
+            body: registerAvailableContact.searchContact == true
                 ? loading()
-                :RefreshIndicator(
-              onRefresh: ()async{
-                return availableContacts.fetchContacts(
-                    context,
-                    appCtrl.user["phone"],
-                    widget.prefs!,
-                    true);
-              },
-                  child: ListView(
-              controller: scrollController,
-              padding: EdgeInsets.only(bottom: 15, top: 0),
-              physics: BouncingScrollPhysics(),
-              children: [
-                  availableContacts
-                      .alreadyJoinedSavedUsersPhoneNameAsInServer
-                      .length ==
-                      0
-                      ? SizedBox(
-                    height: 0,
-                  ):
-                  Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: Insets.i20),
-                      child: Text(fonts.registerUser.tr,
-                          style: AppCss.poppinsSemiBold14
-                              .textColor(appCtrl.appTheme.blackColor)))
-                      .paddingOnly(top: Insets.i10),
-                  availableContacts
-                      .alreadyJoinedSavedUsersPhoneNameAsInServer
-                      .length ==
-                      0
-                      ? SizedBox(
-                    height: 0,
-                  )
-                      : ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    padding: EdgeInsets.all(00),
-                    itemCount: availableContacts
-                        .alreadyJoinedSavedUsersPhoneNameAsInServer
-                        .length,
-                    itemBuilder: (context, idx) {
-                      DeviceContactIdAndName user = availableContacts
-                          .alreadyJoinedSavedUsersPhoneNameAsInServer
-                          .elementAt(idx);
-                      log("user : ${user.name}");
-                      String phone = user.phone!;
-                      String name = user.name ?? user.phone!;
-                      return phone != appCtrl.user["phone"]? FutureBuilder<LocalUserData?>(
-                        future: availableContacts
-                            .fetchUserDataFromnLocalOrServer(
-                            widget.prefs!, phone),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<LocalUserData?>
-                            snapshot) {
-                          if (snapshot.hasData &&
-                              snapshot.data != null) {
-                            return ListTile(
-                              leading: CachedNetworkImage(
-                                  imageUrl: snapshot.data!.photoURL,
-                                  imageBuilder: (context, imageProvider) => CircleAvatar(
-                                      backgroundColor:
-                                      const Color(0xffE6E6E6),
-                                      radius: Sizes.s20,
-                                      backgroundImage: NetworkImage(
-                                          snapshot.data!.photoURL)),
-                                  placeholder: (context, url) => const CircleAvatar(
-                                      backgroundColor:
-                                      Color(0xffE6E6E6),
-                                      radius: Sizes.s20,
-                                      child: Icon(Icons.person,
-                                          color:
-                                          Color(0xffCCCCCC))),
-                                  errorWidget: (context, url, error) =>
-                                  const CircleAvatar(
-                                      backgroundColor:
-                                      Color(0xffE6E6E6),
-                                      radius: AppRadius.r20,
-                                      child: Icon(Icons.person,
-                                          color:
-                                          Color(0xffCCCCCC)))),
-                              title: Text(
-                                snapshot.data!.name,
-                              ),   subtitle: Text(
-                                snapshot.data!.aboutUser,
-                              ),
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 22.0, vertical: 0.0),
-                              onTap: ()async {
-                                log("DATA ss");
-                                await FirebaseFirestore.instance
-                                    .collection(
-                                    collectionName.users)
-                                    .doc(appCtrl.user['id'])
-                                    .collection(
-                                    collectionName.chats)
-                                    .get()
-                                    .then((value) {
-                                  if (value.docs.isNotEmpty) {
-                                    value.docs
-                                        .asMap()
-                                        .forEach((key, value) {
-                                      if (value.data()[
-                                      "receiverId"] ==
-                                          appCtrl
-                                              .user["id"] &&
-                                          value.data()[
-                                          "senderId"] ==
-                                              snapshot
-                                                  .data!.id ||
-                                          value.data()[
-                                          "senderId"] ==
-                                              appCtrl
-                                                  .user["id"] &&
-                                              value.data()[
-                                              "receiverId"] ==
-                                                  snapshot
-                                                      .data!.id) {
-
-                                        UserContactModel
-                                        userContact =
-                                        UserContactModel(
-                                            username: snapshot
-                                                .data!.name,
-                                            uid: value.data()[
-                                            "senderId"],
-                                            phoneNumber:
-                                            snapshot.data!.idVariants,
-                                            image: snapshot
-                                                .data!.photoURL,
-                                            isRegister: true);
-                                        var data = {
-                                          "chatId": value
-                                              .data()["chatId"],
-                                          "data": userContact
-                                        };
-                                        Get.toNamed(routeName.chat,
-                                            arguments: data);
-                                      }
-                                    });
-                                  }else{
-                                    UserContactModel
-                                    userContact =
-                                    UserContactModel(
-                                        username: snapshot
-                                            .data!.name,
-                                        uid: snapshot.data!.id,
-                                        phoneNumber:
-                                        snapshot.data!.idVariants,
-                                        image: snapshot
-                                            .data!.photoURL,
-                                        isRegister: true);
-                                    var data = {
-                                      "chatId": "0",
-                                      "data": userContact,
-                                    };
-                                    Get.toNamed(routeName.chat,
-                                        arguments: data);
-                                  }
-                                });
-                              },
-                            );
-                          }
-                          return ListTile(
-                            leading: CircleAvatar(radius: 22),
-                            title: Text(
-                              name,
-                            ),
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 22.0, vertical: 0.0),
-                          );
-                        },
-                      ): Container();
+                : RefreshIndicator(
+                    onRefresh: () async {
+                      return registerAvailableContact.fetchContacts(
+                          context, appCtrl.user["phone"], widget.prefs!, true);
                     },
-                  ),
-                  Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: Insets.i20),
-                      child: Text(fonts.inviteUser.tr,
-                          style: AppCss.poppinsSemiBold14
-                              .textColor(appCtrl.appTheme.blackColor)))
-                      .paddingOnly(top: Insets.i10),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    padding: EdgeInsets.all(0),
-                    itemCount: inviteContactsCount >=
-                        availableContacts
-                            .contactsBookContactList!.length
-                        ? availableContacts
-                        .contactsBookContactList!.length
-                        : inviteContactsCount,
-                    itemBuilder: (context, idx) {
-                      MapEntry user = availableContacts
-                          .contactsBookContactList!.entries
-                          .elementAt(idx);
-                      String phone = user.key;
-                      return availableContacts
-                          .previouslyFetchedKEYPhoneInSharedPrefs
-                          .indexWhere((element) =>
-                      element.phone == phone) >=
-                          0
-                          ? Container(
-                        width: 0,
-                      )
-                          : Stack(
-                        children: [
-                          ListTile(
-                            leading: CircleAvatar(
-                                radius: Sizes.s20,
-                                child: Text(
-                                  availableContacts
-                                      .getInitials(user.value),
-                                )),
-                            title: Text(
-                              user.value,
-                            ),
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 22.0, vertical: 0.0),
+                    child: ListView(
+                      controller: scrollController,
+                      padding: const EdgeInsets.only(bottom: 15, top: 0),
+                      physics: const BouncingScrollPhysics(),
+                      children: [
+                        registerAvailableContact
+                                    .registerContactUser.isEmpty
+                            ? const SizedBox(
+                                height: 0,
+                              )
+                            : Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: Insets.i20),
+                                    child: Text(fonts.registerUser.tr,
+                                        style: AppCss.poppinsSemiBold14
+                                            .textColor(
+                                                appCtrl.appTheme.blackColor)))
+                                .paddingOnly(top: Insets.i10),
+                        registerAvailableContact
+                                    .registerContactUser.isEmpty
+                            ? const SizedBox(
+                                height: 0,
+                              )
+                            : ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                padding: const EdgeInsets.all(00),
+                                itemCount: registerAvailableContact
+                                    .registerContactUser
+                                    .length,
+                                itemBuilder: (context, idx) {
+                                  RegisterContactDetail user = registerAvailableContact
+                                      .registerContactUser
+                                      .elementAt(idx);
 
-                          ),
-                          Positioned(
-                            right: 19,
-                            bottom: 19,
-                            child: InkWell(
-                                onTap: () {
-                                  if (Platform.isAndroid) {
+                                  String phone = user.phone!;
+                                  String name = user.name ?? user.phone!;
+                                  return phone != appCtrl.user["phone"]
+                                      ? FutureBuilder<UserData?>(
+                                          future: registerAvailableContact
+                                              .getUserDataFromStorageAndFirebase(
+                                                  widget.prefs ?? appCtrl.pref!,
+                                                  phone),
+                                          builder: (BuildContext context,
+                                              AsyncSnapshot<UserData?>
+                                                  snapshot) {
+                                            if (snapshot.hasData &&
+                                                snapshot.data != null) {
+                                              return ListTile(
+                                                leading: CachedNetworkImage(
+                                                    imageUrl:
+                                                        snapshot.data!.photoURL,
+                                                    imageBuilder: (context,
+                                                            imageProvider) =>
+                                                        CircleAvatar(
+                                                            backgroundColor:
+                                                                const Color(
+                                                                    0xffE6E6E6),
+                                                            radius: Sizes.s20,
+                                                            backgroundImage:
+                                                                imageProvider),
+                                                    placeholder: (context, url) => const CircleAvatar(
+                                                        backgroundColor:
+                                                            Color(0xffE6E6E6),
+                                                        radius: Sizes.s20,
+                                                        child: Icon(Icons.person,
+                                                            color: Color(
+                                                                0xffCCCCCC))),
+                                                    errorWidget: (context, url, error) =>
+                                                        const CircleAvatar(
+                                                            backgroundColor: Color(0xffE6E6E6),
+                                                            radius: AppRadius.r20,
+                                                            child: Icon(Icons.person, color: Color(0xffCCCCCC)))),
+                                                title: Text(
+                                                  snapshot.data!.name,
+                                                ),
+                                                subtitle: Text(
+                                                  snapshot.data!.aboutUser,
+                                                ),
+                                                contentPadding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 22.0,
+                                                        vertical: 0.0),
+                                                onTap: () async {
+                                                  final RecentChatController
+                                                      recentChatController =
+                                                      Provider.of<
+                                                              RecentChatController>(
+                                                          Get.context!,
+                                                          listen: false);
+                                                  log("INIT PAGE : ${recentChatController.userData.length}");
+                                                  bool isEmpty =
+                                                      recentChatController
+                                                          .userData
+                                                          .where((element) {
+                                                    return element["receiverId"] ==
+                                                                appCtrl.user[
+                                                                    "id"] &&
+                                                            element["senderId"] ==
+                                                                snapshot
+                                                                    .data!.id ||
+                                                        element["senderId"] ==
+                                                                appCtrl.user[
+                                                                    "id"] &&
+                                                            element["receiverId"] ==
+                                                                snapshot
+                                                                    .data!.id;
+                                                  }).isEmpty;
+                                                  log("isEmpty : $isEmpty");
+                                                  if (!isEmpty) {
+                                                    int index = recentChatController
+                                                        .userData
+                                                        .indexWhere((element) =>
+                                                            element["receiverId"] ==
+                                                                    appCtrl.user[
+                                                                        "id"] &&
+                                                                element["senderId"] ==
+                                                                    snapshot
+                                                                        .data!
+                                                                        .id ||
+                                                            element["senderId"] ==
+                                                                    appCtrl.user[
+                                                                        "id"] &&
+                                                                element["receiverId"] ==
+                                                                    snapshot
+                                                                        .data!
+                                                                        .id);
+                                                    UserContactModel
+                                                        userContact =
+                                                        UserContactModel(
+                                                            username: snapshot
+                                                                .data!.name,
+                                                            uid: snapshot
+                                                                .data!.id,
+                                                            phoneNumber:
+                                                                snapshot.data!
+                                                                    .idVariants,
+                                                            image: snapshot
+                                                                .data!.photoURL,
+                                                            isRegister: true);
 
-                                    Share.share(
-                                        " 'Download the ChatBox App'");
-                                  }
+                                                    if (widget.message ==
+                                                        null) {
+                                                      var data = {
+                                                        "chatId":
+                                                            recentChatController
+                                                                    .userData[
+                                                                index]["chatId"],
+                                                        "data": userContact
+                                                      };
+
+                                                      Get.back();
+                                                      Get.toNamed(
+                                                          routeName.chat,
+                                                          arguments: data);
+                                                    } else {
+                                                      var data = {
+                                                        "chatId":
+                                                            recentChatController
+                                                                    .userData[
+                                                                index]["chatId"],
+                                                        "data": userContact,
+                                                        "message":
+                                                            widget.message,
+                                                      };
+
+                                                      Get.back();
+                                                      Get.toNamed(
+                                                        routeName.chat,
+                                                        arguments: data,
+                                                      );
+
+                                                    }
+                                                  } else {
+                                                    UserContactModel
+                                                        userContact =
+                                                        UserContactModel(
+                                                            username: snapshot
+                                                                .data!.name,
+                                                            uid: snapshot
+                                                                .data!.id,
+                                                            phoneNumber:
+                                                                snapshot.data!
+                                                                    .idVariants,
+                                                            image: snapshot
+                                                                .data!.photoURL,
+                                                            isRegister: true);
+                                                    if (widget.message ==
+                                                        null) {
+                                                      var data = {
+                                                        "chatId": "0",
+                                                        "data": userContact,
+                                                      };
+                                                      Get.back();
+                                                      Get.toNamed(
+                                                          routeName.chat,
+                                                          arguments: data);
+                                                    } else {
+                                                      var data = {
+                                                        "chatId": "0",
+                                                        "data": userContact,
+                                                        "message":
+                                                            widget.message,
+                                                      };
+                                                      Get.back();
+                                                      Get.toNamed(
+                                                          routeName.chat,
+                                                          arguments: data);
+                                                    }
+                                                    //
+                                                    final chatCtrl = Get.isRegistered<ChatController>()
+                                                        ? Get.find<ChatController>()
+                                                        : Get.put(ChatController());
+                                                    chatCtrl.onReady();
+                                                  }
+                                                },
+                                              );
+                                            }
+                                            return ListTile(
+                                              leading: const CircleAvatar(
+                                                  radius: 22),
+                                              title: Text(
+                                                name,
+                                              ),
+                                              contentPadding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 22.0,
+                                                      vertical: 0.0),
+                                            );
+                                          },
+                                        )
+                                      : Container();
                                 },
-                                child: Icon(
-                                  Icons.person_add_alt,
-                                )),
-                          )
-                        ],
-                      );
-                    },
-                  ),
-              ],
-            ),
-                ));
-      }
-    );
+                              ),
+                        if (widget.message == null)
+                          Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: Insets.i20),
+                                  child: Text(fonts.inviteUser.tr,
+                                      style: AppCss.poppinsSemiBold14.textColor(
+                                          appCtrl.appTheme.blackColor)))
+                              .paddingOnly(top: Insets.i10),
+                        if (widget.message == null)
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            padding: const EdgeInsets.all(0),
+                            itemCount: inviteContactsCount >=
+                                    registerAvailableContact
+                                        .contactList!.length
+                                ? registerAvailableContact
+                                    .contactList!.length
+                                : inviteContactsCount,
+                            itemBuilder: (context, idx) {
+                              MapEntry user = registerAvailableContact
+                                  .contactList!.entries
+                                  .elementAt(idx);
+                              String phone = user.key;
+                              return registerAvailableContact
+                                          .oldPhoneData
+                                          .indexWhere((element) =>
+                                              element.phone == phone) >=
+                                      0
+                                  ? Container(
+                                      width: 0,
+                                    )
+                                  : Stack(
+                                      children: [
+                                        ListTile(
+                                          leading: CircleAvatar(
+                                              radius: Sizes.s20,
+                                              child: Text(
+                                                registerAvailableContact
+                                                    .getInitials(user.value),
+                                              )),
+                                          title: Text(
+                                            user.value,
+                                          ),
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                  horizontal: 22.0,
+                                                  vertical: 0.0),
+                                        ),
+                                        Positioned(
+                                          right: 19,
+                                          bottom: 19,
+                                          child: InkWell(
+                                              onTap: () {
+                                                if (Platform.isAndroid) {
+                                                  Share.share(
+                                                      " 'Download the ChatBox App'");
+                                                }
+                                              },
+                                              child: const Icon(
+                                                Icons.person_add_alt,
+                                              )),
+                                        )
+                                      ],
+                                    );
+                            },
+                          ),
+                      ],
+                    ),
+                  ));
+      });
+    });
   }
 
   loading() {
     return Stack(children: [
-      Container(
-        child: Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(appCtrl.appTheme.primary),
-            )),
-      )
+      Center(
+          child: CircularProgressIndicator(
+        valueColor: AlwaysStoppedAnimation<Color>(appCtrl.appTheme.primary),
+      ))
     ]);
   }
 }

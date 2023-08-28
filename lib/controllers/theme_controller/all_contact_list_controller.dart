@@ -1,67 +1,62 @@
-
-
+import 'dart:async';
 import 'package:flutter_theme/config.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:provider/provider.dart';
 
+import '../fetch_contact_controller.dart';
 
 class AllContactListController extends GetxController {
-
   List<Contact> storageContact = [];
   List<Contact> allContact = [];
   bool isLoading = true;
   int counter = 0;
   static const pageSize = 20;
-   PagingController<int, Contact> pagingController =
+  PagingController<int, Contact> pagingController =
       PagingController(firstPageKey: 0);
+  Map<String?, String?>? searchList = <String, String>{};
   TextEditingController searchText = TextEditingController();
-
+  Map<String?, String?> _cachedContacts = {};
   final permissionHandelCtrl = Get.isRegistered<PermissionHandlerController>()
       ? Get.find<PermissionHandlerController>()
       : Get.put(PermissionHandlerController());
 
   //fetch data
-  Future<void> fetchPage(pageKey,search) async {
-    pagingController.itemList = [];
-
-    storageContact = [];
-    if(search !="") {
-      allContact = await permissionHandelCtrl.getContact();
-      allContact.asMap().entries.forEach((element) {
-        if(element.value.displayName.toLowerCase().contains(search)){
-          if(!storageContact.contains(element.value)) {
-            storageContact.add(element.value);
-          }else{
-            storageContact.remove(element.value);
-          }
+  Future<void> fetchPage(pageKey, search) async {
+    if (search != null) {
+      Completer<Map<String?, String?>> completer =
+          Completer<Map<String?, String?>>();
+      searchList = {};
+      _cachedContacts = {};
+      completer.future.then((c) {
+        searchList = c;
+        if (searchList!.isEmpty) {
+          update();
         }
       });
-      update();
-    }else{
 
-      pagingController.itemList = [];
-      storageContact = [];
-      storageContact = await permissionHandelCtrl.getContact();
-      update();
-    }
+      final FetchContactController registerAvailableContact =
+          Provider.of<FetchContactController>(Get.context!, listen: false);
 
-    update();
-    Get.forceAppUpdate();
-    try {
-      final newItems = storageContact;
-      final isLastPage = newItems.length < pageSize;
-      if (isLastPage) {
-        pagingController.appendLastPage(newItems);
-      } else {
-        final nextPageKey = pageKey + newItems.length;
-        pagingController.appendPage(newItems, nextPageKey);
-      }
-    } catch (error) {
-      pagingController.error = error;
+      registerAvailableContact.contactList!.forEach((key, value) {
+        if (value.toString().toLowerCase().contains(search)) {
+          if (!(_cachedContacts[key] == value)) {
+            _cachedContacts[key] = value;
+          } else {
+            _cachedContacts.remove(_cachedContacts[key]);
+          }
+        }
+        update();
+      });
+      searchList = _cachedContacts;
+      update();
+
+    } else {
+      searchList = {};
+      _cachedContacts = {};
+      update();
+      Get.forceAppUpdate();
     }
-    isLoading = false;
-    update();
   }
-
 
   @override
   void onReady() async {
@@ -75,7 +70,7 @@ class AllContactListController extends GetxController {
   void onInit() {
     // TODO: implement onInit
     pagingController.addPageRequestListener((pageKey) {
-      fetchPage(pageKey,"");
+      fetchPage(pageKey, "");
     });
     super.onInit();
   }

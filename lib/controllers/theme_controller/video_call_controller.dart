@@ -2,9 +2,6 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:audioplayers/audioplayers.dart' as audio_players;
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter_theme/common/language/en.dart';
-
-import 'package:permission_handler/permission_handler.dart';
 import 'package:wakelock/wakelock.dart';
 import '../../config.dart';
 

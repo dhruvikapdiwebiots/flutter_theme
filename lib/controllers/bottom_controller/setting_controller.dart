@@ -7,7 +7,7 @@ import 'package:launch_review/launch_review.dart';
 class SettingController extends GetxController {
   List settingList = [];
   dynamic user;
-
+  bool isLoading =false;
 
   @override
   void onReady() {
@@ -19,18 +19,25 @@ class SettingController extends GetxController {
     super.onReady();
   }
 
-  getUserData()async{
-    await FirebaseFirestore.instance.collection(collectionName.users).doc( FirebaseAuth.instance.currentUser != null ? FirebaseAuth.instance.currentUser!.uid : appCtrl.user["id"] ).get().then((value) {
-      if(value.exists){
+  //get user info from firebase
+  getUserData() async {
+    await FirebaseFirestore.instance
+        .collection(collectionName.users)
+        .doc(FirebaseAuth.instance.currentUser != null
+            ? FirebaseAuth.instance.currentUser!.uid
+            : appCtrl.user["id"])
+        .get()
+        .then((value) {
+      if (value.exists) {
         user = value.data();
         appCtrl.storage.write(session.user, user);
       }
       update();
       appCtrl.update();
     });
-
   }
 
+  //edit profile page navigation
   editProfile() {
     user = appCtrl.storage.read(session.user);
 
@@ -56,21 +63,20 @@ class SettingController extends GetxController {
     } else if (index == 3) {
       deleteUser();
     } else if (index == 4) {
-      log("appCtrl.isBiometric  : ${appCtrl.isBiometric }");
-      if(appCtrl.isBiometric == false) {
+      log("appCtrl.isBiometric  : ${appCtrl.isBiometric}");
+      if (appCtrl.isBiometric == false) {
         final fingerPrintCtrl = Get.isRegistered<AddFingerprintController>()
             ? Get.find<AddFingerprintController>()
             : Get.put(AddFingerprintController());
         fingerPrintCtrl.checkBiometric(isSplash: false);
         fingerPrintCtrl.getAvailableBiometric();
-      }else{
+      } else {
         appCtrl.isBiometric = false;
-        appCtrl.storage.write(session.isBiometric,false);
+        appCtrl.storage.write(session.isBiometric, false);
         appCtrl.update();
-
       }
       Get.forceAppUpdate();
-    }else if (index == 5) {
+    } else if (index == 5) {
       LaunchReview.launch(
           androidAppId: appCtrl.userAppSettingsVal!.rateApp,
           iOSAppId: " ${appCtrl.userAppSettingsVal!.rateAppIos}");
@@ -85,6 +91,7 @@ class SettingController extends GetxController {
         "lastSeen": DateTime.now().millisecondsSinceEpoch.toString()
       });
       FirebaseAuth.instance.signOut();
+
       await appCtrl.storage.remove(session.user);
       await appCtrl.storage.remove(session.id);
       await appCtrl.storage.remove(session.isDarkMode);
@@ -92,7 +99,7 @@ class SettingController extends GetxController {
       await appCtrl.storage.remove(session.languageCode);
       await appCtrl.storage.remove(session.languageCode);
       await appCtrl.storage.erase();
-      Get.offAllNamed(routeName.phone,arguments: appCtrl.pref);
+      Get.offAllNamed(routeName.phone, arguments: appCtrl.pref);
     }
   }
 
@@ -137,9 +144,9 @@ class SettingController extends GetxController {
                     color: appCtrl.appTheme.primary,
                     borderRadius: BorderRadius.circular(AppRadius.r25)),
           ).inkWell(onTap: () async {
-            var user = appCtrl.storage.read(session.user);
-            Get.offAllNamed(routeName.phone,arguments: appCtrl.pref);
-            Get.offAllNamed(routeName.phone,arguments: appCtrl.pref);
+            isLoading =true;
+            update();
+
             await FirebaseFirestore.instance
                 .collection(collectionName.users)
                 .doc(user["id"])
@@ -149,16 +156,68 @@ class SettingController extends GetxController {
                 .doc(user["id"])
                 .delete();
             await FirebaseFirestore.instance
+                .collection(collectionName.users)
+                .doc(appCtrl.user["id"])
                 .collection(collectionName.status)
-                .doc(user["id"])
-                .delete();
-            FirebaseAuth.instance.signOut();
-            await appCtrl.storage.remove(session.user);
-            await appCtrl.storage.remove(session.id);
+                .get()
+                .then((value) {
+              for (DocumentSnapshot ds in value.docs) {
+                ds.reference.delete();
+              }
+            });
+            await FirebaseFirestore.instance
+                .collection(collectionName.users)
+                .doc(appCtrl.user["id"])
+                .collection(collectionName.chats)
+                .get()
+                .then((value) {
+              for (DocumentSnapshot ds in value.docs) {
+                ds.reference.delete();
+              }
+            });
+            await FirebaseFirestore.instance
+                .collection(collectionName.users)
+                .doc(appCtrl.user["id"])
+                .collection(collectionName.messages)
+                .get()
+                .then((value) {
+              for (DocumentSnapshot ds in value.docs) {
+                ds.reference.delete();
+              }
+            });
+            await FirebaseFirestore.instance
+                .collection(collectionName.users)
+                .doc(appCtrl.user["id"])
+                .collection(collectionName.groupMessage)
+                .get()
+                .then((value) {
+              for (DocumentSnapshot ds in value.docs) {
+                ds.reference.delete();
+              }
+            });
+
+            await FirebaseFirestore.instance
+                .collection(collectionName.users)
+                .doc(appCtrl.user["id"])
+                .collection(collectionName.broadcastMessage)
+                .get()
+                .then((value) {
+              for (DocumentSnapshot ds in value.docs) {
+                ds.reference.delete();
+              }
+            });
+
             await appCtrl.storage.remove(session.isDarkMode);
             await appCtrl.storage.remove(session.isRTL);
             await appCtrl.storage.remove(session.languageCode);
             await appCtrl.storage.remove(session.languageCode);
+            await appCtrl.storage.remove(session.user);
+            await appCtrl.storage.remove(session.id);
+            FirebaseAuth.instance.signOut();
+            isLoading =false;
+            update();
+            Get.offAllNamed(routeName.phone, arguments: appCtrl.pref);
+
           })
         ],
       ),

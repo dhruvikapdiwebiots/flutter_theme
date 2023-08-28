@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/controllers/fetch_contact_controller.dart';
-import 'package:flutter_theme/models/firebase_contact_model.dart';
+import 'package:flutter_theme/controllers/recent_chat_controller.dart';
 import 'package:flutter_theme/utilities/helper.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,7 +30,6 @@ class EditProfileController extends GetxController {
   final FocusNode passwordFocus = FocusNode();
   SharedPreferences? pref;
 
-
   final storage = GetStorage();
   var debugPrintgedIn = false;
 
@@ -43,7 +42,6 @@ class EditProfileController extends GetxController {
     update();
   }
 
-
   var auth = FirebaseAuth.instance;
   bool isLoading = false;
   bool isLoggedIn = false;
@@ -53,11 +51,10 @@ class EditProfileController extends GetxController {
   var userId = '';
 
   homeNavigation(userid) async {
-    final FetchContactController availableContacts =
-    Provider.of<FetchContactController>(Get.context!,
-        listen: false);
-    log("INIT PAGE");
-    availableContacts.fetchContacts(
+    final FetchContactController registerAvailableContact =
+        Provider.of<FetchContactController>(Get.context!, listen: false);
+    log("INIT PAGEaaa");
+    registerAvailableContact.fetchContacts(
         Get.context!, appCtrl.user["phone"], pref!, false);
     await appCtrl.storage.write(session.isIntro, true);
     await Future.delayed(Durations.s3);
@@ -67,197 +64,8 @@ class EditProfileController extends GetxController {
         .collection('users')
         .doc(user["id"])
         .update({'status': "Online"});
-    Get.offAllNamed(routeName.dashboard,arguments: pref);
-    if(isPhoneLogin ==true){
-      log("CHACNGE");
-      await checkPermission();
-    }
+    Get.offAllNamed(routeName.dashboard, arguments: pref);
   }
-
-  checkPermission() async {
-    final permissionHandelCtrl = Get.isRegistered<PermissionHandlerController>()
-        ? Get.find<PermissionHandlerController>()
-        : Get.put(PermissionHandlerController());
-    bool permissionStatus =
-    await permissionHandelCtrl.permissionGranted();
-    debugPrint("permissionStatus 1: $permissionStatus");
-    appCtrl.contactPermission = permissionStatus;
-    appCtrl.storage.write(session.contactPermission, permissionStatus);
-    appCtrl.update();
-    if (permissionStatus == true) {
-      appCtrl.contactList = await getAllContacts();
-
-      appCtrl.storage.write(session.contactList, appCtrl.contactList);
-      appCtrl.update();
-
-      await checkContactList();
-
-      if (appCtrl.contactList.isNotEmpty) {
-        await addContactInFirebase();
-        final contactCtrl = Get.isRegistered<ContactListController>()
-            ? Get.find<ContactListController>()
-            : Get.put(ContactListController());
-        contactCtrl.getAllData();
-        contactCtrl.getAllUnRegisterUser();
-        contactCtrl.onReady();
-
-        contactCtrl.update();
-        Get.forceAppUpdate();
-      }
-    }
-  }
-
-  checkContactList() async {
-    appCtrl.userContactList = [];
-    appCtrl.firebaseContact = [];
-    appCtrl.update();
-
-    await FirebaseFirestore.instance
-        .collection(collectionName.users)
-        .get()
-        .then((value) async {
-      if (appCtrl.contactList.isNotEmpty) {
-        value.docs.asMap().entries.forEach((users) {
-          if (users.value["phone"] != appCtrl.user["phone"]) {
-            appCtrl.contactList.asMap().entries.forEach((element) {
-              if (element.value.phones.isNotEmpty) {
-                if (users.value.data()["phone"] ==
-                    phoneNumberExtension(
-                        element.value.phones[0].number.toString())) {
-                  appCtrl.userContactList.add(element.value);
-                }
-              }
-            });
-          }
-          appCtrl.update();
-        });
-      }
-    });
-    debugPrint("appCtrl.userContactList : ${appCtrl.userContactList}");
-    update();
-  }
-
-  addContactInFirebase() async {
-    if (appCtrl.contactList.isNotEmpty) {
-      List<Map<String, dynamic>> contactsData = [];
-      List<Map<String, dynamic>> unRegisterContactData = [];
-
-      appCtrl.contactList.asMap().entries.forEach((contact) async {
-        bool isRegister = false;
-        String id = "",name = "";
-        await FirebaseFirestore.instance
-            .collection(collectionName.users)
-            .where("phone",
-            isEqualTo: phoneNumberExtension(
-                contact.value.phones[0].number.toString()))
-            .get()
-            .then((value) {
-          if (value.docs.isEmpty) {
-            isRegister = false;
-          } else {
-            isRegister = true;
-            id = value.docs[0].id;
-            name = value.docs[0].data()["name"];
-          }
-        });
-        update();
-        if (isRegister) {
-          var objData = {
-            'name': name,
-            'phone': contact.value.phones.isNotEmpty
-                ? phoneNumberExtension(
-                contact.value.phones[0].number.toString())
-                : null,
-            "isRegister": true,
-            "image": contact.value.photo,
-            "id": id
-            // Include other necessary contact.value details
-          };
-          if (!contactsData.contains(objData)) {
-            contactsData.add(objData);
-          }
-
-
-
-        } else {
-          var objData = {
-            'name': contact.value.displayName,
-            'phone': contact.value.phones.isNotEmpty
-                ? phoneNumberExtension(
-                contact.value.phones[0].number.toString())
-                : null,
-            "isRegister": false,
-            "image": contact.value.photo,
-            "id": "0"
-            // Include other necessary contact.value details
-          };
-          if (!unRegisterContactData.contains(objData)) {
-            unRegisterContactData.add(objData);
-
-          }
-
-        }
-
-      });
-
-
-      await FirebaseFirestore.instance
-          .collection(collectionName.users)
-          .doc(appCtrl.user["id"])
-          .collection(collectionName.registerUser)
-          .get()
-          .then((value) async {
-        if (value.docs.isEmpty) {
-
-          await FirebaseFirestore.instance
-              .collection(collectionName.users)
-              .doc(appCtrl.user["id"])
-              .collection(collectionName.registerUser)
-              .add({"contact": contactsData});
-        } else {
-          log("ALREADY COLLECTION");
-        }
-      });
-
-      await FirebaseFirestore.instance
-          .collection(collectionName.users)
-          .doc(appCtrl.user["id"])
-          .collection(collectionName.unRegisterUser)
-          .get()
-          .then((value) async {
-        if (value.docs.isEmpty) {
-
-          await FirebaseFirestore.instance
-              .collection(collectionName.users)
-              .doc(appCtrl.user["id"])
-              .collection(collectionName.unRegisterUser)
-              .add({"contact": unRegisterContactData});
-        } else {
-          log("ALREADY COLLECTION");
-        }
-      })/*.then((value) => checkContactList())*/;
-
-    }
-
-    if (appCtrl.firebaseContact.isEmpty) {
-      await FirebaseFirestore.instance
-          .collection(collectionName.users)
-          .doc(appCtrl.user["id"])
-          .collection(collectionName.registerUser)
-          .get()
-          .then((value) {
-        List allUserList = value.docs[0].data()["contact"];
-        allUserList.asMap().entries.forEach((element) {
-          if (!appCtrl.firebaseContact.contains(element.value)) {
-            appCtrl.firebaseContact
-                .add(FirebaseContactModel.fromJson(element.value));
-          }
-        });
-      });
-      appCtrl.update();
-    }
-  }
-
 
   showToast(error) {
     Fluttertoast.showToast(msg: error);
@@ -275,8 +83,6 @@ class EditProfileController extends GetxController {
     FocusScope.of(context).requestFocus(nextFocus);
   }
 
-
-
   //update user
   updateUserData() async {
     isLoading = true;
@@ -293,33 +99,29 @@ class EditProfileController extends GetxController {
             .get()
             .then((value) {
           if (value.docs.isNotEmpty) {
-            ScaffoldMessenger.of(Get.context!)
-                .showSnackBar(
+            ScaffoldMessenger.of(Get.context!).showSnackBar(
                 const SnackBar(content: Text("Email Already Exist")));
+
+            isLoading = false;
+            update();
           } else {
-            FirebaseFirestore.instance.collection(collectionName.users)
+            FirebaseFirestore.instance
+                .collection(collectionName.users)
                 .doc(user["id"])
-                .update(
-                {
-                  'image': imageUrl,
-                  'name': nameText.text,
-                  'status': "Online",
-                  "typeStatus": "",
-                  "phone": phoneText.text,
-                  "email": emailText.text,
-                  "statusDesc": statusText.text,
-                  "pushToken": token,
-                  "isActive":true
-                })
-                .then((result) async {
+                .update({
+              'image': imageUrl,
+              'name': nameText.text,
+              'status': "Online",
+              "typeStatus": "",
+              "phone": phoneText.text,
+              "email": emailText.text,
+              "statusDesc": statusText.text,
+              "pushToken": token,
+              "isActive": true
+            }).then((result) async {
               debugPrint("new USer true");
-              final FetchContactController availableContacts =
-              Provider.of<FetchContactController>(Get.context!,
-                  listen: false);
-              log("INIT PAGE");
-              availableContacts.fetchContacts(
-                  Get.context!, appCtrl.user["phone"], pref!, false);
-              FirebaseFirestore.instance.collection(collectionName.users)
+              await FirebaseFirestore.instance
+                  .collection(collectionName.users)
                   .doc(user["id"])
                   .get()
                   .then((value) async {
@@ -328,13 +130,27 @@ class EditProfileController extends GetxController {
                 appCtrl.user = value.data();
                 appCtrl.update();
               });
-              await Future.delayed(Durations.s3);
-              Get.toNamed(routeName.dashboard,arguments: pref);
-              if(isPhoneLogin ==true){
-                await checkPermission();
-              }
+              final RecentChatController recentChatController =
+                  Provider.of<RecentChatController>(Get.context!,
+                      listen: false);
+              log("INIT PAGE1");
+
+              recentChatController.getModel(appCtrl.user);
+
+              final FetchContactController registerAvailableContact =
+                  Provider.of<FetchContactController>(Get.context!,
+                      listen: false);
+              log("INIT PAGE2");
+              registerAvailableContact.fetchContacts(
+                  Get.context!, appCtrl.user["phone"], pref!, false);
+
+              await Future.delayed(Durations.s5);
+
+              isLoading = false;
+              update();
+              Get.toNamed(routeName.dashboard, arguments: pref);
             }).catchError((onError) {
-              debugPrint("onError");
+              debugPrint("onError :: $onError");
             });
           }
         });
@@ -345,26 +161,23 @@ class EditProfileController extends GetxController {
             .limit(1)
             .get()
             .then((value) {
-          FirebaseFirestore.instance.collection(collectionName.users).doc(user["id"]).update(
-              {
-                'image': imageUrl,
-                'name': nameText.text,
-                'status': "Online",
-                "typeStatus": "",
-                "phone": phoneText.text,
-                "email": emailText.text,
-                "statusDesc": statusText.text,
-                "pushToken": token,
-                "isActive":true
-              }).then((result) async {
-            debugPrint("new USer true");
-            final FetchContactController availableContacts =
-            Provider.of<FetchContactController>(Get.context!,
-                listen: false);
-            log("INIT PAGE");
-            availableContacts.fetchContacts(
-                Get.context!, appCtrl.user["phone"], pref!, false);
-            FirebaseFirestore.instance.collection(collectionName.users).doc(user["id"])
+          FirebaseFirestore.instance
+              .collection(collectionName.users)
+              .doc(user["id"])
+              .update({
+            'image': imageUrl,
+            'name': nameText.text,
+            'status': "Online",
+            "typeStatus": "",
+            "phone": phoneText.text,
+            "email": emailText.text,
+            "statusDesc": statusText.text,
+            "pushToken": token,
+            "isActive": true
+          }).then((result) async {
+            await FirebaseFirestore.instance
+                .collection(collectionName.users)
+                .doc(user["id"])
                 .get()
                 .then((value) async {
               await storage.write(session.id, user["id"]);
@@ -372,15 +185,30 @@ class EditProfileController extends GetxController {
               appCtrl.user = value.data();
               appCtrl.update();
             });
-            await Future.delayed(Durations.s3);
-            Get.toNamed(routeName.dashboard,arguments: pref);
+            final RecentChatController recentChatController =
+                Provider.of<RecentChatController>(Get.context!, listen: false);
+            log("INIT PAGE3");
+
+            recentChatController.getModel(appCtrl.user);
+
+            debugPrint("new USer true");
+            final FetchContactController registerAvailableContact =
+                Provider.of<FetchContactController>(Get.context!,
+                    listen: false);
+            log("INIT PAGE4");
+            registerAvailableContact.fetchContacts(
+                Get.context!, appCtrl.user["phone"], pref!, false);
+
+            await Future.delayed(Durations.s5);
+            Get.toNamed(routeName.dashboard, arguments: pref);
+
+            isLoading = false;
+            update();
           }).catchError((onError) {
-            debugPrint("onError");
+            debugPrint("onErrorss :: $onError");
           });
         });
       }
-      isLoading = false;
-      update();
     });
   }
 
@@ -437,11 +265,12 @@ class EditProfileController extends GetxController {
             .update({'image': imageUrl}).then((value) {
           FirebaseFirestore.instance
               .collection('users')
-              .doc(user["id"]).get().then((snap) async{
-
-                await appCtrl.storage.write(session.user,snap.data());
-                user = snap.data();
-                update();
+              .doc(user["id"])
+              .get()
+              .then((snap) async {
+            await appCtrl.storage.write(session.user, snap.data());
+            user = snap.data();
+            update();
           });
         });
         isLoading = false;

@@ -99,7 +99,7 @@ class SingleClearDialog extends StatelessWidget {
 
                                       });
 
-                                      chatCtrl.message = [];
+                                      chatCtrl.localMessage = [];
                                       chatCtrl.update();
 
                                     });

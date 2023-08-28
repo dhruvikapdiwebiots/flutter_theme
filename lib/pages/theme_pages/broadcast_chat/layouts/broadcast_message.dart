@@ -35,18 +35,7 @@ class BroadcastMessage extends StatelessWidget {
                     ).paddingOnly(bottom: Insets.i8)
                   ],
                 )),
-            /*ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return chatCtrl
-                            .timeLayout(
-                              chatCtrl.message[index],
-                            )
-                            .marginOnly(bottom: Insets.i18);
-                      },
-                      itemCount: chatCtrl.message.reversed.length,
-                      reverse: true,
-                      controller: chatCtrl.listScrollController),*/
+
           ],
         ),
       );

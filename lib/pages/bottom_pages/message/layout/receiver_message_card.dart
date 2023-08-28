@@ -59,7 +59,7 @@ class ReceiverMessageCard extends StatelessWidget {
           .inkWell(onTap: () async {
         await FirebaseFirestore.instance
             .collection(collectionName.users)
-            .doc(document!["senderId"])
+            .doc(document!["receiverId"])
             .get()
             .then((value)async {
           if (value.exists) {
@@ -70,7 +70,7 @@ class ReceiverMessageCard extends StatelessWidget {
                 image: value.data()!["image"],
                 isRegister: true);
             await FirebaseFirestore.instance.collection(collectionName.users).doc(appCtrl.user["id"]).collection(collectionName.messages).doc(document!["chatId"]).collection(collectionName.chat).get().then((value) {
-              log("value.docs : ${value.docs.length}");
+              log("value.docs : ${userContact.uid}");
               if(value.docs.isNotEmpty){
 
                 var data = {"chatId": document!["chatId"], "data": userContact};

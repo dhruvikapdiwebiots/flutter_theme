@@ -39,8 +39,8 @@ class _BroadcastChatState extends State<BroadcastChat>
                   onWillPop: chatCtrl.onBackPress,
                   child: Scaffold(
                       appBar: BroadCastAppBar(
-                          name: chatCtrl.broadData["users"] != null
-                              ? "${chatCtrl.broadData["users"].length} recipients"
+                          name:chatCtrl.pName != "" ?chatCtrl.pName :   chatCtrl.pData.isNotEmpty
+                              ? "${chatCtrl.pData.length} recipients"
                               : "0",
                           nameList: chatCtrl.nameList),
                       backgroundColor: appCtrl.appTheme.bgColor,

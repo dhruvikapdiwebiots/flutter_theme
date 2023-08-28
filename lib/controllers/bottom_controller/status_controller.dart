@@ -4,15 +4,13 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:drishya_picker/drishya_picker.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:light_compressor/light_compressor.dart' as light;
-import 'package:path/path.dart' as path;
-import 'package:permission_handler/permission_handler.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:provider/provider.dart';
-import 'dart:async';
 import 'package:async/async.dart';
 import '../fetch_contact_controller.dart';
 
@@ -39,6 +37,8 @@ class StatusController extends GetxController {
     height: 0.0,
   );
   Reference? reference;
+  StreamSubscription? statusStream;
+
   DateTime date = DateTime.now();
   final pickerCtrl = Get.isRegistered<PickerController>()
       ? Get.find<PickerController>()
@@ -93,7 +93,8 @@ class StatusController extends GetxController {
     });
     _showBannerAd();
     update();
-    getAllStatus();
+    // onListMessage();
+//    getAllStatus();
     super.onReady();
   }
 
@@ -154,8 +155,8 @@ class StatusController extends GetxController {
 
   //add status
   addStatus(File file, StatusType statusType) async {
-
     UploadTask uploadTask = reference!.putFile(file);
+    log("file : $uploadTask");
     TaskSnapshot snap = await uploadTask;
     String downloadUrl = await snap.ref.getDownloadURL();
     imageUrl = downloadUrl;
@@ -169,6 +170,7 @@ class StatusController extends GetxController {
     }
     appCtrl.isLoading = false;
     appCtrl.update();
+    Get.forceAppUpdate();
   }
 
   //status list
@@ -183,20 +185,106 @@ class StatusController extends GetxController {
   }
 
   GallerySetting gallerySetting = const GallerySetting(
-    enableCamera: true,
-    maximumCount: 1,
+    enableCamera: false,
+    maximumCount: 10,
     requestType: RequestType.all,
-    cameraSetting: CameraSetting(videoDuration: Duration(seconds: 15)),
+    cameraSetting:  CameraSetting(videoDuration: Duration(seconds: 15)),
+    cameraTextEditorSetting: EditorSetting(),
+    cameraPhotoEditorSetting: EditorSetting(),
   );
+
+  Future getImage(source) async {
+    final ImagePicker picker = ImagePicker();
+    imageFile = (await picker.pickImage(source: source, imageQuality: 30))!;
+    if (imageFile != null) {
+      final croppedFile = await ImageCropper().cropImage(
+        sourcePath: imageFile!.path,
+        compressQuality: 100,
+        uiSettings: [
+          AndroidUiSettings(
+              toolbarTitle: 'Cropper',
+              toolbarColor: appCtrl.appTheme.primary,
+              toolbarWidgetColor: appCtrl.appTheme.white,
+              initAspectRatio: CropAspectRatioPreset.original,
+              lockAspectRatio: false),
+          IOSUiSettings(
+            title: 'Cropper',
+          ),
+        ],
+      );
+      Get.back();
+      appCtrl.isLoading = true;
+      appCtrl.update();
+      Get.forceAppUpdate();
+      if (croppedFile != null) {
+        File compressedFile = await FlutterNativeImage.compressImage(
+          croppedFile.path,
+          quality: 30,
+        );
+        update();
+
+        log("image : ${compressedFile.lengthSync()}");
+
+        image = File(compressedFile.path);
+        if (image!.lengthSync() / 1000000 >
+            appCtrl.usageControlsVal!.maxFileSize!) {
+          image = null;
+          snackBar(
+              "Image Should be less than ${image!.lengthSync() / 1000000 > appCtrl.usageControlsVal!.maxFileSize!}");
+        }
+      }
+      log("image1 : $image");
+      Get.forceAppUpdate();
+      return image;
+
+    }
+  }
+
+  imagePickerOption(
+    BuildContext context,
+  ) {
+    showModalBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+          borderRadius:
+              BorderRadius.vertical(top: Radius.circular(AppRadius.r25)),
+        ),
+        builder: (BuildContext context) {
+          // return your layout
+          return ImagePickerLayout(cameraTap: () async {
+            dismissKeyboard();
+            await getImage(ImageSource.camera).then((value) async {
+              log("VALUE : $value");
+              String fileName =
+                  DateTime.now().millisecondsSinceEpoch.toString();
+
+              reference = FirebaseStorage.instance.ref().child(fileName);
+              update();
+              try {
+                await addStatus(image!, StatusType.image);
+              } catch (e) {
+                appCtrl.isLoading = false;
+                appCtrl.update();
+              }
+            });
+          }, galleryTap: () async {
+            Get.back();
+            pickAssets();
+          });
+        });
+  }
 
   pickAssets() async {
     try {
       log("COUNT : ${appCtrl.usageControlsVal!.maxFilesMultiShare}");
       GalleryController controller = GalleryController();
+
       final entities = await controller.pick(
         Get.context!,
         setting: gallerySetting,
       );
+
+      log("entities :: $entities");
 
       if (entities.isNotEmpty) {
         File? videoFile = await entities[0].file;
@@ -267,88 +355,101 @@ class StatusController extends GetxController {
     }
   }
 
-  getAllStatus() async {
-    statusList = [];
+  getAllStatus({search}) async {
+    LocalStorage storage = LocalStorage('statusModel');
+
     allViewStatusList = [];
     update();
     Get.forceAppUpdate();
-    log("statusList : %${statusList.length}");
     var futureGroup = FutureGroup();
-    final FetchContactController availableContacts =
+    final FetchContactController registerAvailableContact =
         Provider.of<FetchContactController>(Get.context!, listen: false);
 
-    for (var chunk
-        in availableContacts.alreadyJoinedSavedUsersPhoneNameAsInServer) {
+    for (var chunk in registerAvailableContact
+        .registerContactUser) {
       futureGroup.add(getStatusUsingChunks(chunk.id));
     }
-    log("   ::::::: ${availableContacts.alreadyJoinedSavedUsersPhoneNameAsInServer}");
+    log("   ::::::: ${registerAvailableContact.registerContactUser}");
     futureGroup.close();
     var p = await futureGroup.future;
-    for (var batch in p) {
-      if (batch != null) {
-        for (QueryDocumentSnapshot<Map<String, dynamic>> postedStatus
-            in batch) {
-          if (postedStatus.exists) {
-            Status status = Status.fromJson(postedStatus.data());
-            for (var photo in status.photoUrl!) {
-              bool isExist = photo.seenBy!.where((element) {
-                log("ELE : ${element["uid"]}");
-                return element["uid"] == appCtrl.user["id"];
-              }).isEmpty;
 
-              if (isExist) {
-                if (!statusList.contains(status)) {
-                  statusList.add(status);
+    storage.ready.then((ready) {
+      for (var batch in p) {
+        if (batch != null) {
+          for (QueryDocumentSnapshot<Map<String, dynamic>> postedStatus
+              in batch) {
+            if (postedStatus.exists) {
+              Status status = Status.fromJson(postedStatus.data());
+              if (search == null) {
+                log("SEDD : ${status.seenAllStatus}");
+                if (status.seenAllStatus != null) {
+                  bool isExist =
+                      status.seenAllStatus!.contains(appCtrl.user["id"]);
+
+                  if (isExist) {
+                    if (!allViewStatusList.contains(status)) {
+                      allViewStatusList.add(status);
+                    }
+                    bool isEmpty = statusList
+                        .where((element) => element.uid == status.uid).isEmpty;
+
+                    if(!isEmpty){
+                      int id = statusList
+                          .indexWhere((element) => element.uid == status.uid);
+                      statusList.removeAt(id);
+                    }
+                    update();
+                  }
+
+                } else {
+                  bool isEmpty = statusList
+                      .where((element) => element.uid == status.uid).isEmpty;
+                  log("isEmpty 11: $isEmpty");
+                  if(isEmpty) {
+                    if (!statusList.contains(status)) {
+                      statusList.add(status);
+                    }
+                  }
+                  update();
+                }
+              } else {
+                if (status.username.toString().toLowerCase().contains(search)) {
+                  for (var photo in status.photoUrl!) {
+                    bool isExist = photo.seenBy!.where((element) {
+                      log("ELE : ${element["uid"]}");
+                      return element["uid"] == appCtrl.user["id"];
+                    }).isEmpty;
+
+                    if (isExist) {
+                      if (!statusList.contains(status)) {
+                        statusList.add(status);
+                      }
+                      update();
+                    }
+                  }
+
+                  if (status.seenAllStatus != null) {
+                    bool isExist =
+                        status.seenAllStatus!.contains(appCtrl.user["id"]);
+
+                    if (isExist) {
+                      if (!allViewStatusList.contains(status)) {
+                        allViewStatusList.add(status);
+                      }
+                    }
+                    update();
+                  }
                 }
                 update();
               }
             }
-
-            if (status.seenAllStatus != null) {
-              bool isExist = status.seenAllStatus!.contains(appCtrl.user["id"]);
-
-              if (isExist) {
-                if (!allViewStatusList.contains(status)) {
-                  allViewStatusList.add(status);
-                }
-              }
-              update();
-            }
+            update();
           }
-          update();
         }
       }
-    }
+    });
     log("allViewStatusList : %${statusList.length}");
     log("allViewStatusList : %${allViewStatusList.length}");
     update();
-  }
-
-  getStatusByUser(
-      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) async {
-    statusList = [];
-
-    if (snapshot.data!.docs.isNotEmpty) {
-      Status status = Status.fromJson(snapshot.data!.docs[0].data());
-      for (var photo in status.photoUrl!) {
-        if (photo.seenBy!
-            .where((element) => element["uid"] == appCtrl.user["id"])
-            .isEmpty) {
-          if (!statusList.contains(status)) {
-            statusList.add(status);
-          }
-        }
-      }
-      if (status.seenAllStatus != null && status.seenAllStatus!.isNotEmpty) {
-        bool isExist = status.seenAllStatus!
-            .where((element) => element == appCtrl.user["uid"])
-            .isNotEmpty;
-        if (isExist) {
-          if (!allViewStatusList.contains(status)) {
-            allViewStatusList.add(status);
-          }
-        }
-      }
-    }
   }
 }

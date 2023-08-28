@@ -27,6 +27,18 @@ class GroupDeleteAlert extends StatelessWidget {
           TextButton(
             onPressed: () async {
               Get.back();
+              int index =0;
+              chatCtrl.selectedIndexId.asMap().entries.forEach((e) {
+                chatCtrl.localMessage.asMap().entries.forEach((element) {
+                  index = element.value.message!.indexWhere((element) => element.docId == e.value );
+
+                  if(index >0) {
+                    chatCtrl.localMessage[element.key].message!.removeAt(index);
+                  }
+                });
+                chatCtrl.update();
+
+              });
               chatCtrl.selectedIndexId.asMap().entries.forEach((element) {
                 FirebaseFirestore.instance
                     .collection(collectionName.users)

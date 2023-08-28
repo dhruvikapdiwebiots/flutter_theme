@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 import 'dart:io';
 import 'package:flutter_theme/models/data_model.dart';
 import 'package:flutter_theme/models/firebase_contact_model.dart';
@@ -31,7 +31,7 @@ SharedPreferences? pref;
 
   bool isTheme = false,isTyping =false,contactPermission = false;
   bool isBiometric = false;
-  bool isRTL = false,isLoading =false;
+  bool isRTL = false,isLoading =false,isSearch =false;
   String languageVal = "in";
   List drawerList = [];
   dynamic user;
@@ -47,7 +47,7 @@ SharedPreferences? pref;
   UsageControlModel? usageControlsVal;
   var deviceData = <String, dynamic>{};
 
-  DataModel? cachedModel;
+  ContactModel? cachedModel;
 
 //list of bottommost page
   List<Widget> widgetOptions = <Widget>[];
@@ -71,9 +71,9 @@ SharedPreferences? pref;
   }
 
 
-  DataModel? getModel() {
+  ContactModel? getModel() {
 
-    cachedModel ??= DataModel(appCtrl.user["phone"]);
+    cachedModel ??= ContactModel(appCtrl.user["phone"]);
 
     debugPrint("NEW DATA ${cachedModel!.userData}");
 

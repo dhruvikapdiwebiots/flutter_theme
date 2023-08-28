@@ -1,4 +1,3 @@
-import 'package:flutter_theme/pages/bottom_pages/status/layouts/status_list_card.dart';
 
 import '../../../../config.dart';
 

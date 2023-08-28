@@ -1,10 +1,9 @@
-import 'dart:collection';
+
 import 'dart:developer';
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter_theme/config.dart';
-import 'package:flutter_theme/controllers/fetch_contact_controller.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class MessageController extends GetxController {
@@ -32,9 +31,6 @@ class MessageController extends GetxController {
   List selectedContact = [];
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-  /*final dashboardCtrl = Get.isRegistered<DashboardController>()
-      ? Get.find<DashboardController>()
-      : Get.put(DashboardController());*/
 
   @override
   void onReady() async {
@@ -163,15 +159,5 @@ class MessageController extends GetxController {
         false;
   }
 
-  Future getMessage() async {
-
-    List statusData = [];
-    try {
-      statusData = await MessageFirebaseApi().getContactList(contactUserList);
-    } catch (e) {
-      log("message list : $e");
-    }
-    return statusData;
-  }
 
 }

@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import '../../../../config.dart';
 
@@ -42,7 +41,7 @@ class LoadUser extends StatelessWidget {
                   currentUserId: currentUserId,
                   blockBy: blockBy)
               .marginOnly(bottom: Insets.i12);
-      return Text("BROADCAST");
+
     } else {
       return Container();
     }

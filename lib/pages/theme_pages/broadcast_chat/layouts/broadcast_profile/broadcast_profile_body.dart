@@ -1,5 +1,7 @@
+import 'package:flutter_theme/controllers/recent_chat_controller.dart';
 import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_profile/group_images_video.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import '../../../../../config.dart';
 
 class BroadcastProfileBody extends StatelessWidget {
@@ -17,10 +19,10 @@ class BroadcastProfileBody extends StatelessWidget {
             if (snapshot.hasData) {
               if (snapshot.data!.exists) {
                 chatCtrl.broadData = snapshot.data!.data();
-                chatCtrl.userList = chatCtrl.broadData != null
-                    ? chatCtrl.broadData["users"].length < 5
-                        ? chatCtrl.broadData["users"]
-                        : chatCtrl.broadData["users"].getRange(0, 5)
+                chatCtrl.userList = chatCtrl.pData.isNotEmpty
+                    ? chatCtrl.pData.length < 5
+                        ? chatCtrl.pData
+                        : chatCtrl.pData.getRange(0, 5).toList()
                     : [];
                 chatCtrl.isThere = chatCtrl.userList.any((element) =>
                     element["id"].contains(chatCtrl.userData["id"]));
@@ -61,7 +63,7 @@ class BroadcastProfileBody extends StatelessWidget {
                                             .toString(),
                                       ))
                                     : Text(
-                                        chatCtrl.broadData["name"] ??
+                                    chatCtrl.pName ??
                                             fonts.broadCast.tr,
                                         style: AppCss.poppinsSemiBold18
                                             .textColor(
@@ -76,8 +78,7 @@ class BroadcastProfileBody extends StatelessWidget {
                                 ).paddingOnly(bottom: Insets.i2).inkWell(
                                     onTap: () async {
                                   chatCtrl.isTextBox = !chatCtrl.isTextBox;
-                                  chatCtrl.textNameController.text =
-                                      chatCtrl.pName!;
+
                                   chatCtrl.update();
                                   if (chatCtrl.textNameController.text !=
                                       chatCtrl.pName) {
@@ -86,10 +87,22 @@ class BroadcastProfileBody extends StatelessWidget {
                                         .doc(chatCtrl.pId)
                                         .update({
                                       "name": chatCtrl.textNameController.text
-                                    }).then((value) {
+                                    }).then((value) async{
+
                                       chatCtrl.pName =
                                           chatCtrl.textNameController.text;
                                       chatCtrl.update();
+                                      await FirebaseFirestore.instance.collection(collectionName.users).doc(appCtrl.user["id"])
+                                          .collection(collectionName.chats)
+                                          .where("broadcastId",isEqualTo: chatCtrl.pId).limit(1).get().then((chatBroadcast)async{
+                                            if(chatBroadcast.docs.isNotEmpty){
+                                              await FirebaseFirestore.instance.collection(collectionName.users).doc(appCtrl.user["id"])
+                                                  .collection(collectionName.chats).doc(chatBroadcast.docs[0].id).update(
+                                                  {"name":chatCtrl.pName});
+                                            }
+                                      });
+
+
                                     });
                                   }
                                 })
@@ -199,7 +212,7 @@ class BroadcastProfileBody extends StatelessWidget {
                                   ],
                                 ),
                                 const VSpace(Sizes.s22),
-                                ...chatCtrl.userList.asMap().entries.map((e) {
+                                ...chatCtrl.pData.asMap().entries.map((e) {
                                   return StreamBuilder(
                                       stream: FirebaseFirestore.instance
                                           .collection(collectionName.users)

@@ -71,8 +71,6 @@ class _PickupLayoutState extends State<PickupLayout>
 
   @override
   Widget build(BuildContext context) {
-    // ignore: unnecessary_null_comparison
-    var user = appCtrl.storage.read(session.user);
     return appCtrl.user != null && appCtrl.user != ""
         ? StreamBuilder(
             stream: FirebaseFirestore.instance

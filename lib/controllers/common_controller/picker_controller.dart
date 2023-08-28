@@ -394,7 +394,7 @@ class PickerController extends GetxController {
                     .entries
                     .forEach((element) async {
                   File? videoFile = await element.value.file;
-                  File? video;
+
                   if (element.value.title!.contains("mp4")) {
                     final light.LightCompressor lightCompressor =
                         light.LightCompressor();
@@ -426,7 +426,6 @@ class PickerController extends GetxController {
                     .entries
                     .forEach((element) async {
                   File? videoFile = await element.value.file;
-                  File? video;
                   if (element.value.title!.contains("mp4")) {
                     final light.LightCompressor lightCompressor =
                         light.LightCompressor();

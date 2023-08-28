@@ -58,9 +58,9 @@ class _ChatCardState extends State<ChatCard> {
         return Consumer<RecentChatController>(
             builder: (context, recentChat, _child) {
 
-              return ScopedModel<DataModel>(
+              return ScopedModel<ContactModel>(
                 model: recentChat.getModel(appCtrl.user)!,
-                child: ScopedModelDescendant<DataModel>(builder: (context, child, _model) {
+                child: ScopedModelDescendant<ContactModel>(builder: (context, child, _model) {
                   appCtrl.cachedModel = _model;
                     return recentChat.userData.isNotEmpty
                         ? ListView(controller: scrollController, children: [

@@ -10,13 +10,9 @@ import 'package:flutter_theme/pages/theme_pages/group_chat_message/group_message
 import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/clear_dialog.dart';
 import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_chat_wall_paper.dart';
 import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_profile/exit_group_alert.dart';
-import 'package:flutter_theme/widgets/common_note_encrypt.dart';
 import 'package:flutter_theme/widgets/reaction_pop_up/emoji_picker_widget.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
-
-import '../../pages/theme_pages/chat_message/layouts/chat_wall_paper.dart';
 
 class GroupChatMessageController extends GetxController {
   String? pId,
@@ -85,10 +81,13 @@ class GroupChatMessageController extends GetxController {
 
     var data = Get.arguments;
     pData = data;
+
     if(pData != null) {
+
       pId = pData["message"]["groupId"];
       pName = pData["groupData"]["name"];
       groupImage = pData["groupData"]["image"];
+      userList = pData["message"]["receiverId"];
     }
     update();
     getPeerStatus();
@@ -525,7 +524,7 @@ class GroupChatMessageController extends GetxController {
   }
 
   Widget timeLayout(DateTimeChip document) {
-    List<MessageModel> newMessageList = document.message!;
+    List<MessageModel> newMessageList = document.message!.reversed.toList();
     return Column(
       children: [
         Text(
@@ -550,9 +549,6 @@ class GroupChatMessageController extends GetxController {
 // BUILD ITEM MESSAGE BOX FOR RECEIVER AND SENDER BOX DESIGN
   Widget buildItem(int index, MessageModel document, docId, title) {
     return Column(children: [
-      document.type == MessageType.note.name
-          ? const CommonNoteEncrypt()
-          : Container(),
       (document.sender == user["id"])
           ? GroupSenderMessage(
                   document: document,
@@ -695,29 +691,8 @@ class GroupChatMessageController extends GetxController {
     appCtrl.isTyping = false;
     appCtrl.update();
     firebaseCtrl.groupTypingStatus(pId, false);
-    FirebaseFirestore.instance
-        .collection(collectionName.users)
-        .doc(appCtrl.user["id"])
-        .collection(collectionName.messages)
-        .doc(pId)
-        .collection(collectionName.chat)
-        .get()
-        .then((value) {
-      if (value.docs.isNotEmpty) {
-        if (value.docs.length == 1) {
-          FirebaseFirestore.instance
-              .collection(collectionName.users)
-              .doc(appCtrl.user["id"])
-              .collection(collectionName.messages)
-              .doc(pId)
-              .collection(collectionName.chat)
-              .doc(value.docs[0].id)
-              .delete();
-        }
-      }
-    });
-    Get.back();
-    return Future.value(false);
+
+    return Future.value(true);
   }
 
   //ON LONG PRESS
@@ -759,6 +734,8 @@ class GroupChatMessageController extends GetxController {
         .get()
         .then((value) async {
       if (value.docs.isNotEmpty) {
+
+
         await FirebaseFirestore.instance
             .collection(collectionName.users)
             .doc(user["id"])
@@ -766,6 +743,7 @@ class GroupChatMessageController extends GetxController {
             .doc(value.docs[0].id)
             .delete()
             .then((value) {
+
           Get.back();
           Get.back();
         });
@@ -935,10 +913,10 @@ class GroupChatMessageController extends GetxController {
         localMessage.asMap().entries.forEach((element) {
           element.value.message!.asMap().entries.forEach((e) {
             if(decryptMessage(e.value.content).toString().toLowerCase().contains(txtChatSearch.text)){
-              if (!searchChatId.contains(e.value.docId)) {
-                searchChatId.add(e.value.docId);
+              if (!searchChatId.contains(e.key)) {
+                searchChatId.add(e.key);
               } else {
-                searchChatId.remove(e.value.docId);
+                searchChatId.remove(e.key);
               }
             }
           });

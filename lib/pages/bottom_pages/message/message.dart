@@ -17,7 +17,7 @@ class _MessageState extends State<Message>
   void initState() {
     // TODO: implement initState
     WidgetsBinding.instance.addObserver(this);
-    messageCtrl.getMessage();
+
 
     super.initState();
   }
@@ -30,7 +30,7 @@ class _MessageState extends State<Message>
       firebaseCtrl.setLastSeen();
     }
     firebaseCtrl.statusDeleteAfter24Hours();
-    messageCtrl.getMessage();
+
   }
 
   @override
@@ -46,7 +46,7 @@ class _MessageState extends State<Message>
               child: Scaffold(
                   key: messageCtrl.scaffoldKey,
                   backgroundColor: appCtrl.appTheme.bgColor,
-                  floatingActionButton:  MessageFloatingButton(prefs: widget.sharedPreferences!),
+                  floatingActionButton:  MessageFloatingButton(prefs: widget.sharedPreferences!,),
                   body:const ChatCard())),
         ]);
       });

@@ -165,60 +165,6 @@ class ContactList extends StatelessWidget {
                             ],
                           )
 
-                    /*    Text(fonts.registerUser.tr)
-                                      .paddingSymmetric(
-                                          horizontal: Insets.i15,
-                                          vertical: Insets.i10)
-                                      .width(
-                                          MediaQuery.of(context).size.width),
-                                  contactCtrl.registerList!.isNotEmpty
-                                      ? Column(children: [
-                                          ...contactCtrl.registerList!
-                                              .asMap()
-                                              .entries
-                                              .map((item) => RegisterUser(
-                                                  message: message,
-                                                  userContactModel:
-                                                      item.value))
-                                              .toList()
-                                        ])
-                                      : Column(children: [
-                                          ...contactCtrl
-                                              .registerContact!.userTitle!
-                                              .asMap()
-                                              .entries
-                                              .map((item) => RegisterUser(
-                                                  message: message,
-                                                  userContactModel:
-                                                      item.value))
-                                              .toList()
-                                        ]),
-                                  Text(fonts.unRegisterUser.tr)
-                                      .paddingSymmetric(
-                                          horizontal: Insets.i15,
-                                          vertical: Insets.i10)
-                                      .width(
-                                          MediaQuery.of(context).size.width),
-                                  contactCtrl.unRegisterList!.isNotEmpty
-                                      ? Column(children: [
-                                          ...contactCtrl.unRegisterList!
-                                              .asMap()
-                                              .entries
-                                              .map((item) => UnRegisterUser(
-                                                  item: item.value,
-                                                  message: message))
-                                              .toList()
-                                        ])
-                                      : Column(children: [
-                                          ...contactCtrl
-                                              .unRegisterContact!.userTitle!
-                                              .asMap()
-                                              .entries
-                                              .map((item) => UnRegisterUser(
-                                                  item: item.value,
-                                                  message: message))
-                                              .toList()
-                                        ])*/
                   ]))
                 ]))
           ]))),

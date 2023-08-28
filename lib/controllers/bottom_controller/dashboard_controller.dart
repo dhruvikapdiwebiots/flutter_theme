@@ -7,9 +7,6 @@ import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/controllers/common_controller/ad_controller.dart';
 import 'package:flutter_theme/controllers/recent_chat_controller.dart';
-import 'package:flutter_theme/models/data_model.dart';
-import 'package:flutter_theme/models/firebase_contact_model.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -26,13 +23,7 @@ class DashboardController extends GetxController
   bool isSearch = false;
   int counter = 0;
   SharedPreferences? pref;
-
-  List<ContactModel> contactList = [];
-  List<UserContactModel>? searchContactList = [];
-  List<UserContactModel>? registerContactList = [];
-  List<UserContactModel>? unRegisterContactList = [];
   List<Contact> storageContact = [];
-  List<UserContactModel>? nameList = [];
 
   TextEditingController searchText = TextEditingController();
   TextEditingController userText = TextEditingController();
@@ -61,13 +52,6 @@ class DashboardController extends GetxController
   final Connectivity connectivity = Connectivity();
   late StreamSubscription<ConnectivityResult> connectivitySubscription;
 
-//list of bottommost page
-  /* List<Widget> widgetOptions = <Widget>[
-    const Message(),
-    const StatusList(),
-    CallList()
-  ];*/
-
   List<Widget> widgetOptions(prefs) {
     return [Message(sharedPreferences: prefs), const StatusList(), CallList()];
   }
@@ -79,7 +63,7 @@ class DashboardController extends GetxController
     try {
       result = await connectivity.checkConnectivity();
     } on PlatformException catch (e) {
-      debugPrint('Couldn\'t check connectivity status');
+      debugPrint('Couldn\'t check connectivity status : $e');
       return;
     }
 
@@ -100,49 +84,37 @@ class DashboardController extends GetxController
 
   onChange(val) async {
     selectedIndex = val;
-    if (val == 1) {
-      /* if (appCtrl.contactList.isEmpty) {
-        await checkPermission();
-        checkContactList();
-      }*/
-    }
+    update();
   }
 
-  recentMessageSearch()async{
+  recentMessageSearch() async {
+    if (userText.text.isNotEmpty) {
+      appCtrl.isSearch = true;
+      appCtrl.update();
+    } else {
+      appCtrl.isSearch = false;
+      appCtrl.update();
+    }
     final RecentChatController recentChatController =
-    Provider.of<RecentChatController>(Get.context!, listen: false);
+        Provider.of<RecentChatController>(Get.context!, listen: false);
     recentChatController.getMessageList(name: userText.text);
   }
 
+  statusSearch() async {
+    await statusCtrl.getAllStatus(search: userText.text);
+    statusCtrl.update();
+  }
+
   Stream onSearch(val) {
-    if (selectedIndex == 0) {
-      return FirebaseFirestore.instance
-          .collection(collectionName.users)
-          .doc(appCtrl.user["id"])
-          .collection(collectionName.chats)
-          .where("name", isEqualTo: val)
-          .limit(15)
-          .snapshots();
-    } else if (selectedIndex == 1) {
-      return FirebaseFirestore.instance
-          .collection(collectionName.users)
-          .doc(messageCtrl.currentUserId)
-          .collection(collectionName.chats)
-          .where("name", isEqualTo: val)
-          .orderBy("updateStamp", descending: true)
-          .limit(15)
-          .snapshots();
-    } else {
-      Stream<QuerySnapshot<Map<String, dynamic>>>? snapshots = FirebaseFirestore
-          .instance
-          .collection(collectionName.calls)
-          .doc(appCtrl.user["id"])
-          .collection(collectionName.collectionCallHistory)
-          .where("callerName", isEqualTo: val)
-          .orderBy("timestamp", descending: true)
-          .snapshots();
-      return snapshots;
-    }
+    Stream<QuerySnapshot<Map<String, dynamic>>>? snapshots = FirebaseFirestore
+        .instance
+        .collection(collectionName.calls)
+        .doc(appCtrl.user["id"])
+        .collection(collectionName.collectionCallHistory)
+        .where("callerName", isEqualTo: val)
+        .orderBy("timestamp", descending: true)
+        .snapshots();
+    return snapshots;
   }
 
   Stream callData(val) {
@@ -160,7 +132,7 @@ class DashboardController extends GetxController
   @override
   void onReady() async {
     // TODO: implement onReady
-    //checkPermission();
+
     messageCtrl.message =
         MessageFirebaseApi().chatListWidget(appCtrl.cachedModel!.userData);
     log("message = : ${messageCtrl.message}");
@@ -178,21 +150,21 @@ class DashboardController extends GetxController
     firebaseCtrl.setIsActive();
     controller!.addListener(() {
       selectedIndex = controller!.index;
-      log("selectedIndex :: ${selectedIndex}");
-      if (selectedIndex == 1) {
+
+      update();
+      if (controller!.index == 1) {
         statusCtrl.getAllStatus();
       }
-      update();
     });
     user = appCtrl.storage.read(session.user);
     appCtrl.update();
-
     //statusCtrl.update();
     update();
     // await Future.delayed(Durations.s3);
 
     //checkContactList();
-
+    await Future.delayed(Durations.s3);
+    statusCtrl.getAllStatus();
     super.onReady();
   }
 
@@ -367,15 +339,6 @@ class DashboardController extends GetxController
       });
       appCtrl.update();
     }*/
-  }
-
-  getFirebaseContact() async {
-    final contactCtrl = Get.isRegistered<ContactListController>()
-        ? Get.find<ContactListController>()
-        : Get.put(ContactListController());
-    contactCtrl.getAllData();
-    contactCtrl.getAllUnRegisterUser();
-    contactCtrl.onReady();
   }
 
   checkContactList() async {

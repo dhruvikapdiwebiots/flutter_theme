@@ -42,7 +42,7 @@ class _BackgroundListState extends State<BackgroundList> {
               children: [
                 SvgPicture.asset(svgAssets.gallery),
                 const HSpace(Sizes.s10),
-                Text("Default Background",
+                Text("Set Default Background",
                         style: AppCss.poppinsSemiBold16
                             .textColor(appCtrl.appTheme.blackColor))
                     .inkWell(onTap: () async {
@@ -83,6 +83,59 @@ class _BackgroundListState extends State<BackgroundList> {
                         .collection(collectionName.broadcast)
                         .doc(broadcastId)
                         .update({'backgroundImage': ""});
+                  }
+                  Get.back();
+                }),
+              ],
+            ).marginSymmetric(horizontal: Insets.i15),
+
+            const VSpace(Sizes.s20),
+            Row(
+              children: [
+                Icon(Icons.delete_forever,color: appCtrl.appTheme.redColor,),
+                const HSpace(Sizes.s10),
+                Text("Remove wallpaper",
+                    style: AppCss.poppinsSemiBold16
+                        .textColor(appCtrl.appTheme.redColor))
+                    .inkWell(onTap: () async {
+                  if (chatId != null) {
+                    dynamic userData = appCtrl.storage.read(session.user);
+                    await FirebaseFirestore.instance
+                        .collection(collectionName.users)
+                        .doc(userData["id"])
+                        .collection(collectionName.chats)
+                        .where("chatId",
+                        isEqualTo: chatId)
+                        .limit(1)
+                        .get()
+                        .then((userChat) {
+                      if(userChat.docs.isNotEmpty) {
+                        FirebaseFirestore.instance
+                            .collection(
+                            collectionName.users)
+                            .doc(userData["id"])
+                            .collection(
+                            collectionName.chats)
+                            .doc(userChat.docs[0].id)
+                            .update(
+                            {
+                              'backgroundImage': ""
+                            });
+                      }
+                    });
+                  }
+                  if (groupId != null) {
+                    await FirebaseFirestore.instance
+                        .collection(collectionName.groups)
+                        .doc(groupId)
+                        .update({'backgroundImage': ""});
+                  }
+                  if (broadcastId != null) {
+                    await FirebaseFirestore.instance
+                        .collection(collectionName.broadcast)
+                        .doc(broadcastId)
+                        .update({'backgroundImage': ""});
+
                   }
                   Get.back();
                 }),

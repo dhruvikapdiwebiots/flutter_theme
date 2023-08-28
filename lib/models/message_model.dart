@@ -36,7 +36,7 @@ class MessageModel {
   String? receiver;
   String? content;
   String? timestamp;
-  String? type, groupId;
+  String? type, groupId,broadcastId;
   String? messageType, chatId, blockBy, blockUserId, emoji, favouriteId, docId;
   bool? isBlock, isSeen, isBroadcast, isFavourite;
   List? receiverList, seenMessageList;
@@ -60,13 +60,14 @@ class MessageModel {
       this.favouriteId,
       this.docId,
       this.groupId,
+      this.broadcastId,
       this.seenMessageList,
       this.receiver});
 
   MessageModel.fromJson(Map<String, dynamic> json) {
     sender = json["sender"];
     senderName = json['senderName'] ?? '';
-    if (!json.containsKey("groupId")) {
+    if (!json.containsKey("groupId") && !json.containsKey("broadcastId") ) {
       receiver = json['receiver'] ?? '';
     }
     content = json['content'] ?? '';
@@ -93,12 +94,12 @@ class MessageModel {
     if (json.containsKey("isFavourite")) {
       isFavourite = json['isFavourite'] ?? false;
     }
-    if (json.containsKey("groupId")) {
+    if (json.containsKey("groupId") || json.containsKey("broadcastId")) {
       if (json.containsKey("receiver")) {
         receiverList = json['receiver'] ?? [];
       }
     }
-    if (json.containsKey("groupId")) {
+    if (json.containsKey("groupId") || json.containsKey("broadcastId")) {
       groupId = json['groupId'] ?? "";
     }
     if (json.containsKey("seenMessageList")) {
@@ -128,6 +129,7 @@ class MessageModel {
     data['receiverList'] = receiverList;
     data['groupId'] = groupId;
     data['seenMessageList'] = seenMessageList;
+    data['broadcastId'] = broadcastId;
     return data;
   }
 }

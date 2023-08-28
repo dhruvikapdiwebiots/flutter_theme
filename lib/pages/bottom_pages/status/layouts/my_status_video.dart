@@ -1,4 +1,4 @@
-import 'package:figma_squircle/figma_squircle.dart';
+
 import 'package:video_player/video_player.dart';
 
 import '../../../../config.dart';

@@ -6,10 +6,10 @@ import '../broad_cast_on_tap_class.dart';
 class BroadcastSenderMessage extends StatefulWidget {
   final MessageModel? document;
   final int? index;
-  final String? docId;
+  final String? docId,title;
 
   const BroadcastSenderMessage(
-      {Key? key, this.document, this.index, this.docId})
+      {Key? key, this.document, this.index, this.docId,this.title})
       : super(key: key);
 
   @override
@@ -144,7 +144,21 @@ class _BroadcastSenderMessage extends State<BroadcastSenderMessage> {
                                     BorderRadius.circular(AppRadius.r8))
                             .alignment(Alignment.center))
                     .paddingOnly(bottom: Insets.i8)
-            ]))
+            ])),
+        if (chatCtrl.enableReactionPopup &&
+            chatCtrl.selectedIndexId.contains(widget.docId))
+          SizedBox(
+
+              height: Sizes.s48,
+              child: ReactionPopup(
+                reactionPopupConfig: ReactionPopupConfiguration(
+                    shadow:
+                    BoxShadow(color: Colors.grey.shade400, blurRadius: 20)),
+                onEmojiTap: (val) =>
+                    OnTapFunctionCall()
+                        .onEmojiSelectBroadcast(chatCtrl, widget.docId, val,widget.title),
+                showPopUp: chatCtrl.showPopUp,
+              ))
       ]);
     });
   }

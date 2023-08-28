@@ -18,7 +18,7 @@ class CommonNoteEncrypt extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SvgPicture.asset(svgAssets.lock),
+          SvgPicture.asset(svgAssets.lock).paddingOnly(top: Insets.i2),
           const HSpace(Sizes.s5),
           Expanded(
               child: Text(

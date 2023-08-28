@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:typed_data';
 import 'package:async/async.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
@@ -9,25 +8,25 @@ import 'package:localstorage/localstorage.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LocalUserData {
-  final lastnotifyListenersd, userType;
+class UserData {
+  final int time, userType;
   final Int8List? photoBytes;
   final String id, name, photoURL, aboutUser;
   final String idVariants;
 
-  LocalUserData({
+  UserData({
     required this.id,
     required this.idVariants,
     required this.userType,
     required this.aboutUser,
-    required this.lastnotifyListenersd,
+    required this.time,
     required this.name,
     required this.photoURL,
     this.photoBytes,
   });
 
-  factory LocalUserData.fromJson(Map<String, dynamic> jsonData) {
-    return LocalUserData(
+  factory UserData.fromJson(Map<String, dynamic> jsonData) {
+    return UserData(
       id: jsonData['id'],
       aboutUser: jsonData['about'],
       idVariants: jsonData['idVars'],
@@ -35,25 +34,11 @@ class LocalUserData {
       photoURL: jsonData['url'],
       photoBytes: jsonData['bytes'],
       userType: jsonData['type'],
-      lastnotifyListenersd: jsonData['time'],
+      time: jsonData['time'],
     );
   }
 
-  Map<String, dynamic> toMapp(LocalUserData user) {
-    return {
-      'id': user.id,
-      'about': user.aboutUser,
-      'idVars': user.idVariants,
-      'name': user.name,
-      'url': user.photoURL,
-      'bytes': user.photoBytes,
-      'type': user.userType,
-      'time': user.lastnotifyListenersd,
-    };
-  }
-
-  static Map<String, dynamic> toMap(LocalUserData user) =>
-      {
+  static Map<String, dynamic> toMap(UserData user) => {
         'id': user.id,
         'about': user.aboutUser,
         'idVars': user.idVariants,
@@ -61,94 +46,93 @@ class LocalUserData {
         'url': user.photoURL,
         'bytes': user.photoBytes,
         'type': user.userType,
-        'time': user.lastnotifyListenersd,
+        'time': user.time,
       };
 
-  static String encode(List<LocalUserData> users) =>
-      json.encode(
+  static String encode(List<UserData> users) => json.encode(
         users
-            .map<Map<String, dynamic>>((user) => LocalUserData.toMap(user))
+            .map<Map<String, dynamic>>((user) => UserData.toMap(user))
             .toList(),
       );
 
-  static List<LocalUserData> decode(String users) =>
+  static List<UserData> decode(String users) =>
       (json.decode(users) as List<dynamic>)
-          .map<LocalUserData>((item) => LocalUserData.fromJson(item))
+          .map<UserData>((item) => UserData.fromJson(item))
           .toList();
 }
 
 class FetchContactController with ChangeNotifier {
-  int daysTonotifyListenersCache = 7;
-  var usersDocsRefinServer =
-  FirebaseFirestore.instance.collection("users");
-  List<LocalUserData> localUsersLIST = [];
-  String localUsersSTRING = "";
+  int cacheDays = 2;
+  var userRef = FirebaseFirestore.instance.collection("users");
+  List<UserData> storageUserList = [];
+  String storageUserString = "";
 
-  addORnotifyListenersLocalUserDataMANUALLY({required SharedPreferences prefs,
-    required LocalUserData localUserData,
-    required bool isNotifyListener}) {
+  addData(
+      {required SharedPreferences prefs,
+      required UserData localUserData,
+      required bool isListener}) {
     int ind =
-    localUsersLIST.indexWhere((element) => element.id == localUserData.id);
+        storageUserList.indexWhere((element) => element.id == localUserData.id);
     if (ind >= 0) {
-      if (localUsersLIST[ind].name.toString() !=
-          localUserData.name.toString() ||
-          localUsersLIST[ind].photoURL.toString() !=
+      if (storageUserList[ind].name.toString() !=
+              localUserData.name.toString() ||
+          storageUserList[ind].photoURL.toString() !=
               localUserData.photoURL.toString()) {
-        localUsersLIST.removeAt(ind);
-        localUsersLIST.insert(ind, localUserData);
-        localUsersLIST.sort(
-                (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
-        if (isNotifyListener == true) {
+        storageUserList.removeAt(ind);
+        storageUserList.insert(ind, localUserData);
+        storageUserList.sort(
+            (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+        if (isListener == true) {
           notifyListeners();
         }
-        saveFetchedLocalUsersInPrefs(prefs);
+        getAndSaveUserInLocalStorage(prefs);
       }
     } else {
-      localUsersLIST.add(localUserData);
-      localUsersLIST
+      storageUserList.add(localUserData);
+      storageUserList
           .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
-      if (isNotifyListener == true) {
+      if (isListener == true) {
         notifyListeners();
       }
-      saveFetchedLocalUsersInPrefs(prefs);
+      getAndSaveUserInLocalStorage(prefs);
     }
   }
 
-  Future<LocalUserData?> fetchUserDataFromnLocalOrServer(
+  Future<UserData?> getUserDataFromStorageAndFirebase(
       SharedPreferences prefs, String userid) async {
-    log("userid : $userid");
-    int ind = localUsersLIST.indexWhere((element) =>
-    element.idVariants == userid);
+    int ind =
+        storageUserList.indexWhere((element) => element.idVariants == userid);
     if (ind >= 0) {
-      // print("LOADED ${localUsersLIST[ind].id} LOCALLY ");
-      LocalUserData localUser = localUsersLIST[ind];
+      // print("LOADED ${storageUserList[ind].id} LOCALLY ");
+      UserData localUser = storageUserList[ind];
 
-      if (DateTime
-          .now()
-          .difference(
-          DateTime.fromMillisecondsSinceEpoch(localUser.lastnotifyListenersd))
-          .inDays >
-          daysTonotifyListenersCache) {
-        QuerySnapshot<Map<String, dynamic>> doc =
-        await usersDocsRefinServer.where("phone", isEqualTo: localUser.id)
+      if (DateTime.now()
+              .difference(DateTime.fromMillisecondsSinceEpoch(
+                  localUser.time))
+              .inDays >
+          cacheDays) {
+        QuerySnapshot<Map<String, dynamic>> doc = await userRef
+            .where("phone", isEqualTo: localUser.id)
             .get();
         if (doc.docs.isNotEmpty) {
-          var notifyListenersdUserData = LocalUserData(
-              aboutUser: doc.docs[0].data()["statusDesc"] ?? "",
-              idVariants: doc.docs[0].data()["phone"] ?? [userid],
-              id: doc.docs[0].data()["id"],
-              userType: 0,
-              lastnotifyListenersd: DateTime
-                  .now()
-                  .millisecondsSinceEpoch,
-              name: doc.docs[0].data()["name"],
-              photoURL: doc.docs[0].data()["image"] ?? "");
-          // print("notifyListenersD ${localUser.id} LOCALLY AFTER EXPIRED");
-          addORnotifyListenersLocalUserDataMANUALLY(
-              prefs: prefs,
-              isNotifyListener: false,
-              localUserData: notifyListenersdUserData);
-          return Future.value(notifyListenersdUserData);
+          if (doc.docs[0].data()["isActive"] == true) {
+            var userDataModel = UserData(
+                aboutUser: doc.docs[0].data()["statusDesc"] ?? "",
+                idVariants: doc.docs[0].data()["phone"] ?? [userid],
+                id: doc.docs[0].data()["id"],
+                userType: 0,
+                time: DateTime.now().millisecondsSinceEpoch,
+                name: doc.docs[0].data()["name"],
+                photoURL: doc.docs[0].data()["image"] ?? "");
+            // print("notifyListenersD ${localUser.id} LOCALLY AFTER EXPIRED");
+            addData(
+                prefs: prefs,
+                isListener: false,
+                localUserData: userDataModel);
+            return Future.value(userDataModel);
+          }else {
+            return Future.value(localUser);
+          }
         } else {
           return Future.value(localUser);
         }
@@ -157,68 +141,67 @@ class FetchContactController with ChangeNotifier {
       }
     } else {
       QuerySnapshot<Map<String, dynamic>> doc =
-      await usersDocsRefinServer.where("phone", isEqualTo: userid).get();
+          await userRef.where("phone", isEqualTo: userid).get();
       if (doc.docs.isNotEmpty) {
         // print("LOADED ${doc.data()![Dbkeys.phone]} SERVER ");
-        var notifyListenersdUserData = LocalUserData(
-            aboutUser: doc.docs[0].data()["statusDesc"] ?? "",
-            idVariants: doc.docs[0].data()["phone"] ?? [userid],
-            id: doc.docs[0].data()["id"],
-            userType: 0,
-            lastnotifyListenersd: DateTime
-                .now()
-                .millisecondsSinceEpoch,
-            name: doc.docs[0].data()["name"],
-            photoURL: doc.docs[0].data()["image"] ?? "");
+        if(doc.docs[0].data()["isActive"] == true){
+          var userDataModel = UserData(
+              aboutUser: doc.docs[0].data()["statusDesc"] ?? "",
+              idVariants: doc.docs[0].data()["phone"] ?? [userid],
+              id: doc.docs[0].data()["id"],
+              userType: 0,
+              time: DateTime.now().millisecondsSinceEpoch,
+              name: doc.docs[0].data()["name"],
+              photoURL: doc.docs[0].data()["image"] ?? "");
 
-        addORnotifyListenersLocalUserDataMANUALLY(
-            prefs: prefs,
-            isNotifyListener: false,
-            localUserData: notifyListenersdUserData);
-        return Future.value(notifyListenersdUserData);
+          addData(
+              prefs: prefs,
+              isListener: false,
+              localUserData: userDataModel);
+          return Future.value(userDataModel);
+        } else {
+          return Future.value(null);
+        }
       } else {
         return Future.value(null);
       }
     }
   }
 
-  fetchFromFiretsoreAndReturnData(SharedPreferences prefs, String userid,
+  getDataFromFirebase(SharedPreferences prefs, String userid,
       Function(DocumentSnapshot<Map<String, dynamic>> doc) onReturnData) async {
-    var doc = await usersDocsRefinServer.doc(userid).get();
-    if (doc.exists && doc.data() != null) {
+    var doc = await userRef.doc(userid).get();
+    if (doc.exists && doc.data() != null  && doc.data()!["isActive"] == true) {
       onReturnData(doc);
-      addORnotifyListenersLocalUserDataMANUALLY(
-          isNotifyListener: true,
+      addData(
+          isListener: true,
           prefs: prefs,
-          localUserData: LocalUserData(
+          localUserData: UserData(
               id: doc.data()!["id"],
               idVariants: doc.data()!["phone"],
               userType: 0,
               aboutUser: doc.data()!["statusDesc"],
-              lastnotifyListenersd: DateTime
-                  .now()
-                  .millisecondsSinceEpoch,
+              time: DateTime.now().millisecondsSinceEpoch,
               name: doc.data()!["name"],
               photoURL: doc.data()!["image"] ?? ""));
     }
   }
 
-  Future<bool?> fetchLocalUsersFromPrefs(SharedPreferences prefs) async {
-    localUsersSTRING = prefs.getString('localUsersSTRING') ?? "";
+  Future<bool?> getDataFromLocal(SharedPreferences prefs) async {
+    storageUserString = prefs.getString('storageUserString') ?? "";
     // String? localUsersDEVICECONTACT =
     //     prefs.getString('localUsersDEVICECONTACT') ?? "";
 
-    if (localUsersSTRING != "") {
-      localUsersLIST = LocalUserData.decode(localUsersSTRING);
+    if (storageUserString != "") {
+      storageUserList = UserData.decode(storageUserString);
 
-      localUsersLIST
+      storageUserList
           .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
-      for (var user in localUsersLIST) {
-        log("USER:: ${user}");
-        alreadyJoinedSavedUsersPhoneNameAsInServer = [];
+      for (var user in storageUserList) {
+        registerContactUser = [];
         if (user.idVariants != appCtrl.user["phone"]) {
-          alreadyJoinedSavedUsersPhoneNameAsInServer
-              .add(DeviceContactIdAndName(phone: user.idVariants,
+          registerContactUser.add(RegisterContactDetail(
+              phone: user.idVariants,
               name: user.name,
               id: user.id,
               image: user.photoURL,
@@ -231,68 +214,56 @@ class FetchContactController with ChangeNotifier {
     } else {
       return true;
     }
-
-    // if (localUsersDEVICECONTACT != "") {
-    //   alreadyJoinedSavedUsersPhoneNameAsInServer =
-    //       DeviceContactIdAndName.decode(localUsersDEVICECONTACT);
-    //   alreadyJoinedSavedUsersPhoneNameAsInServer.sort((a, b) =>
-    //       (a.name ?? "").toLowerCase().compareTo((b.name ?? "").toLowerCase()));
-    // }
   }
 
-  saveFetchedLocalUsersInPrefs(SharedPreferences prefs) async {
-    if (searchingcontactsindatabase == false) {
-      localUsersSTRING = LocalUserData.encode(localUsersLIST);
-      await prefs.setString('localUsersSTRING', localUsersSTRING);
-
-      // print("SAVED ${localUsersLIST.length} LOCAL USERS - at end");
+  getAndSaveUserInLocalStorage(SharedPreferences prefs) async {
+    if (searchContact == false) {
+      storageUserString = UserData.encode(storageUserList);
+      await prefs.setString('storageUserString', storageUserString);
     }
   }
 
-  //********---DEVICE CONTACT FETCH STARTS BELOW::::::::-----
+  List<RegisterContactDetail> oldPhoneData = [];
+  List<RegisterContactDetail> registerContactUser = [];
 
-  List<DeviceContactIdAndName> previouslyFetchedKEYPhoneInSharedPrefs = [];
-  List<DeviceContactIdAndName> alreadyJoinedSavedUsersPhoneNameAsInServer = [];
-
-//-------
-  Map<String?, String?>? contactsBookContactList = new Map<String, String>();
-  bool searchingcontactsindatabase = true;
+  Map<String?, String?>? contactList =  <String, String>{};
+  bool searchContact = true;
   bool isLoading = true;
 
-  List<dynamic> currentUserPhoneNumberVariants = [];
+  List<dynamic> currentUser = [];
 
-  fetchContacts(BuildContext context, String currentuserphone,
+  fetchContacts(BuildContext context, String phone,
       SharedPreferences prefs, bool isForceFetch,
-      {List<dynamic>? currentuserphoneNumberVariants}) async {
-    if (currentuserphoneNumberVariants != null) {
-      currentUserPhoneNumberVariants = currentuserphoneNumberVariants;
+      {List<dynamic>? currentUserVariants}) async {
+    if (currentUserVariants != null) {
+      currentUser = currentUserVariants;
     }
     await getContacts(context, prefs).then((value) async {
-      final List<DeviceContactIdAndName> decodedPhoneStrings =
-      prefs.getString('availablePhoneString') == null ||
-          prefs.getString('availablePhoneString') == ''
-          ? []
-          : DeviceContactIdAndName.decode(
-          prefs.getString('availablePhoneString')!);
-      final List<DeviceContactIdAndName> decodedPhoneAndNameStrings =
-      prefs.getString('availablePhoneAndNameString') == null ||
-          prefs.getString('availablePhoneAndNameString') == ''
-          ? []
-          : DeviceContactIdAndName.decode(
-          prefs.getString('availablePhoneAndNameString')!);
-      previouslyFetchedKEYPhoneInSharedPrefs = decodedPhoneStrings;
-      alreadyJoinedSavedUsersPhoneNameAsInServer = decodedPhoneAndNameStrings;
+      final List<RegisterContactDetail> decodedPhoneStrings =
+          prefs.getString('registerUserPhoneString') == null ||
+                  prefs.getString('registerUserPhoneString') == ''
+              ? []
+              : RegisterContactDetail.decode(
+                  prefs.getString('registerUserPhoneString')!);
+      final List<RegisterContactDetail> decodedPhoneAndNameStrings =
+          prefs.getString('registerUserPhoneAndNameString') == null ||
+                  prefs.getString('registerUserPhoneAndNameString') == ''
+              ? []
+              : RegisterContactDetail.decode(
+                  prefs.getString('registerUserPhoneAndNameString')!);
+      oldPhoneData = decodedPhoneStrings;
+      registerContactUser = decodedPhoneAndNameStrings;
 
-      var a = alreadyJoinedSavedUsersPhoneNameAsInServer;
-      var b = previouslyFetchedKEYPhoneInSharedPrefs;
+      var a = registerContactUser;
+      var b = oldPhoneData;
 
-      alreadyJoinedSavedUsersPhoneNameAsInServer = a;
-      previouslyFetchedKEYPhoneInSharedPrefs = b;
+      registerContactUser = a;
+      oldPhoneData = b;
 
-      await fetchLocalUsersFromPrefs(prefs).then((b) async {
+      await getDataFromLocal(prefs).then((b) async {
         if (b == true) {
-          await searchAvailableContactsInDb(
-              context, currentuserphone, prefs, isForceFetch);
+          await searchRegisterUserFromFirebase(
+              context, phone, prefs, isForceFetch);
         }
       });
     });
@@ -300,23 +271,23 @@ class FetchContactController with ChangeNotifier {
   }
 
   setIsLoading(bool val) {
-    searchingcontactsindatabase = val;
+    searchContact = val;
     notifyListeners();
   }
 
-  Future<Map<String?, String?>> getContacts(BuildContext context,
-      SharedPreferences prefs,
+  Future<Map<String?, String?>> getContacts(
+      BuildContext context, SharedPreferences prefs,
       {bool refresh = false}) async {
     Completer<Map<String?, String?>> completer =
-    new Completer<Map<String?, String?>>();
+        Completer<Map<String?, String?>>();
     LocalStorage storage = LocalStorage("cachedContacts");
 
-    Map<String?, String?> _cachedContacts = {};
+    Map<String?, String?> cachedContacts = {};
 
     completer.future.then((c) {
-      this.contactsBookContactList = c;
-      if (this.contactsBookContactList!.isEmpty) {
-        searchingcontactsindatabase = false;
+      contactList = c;
+      if (contactList!.isEmpty) {
+        searchContact = false;
         notifyListeners();
       }
     });
@@ -325,68 +296,56 @@ class FetchContactController with ChangeNotifier {
       if (res) {
         storage.ready.then((ready) async {
           if (ready) {
-            String? getNormalizedNumber(String? number) {
-              if (number == null) return null;
-              return number.replaceAll(new RegExp('[^0-9+]'), '');
-            }
-
+       
             FlutterContacts.getContacts(
-                withPhoto: true, withProperties: true, withThumbnail: true)
+                    withPhoto: true, withProperties: true, withThumbnail: true)
                 .then((Iterable<Contact> contacts) async {
               for (Contact p in contacts.where((c) => c.phones.isNotEmpty)) {
                 if (p.phones.isNotEmpty) {
                   List<String?> numbers = p.phones
                       .map((number) {
-                    String? _phone = phoneNumberExtension(
-                        number.normalizedNumber);
+                        String? phoneNumber =
+                            phoneNumberExtension(number.normalizedNumber);
 
-                    return _phone;
-                  })
+                        return phoneNumber;
+                      })
                       .toList()
                       .where((s) => s.isNotEmpty)
                       .toList();
                   for (var number in numbers) {
-                    if (!(_cachedContacts[number] == p.displayName)) {
-                      _cachedContacts[number] = p.displayName;
+                    if (!(cachedContacts[number] == p.displayName)) {
+                      cachedContacts[number] = p.displayName;
                     }
                   }
                 }
               }
 
-              completer.complete(_cachedContacts);
+              completer.complete(cachedContacts);
             });
             notifyListeners();
           }
           // }
         });
-      } else {
-        /*Navigator.pushReplacement(
-            context,
-            new MaterialPageRoute(
-                builder: (context) => OpenSettings(
-                      permtype: 'contact',
-                      prefs: prefs,
-                    )));*/
-      }
+      } 
       notifyListeners();
     }).catchError((onError) {
       //  Fiberchat.showRationale('Error occured: $onError');
     });
-    //notifyListeners();
+   
     return completer.future;
   }
 
-
   static Future<bool> checkAndRequestPermission(Permission permission) {
-    Completer<bool> completer = new Completer<bool>();
+    Completer<bool> completer =  Completer<bool>();
     permission.request().then((status) {
       if (status != PermissionStatus.granted) {
-        permission.request().then((_status) {
-          bool granted = _status == PermissionStatus.granted;
+        permission.request().then((status) {
+          bool granted = status == PermissionStatus.granted;
           completer.complete(granted);
         });
-      } else
+      } else {
         completer.complete(true);
+      }
     });
     return completer.future;
   }
@@ -395,21 +354,17 @@ class FetchContactController with ChangeNotifier {
     try {
       List<String> names = name
           .trim()
-          .replaceAll(new RegExp(r'[\W]'), '')
+          .replaceAll( RegExp(r'\W'), '')
           .toUpperCase()
           .split(' ');
-      names.retainWhere((s) =>
-      s
-          .trim()
-          .isNotEmpty);
-      if (names.length >= 2)
+      names.retainWhere((s) => s.trim().isNotEmpty);
+      if (names.length >= 2) {
         return names.elementAt(0)[0] + names.elementAt(1)[0];
-      else if (names
-          .elementAt(0)
-          .length >= 2)
+      } else if (names.elementAt(0).length >= 2) {
         return names.elementAt(0).substring(0, 2);
-      else
+      } else {
         return names.elementAt(0)[0];
+      }
     } catch (e) {
       return '?';
     }
@@ -420,9 +375,8 @@ class FetchContactController with ChangeNotifier {
       return null;
     }
 
-    return number.replaceAll(new RegExp('[^0-9+]'), '');
+    return number.replaceAll( RegExp('[^0-9+]'), '');
   }
-
 
   Future<List<QueryDocumentSnapshot>?> getUsersUsingChunks(chunks) async {
     QuerySnapshot result = await FirebaseFirestore.instance
@@ -436,51 +390,50 @@ class FetchContactController with ChangeNotifier {
     }
   }
 
-  searchAvailableContactsInDb(BuildContext context,
-      String currentuserphone,
-      SharedPreferences existingPrefs,
-      bool isForceFetch,) async {
+  searchRegisterUserFromFirebase(
+    BuildContext context,
+    String currentUserPhone,
+    SharedPreferences existingPrefs,
+    bool isForceFetch,
+  ) async {
     if (existingPrefs.getString('lastTimeCheckedContactBookSavedCopy') ==
-        contactsBookContactList.toString() &&
+            contactList.toString() &&
         isForceFetch == false) {
-      searchingcontactsindatabase = false;
+      searchContact = false;
       notifyListeners();
-      if (previouslyFetchedKEYPhoneInSharedPrefs.length == 0 ||
-          alreadyJoinedSavedUsersPhoneNameAsInServer.length == 0) {
-        final List<DeviceContactIdAndName> decodedPhoneStrings =
-        existingPrefs.getString('availablePhoneString') == null ||
-            existingPrefs.getString('availablePhoneString') == ''
-            ? []
-            : DeviceContactIdAndName.decode(
-            existingPrefs.getString('availablePhoneString')!);
-        final List<DeviceContactIdAndName> decodedPhoneAndNameStrings =
-        existingPrefs.getString('availablePhoneAndNameString') == null ||
-            existingPrefs.getString('availablePhoneAndNameString') == ''
-            ? []
-            : DeviceContactIdAndName.decode(
-            existingPrefs.getString('availablePhoneAndNameString')!);
-        previouslyFetchedKEYPhoneInSharedPrefs = decodedPhoneStrings;
-        alreadyJoinedSavedUsersPhoneNameAsInServer = decodedPhoneAndNameStrings;
+      if (oldPhoneData.isEmpty ||
+          registerContactUser.isEmpty) {
+        final List<RegisterContactDetail> decodedPhoneStrings =
+            existingPrefs.getString('registerUserPhoneString') == null ||
+                    existingPrefs.getString('registerUserPhoneString') == ''
+                ? []
+                : RegisterContactDetail.decode(
+                    existingPrefs.getString('registerUserPhoneString')!);
+        final List<RegisterContactDetail> decodedPhoneAndNameStrings =
+            existingPrefs.getString('registerUserPhoneAndNameString') == null ||
+                    existingPrefs.getString('registerUserPhoneAndNameString') == ''
+                ? []
+                : RegisterContactDetail.decode(
+                    existingPrefs.getString('registerUserPhoneAndNameString')!);
+        oldPhoneData = decodedPhoneStrings;
+        registerContactUser = decodedPhoneAndNameStrings;
       }
 
       notifyListeners();
 
       // print(
-      //     '11. SKIPPED SEARCHING - AS ${contactsBookContactList!.entries.length} CONTACTS ALREADY CHECKED IN DATABASE, ${alreadyJoinedSavedUsersPhoneNameAsInServer.length} EXISTS');
+      //     '11. SKIPPED SEARCHING - AS ${contactsBookContactList!.entries.length} CONTACTS ALREADY CHECKED IN DATABASE, ${registerContactUser.length} EXISTS');
     } else {
       // print(
 
-
-      List<String> myArray = contactsBookContactList!.entries
-          .toList()
-          .map((e) => e.key.toString())
-          .toList();
+      List<String> myArray =
+          contactList!.entries.toList().map((e) => e.key.toString()).toList();
 
       var futureGroup = FutureGroup();
 
       for (var chunk in myArray) {
-        futureGroup.add(
-            getUsersUsingChunks(chunk.toString().replaceAll("+91", "")));
+        futureGroup
+            .add(getUsersUsingChunks(chunk.toString().replaceAll("+91", "")));
       }
 
       futureGroup.close();
@@ -488,85 +441,78 @@ class FetchContactController with ChangeNotifier {
       for (var batch in p) {
         if (batch != null) {
           for (QueryDocumentSnapshot<Map<String, dynamic>> registeredUser
-          in batch) {
+              in batch) {
+            if (registeredUser.data()["isActive"] == true) {
+              if (registerContactUser.indexWhere((element) =>
+                          element.phone == registeredUser.data()["phone"]) <
+                      0 &&
+                  registeredUser.data()["phone"] != currentUserPhone) {
+                registerContactUser.add(RegisterContactDetail(
+                    phone: registeredUser.data()["phone"] ?? '',
+                    name: registeredUser.data()["name"],
+                    image: registeredUser.data()["image"],
+                    statusDesc: registeredUser.data()["statusDesc"],
+                    id: registeredUser.data()["id"]));
 
-            if (alreadyJoinedSavedUsersPhoneNameAsInServer.indexWhere(
-                    (element) =>
-                element.phone == registeredUser.data()["phone"]) <
-                0 &&
-                registeredUser.data()["phone"] != currentuserphone) {
-              alreadyJoinedSavedUsersPhoneNameAsInServer.add(
-                  DeviceContactIdAndName(
-                      phone: registeredUser.data()["phone"] ?? '',
-                      name: registeredUser.data()["name"],
-                      image: registeredUser.data()["image"],
-                      statusDesc: registeredUser.data()["statusDesc"],
-                      id: registeredUser.data()["id"]));
-              // print('INSERTED $key IN LOCAL USER DATA LIST');
-              addORnotifyListenersLocalUserDataMANUALLY(
-                  prefs: existingPrefs,
-                  localUserData: LocalUserData(
-                      aboutUser:
-                      registeredUser.data()["statusDesc"] ?? "",
-                      id: registeredUser.data()["id"],
-                      idVariants:
-                      registeredUser.data()["phone"],
-
-                      userType: 0,
-                      lastnotifyListenersd: DateTime
-                          .now()
-                          .millisecondsSinceEpoch,
-                      name: registeredUser.data()["name"],
-                      photoURL:
-                      registeredUser.data()["image"] ?? ""),
-                  isNotifyListener: true);
+                addData(
+                    prefs: existingPrefs,
+                    localUserData: UserData(
+                        aboutUser: registeredUser.data()["statusDesc"] ?? "",
+                        id: registeredUser.data()["id"],
+                        idVariants: registeredUser.data()["phone"],
+                        userType: 0,
+                        time:
+                            DateTime.now().millisecondsSinceEpoch,
+                        name: registeredUser.data()["name"],
+                        photoURL: registeredUser.data()["image"] ?? ""),
+                    isListener: true);
+              }
             }
           }
         }
       }
       notifyListeners();
-      int i = alreadyJoinedSavedUsersPhoneNameAsInServer
-          .indexWhere((element) => element.phone == currentuserphone);
+      int i = registerContactUser
+          .indexWhere((element) => element.phone == currentUserPhone);
       if (i >= 0) {
-        alreadyJoinedSavedUsersPhoneNameAsInServer.removeAt(i);
-        previouslyFetchedKEYPhoneInSharedPrefs.removeAt(i);
+        registerContactUser.removeAt(i);
+        oldPhoneData.removeAt(i);
       }
       notifyListeners();
-      finishLoadingTasks(context, existingPrefs, currentuserphone,
-          "24. SEARCHING STOPPED as users search completed in database.");
+      finishLoadingTasks( existingPrefs, currentUserPhone,
+          fonts.done);
     }
   }
 
-  finishLoadingTasks(BuildContext context, SharedPreferences existingPrefs,
-      String currentuserphone, String printStatement,
-      {bool isrealyfinish = true}) async {
-    if (isrealyfinish == true) {
-      searchingcontactsindatabase = false;
+  finishLoadingTasks(SharedPreferences existingPrefs,
+      String currentUserPhone, String printStatement,
+      {bool isFinish = true}) async {
+    if (isFinish == true) {
+      searchContact = false;
     }
 
-    final String encodedavailablePhoneString =
-    DeviceContactIdAndName.encode(previouslyFetchedKEYPhoneInSharedPrefs);
+    final String availablePhoneEncoded =
+        RegisterContactDetail.encode(oldPhoneData);
 
     await existingPrefs.setString(
-        'availablePhoneString', encodedavailablePhoneString);
+        'registerUserPhoneString', availablePhoneEncoded);
 
-    final String encodedalreadyJoinedSavedUsersPhoneNameAsInServer =
-    DeviceContactIdAndName.encode(
-        alreadyJoinedSavedUsersPhoneNameAsInServer);
-    await existingPrefs.setString('availablePhoneAndNameString',
-        encodedalreadyJoinedSavedUsersPhoneNameAsInServer);
+    final String registerContactUserEncode =
+        RegisterContactDetail.encode(registerContactUser);
+    await existingPrefs.setString(
+        'registerUserPhoneAndNameString', registerContactUserEncode);
 
-    if (isrealyfinish == true) {
-      await existingPrefs.setString('lastTimeCheckedContactBookSavedCopy',
-          contactsBookContactList.toString());
+    if (isFinish == true) {
+      await existingPrefs.setString(
+          'lastTimeCheckedContactBookSavedCopy', contactList.toString());
       notifyListeners();
     }
   }
 
   String getUserNameOrIdQuickly(String userid) {
-    if (localUsersLIST.indexWhere((element) => element.id == userid) >= 0) {
-      return localUsersLIST[
-      localUsersLIST.indexWhere((element) => element.id == userid)]
+    if (storageUserList.indexWhere((element) => element.id == userid) >= 0) {
+      return storageUserList[
+              storageUserList.indexWhere((element) => element.id == userid)]
           .name;
     } else {
       return 'User';
@@ -574,21 +520,18 @@ class FetchContactController with ChangeNotifier {
   }
 }
 
-class DeviceContactIdAndName {
+class RegisterContactDetail {
   final String? phone;
   final String? name;
   final String id;
   final String? image;
   final String? statusDesc;
 
-  DeviceContactIdAndName({
-    this.phone,
-    this.name,
-    required this.id, this.image, this.statusDesc
-  });
+  RegisterContactDetail(
+      {this.phone, this.name, required this.id, this.image, this.statusDesc});
 
-  factory DeviceContactIdAndName.fromJson(Map<String, dynamic> jsonData) {
-    return DeviceContactIdAndName(
+  factory RegisterContactDetail.fromJson(Map<String, dynamic> jsonData) {
+    return RegisterContactDetail(
       id: jsonData['id'],
       name: jsonData['name'],
       phone: jsonData['phone'],
@@ -597,8 +540,7 @@ class DeviceContactIdAndName {
     );
   }
 
-  static Map<String, dynamic> toMap(DeviceContactIdAndName contact) =>
-      {
+  static Map<String, dynamic> toMap(RegisterContactDetail contact) => {
         'id': contact.id,
         'name': contact.name,
         'phone': contact.phone,
@@ -606,17 +548,16 @@ class DeviceContactIdAndName {
         'statusDesc': contact.statusDesc,
       };
 
-  static String encode(List<DeviceContactIdAndName> contacts) =>
-      json.encode(
+  static String encode(List<RegisterContactDetail> contacts) => json.encode(
         contacts
             .map<Map<String, dynamic>>(
-                (contact) => DeviceContactIdAndName.toMap(contact))
+                (contact) => RegisterContactDetail.toMap(contact))
             .toList(),
       );
 
-  static List<DeviceContactIdAndName> decode(String contacts) =>
+  static List<RegisterContactDetail> decode(String contacts) =>
       (json.decode(contacts) as List<dynamic>)
-          .map<DeviceContactIdAndName>(
-              (item) => DeviceContactIdAndName.fromJson(item))
+          .map<RegisterContactDetail>(
+              (item) => RegisterContactDetail.fromJson(item))
           .toList();
 }

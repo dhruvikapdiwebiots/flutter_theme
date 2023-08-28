@@ -8,7 +8,6 @@ import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/models/message_model.dart';
 import 'package:flutter_theme/pages/theme_pages/chat_message/layouts/chat_wall_paper.dart';
 import 'package:flutter_theme/pages/theme_pages/chat_message/layouts/single_clear_dialog.dart';
-import 'package:flutter_theme/widgets/common_note_encrypt.dart';
 import 'package:flutter_theme/widgets/reaction_pop_up/emoji_picker_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -109,18 +108,12 @@ class ChatController extends GetxController {
         update();
       }
     });
-    /*  if (data["allMessage"] != "") {
-      allMessages = data["allMessage"];
-      update();
-      ChatMessageApi().getLocalMessage();
-      update();
-    }*/
-    //  allMessages.add(value)
+
   }
 
   //get chat data
   getChatData() async {
-    log("ALL MESSAGE:${chatId} ");
+
     if (chatId != "0") {
       await FirebaseFirestore.instance
           .collection(collectionName.users)
@@ -792,7 +785,8 @@ class ChatController extends GetxController {
   }
 
   Widget timeLayout(DateTimeChip document) {
-    List<MessageModel> newMessageList = document.message!;
+
+    List<MessageModel> newMessageList = document.message!.reversed.toList();
     log("newMessageList : ${newMessageList.length}");
     return Column(
       children: [
@@ -857,9 +851,7 @@ class ChatController extends GetxController {
   Future<bool> onBackPress() {
     appCtrl.isTyping = false;
     appCtrl.update();
-
-    Get.back();
-    return Future.value(false);
+    return Future.value(true);
   }
 
   //ON LONG PRESS
@@ -890,10 +882,10 @@ class ChatController extends GetxController {
         localMessage.asMap().entries.forEach((element) {
           element.value.message!.asMap().entries.forEach((e) {
             if(decryptMessage(e.value.content).toString().toLowerCase().contains(txtChatSearch.text)){
-              if (!searchChatId.contains(e.value.docId)) {
-                searchChatId.add(e.value.docId);
+              if (!searchChatId.contains(e.key)) {
+                searchChatId.add(e.key);
               } else {
-                searchChatId.remove(e.value.docId);
+                searchChatId.remove(e.key);
               }
             }
           });

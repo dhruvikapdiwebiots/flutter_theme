@@ -33,21 +33,22 @@ class _StatusListState extends State<StatusList>
   @override
   Widget build(BuildContext context) {
     return GetBuilder<StatusController>(builder: (_) {
+
       return NotificationListener<OverscrollIndicatorNotification>(
           onNotification: (OverscrollIndicatorNotification overscroll) {
             overscroll.disallowIndicator();
             return false;
           },
+
           child: Scaffold(
               backgroundColor: appCtrl.appTheme.bgColor,
               floatingActionButton: const StatusFloatingButton(),
               body: SafeArea(
                   child: Stack(children: [
-                /*AdCommonLayout(
+                AdCommonLayout(
                     bannerAdIsLoaded: statusCtrl.bannerAdIsLoaded,
                     bannerAd: statusCtrl.bannerAd,
                     currentAd: statusCtrl.currentAd),
-*/
                  const   StatusListBodyLayout()
               ]))));
     });

@@ -7,11 +7,13 @@ import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:dartx/dartx_io.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/models/message_model.dart';
+import 'package:flutter_theme/pages/theme_pages/broadcast_chat/layouts/broad_cast_wall_paper.dart';
 import 'package:flutter_theme/pages/theme_pages/broadcast_chat/layouts/broadcast_file_list.dart';
-import 'package:flutter_theme/widgets/common_note_encrypt.dart';
 import 'package:flutter_theme/widgets/reaction_pop_up/emoji_picker_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+
+import '../../pages/theme_pages/broadcast_chat/layouts/broad_cast_clear_dialog.dart';
 
 class BroadcastChatController extends GetxController {
   String? pId,
@@ -35,6 +37,7 @@ class BroadcastChatController extends GetxController {
   bool isUserAvailable = true;
   bool isTextBox = false, isThere = false;
   XFile? imageFile;
+  String? wallPaperType;
   XFile? videoFile;
   File? image;
   int totalUser = 0;
@@ -42,7 +45,7 @@ class BroadcastChatController extends GetxController {
   Offset tapPosition = Offset.zero;
   File? video;
   bool? isLoading = true;
-  bool typing = false, isBlock = false;
+  bool typing = false, isBlock = false,enableReactionPopup =false,showPopUp=false;
   final pickerCtrl = Get.isRegistered<PickerController>()
       ? Get.find<PickerController>()
       : Get.put(PickerController());
@@ -73,8 +76,8 @@ class BroadcastChatController extends GetxController {
     broadData = data["data"];
     pId = data["broadcastId"];
     pData = broadData["receiverId"];
+    pName = broadData["name"] ?? "";
     newContact = data["newContact"] ?? [];
-    log("newContact : ${newContact.length}");
     totalUser = pData.length;
 
     for (var i = 0; i < pData.length; i++) {
@@ -93,6 +96,41 @@ class BroadcastChatController extends GetxController {
 
   //get broad cast data
   getBroadcastData() async {
+    log("chatId :: $chatId");
+    messageSub =  FirebaseFirestore.instance
+        .collection(collectionName.users)
+        .doc(appCtrl.user["id"])
+        .collection(collectionName.broadcastMessage)
+        .doc(pId)
+        .collection(collectionName.chat)
+        .snapshots()
+        .listen((event) async {
+      allMessages = event.docs;
+      update();
+      ChatMessageApi().getLocalBroadcastMessage();
+
+      isLoading = false;
+      update();
+    });
+    await FirebaseFirestore.instance
+        .collection(collectionName.broadcast)
+        .doc(pId)
+        .get()
+        .then((value) {
+      if (value.exists) {
+
+        if (value.data().toString().contains('backgroundImage')) {
+          broadData["backgroundImage"] = value.data()!["backgroundImage"] ?? "";
+
+        } else {
+          broadData["backgroundImage"] = "";
+        }
+      } else {
+        broadData["backgroundImage"] = "";
+      }
+      broadData["users"] = value.data()!["users"] ?? [];
+    });
+
     if (newContact.isNotEmpty) {
       final key = encrypt.Key.fromUtf8('my 32 length key................');
       final iv = encrypt.IV.fromLength(16);
@@ -138,24 +176,46 @@ class BroadcastChatController extends GetxController {
         update();
       }
     });
-    await FirebaseFirestore.instance
-        .collection(collectionName.broadcast)
-        .doc(pId)
-        .get()
-        .then((value) {
-      if (value.exists) {
-        if (value.data().toString().contains('backgroundImage')) {
-          broadData["backgroundImage"] = value.data()!["backgroundImage"] ?? "";
-        } else {
-          broadData["backgroundImage"] = "";
-        }
-      } else {
-        broadData["backgroundImage"] = "";
-      }
-      broadData["users"] = value.data()!["users"] ?? [];
-    });
 
     update();
+
+
+  }
+
+
+//clear dialog
+  clearChatConfirmation() async {
+    Get.generalDialog(
+      pageBuilder: (context, anim1, anim2) {
+        return const BroadcastClearDialog();
+      },
+      transitionBuilder: (context, anim1, anim2, child) {
+        return SlideTransition(
+            position: Tween(begin: const Offset(0, -1), end: const Offset(0, 0))
+                .animate(anim1),
+            child: child);
+      },
+      transitionDuration: const Duration(milliseconds: 300),
+    );
+  }
+
+
+
+  wallPaperConfirmation(image) async {
+    Get.generalDialog(
+      pageBuilder: (context, anim1, anim2) {
+        return BroadcastChatWallPaper(
+          image: image,
+        );
+      },
+      transitionBuilder: (context, anim1, anim2, child) {
+        return SlideTransition(
+            position: Tween(begin: const Offset(0, -1), end: const Offset(0, 0))
+                .animate(anim1),
+            child: child);
+      },
+      transitionDuration: const Duration(milliseconds: 300),
+    );
   }
 
   //update typing status
@@ -332,6 +392,45 @@ class BroadcastChatController extends GetxController {
       await Future.delayed(Durations.s4);
       String dateTime = DateTime.now().millisecondsSinceEpoch.toString();
 
+      MessageModel messageModel = MessageModel(
+          blockBy:"",
+          blockUserId: "",
+          broadcastId: chatId,
+          chatId: chatId,
+          content: encrypted,
+          docId: dateTime,
+          isBlock: false,
+          isBroadcast: false,
+          isFavourite: false,
+          isSeen: false,
+          messageType: "sender",
+          receiverList: pData,
+          sender: appCtrl.user["id"],
+          timestamp: dateTime,
+          type: type.name);
+      bool isEmpty =
+          localMessage.where((element) => element.time == "Today").isEmpty;
+      if (isEmpty) {
+        List<MessageModel>? message = [];
+        if (message.isNotEmpty) {
+          message.add(messageModel);
+          message[0].docId = dateTime;
+        } else {
+          message = [messageModel];
+          message[0].docId = dateTime;
+        }
+        DateTimeChip dateTimeChip =
+        DateTimeChip(time: getDate(dateTime), message: message);
+        localMessage.add(dateTimeChip);
+      } else {
+        int index =
+        localMessage.indexWhere((element) => element.time == "Today");
+
+        if (!localMessage[index].message!.contains(messageModel)) {
+          localMessage[index].message!.add(messageModel);
+        }
+      }
+      update();
       await FirebaseFirestore.instance
           .collection(collectionName.users)
           .doc(userData["id"])
@@ -345,7 +444,7 @@ class BroadcastChatController extends GetxController {
             .collection(collectionName.chats)
             .doc(snap.docs[0].id)
             .update({
-          "receiverId": newpData,
+          "receiverId": pData,
           "updateStamp": dateTime,
           "lastMessage": encrypted
         });
@@ -361,7 +460,7 @@ class BroadcastChatController extends GetxController {
           .set({
         'sender': userData["id"],
         'senderName': userData["name"],
-        'receiver': newpData,
+        'receiver': pData,
         'content': encrypted,
         "broadcastId": pId,
         'type': type.name,
@@ -439,15 +538,16 @@ class BroadcastChatController extends GetxController {
   }
 
   //delete chat layout
-  Widget buildPopupDialog(
-      BuildContext context, DocumentSnapshot documentReference) {
-    return BroadCastDeleteAlert(
-      documentReference: documentReference,
-    );
+   buildPopupDialog(
+
+   )async {
+     await showDialog(
+         context: Get.context!, builder: (_) => const BroadCastDeleteAlert());
+
   }
 
   Widget timeLayout(DateTimeChip document) {
-    List<MessageModel> newMessageList = document.message!;
+    List<MessageModel> newMessageList = document.message!.reversed.toList();
     return Column(
       children: [
         Text(
@@ -472,25 +572,12 @@ class BroadcastChatController extends GetxController {
 // BUILD ITEM MESSAGE BOX FOR RECEIVER AND SENDER BOX DESIGN
   Widget buildItem(int index, MessageModel document, documentId, title) {
 
-    if (document.type == MessageType.note.name) {
-      return Container(
-          margin: const EdgeInsets.only(bottom: 2.0),
-          padding: const EdgeInsets.only(left: Insets.i10, right: Insets.i10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
-              if (document.type == MessageType.note.name)
-                const Align(
-                  alignment: Alignment.center,
-                  child: CommonNoteEncrypt(),
-                ).paddingOnly(bottom: Insets.i8)
-            ],
-          ));
-    }
     if (document.sender == userData["id"]) {
       return BroadcastSenderMessage(
         document: document,
         index: index,
+        docId: documentId,
+        title: title,
       );
     } else {
       // RECEIVER MESSAGE
@@ -505,14 +592,22 @@ class BroadcastChatController extends GetxController {
             'users') // Your collection name will be whatever you have given in firestore database
         .doc(userData["id"])
         .update({'status': "Online"});
-    Get.back();
-    return Future.value(false);
+
+    return Future.value(true);
   }
 
   //ON LONG PRESS
   onLongPressFunction(docId) {
+    showPopUp = true;
+    enableReactionPopup = true;
+
     if (!selectedIndexId.contains(docId)) {
-      selectedIndexId.add(docId);
+      if (showPopUp == false) {
+        selectedIndexId.add(docId);
+      } else {
+        selectedIndexId = [];
+        selectedIndexId.add(docId);
+      }
       update();
     }
     update();
@@ -554,7 +649,6 @@ class BroadcastChatController extends GetxController {
 
   //check contact in firebase and if not exists
   saveContact(userData, {message}) async {
-    bool isRegister = false;
 
     await FirebaseFirestore.instance
         .collection(collectionName.users)

@@ -1,8 +1,7 @@
-import 'dart:developer';
+
 
 import 'package:flutter_theme/pages/bottom_pages/status/layouts/my_status_video.dart';
-import 'package:flutter_theme/pages/theme_pages/contact_list/new_contact_check.dart';
-import 'package:flutter_theme/widgets/common_app_bar.dart';
+import 'package:flutter_theme/pages/theme_pages/contact_list/fetch_contacts.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -16,7 +15,7 @@ class MyStatus extends StatelessWidget {
     return GetBuilder<StatusController>(builder: (statusCtrl) {
       return Scaffold(
         backgroundColor: appCtrl.appTheme.bgColor,
-        appBar: CommonAppBar(text: "My Status"),
+        appBar: const CommonAppBar(text: "My Status"),
         floatingActionButton: const StatusFloatingButton(),
         body: StreamBuilder(
             stream: FirebaseFirestore.instance
@@ -95,7 +94,7 @@ class MyStatus extends StatelessWidget {
                                               Share.share(e.value.image!,
                                                   subject: 'Look what I share!');
                                             } else {
-                                              Get.to(() => NewContact(message: e.value,));
+                                              Get.to(() => FetchContact(message: e.value,));
                                             }
                                           },
                                           shape: RoundedRectangleBorder(
@@ -110,7 +109,7 @@ class MyStatus extends StatelessWidget {
                                             _buildPopupMenuItem(
                                                 fonts.forward.tr, 2),
                                           ],
-                                          child: Icon(Icons.more_vert)
+                                          child: const Icon(Icons.more_vert)
                                               .paddingAll(Insets.i10),
                                         ),
                                         contentPadding:
