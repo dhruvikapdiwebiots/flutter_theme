@@ -74,7 +74,7 @@ class GroupProfileBody extends StatelessWidget {
                                   chatCtrl.isTextBox
                                       ? svgAssets.send
                                       : svgAssets.edit2,
-                                  color: appCtrl.appTheme.txtColor,
+                                  colorFilter: ColorFilter.mode(appCtrl.appTheme.txtColor, BlendMode.srcIn)
                                 ).paddingOnly(bottom: Insets.i2).inkWell(
                                     onTap: () async {
                                       if(chatCtrl.isTextBox ==false){
@@ -221,7 +221,7 @@ class GroupProfileBody extends StatelessWidget {
                                       )),
                                       SvgPicture.asset(
                                         svgAssets.send,
-                                        color: appCtrl.appTheme.txtColor,
+                                          colorFilter: ColorFilter.mode(appCtrl.appTheme.txtColor, BlendMode.srcIn)
                                       ).paddingOnly(bottom: Insets.i2).inkWell(
                                           onTap: () async {
                                         chatCtrl.isDescTextBox =
@@ -283,7 +283,7 @@ class GroupProfileBody extends StatelessWidget {
                               children: [
                                 Row(
                                   children: [
-                                    SvgPicture.asset(svgAssets.add,color: appCtrl.appTheme.blackColor,height: Sizes.s20,).inkWell(onTap: ()=>Get.toNamed(routeName.broadcastSearchUser,arguments: chatCtrl.userList)),
+                                    SvgPicture.asset(svgAssets.add, colorFilter: ColorFilter.mode(appCtrl.appTheme.blackColor , BlendMode.srcIn),height: Sizes.s20,).inkWell(onTap: ()=>Get.toNamed(routeName.broadcastSearchUser,arguments: chatCtrl.userList)),
                                     const HSpace(Sizes.s8),
                                     Text(
                                         fonts.addContact.tr,

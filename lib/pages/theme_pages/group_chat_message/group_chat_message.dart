@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 
 import 'package:flutter_theme/config.dart';
 
@@ -62,38 +62,34 @@ class _GroupChatMessageState extends State<GroupChatMessage>
   Widget build(BuildContext context) {
 
     return GetBuilder<GroupChatMessageController>(builder: (_) {
-      return AgoraToken(
-        scaffold: PickupLayout(
-          scaffold: WillPopScope(
-              onWillPop: chatCtrl.onBackPress,
-              child: Scaffold(
-                  appBar: GroupChatMessageAppBar(
-                    name: chatCtrl.pName,
-                    image: chatCtrl.groupImage,
-                    videoTap: () async {
-                      await chatCtrl.permissionHandelCtrl
-                          .getCameraMicrophonePermissions()
-                          .then((value) {
-                        if (value == true) {
-                          chatCtrl.audioAndVideoCall(true);
-                        }
-                      });
-                    },
-                  ),
-                  backgroundColor: appCtrl.appTheme.bgColor,
-                  body: Stack(children: <Widget>[
-                    //body layout
-                    const GroupChatBody(),
-                    // Loading
-                    if (chatCtrl.isLoading)
-                      CommonLoader(isLoading: chatCtrl.isLoading),
+      return WillPopScope(
+          onWillPop: chatCtrl.onBackPress,
+          child: Scaffold(
+              appBar: GroupChatMessageAppBar(
+                name: chatCtrl.pName,
+                image: chatCtrl.groupImage,
+                videoTap: () async {
+                  await chatCtrl.permissionHandelCtrl
+                      .getCameraMicrophonePermissions()
+                      .then((value) {
+                    if (value == true) {
+                      chatCtrl.audioAndVideoCall(true);
+                    }
+                  });
+                },
+              ),
+              backgroundColor: appCtrl.appTheme.bgColor,
+              body: Stack(children: <Widget>[
+                //body layout
+                const GroupChatBody(),
+                // Loading
+                if (chatCtrl.isLoading)
+                  CommonLoader(isLoading: chatCtrl.isLoading),
 
-                    GetBuilder<AppController>(builder: (appCtrl) {
-                      return CommonLoader(isLoading: appCtrl.isLoading);
-                    })
-                  ]).height(MediaQuery.of(context).size.height))),
-        ),
-      );
+                GetBuilder<AppController>(builder: (appCtrl) {
+                  return CommonLoader(isLoading: appCtrl.isLoading);
+                })
+              ]).height(MediaQuery.of(context).size.height)));
     });
   }
 }

@@ -1,8 +1,6 @@
-import 'dart:developer';
 
 import 'package:flutter_theme/models/message_model.dart';
 import 'package:flutter_theme/pages/theme_pages/group_chat_message/group_on_tap_function_class.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 import '../../../../../config.dart';
 
@@ -20,7 +18,6 @@ class GroupSenderMessage extends StatefulWidget {
 }
 
 class _GroupSenderMessageState extends State<GroupSenderMessage> {
-  final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {

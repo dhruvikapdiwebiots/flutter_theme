@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
-import 'package:flutter_theme/models/user_setting_model.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../../config.dart';

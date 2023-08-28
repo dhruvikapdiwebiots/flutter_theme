@@ -165,7 +165,6 @@ class ChatMessageApi {
   //audio and video call api
   audioAndVideoCallApi({toData, isVideoCall}) async {
     try {
-      dynamic agoraToken = appCtrl.storage.read(session.agoraToken);
 
       var userData = appCtrl.storage.read(session.user);
       String channelId = Random().nextInt(1000).toString();

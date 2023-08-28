@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/widgets/common_photo_view.dart';

@@ -107,14 +107,14 @@ class CenterPositionImage extends StatelessWidget {
                     bottom: 0,
                     right: -2,
                     child: Container(
-                      padding: EdgeInsets.all(Insets.i1),
+                      padding: const EdgeInsets.all(Insets.i1),
                       decoration: ShapeDecoration(
                           color: appCtrl.appTheme.whiteColor,
                           shape: SmoothRectangleBorder(
                               borderRadius: SmoothBorderRadius(
                                   cornerRadius: 8, cornerSmoothing: 1))),
                       child: Container(
-                        padding: EdgeInsets.all(Insets.i5),
+                        padding: const EdgeInsets.all(Insets.i5),
                         decoration: ShapeDecoration(
                             color: appCtrl.appTheme.primary,
                             shape: SmoothRectangleBorder(

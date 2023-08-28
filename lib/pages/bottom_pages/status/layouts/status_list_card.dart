@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:dotted_border/dotted_border.dart';
-import 'package:figma_squircle/figma_squircle.dart';
 import 'package:flutter_theme/pages/bottom_pages/status/layouts/stat_video.dart';
 import 'package:intl/intl.dart';
 

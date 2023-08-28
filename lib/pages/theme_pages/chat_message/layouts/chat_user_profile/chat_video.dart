@@ -1,5 +1,4 @@
-import 'package:figma_squircle/figma_squircle.dart';
-import 'package:flutter_theme/widgets/common_photo_view.dart';
+
 import 'package:flutter_theme/widgets/common_video_view.dart';
 import 'package:video_player/video_player.dart';
 

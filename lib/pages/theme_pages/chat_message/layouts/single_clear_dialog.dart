@@ -1,7 +1,6 @@
-import 'dart:developer';
+
 
 import '../../../../config.dart';
-import 'package:encrypt/encrypt.dart' as encrypt;
 
 class SingleClearDialog extends StatelessWidget {
   const SingleClearDialog({Key? key}) : super(key: key);

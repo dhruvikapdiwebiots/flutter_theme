@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter_theme/config.dart';
 
 class EditProfileTextBox extends StatelessWidget {
@@ -10,7 +10,7 @@ class EditProfileTextBox extends StatelessWidget {
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const VSpace(Sizes.s20),
         Text(
-          "User Name",
+          fonts.userName.tr,
           style: AppCss.poppinsMedium15.textColor(appCtrl.appTheme.blackColor),
         ),
         const VSpace(Sizes.s8),
@@ -21,7 +21,7 @@ class EditProfileTextBox extends StatelessWidget {
         const VSpace(Sizes.s28),
         //email text box
         Text(
-          "Email",
+          fonts.email.tr,
           style: AppCss.poppinsMedium15.textColor(appCtrl.appTheme.blackColor),
         ),
         const VSpace(Sizes.s8),
@@ -33,7 +33,7 @@ class EditProfileTextBox extends StatelessWidget {
                 borderSide: BorderSide(color: appCtrl.appTheme.primary))),
         const VSpace(Sizes.s28),
         Text(
-          "Mobile Number",
+          fonts.mobileNumber.tr,
           style: AppCss.poppinsMedium15.textColor(appCtrl.appTheme.blackColor),
         ),
         const VSpace(Sizes.s8),
@@ -60,7 +60,7 @@ class EditProfileTextBox extends StatelessWidget {
             maxLength: 10),
 
         const VSpace(Sizes.s28),
-        Text("Add Status",
+        Text(fonts.addStatus.tr,
             style:
             AppCss.poppinsMedium15.textColor(appCtrl.appTheme.blackColor)),
         const VSpace(Sizes.s8),

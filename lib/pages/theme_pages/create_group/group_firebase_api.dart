@@ -53,41 +53,6 @@ class GroupFirebaseApi {
     final encrypted =
         encrypter.encrypt("${ user["id"] == appCtrl.user["id"]? "You" : user["name"] } created this group", iv: iv).base64;
 
-    /* await FirebaseFirestore.instance .collection(collectionName.users)
-        .doc(appCtrl.user["id"])
-        .collection(collectionName.groupMessage)
-        .doc(id)
-        .collection(collectionName.chat)
-        .add({
-      'sender': user["id"],
-      'senderName': user["name"],
-      'receiver': groupCtrl.selectedContact,
-      'content': "",
-      "groupId": id,
-      'type': MessageType.note.name,
-      'messageType': "sender",
-      "status": "",
-      'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-    }).then((e) {
-      FirebaseFirestore.instance .collection(collectionName.users)
-          .doc(appCtrl.user["id"])
-          .collection(collectionName.groupMessage)
-          .doc(id)
-          .collection(collectionName.chat)
-          .add({
-        'sender': user["id"],
-        'senderName': user["name"],
-        'receiver': groupCtrl.selectedContact,
-        'content': encrypted,
-        "groupId": id,
-        'type': MessageType.messageType.name,
-        'messageType': "sender",
-        "status": "",
-        'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-      });
-    }); */
-    final note = encrypter.encrypt(fonts.noteEncrypt.tr, iv: iv).base64;
-    log("SEKEC : ${groupCtrl.selectedContact.length}");
     groupCtrl.selectedContact.asMap().entries.forEach((e) async {
       log("USER ID :: ${e.value["id"]}");
 

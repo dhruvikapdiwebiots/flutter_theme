@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 
 import 'package:flutter_theme/controllers/recent_chat_controller.dart';
 import 'package:provider/provider.dart';
@@ -56,12 +56,12 @@ class _ChatCardState extends State<ChatCard> {
       return GetBuilder<DashboardController>(builder: (dashboardCtrl) {
 
         return Consumer<RecentChatController>(
-            builder: (context, recentChat, _child) {
+            builder: (context, recentChat, child) {
 
               return ScopedModel<ContactModel>(
                 model: recentChat.getModel(appCtrl.user)!,
-                child: ScopedModelDescendant<ContactModel>(builder: (context, child, _model) {
-                  appCtrl.cachedModel = _model;
+                child: ScopedModelDescendant<ContactModel>(builder: (context, child, model) {
+                  appCtrl.cachedModel = model;
                     return recentChat.userData.isNotEmpty
                         ? ListView(controller: scrollController, children: [
                       Column(

@@ -1,7 +1,5 @@
-import 'dart:developer';
 
 import 'package:flutter_theme/models/message_model.dart';
-import 'package:flutter_theme/pages/theme_pages/chat_message/layouts/receiver_image.dart';
 import '../../../../../config.dart';
 import '../../group_on_tap_function_class.dart';
 
@@ -57,8 +55,8 @@ class _GroupReceiverMessageState extends State<GroupReceiverMessage> {
                             height: Sizes.s35,
                             width: Sizes.s35,
                             alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                                color: const Color(0xff3282B8),
+                            decoration: const BoxDecoration(
+                                color: Color(0xff3282B8),
                                 shape: BoxShape.circle),
                             child: Text(
                                 chatCtrl.pName!.length > 2
@@ -74,8 +72,8 @@ class _GroupReceiverMessageState extends State<GroupReceiverMessage> {
                             height: Sizes.s35,
                             width: Sizes.s35,
                             alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                                color: const Color(0xff3282B8),
+                            decoration: const BoxDecoration(
+                                color: Color(0xff3282B8),
                                 shape: BoxShape.circle),
                             child: Text(
                               chatCtrl.pName!.length > 2

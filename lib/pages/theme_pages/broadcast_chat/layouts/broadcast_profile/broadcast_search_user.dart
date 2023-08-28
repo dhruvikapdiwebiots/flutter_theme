@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import '../../../../../config.dart';
-import '../../../../../widgets/common_app_bar.dart';
 
 class BroadcastSearchUser extends StatelessWidget {
   const BroadcastSearchUser({Key? key}) : super(key: key);

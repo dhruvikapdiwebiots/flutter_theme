@@ -3,7 +3,6 @@ import 'package:flutter_theme/config.dart';
 class Fonts{
   final String crcSeperator = '&';
   final intro1 = "intro1";
-  final appId = "Your AGORA APP Api Key";
   final intro2 = "intro2";
   final intro3 = "intro3";
   final chatify = "Chatify";
@@ -154,5 +153,8 @@ class Fonts{
   final deleteOption = "deleteOption";
   final clearChatId = "clearChatId";
   final existGroup = "existGroup";
+  final userName = "userName";
+  final email = "email";
+  final addStatus = "addStatus";
   String unblockUser(val) => "unblockUser".trParams({'pName':val});
 }

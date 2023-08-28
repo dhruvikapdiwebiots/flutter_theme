@@ -21,7 +21,7 @@ class BlockReportLayout extends StatelessWidget {
         child: Row(children: [
           SvgPicture.asset(
              icon!,
-              color: appCtrl.appTheme.redColor),
+              colorFilter:ColorFilter.mode(appCtrl.appTheme.redColor,BlendMode.srcIn)),
           const HSpace(Sizes.s10),
           Text(
               name!,

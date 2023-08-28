@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_theme/controllers/common_controller/ad_controller.dart';
 import 'package:flutter_theme/controllers/fetch_contact_controller.dart';
 import 'package:flutter_theme/controllers/recent_chat_controller.dart';
 import 'package:provider/provider.dart';

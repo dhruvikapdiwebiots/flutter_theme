@@ -2,9 +2,6 @@ import 'package:giphy_get/giphy_get.dart';
 
 import '../../../../config.dart';
 
-import 'package:giphy_get/giphy_get.dart';
-
-import '../../../../config.dart';
 
 class InputBox extends StatefulWidget {
   const InputBox({Key? key}) : super(key: key);

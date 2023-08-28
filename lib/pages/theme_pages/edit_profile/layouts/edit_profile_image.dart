@@ -1,7 +1,5 @@
 import 'dart:developer';
 
-import 'package:figma_squircle/figma_squircle.dart';
-
 import '../../../../config.dart';
 
 class EditProfileImage extends StatelessWidget {

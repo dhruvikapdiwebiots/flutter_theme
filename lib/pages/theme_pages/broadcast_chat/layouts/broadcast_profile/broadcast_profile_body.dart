@@ -1,7 +1,6 @@
-import 'package:flutter_theme/controllers/recent_chat_controller.dart';
+
 import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_profile/group_images_video.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import '../../../../../config.dart';
 
 class BroadcastProfileBody extends StatelessWidget {
@@ -74,7 +73,7 @@ class BroadcastProfileBody extends StatelessWidget {
                                   chatCtrl.isTextBox
                                       ? svgAssets.send
                                       : svgAssets.edit2,
-                                  color: appCtrl.appTheme.txtColor,
+                                  colorFilter:ColorFilter.mode(appCtrl.appTheme.txtColor, BlendMode.srcIn) ,
                                 ).paddingOnly(bottom: Insets.i2).inkWell(
                                     onTap: () async {
                                   chatCtrl.isTextBox = !chatCtrl.isTextBox;
@@ -156,7 +155,7 @@ class BroadcastProfileBody extends StatelessWidget {
                               children: [
                                 Row(
                                   children: [
-                                    SvgPicture.asset(svgAssets.add,color: appCtrl.appTheme.blackColor,height: Sizes.s20,).inkWell(onTap: ()=>Get.toNamed(routeName.broadcastSearchUser,arguments: chatCtrl.userList)),
+                                    SvgPicture.asset(svgAssets.add, colorFilter:ColorFilter.mode(appCtrl.appTheme.blackColor, BlendMode.srcIn) ,height: Sizes.s20,).inkWell(onTap: ()=>Get.toNamed(routeName.broadcastSearchUser,arguments: chatCtrl.userList)),
                                     const HSpace(Sizes.s8),
                                     Text(
                                         fonts.addContact.tr,

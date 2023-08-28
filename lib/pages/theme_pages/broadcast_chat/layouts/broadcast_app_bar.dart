@@ -136,7 +136,8 @@ class BroadCastAppBar extends StatelessWidget implements PreferredSizeWidget {
               child: SvgPicture.asset(
                 svgAssets.more,
                 height: Sizes.s22,
-                color: appCtrl.appTheme.blackColor,
+                colorFilter: ColorFilter.mode(appCtrl.appTheme.blackColor, BlendMode.srcIn),
+
               ).paddingAll(Insets.i10),
             )
                 .decorated(
@@ -154,7 +155,7 @@ class BroadCastAppBar extends StatelessWidget implements PreferredSizeWidget {
           ],
           leading: SvgPicture.asset(
                   appCtrl.isRTL ? svgAssets.arrowForward : svgAssets.arrowBack,
-                  color: appCtrl.appTheme.blackColor,
+              colorFilter: ColorFilter.mode(appCtrl.appTheme.blackColor, BlendMode.srcIn),
                   height: Sizes.s18)
               .paddingAll(Insets.i10)
               .decorated(
@@ -236,7 +237,7 @@ class BroadCastAppBar extends StatelessWidget implements PreferredSizeWidget {
               SvgPicture.asset(
                 iconData,
                 height: Sizes.s20,
-                color: appCtrl.appTheme.blackColor,
+                colorFilter: ColorFilter.mode(appCtrl.appTheme.blackColor, BlendMode.srcIn),
               ),
               const HSpace(Sizes.s5),
               Text(

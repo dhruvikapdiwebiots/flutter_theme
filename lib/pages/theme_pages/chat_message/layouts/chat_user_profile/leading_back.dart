@@ -16,7 +16,8 @@ class LeadingBack extends StatelessWidget {
         appCtrl.isRTL
             ? svgAssets.arrowForward
             : svgAssets.arrowBack,
-        color: appCtrl.appTheme.blackColor,
+
+        colorFilter:ColorFilter.mode(appCtrl.appTheme.blackColor, BlendMode.srcIn) ,
         height: Sizes.s18,
       )
 

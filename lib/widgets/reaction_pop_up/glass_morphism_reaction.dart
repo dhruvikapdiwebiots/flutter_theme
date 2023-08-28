@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter_theme/widgets/reaction_pop_up/gradient_painter.dart';
-import 'package:flutter_theme/widgets/reaction_pop_up/reaction_config.dart';
 
 import '../../config.dart';
 

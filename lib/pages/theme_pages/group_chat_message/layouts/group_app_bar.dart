@@ -22,7 +22,7 @@ class GroupChatMessageAppBar extends StatelessWidget
     var appBarHeight = AppBar().preferredSize.height;
     return GetBuilder<GroupChatMessageController>(builder: (chatCtrl) {
       return PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight),
+        preferredSize: const Size.fromHeight(kToolbarHeight),
         child: Container(
           decoration:const BoxDecoration(boxShadow: [
             BoxShadow(
@@ -46,7 +46,8 @@ class GroupChatMessageAppBar extends StatelessWidget
               titleSpacing: 0,
               leading: SvgPicture.asset(
                   appCtrl.isRTL ? svgAssets.arrowForward : svgAssets.arrowBack,
-                  color: appCtrl.appTheme.blackColor,
+
+                  colorFilter: ColorFilter.mode(appCtrl.appTheme.blackColor, BlendMode.srcIn),
                   height: Sizes.s18)
                   .paddingAll(Insets.i10)
                   .decorated(
@@ -178,48 +179,7 @@ log("CHECLL");
                       vertical: Insets.i22, horizontal: Insets.i20)
                       .inkWell(onTap: () => chatCtrl.buildPopupDialog())
                 ])
-                    :PopupMenuButton(
-                  color: appCtrl.appTheme.whiteColor,
-                  padding: EdgeInsets.zero,
-                  constraints:const BoxConstraints(maxWidth: Sizes.s170),
-                  iconSize: Sizes.s20,
-                  onSelected: (result) async {
-
-                    if (result == 0) {
-                      callTap;
-                    } else if (result == 2) {
-                      videoTap;
-                    }
-                  },
-                  offset: Offset(0.0, appBarHeight),
-                  shape: RoundedRectangleBorder(
-                      borderRadius:
-                      BorderRadius.circular(AppRadius.r8)),
-                  itemBuilder: (ctx) => [
-                    _buildPopupMenuItem(
-                        "audio", svgAssets.audio, 0),
-                    _buildPopupMenuItem("video", svgAssets.video, 1,
-                        isDivider: false),
-                  ],
-                  child: SvgPicture.asset(
-                    svgAssets.audioVideo,
-                    height: Sizes.s22,
-                    color: appCtrl.appTheme.blackColor,
-                  ).paddingAll(Insets.i10),
-                )
-                    .decorated(
-                    color: appCtrl.appTheme.whiteColor,
-                    boxShadow: [
-                      const BoxShadow(
-                          offset: Offset(0, 2),
-                          blurRadius: 5,
-                          spreadRadius: 1,
-                          color: Color.fromRGBO(0, 0, 0, 0.05))
-                    ],
-                    borderRadius:
-                    BorderRadius.circular(AppRadius.r10))
-                    .marginSymmetric(vertical: Insets.i23)
-                    .marginOnly(right: Insets.i20),
+                    :Container(),
                 PopupMenuButton(
                   color: appCtrl.appTheme.whiteColor,
                   padding: EdgeInsets.zero,
@@ -287,7 +247,7 @@ log("CHECLL");
                   child: SvgPicture.asset(
                     svgAssets.more,
                     height: Sizes.s22,
-                    color: appCtrl.appTheme.blackColor,
+                      colorFilter: ColorFilter.mode(appCtrl.appTheme.blackColor, BlendMode.srcIn)
                   ).paddingAll(Insets.i10),
                 )
                     .decorated(
@@ -361,7 +321,7 @@ log("CHECLL");
               SvgPicture.asset(
                 iconData,
                 height: Sizes.s20,
-                color: appCtrl.appTheme.blackColor,
+                  colorFilter: ColorFilter.mode(appCtrl.appTheme.blackColor, BlendMode.srcIn)
               ),
               const HSpace(Sizes.s5),
               Text(

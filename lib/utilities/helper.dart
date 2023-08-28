@@ -33,7 +33,7 @@ class Helper {
 
 
   getToast(String message, Color color) {
-    Get.rawSnackbar(message: message, backgroundColor: color, duration: Duration(milliseconds: 1000));
+    Get.rawSnackbar(message: message, backgroundColor: color, duration: const Duration(milliseconds: 1000));
   }
 
 

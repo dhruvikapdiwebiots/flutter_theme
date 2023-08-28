@@ -1,6 +1,5 @@
 import 'package:camera/camera.dart';
 
-import 'package:flutter_theme/controllers/common_controller/ad_controller.dart';
 
 import 'config.dart';
 export 'package:get_storage/get_storage.dart';

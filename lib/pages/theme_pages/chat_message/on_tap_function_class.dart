@@ -5,6 +5,7 @@ import 'package:flutter_theme/config.dart';
 import 'package:open_filex/open_filex.dart';
 
 class OnTapFunctionCall {
+  var openResult = 'Unknown';
   //contentTap
   contentTap(ChatController chatCtrl, docId) {
 
@@ -35,14 +36,14 @@ class OnTapFunctionCall {
       }
       chatCtrl.update();
     } else {
-      var openResult = 'Unknown';
+
       var dio = Dio();
       var tempDir = await getExternalStorageDirectory();
       var filePath = tempDir!.path +
           (decryptMessage(document!['content']).contains("-BREAK-")
               ? decryptMessage(document!['content']).split("-BREAK-")[0]
               : (decryptMessage(document!['content'])));
-      final response = await dio.download(
+    await dio.download(
           decryptMessage(document!['content']).contains("-BREAK-")
               ? decryptMessage(document!['content']).split("-BREAK-")[1]
               : decryptMessage(document!['content']),
@@ -51,7 +52,7 @@ class OnTapFunctionCall {
 
 
       openResult = "type=${result.type}  message=${result.message}";
-      log("result : ${openResult}");
+
     }
   }
 
@@ -87,12 +88,12 @@ class OnTapFunctionCall {
       }
       chatCtrl.update();
     } else {
-      var openResult = 'Unknown';
+
       var dio = Dio();
       var tempDir = await getExternalStorageDirectory();
 
       var filePath = tempDir!.path + decryptMessage(document!['content']).split("-BREAK-")[0];
-      final response = await dio.download(
+     await dio.download(
           decryptMessage(document!['content']).split("-BREAK-")[1], filePath);
 
       final result = await OpenFilex.open(filePath);
@@ -116,12 +117,12 @@ class OnTapFunctionCall {
       }
       chatCtrl.update();
     } else {
-      var openResult = 'Unknown';
+
       var dio = Dio();
       var tempDir = await getExternalStorageDirectory();
 
       var filePath = tempDir!.path + decryptMessage(document!['content']).split("-BREAK-")[0];
-      final response = await dio.download(
+      await dio.download(
           decryptMessage(document!['content']).split("-BREAK-")[1], filePath);
 
       final result = await OpenFilex.open(filePath);
@@ -145,12 +146,12 @@ class OnTapFunctionCall {
       }
       chatCtrl.update();
     } else {
-      var openResult = 'Unknown';
+
       var dio = Dio();
       var tempDir = await getExternalStorageDirectory();
 
       var filePath = tempDir!.path + decryptMessage(document!['content']).split("-BREAK-")[0];
-      final response = await dio.download(
+      await dio.download(
           decryptMessage(document!['content']).split("-BREAK-")[1], filePath);
 
       final result = await OpenFilex.open(filePath);
@@ -175,12 +176,12 @@ class OnTapFunctionCall {
       }
       chatCtrl.update();
     } else {
-      var openResult = 'Unknown';
+
       var dio = Dio();
       var tempDir = await getExternalStorageDirectory();
 
       var filePath = tempDir!.path + decryptMessage(document!['content']).split("-BREAK-")[0];
-      final response = await dio.download(
+       await dio.download(
           decryptMessage(document!['content']).split("-BREAK-")[1], filePath);
 
       final result = await OpenFilex.open(filePath);

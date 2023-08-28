@@ -1,6 +1,4 @@
-import 'dart:developer';
 
-import 'package:collection/collection.dart';
 import 'package:flutter_theme/widgets/common_note_encrypt.dart';
 
 import '../../../../config.dart';

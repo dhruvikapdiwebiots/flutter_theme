@@ -1,5 +1,4 @@
 
-import 'dart:developer';
 
 import '../../../../config.dart';
 
@@ -81,7 +80,7 @@ class CallView extends StatelessWidget {
                   snapshot!.data!.docs[index!].data()["isVideoCall"]
                       ? svgAssets.videoCallFilled
                       : svgAssets.callFilled,
-                  color: appCtrl.appTheme.primary)),
+                  colorFilter:ColorFilter.mode(appCtrl.appTheme.primary, BlendMode.srcIn) )),
           const Divider(
               color: Color.fromRGBO(49, 100, 189, .1),
               endIndent: Insets.i15,

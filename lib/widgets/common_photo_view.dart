@@ -64,6 +64,7 @@ class _CommonPhotoViewState extends State<CommonPhotoView> {
                   Uint8List.fromList(response.data),
                   quality: 60,
                   name: "probot");
+              log("RES : $result");
               isLoading = false;
               setState(() {
 

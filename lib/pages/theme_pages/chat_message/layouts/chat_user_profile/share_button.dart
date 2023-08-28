@@ -15,7 +15,7 @@ class ShareButton extends StatelessWidget {
       ),
       child: SvgPicture.asset(
         svgAssets.share,
-        color: appCtrl.appTheme.blackColor,
+        colorFilter:ColorFilter.mode(appCtrl.appTheme.blackColor,BlendMode.srcIn),
         height: Sizes.s18,
       )
 

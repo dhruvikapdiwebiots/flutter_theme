@@ -19,7 +19,7 @@ class StatusScreenView extends StatefulWidget {
 class _StatusScreenViewState extends State<StatusScreenView> {
   StoryController controller = StoryController();
   List<StoryItem> storyItems = [];
-  bool FAB_visibility = true;
+  bool visibility = true;
   int position = 0, selectedIndex = 0, lastPosition = 0;
   Status? status;
   List seenBy = [];
@@ -65,11 +65,9 @@ class _StatusScreenViewState extends State<StatusScreenView> {
 
   @override
   Widget build(BuildContext context) {
-    final Size _size = MediaQuery.of(context).size;
+
     return GestureDetector(
       onPanEnd: (details) {
-        print(details.velocity.pixelsPerSecond.dy.toString());
-        print(details.velocity.pixelsPerSecond.dx.toString());
         if (details.velocity.pixelsPerSecond.dy > -100) {
           setState(() {
             isSwipeUp = true;
@@ -99,10 +97,10 @@ class _StatusScreenViewState extends State<StatusScreenView> {
                     },
                     behavior: HitTestBehavior.deferToChild,
                     child: StoryView(
-                      indicatorColor: Color.fromRGBO(255, 255, 255, 0.50),
+                      indicatorColor: const Color.fromRGBO(255, 255, 255, 0.50),
                       onStoryShow: (s) async {
                         log("STATUS : ${s.reactive}");
-                        dynamic user = appCtrl.storage.read(session.user);
+
                         selectedIndex = selectedIndex + 1;
                         position = position + 1;
 
@@ -253,10 +251,10 @@ class _StatusScreenViewState extends State<StatusScreenView> {
                                               .toString())))
                               ? Text("Today ${DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(int.parse(status!.photoUrl![lastPosition].timestamp.toString())))}",
                                   style: AppCss.poppinsMedium12.textColor(
-                                      Color.fromRGBO(255, 255, 255, 0.65)))
+                                      const Color.fromRGBO(255, 255, 255, 0.65)))
                               : Text("Tomorrow ${DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(int.parse(status!.photoUrl![lastPosition].timestamp.toString())))}",
                                   style: AppCss.poppinsMedium12
-                                      .textColor(Color.fromRGBO(255, 255, 255, 0.65))),
+                                      .textColor(const Color.fromRGBO(255, 255, 255, 0.65))),
                         ],
                       ).marginOnly(top: Insets.i10)
                     ],
@@ -305,21 +303,21 @@ class _StatusScreenViewState extends State<StatusScreenView> {
     return NotificationListener<DraggableScrollableNotification>(
       onNotification: (notification) {
         log("notification: $notification");
-        if (FAB_visibility && notification.extent >= 0.2) {
+        if (visibility && notification.extent >= 0.2) {
           setState(() {
-            FAB_visibility = false;
+            visibility = false;
           });
-        } else if (!FAB_visibility && notification.extent < 0.2) {
+        } else if (!visibility && notification.extent < 0.2) {
           setState(() {
-            FAB_visibility = true;
+            visibility = true;
           });
         }
-        return FAB_visibility;
+        return visibility;
         // here determine if scroll is over and func.call()
       },
       child: GestureDetector(
         onVerticalDragDown: (panel) {
-          FAB_visibility = false;
+          visibility = false;
           controller.play();
           Get.back();
           setState(() {});

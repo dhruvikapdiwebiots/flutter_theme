@@ -2,10 +2,8 @@
 
 import 'package:flutter_theme/pages/bottom_pages/call_list/layouts/call_contact_list.dart';
 import 'package:flutter_theme/pages/theme_pages/all_contact/all_contact_list.dart';
-import 'package:flutter_theme/pages/theme_pages/audio_call/audio_call.dart';
-import 'package:flutter_theme/pages/theme_pages/broadcast_chat/layouts/broadcast_profile/boradcast_search_user.dart';
+import 'package:flutter_theme/pages/theme_pages/broadcast_chat/layouts/broadcast_profile/broadcast_search_user.dart';
 import 'package:flutter_theme/pages/theme_pages/broadcast_chat/layouts/broadcast_profile/broadcast_profile.dart';
-import 'package:flutter_theme/pages/theme_pages/broadcast_chat/layouts/broadcast_profile/broadcast_profile_body.dart';
 import 'package:flutter_theme/pages/theme_pages/chat_message/layouts/chat_user_profile/chat_user_profile.dart';
 import 'package:flutter_theme/pages/theme_pages/fingerprint_and_lock_security/fingerprint_and_lock_security.dart';
 import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_profile/group_profile.dart';
@@ -16,7 +14,6 @@ import '../pages/bottom_pages/dashboard/dashboard.dart';
 import '../config.dart';
 import '../pages/bottom_pages/status/layouts/my_status.dart';
 import '../pages/theme_pages/group_chat_message/layouts/group_profile/add_participants.dart';
-import '../pages/theme_pages/video_call/video_call.dart';
 import 'route_name.dart';
 
 RouteName _routeName = RouteName();
@@ -30,15 +27,13 @@ class AppRoute {
     GetPage(name: _routeName.editProfile, page: () => EditProfile()),
     GetPage(name: _routeName.chat, page: () =>const Chat()),
     GetPage(name: _routeName.setting, page: () => Setting()),
-    GetPage(name: _routeName.contactList, page: () => ContactList()),
-    GetPage(name: _routeName.allContactList, page: () => AllContactList()),
+    GetPage(name: _routeName.contactList, page: () => const ContactList()),
+    GetPage(name: _routeName.allContactList, page: () => const AllContactList()),
     GetPage(name: _routeName.groupChat, page: () => GroupChat()),
     GetPage(name: _routeName.groupChatMessage, page: () =>const GroupChatMessage()),
     GetPage(name: _routeName.confirmationScreen, page: () =>const ConfirmStatusScreen()),
     GetPage(name: _routeName.statusView, page: () =>const StatusScreenView()),
     GetPage(name: _routeName.broadcastChat, page: () =>const BroadcastChat()),
-    GetPage(name: _routeName.videoCall, page: () => const VideoCall()),
-    GetPage(name: _routeName.audioCall, page: () => const AudioCall()),
     GetPage(name: _routeName.backgroundList, page: () => const BackgroundList()),
     GetPage(name: _routeName.fingerLock, page: () =>  FingerPrintLock()),
     GetPage(name: _routeName.myStatus, page: () => const MyStatus()),

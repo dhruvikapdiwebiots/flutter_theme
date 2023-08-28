@@ -1,10 +1,5 @@
 
 import 'dart:developer';
-import 'dart:io';
-
-import 'package:async/async.dart' show StreamGroup;
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_theme/common/config.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:scoped_model/scoped_model.dart';

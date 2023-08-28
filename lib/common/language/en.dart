@@ -177,4 +177,7 @@ final dynamic en = {
   "noteEncrypt":
       "Message, Audio, Video, Media, etc share end-to-end encryption so that no one, can read your conversation.",
   "existGroup": "Are your sure, you want to exit from this group?",
+  "userName": "User Name",
+  "email": "Email",
+  "addStatus": "Add Status",
 };

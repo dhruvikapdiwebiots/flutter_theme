@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import '../../../../../config.dart';
-import '../../../../../widgets/common_app_bar.dart';
 
 class SearchUser extends StatelessWidget {
   const SearchUser({Key? key}) : super(key: key);

@@ -65,25 +65,26 @@ class _MyMessageViewerState extends State<MyMessageViewer> {
                       : messageType == MessageType.doc.name
                           ? SvgPicture.asset(
                               svgAssets.docx,
-                              color: appCtrl.appTheme.white,
+                      colorFilter: ColorFilter.mode( appCtrl.appTheme.white, BlendMode.srcIn)
                             )
                           : message!.contains(".pdf")
                               ? SvgPicture.asset(svgAssets.pdf,
-                                  color: appCtrl.appTheme.white)
+                      colorFilter: ColorFilter.mode( appCtrl.appTheme.white, BlendMode.srcIn)
+                                )
                               : messageType == MessageType.gif.name
                                   ? SvgPicture.asset(svgAssets.pdf,
-                                      color: appCtrl.appTheme.white)
+                      colorFilter: ColorFilter.mode( appCtrl.appTheme.white, BlendMode.srcIn))
                                   : messageType == MessageType.video.name
                                       ? SvgPicture.asset(svgAssets.video,
-                                          color: appCtrl.appTheme.white)
+                      colorFilter: ColorFilter.mode( appCtrl.appTheme.white, BlendMode.srcIn))
                                       : messageType == MessageType.audio.name
                                           ? SvgPicture.asset(svgAssets.audio,
-                                              color: appCtrl.appTheme.white)
+                      colorFilter: ColorFilter.mode( appCtrl.appTheme.white, BlendMode.srcIn))
                                           : messageType ==
                                                   MessageType.image.name
                                               ? SvgPicture.asset(
                                                   svgAssets.gallery,
-                                                  color: appCtrl.appTheme.white)
+                      colorFilter: ColorFilter.mode( appCtrl.appTheme.white, BlendMode.srcIn))
                                               : Text(message!,
                                                   overflow: TextOverflow.clip,
                                                   style: AppCss.poppinsMedium13

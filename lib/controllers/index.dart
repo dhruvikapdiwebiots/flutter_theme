@@ -22,5 +22,3 @@ export 'theme_controller/all_contact_list_controller.dart';
 export 'common_controller/all_permission_handler.dart';
 export 'common_controller/notification_controller.dart';
 export 'common_controller/picker_controller.dart';
-export 'theme_controller/video_call_controller.dart';
-export 'theme_controller/audio_call_controller.dart';

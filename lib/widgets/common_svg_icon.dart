@@ -8,7 +8,8 @@ class CommonSvgIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return SvgPicture.asset(icon!,
         height: Sizes.s20,
-        color: appCtrl.appTheme.blackColor)
+        colorFilter: ColorFilter.mode( appCtrl.appTheme.blackColor, BlendMode.srcIn)
+)
         .paddingAll(Insets.i10)
         .decorated(
         color: appCtrl.appTheme.whiteColor,

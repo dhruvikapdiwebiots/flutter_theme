@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import '../../../config.dart';
 
 class AllContactList extends StatefulWidget {
-  AllContactList({Key? key}) : super(key: key);
+ const AllContactList({Key? key}) : super(key: key);
 
   @override
   State<AllContactList> createState() => _AllContactListState();
@@ -52,7 +52,7 @@ class _AllContactListState extends State<AllContactList> {
   Widget build(BuildContext context) {
 
     return Consumer<FetchContactController>(
-        builder: (context, registerAvailableContact, _child) {
+        builder: (context, registerAvailableContact, child) {
       return Scaffold(
           backgroundColor: appCtrl.appTheme.bgColor,
           appBar: AppBar(

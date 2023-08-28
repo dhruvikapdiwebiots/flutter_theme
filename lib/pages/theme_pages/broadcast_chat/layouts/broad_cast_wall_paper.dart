@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 
 import '../../../../config.dart';
 

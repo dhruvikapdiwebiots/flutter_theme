@@ -1,4 +1,4 @@
-import 'package:figma_squircle/figma_squircle.dart';
+
 
 import '../../../../config.dart';
 
@@ -65,7 +65,7 @@ class SettingListCard extends StatelessWidget {
                           ? svgAssets.arrowBack
                           : svgAssets.arrowForward,
                       height: Sizes.s10,
-                      color: appCtrl.appTheme.blackColor)
+              colorFilter: ColorFilter.mode( appCtrl.appTheme.blackColor, BlendMode.srcIn))
                   .paddingAll(Insets.i12)
                   .decorated(
                       color: appCtrl.appTheme.txtColor.withOpacity(.1),

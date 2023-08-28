@@ -1,5 +1,4 @@
 import 'package:flutter_theme/config.dart';
-import 'package:flutter_theme/widgets/loading_component.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Otp extends StatelessWidget {

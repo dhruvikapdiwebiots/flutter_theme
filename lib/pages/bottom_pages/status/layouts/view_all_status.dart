@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:flutter_theme/controllers/fetch_contact_controller.dart';
-import 'package:flutter_theme/pages/bottom_pages/status/layouts/status_list_card.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../config.dart';

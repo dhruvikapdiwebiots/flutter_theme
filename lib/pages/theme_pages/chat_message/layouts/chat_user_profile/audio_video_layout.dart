@@ -17,7 +17,7 @@ class AudioVideoButtonLayout extends StatelessWidget {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       Column(children: [
         SvgPicture.asset(svgAssets.call,
-            height: Sizes.s18, color: appCtrl.appTheme.primary),
+            height: Sizes.s18,  colorFilter:ColorFilter.mode(appCtrl.appTheme.primary,BlendMode.srcIn)),
         const VSpace(Sizes.s10),
         Text(fonts.audio.tr,
             style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.txtColor))
@@ -36,7 +36,7 @@ class AudioVideoButtonLayout extends StatelessWidget {
       Column(
         children: [
           SvgPicture.asset(svgAssets.video,
-              height: Sizes.s18, color: appCtrl.appTheme.primary),
+              height: Sizes.s18,   colorFilter:ColorFilter.mode(appCtrl.appTheme.primary,BlendMode.srcIn)),
           const VSpace(Sizes.s10),
           Text(fonts.video.tr,
               style:
@@ -58,7 +58,7 @@ class AudioVideoButtonLayout extends StatelessWidget {
         Column(
           children: [
             SvgPicture.asset(svgAssets.profileAdd,
-                height: Sizes.s18, color: appCtrl.appTheme.primary),
+                height: Sizes.s18,    colorFilter:ColorFilter.mode(appCtrl.appTheme.primary,BlendMode.srcIn)),
             const VSpace(Sizes.s10),
             Text(fonts.add,
                 style:

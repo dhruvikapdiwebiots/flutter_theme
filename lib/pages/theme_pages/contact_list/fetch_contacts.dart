@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_theme/controllers/fetch_contact_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';

@@ -3,8 +3,6 @@ import 'dart:developer';
 
 import 'package:flutter_theme/widgets/reaction_pop_up/emoji_row.dart';
 import 'package:flutter_theme/widgets/reaction_pop_up/glass_morphism_reaction.dart';
-import 'package:flutter_theme/widgets/reaction_pop_up/reaction_config.dart';
-
 import '../../config.dart';
 
 class ReactionPopup extends StatefulWidget {
@@ -36,7 +34,7 @@ class ReactionPopupState extends State<ReactionPopup>
       widget.reactionPopupConfig;
 
   bool get showPopUp => widget.showPopUp;
-  double _yCoordinate = 0.0;
+  double yCoordinate = 0.0;
   double _xCoordinate = 0.0;
 
   @override
@@ -66,7 +64,7 @@ class ReactionPopupState extends State<ReactionPopup>
 
   @override
   Widget build(BuildContext context) {
-    final deviceWidth = MediaQuery.of(context).size.width;
+
     if (showPopUp) {
       _animationController.forward();
     } else {
@@ -131,7 +129,7 @@ alignment: Alignment.centerRight,
       log("_xCoordinate : $_xCoordinate");
       message = message;
       _xCoordinate = xCoordinate;
-      _yCoordinate = yCoordinate;
+      yCoordinate = yCoordinate;
     });
   }
 

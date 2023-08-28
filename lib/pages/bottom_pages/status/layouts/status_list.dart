@@ -19,7 +19,7 @@ class _StatusListLayoutState extends State<StatusListLayout> {
       return GetBuilder<DashboardController>(builder: (dashboardCtrl) {
         return GetBuilder<AppController>(builder: (appCtrl) {
           return Consumer<FetchContactController>(
-              builder: (context, registerAvailableContact, _child) {
+              builder: (context, registerAvailableContact,child) {
             return Stack(
               children: [
                 Container(

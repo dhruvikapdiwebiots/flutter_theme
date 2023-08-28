@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:giphy_get/giphy_get.dart';
 

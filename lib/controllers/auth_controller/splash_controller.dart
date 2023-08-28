@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter_theme/controllers/fetch_contact_controller.dart';

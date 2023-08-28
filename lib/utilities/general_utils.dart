@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 import 'dart:io';
 import 'dart:math' as math;
 import 'package:flutter_contacts/flutter_contacts.dart';
@@ -221,7 +221,7 @@ getDate(date) {
   DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(int.parse(date));
   if (dateTime.day == now.day) {
     when = 'Today';
-  } else if (dateTime.day == now.subtract(Duration(days: 1)).day) {
+  } else if (dateTime.day == now.subtract(const Duration(days: 1)).day) {
     when = 'Yesterday';
   } else {
     when = "${DateFormat.MMMd().format(dateTime)}-other";
@@ -235,10 +235,10 @@ getWhen(date) {
   DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(int.parse(date));
   if (dateTime.day == now.day) {
     when = 'Today';
-  } else if (dateTime.day == now.subtract(Duration(days: 1)).day) {
+  } else if (dateTime.day == now.subtract(const Duration(days: 1)).day) {
     when = 'Yesterday';
   } else {
-    when = "${DateFormat.MMMd().format(dateTime)}";
+    when = DateFormat.MMMd().format(dateTime);
   }
   return when;
 }

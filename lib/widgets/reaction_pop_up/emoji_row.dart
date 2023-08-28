@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:flutter_theme/widgets/reaction_pop_up/emoji_picker_widget.dart';
-import 'package:flutter_theme/widgets/reaction_pop_up/reaction_config.dart';
 
 import '../../config.dart';
 
@@ -31,7 +30,7 @@ class EmojiRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final emojiList = emojiConfiguration?.emojiList ?? _emojiUnicodes;
-    final size = emojiConfiguration?.size;
+
     return IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,

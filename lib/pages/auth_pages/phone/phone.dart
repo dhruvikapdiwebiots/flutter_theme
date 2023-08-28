@@ -38,7 +38,7 @@ class Phone extends StatelessWidget {
                         ]),
                   ),
                   if(phoneCtrl.isLoading)
-                    Center(child: CircularProgressIndicator(),)
+                    CommonLoader(isLoading: phoneCtrl.isLoading)
                 ],
               )),
         ),

@@ -13,25 +13,23 @@ class CallContactList extends StatelessWidget {
 
       }
 
-      return AgoraToken(
-        scaffold: PickupLayout(
-          scaffold: GetBuilder<AppController>(builder: (appCtrl) {
-            return Scaffold(
-                backgroundColor: appCtrl.appTheme.whiteColor,
-                appBar: AppBar(
-                    centerTitle: false,
-                    automaticallyImplyLeading: false,
-                    leading: Icon(Icons.arrow_back,
-                            color: appCtrl.appTheme.whiteColor)
-                        .inkWell(onTap: () => Get.back()),
-                    backgroundColor: appCtrl.appTheme.primary,
-                    title: Text(fonts.selectContacts.tr,
-                        style: AppCss.poppinsMedium18
-                            .textColor(appCtrl.appTheme.whiteColor))),
-                body: SingleChildScrollView(
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
+      return GetBuilder<AppController>(builder: (appCtrl) {
+        return Scaffold(
+            backgroundColor: appCtrl.appTheme.whiteColor,
+            appBar: AppBar(
+                centerTitle: false,
+                automaticallyImplyLeading: false,
+                leading: Icon(Icons.arrow_back,
+                    color: appCtrl.appTheme.whiteColor)
+                    .inkWell(onTap: () => Get.back()),
+                backgroundColor: appCtrl.appTheme.primary,
+                title: Text(fonts.selectContacts.tr,
+                    style: AppCss.poppinsMedium18
+                        .textColor(appCtrl.appTheme.whiteColor))),
+            body: SingleChildScrollView(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       if (callCtrl.contactList.isNotEmpty)
                         Column(children: [
                           ...callCtrl.contactList.asMap().entries.map((e) {
@@ -47,14 +45,14 @@ class CallContactList extends StatelessWidget {
                                       image =
                                           snapshot.data!.data()!["image"] ?? "";
                                       desc = snapshot.data!
-                                              .data()!["statusDesc"] ??
+                                          .data()!["statusDesc"] ??
                                           "";
                                     }
                                     return Column(
                                       children: [
                                         Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.spaceBetween,
                                           children: [
                                             Row(
                                               children: [
@@ -64,15 +62,15 @@ class CallContactList extends StatelessWidget {
                                                 const HSpace(Sizes.s10),
                                                 Column(
                                                   crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                                  CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
                                                       e.value.name ?? "",
                                                       style: AppCss
                                                           .poppinsMedium14
                                                           .textColor(appCtrl
-                                                              .appTheme
-                                                              .blackColor),
+                                                          .appTheme
+                                                          .blackColor),
                                                     ),
                                                     const VSpace(Sizes.s5),
                                                     Text(
@@ -80,8 +78,8 @@ class CallContactList extends StatelessWidget {
                                                       style: AppCss
                                                           .poppinsMedium12
                                                           .textColor(appCtrl
-                                                              .appTheme
-                                                              .txtColor),
+                                                          .appTheme
+                                                          .txtColor),
                                                     ),
                                                   ],
                                                 )
@@ -100,14 +98,14 @@ class CallContactList extends StatelessWidget {
                                                 }),
                                                 const HSpace(Sizes.s12),
                                                 SvgPicture.asset(
-                                                        svgAssets
-                                                            .videoCallFilled,
-                                                        colorFilter:
-                                                            ColorFilter.mode(
-                                                                appCtrl.appTheme
-                                                                    .primary,
-                                                                BlendMode
-                                                                    .srcIn))
+                                                    svgAssets
+                                                        .videoCallFilled,
+                                                    colorFilter:
+                                                    ColorFilter.mode(
+                                                        appCtrl.appTheme
+                                                            .primary,
+                                                        BlendMode
+                                                            .srcIn))
                                                     .inkWell(onTap: () {
                                                   callCtrl.callFromList(true,
                                                       snapshot.data!.data());
@@ -130,9 +128,7 @@ class CallContactList extends StatelessWidget {
                           }).toList()
                         ])
                     ]).marginSymmetric(vertical: Insets.i10)));
-          }),
-        ),
-      );
+      });
     });
   }
 }

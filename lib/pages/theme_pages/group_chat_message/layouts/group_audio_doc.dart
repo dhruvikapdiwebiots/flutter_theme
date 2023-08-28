@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_theme/models/message_model.dart';
 import 'package:intl/intl.dart';
@@ -212,9 +211,10 @@ class _GroupAudioDocState extends State<GroupAudioDoc>
                                           ? svgAssets.pause
                                           : svgAssets.arrow,
                                       height: Sizes.s15,
-                                      color: widget.isReceiver
+                                      colorFilter: ColorFilter.mode(widget.isReceiver
                                           ? appCtrl.appTheme.primary
-                                          : appCtrl.appTheme.blackColor,
+                                          : appCtrl.appTheme.blackColor, BlendMode.srcIn)
+
                                     )),
                                 const HSpace(Sizes.s10),
                                 Column(
