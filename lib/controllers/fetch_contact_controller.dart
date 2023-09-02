@@ -39,21 +39,21 @@ class UserData {
   }
 
   static Map<String, dynamic> toMap(UserData user) => {
-        'id': user.id,
-        'about': user.aboutUser,
-        'idVars': user.idVariants,
-        'name': user.name,
-        'url': user.photoURL,
-        'bytes': user.photoBytes,
-        'type': user.userType,
-        'time': user.time,
-      };
+    'id': user.id,
+    'about': user.aboutUser,
+    'idVars': user.idVariants,
+    'name': user.name,
+    'url': user.photoURL,
+    'bytes': user.photoBytes,
+    'type': user.userType,
+    'time': user.time,
+  };
 
   static String encode(List<UserData> users) => json.encode(
-        users
-            .map<Map<String, dynamic>>((user) => UserData.toMap(user))
-            .toList(),
-      );
+    users
+        .map<Map<String, dynamic>>((user) => UserData.toMap(user))
+        .toList(),
+  );
 
   static List<UserData> decode(String users) =>
       (json.decode(users) as List<dynamic>)
@@ -69,19 +69,19 @@ class FetchContactController with ChangeNotifier {
 
   addData(
       {required SharedPreferences prefs,
-      required UserData localUserData,
-      required bool isListener}) {
+        required UserData localUserData,
+        required bool isListener}) {
     int ind =
-        storageUserList.indexWhere((element) => element.id == localUserData.id);
+    storageUserList.indexWhere((element) => element.id == localUserData.id);
     if (ind >= 0) {
       if (storageUserList[ind].name.toString() !=
-              localUserData.name.toString() ||
+          localUserData.name.toString() ||
           storageUserList[ind].photoURL.toString() !=
               localUserData.photoURL.toString()) {
         storageUserList.removeAt(ind);
         storageUserList.insert(ind, localUserData);
         storageUserList.sort(
-            (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+                (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
         if (isListener == true) {
           notifyListeners();
         }
@@ -101,15 +101,15 @@ class FetchContactController with ChangeNotifier {
   Future<UserData?> getUserDataFromStorageAndFirebase(
       SharedPreferences prefs, String userid) async {
     int ind =
-        storageUserList.indexWhere((element) => element.idVariants == userid);
+    storageUserList.indexWhere((element) => element.idVariants == userid);
     if (ind >= 0) {
       // print("LOADED ${storageUserList[ind].id} LOCALLY ");
       UserData localUser = storageUserList[ind];
 
       if (DateTime.now()
-              .difference(DateTime.fromMillisecondsSinceEpoch(
-                  localUser.time))
-              .inDays >
+          .difference(DateTime.fromMillisecondsSinceEpoch(
+          localUser.time))
+          .inDays >
           cacheDays) {
         QuerySnapshot<Map<String, dynamic>> doc = await userRef
             .where("phone", isEqualTo: localUser.id)
@@ -141,7 +141,7 @@ class FetchContactController with ChangeNotifier {
       }
     } else {
       QuerySnapshot<Map<String, dynamic>> doc =
-          await userRef.where("phone", isEqualTo: userid).get();
+      await userRef.where("phone", isEqualTo: userid).get();
       if (doc.docs.isNotEmpty) {
         // print("LOADED ${doc.data()![Dbkeys.phone]} SERVER ");
         if(doc.docs[0].data()["isActive"] == true){
@@ -240,17 +240,17 @@ class FetchContactController with ChangeNotifier {
     }
     await getContacts(context, prefs).then((value) async {
       final List<RegisterContactDetail> decodedPhoneStrings =
-          prefs.getString('registerUserPhoneString') == null ||
-                  prefs.getString('registerUserPhoneString') == ''
-              ? []
-              : RegisterContactDetail.decode(
-                  prefs.getString('registerUserPhoneString')!);
+      prefs.getString('registerUserPhoneString') == null ||
+          prefs.getString('registerUserPhoneString') == ''
+          ? []
+          : RegisterContactDetail.decode(
+          prefs.getString('registerUserPhoneString')!);
       final List<RegisterContactDetail> decodedPhoneAndNameStrings =
-          prefs.getString('registerUserPhoneAndNameString') == null ||
-                  prefs.getString('registerUserPhoneAndNameString') == ''
-              ? []
-              : RegisterContactDetail.decode(
-                  prefs.getString('registerUserPhoneAndNameString')!);
+      prefs.getString('registerUserPhoneAndNameString') == null ||
+          prefs.getString('registerUserPhoneAndNameString') == ''
+          ? []
+          : RegisterContactDetail.decode(
+          prefs.getString('registerUserPhoneAndNameString')!);
       oldPhoneData = decodedPhoneStrings;
       registerContactUser = decodedPhoneAndNameStrings;
 
@@ -279,7 +279,7 @@ class FetchContactController with ChangeNotifier {
       BuildContext context, SharedPreferences prefs,
       {bool refresh = false}) async {
     Completer<Map<String?, String?>> completer =
-        Completer<Map<String?, String?>>();
+    Completer<Map<String?, String?>>();
     LocalStorage storage = LocalStorage("cachedContacts");
 
     Map<String?, String?> cachedContacts = {};
@@ -296,19 +296,19 @@ class FetchContactController with ChangeNotifier {
       if (res) {
         storage.ready.then((ready) async {
           if (ready) {
-       
+
             FlutterContacts.getContacts(
-                    withPhoto: true, withProperties: true, withThumbnail: true)
+                withPhoto: true, withProperties: true, withThumbnail: true)
                 .then((Iterable<Contact> contacts) async {
               for (Contact p in contacts.where((c) => c.phones.isNotEmpty)) {
                 if (p.phones.isNotEmpty) {
                   List<String?> numbers = p.phones
                       .map((number) {
-                        String? phoneNumber =
-                            phoneNumberExtension(number.normalizedNumber);
+                    String? phoneNumber =
+                    phoneNumberExtension(number.normalizedNumber);
 
-                        return phoneNumber;
-                      })
+                    return phoneNumber;
+                  })
                       .toList()
                       .where((s) => s.isNotEmpty)
                       .toList();
@@ -326,12 +326,12 @@ class FetchContactController with ChangeNotifier {
           }
           // }
         });
-      } 
+      }
       notifyListeners();
     }).catchError((onError) {
       //  Fiberchat.showRationale('Error occured: $onError');
     });
-   
+
     return completer.future;
   }
 
@@ -391,30 +391,30 @@ class FetchContactController with ChangeNotifier {
   }
 
   searchRegisterUserFromFirebase(
-    BuildContext context,
-    String currentUserPhone,
-    SharedPreferences existingPrefs,
-    bool isForceFetch,
-  ) async {
+      BuildContext context,
+      String currentUserPhone,
+      SharedPreferences existingPrefs,
+      bool isForceFetch,
+      ) async {
     if (existingPrefs.getString('lastTimeCheckedContactBookSavedCopy') ==
-            contactList.toString() &&
+        contactList.toString() &&
         isForceFetch == false) {
       searchContact = false;
       notifyListeners();
       if (oldPhoneData.isEmpty ||
           registerContactUser.isEmpty) {
         final List<RegisterContactDetail> decodedPhoneStrings =
-            existingPrefs.getString('registerUserPhoneString') == null ||
-                    existingPrefs.getString('registerUserPhoneString') == ''
-                ? []
-                : RegisterContactDetail.decode(
-                    existingPrefs.getString('registerUserPhoneString')!);
+        existingPrefs.getString('registerUserPhoneString') == null ||
+            existingPrefs.getString('registerUserPhoneString') == ''
+            ? []
+            : RegisterContactDetail.decode(
+            existingPrefs.getString('registerUserPhoneString')!);
         final List<RegisterContactDetail> decodedPhoneAndNameStrings =
-            existingPrefs.getString('registerUserPhoneAndNameString') == null ||
-                    existingPrefs.getString('registerUserPhoneAndNameString') == ''
-                ? []
-                : RegisterContactDetail.decode(
-                    existingPrefs.getString('registerUserPhoneAndNameString')!);
+        existingPrefs.getString('registerUserPhoneAndNameString') == null ||
+            existingPrefs.getString('registerUserPhoneAndNameString') == ''
+            ? []
+            : RegisterContactDetail.decode(
+            existingPrefs.getString('registerUserPhoneAndNameString')!);
         oldPhoneData = decodedPhoneStrings;
         registerContactUser = decodedPhoneAndNameStrings;
       }
@@ -427,7 +427,7 @@ class FetchContactController with ChangeNotifier {
       // print(
 
       List<String> myArray =
-          contactList!.entries.toList().map((e) => e.key.toString()).toList();
+      contactList!.entries.toList().map((e) => e.key.toString()).toList();
 
       var futureGroup = FutureGroup();
 
@@ -441,11 +441,11 @@ class FetchContactController with ChangeNotifier {
       for (var batch in p) {
         if (batch != null) {
           for (QueryDocumentSnapshot<Map<String, dynamic>> registeredUser
-              in batch) {
+          in batch) {
             if (registeredUser.data()["isActive"] == true) {
               if (registerContactUser.indexWhere((element) =>
-                          element.phone == registeredUser.data()["phone"]) <
-                      0 &&
+              element.phone == registeredUser.data()["phone"]) <
+                  0 &&
                   registeredUser.data()["phone"] != currentUserPhone) {
                 registerContactUser.add(RegisterContactDetail(
                     phone: registeredUser.data()["phone"] ?? '',
@@ -462,7 +462,7 @@ class FetchContactController with ChangeNotifier {
                         idVariants: registeredUser.data()["phone"],
                         userType: 0,
                         time:
-                            DateTime.now().millisecondsSinceEpoch,
+                        DateTime.now().millisecondsSinceEpoch,
                         name: registeredUser.data()["name"],
                         photoURL: registeredUser.data()["image"] ?? ""),
                     isListener: true);
@@ -492,13 +492,13 @@ class FetchContactController with ChangeNotifier {
     }
 
     final String availablePhoneEncoded =
-        RegisterContactDetail.encode(oldPhoneData);
+    RegisterContactDetail.encode(oldPhoneData);
 
     await existingPrefs.setString(
         'registerUserPhoneString', availablePhoneEncoded);
 
     final String registerContactUserEncode =
-        RegisterContactDetail.encode(registerContactUser);
+    RegisterContactDetail.encode(registerContactUser);
     await existingPrefs.setString(
         'registerUserPhoneAndNameString', registerContactUserEncode);
 
@@ -512,7 +512,7 @@ class FetchContactController with ChangeNotifier {
   String getUserNameOrIdQuickly(String userid) {
     if (storageUserList.indexWhere((element) => element.id == userid) >= 0) {
       return storageUserList[
-              storageUserList.indexWhere((element) => element.id == userid)]
+      storageUserList.indexWhere((element) => element.id == userid)]
           .name;
     } else {
       return 'User';
@@ -541,19 +541,19 @@ class RegisterContactDetail {
   }
 
   static Map<String, dynamic> toMap(RegisterContactDetail contact) => {
-        'id': contact.id,
-        'name': contact.name,
-        'phone': contact.phone,
-        'image': contact.image,
-        'statusDesc': contact.statusDesc,
-      };
+    'id': contact.id,
+    'name': contact.name,
+    'phone': contact.phone,
+    'image': contact.image,
+    'statusDesc': contact.statusDesc,
+  };
 
   static String encode(List<RegisterContactDetail> contacts) => json.encode(
-        contacts
-            .map<Map<String, dynamic>>(
-                (contact) => RegisterContactDetail.toMap(contact))
-            .toList(),
-      );
+    contacts
+        .map<Map<String, dynamic>>(
+            (contact) => RegisterContactDetail.toMap(contact))
+        .toList(),
+  );
 
   static List<RegisterContactDetail> decode(String contacts) =>
       (json.decode(contacts) as List<dynamic>)

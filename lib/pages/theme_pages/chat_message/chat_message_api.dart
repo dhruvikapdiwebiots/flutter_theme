@@ -1,8 +1,7 @@
 import 'dart:math';
 import 'dart:developer' as log;
-
 import 'package:flutter_theme/models/message_model.dart';
-
+import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import '../../../config.dart';
 
 class ChatMessageApi {
@@ -182,7 +181,9 @@ class ChatMessageApi {
           channelId: channelId,
           isVideoCall: isVideoCall,
           receiver: null);
-      //  ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
+
+      ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
+
       await FirebaseFirestore.instance
           .collection(collectionName.calls)
           .doc(call.callerId)
@@ -231,7 +232,7 @@ class ChatMessageApi {
             var data = {
               "channelName": call.channelId,
               "call": call,
-              "role": "role"
+              "role": role
             };
             Get.toNamed(routeName.audioCall, arguments: data);
           } else {
@@ -246,10 +247,11 @@ class ChatMessageApi {
             var data = {
               "channelName": call.channelId,
               "call": call,
-              "role": "role"
+              "role":role
             };
 
             Get.toNamed(routeName.videoCall, arguments: data);
+
           }
         });
       });

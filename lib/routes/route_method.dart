@@ -9,10 +9,12 @@ import 'package:flutter_theme/pages/theme_pages/fingerprint_and_lock_security/fi
 import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_profile/group_profile.dart';
 import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_profile/search_user.dart';
 import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/my_message_viewer.dart';
+import 'package:flutter_theme/pages/theme_pages/video_call/video_call.dart';
 import 'package:flutter_theme/widgets/background_list.dart';
 import '../pages/bottom_pages/dashboard/dashboard.dart';
 import '../config.dart';
 import '../pages/bottom_pages/status/layouts/my_status.dart';
+import '../pages/theme_pages/audio_call/audio_call.dart';
 import '../pages/theme_pages/group_chat_message/layouts/group_profile/add_participants.dart';
 import 'route_name.dart';
 
@@ -45,6 +47,8 @@ class AppRoute {
     GetPage(name: _routeName.broadcastSearchUser, page: () => const BroadcastSearchUser()),
     GetPage(name: _routeName.myMessageViewer, page: () => const MyMessageViewer()),
     GetPage(name: _routeName.callContactList, page: () => const CallContactList()),
+    GetPage(name: _routeName.videoCall, page: () => const VideoCall()),
+    GetPage(name: _routeName.audioCall, page: () => const AudioCall()),
 
   ];
 }

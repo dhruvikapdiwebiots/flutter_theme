@@ -72,7 +72,6 @@ class ContactModel extends Model {
             List<QueryDocumentSnapshot<Map<String, dynamic>>> peers = [];
 
             chat.docs.asMap().entries.forEach((element) {
-              debugPrint("_chatsWith : ${element.value.data()}");
               if(!peers.contains(element.value)) {
                 peers.add(element.value);
               }

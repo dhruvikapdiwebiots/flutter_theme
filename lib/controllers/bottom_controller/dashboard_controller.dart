@@ -132,11 +132,12 @@ class DashboardController extends GetxController
   @override
   void onReady() async {
     // TODO: implement onReady
-
-    messageCtrl.message =
-        MessageFirebaseApi().chatListWidget(appCtrl.cachedModel!.userData);
-    log("message = : ${messageCtrl.message}");
-    messageCtrl.update();
+if(appCtrl.cachedModel != null) {
+  messageCtrl.message =
+      MessageFirebaseApi().chatListWidget(appCtrl.cachedModel!.userData);
+  log("message = : ${messageCtrl.message}");
+  messageCtrl.update();
+}
     final addCtrl = Get.isRegistered<AdController>()
         ? Get.find<AdController>()
         : Get.put(AdController());
@@ -168,67 +169,7 @@ class DashboardController extends GetxController
     super.onReady();
   }
 
-  checkPermission() async {
-    Completer<Map<String?, String?>> completer =
-        Completer<Map<String?, String?>>();
 
-    appCtrl.contactPermission =
-        appCtrl.storage.read(session.contactPermission) ?? false;
-    debugPrint("CHECK PERMISSION :: ${appCtrl.contactPermission}");
-    if (appCtrl.contactPermission == false) {
-      final permissionHandelCtrl =
-          Get.isRegistered<PermissionHandlerController>()
-              ? Get.find<PermissionHandlerController>()
-              : Get.put(PermissionHandlerController());
-      bool permissionStatus = await permissionHandelCtrl.permissionGranted();
-      appCtrl.contactPermission = permissionStatus;
-      appCtrl.storage.write(session.contactPermission, permissionStatus);
-      checkPermission();
-    } else {
-      appCtrl.update();
-      debugPrint("appCtrl.contactPermission: ${appCtrl.contactPermission}");
-      if (appCtrl.contactPermission == true) {
-        await FlutterContacts.getContacts(
-                withPhoto: true, withProperties: true, withThumbnail: true)
-            .then((contacts) async {
-          appCtrl.contactList = contacts;
-          appCtrl.update();
-
-          contacts.where((c) => c.phones.isNotEmpty).forEach((Contact p) {
-            if (p.displayName.isNotEmpty && p.phones.isNotEmpty) {
-              List<String?> numbers = p.phones
-                  .map((number) {
-                    String? phone =
-                        phoneNumberExtension(number.normalizedNumber);
-
-                    return phone;
-                  })
-                  .toList()
-                  .where((s) => s.isNotEmpty)
-                  .toList();
-
-              numbers.asMap().entries.forEach((number) {
-                appCtrl.cachedContacts[number.value] = p.displayName;
-              });
-              appCtrl.update();
-            }
-          });
-          completer.complete(appCtrl.cachedContacts);
-          update();
-          completer.future.then((c) {
-            appCtrl.allContacts = c;
-          });
-          appCtrl.update();
-          appCtrl.storage.write(session.contactList, appCtrl.contactList);
-          appCtrl.update();
-          checkContactList();
-
-          debugPrint("PERR : ${appCtrl.contactList.length}");
-          debugPrint("PERR : ${appCtrl.allContacts}");
-        });
-      }
-    }
-  }
 
   addContactInFirebase() async {
     if (appCtrl.contactList.isNotEmpty) {
@@ -367,7 +308,7 @@ class DashboardController extends GetxController
       appCtrl.update();
       Get.forceAppUpdate();
     } else {
-      checkPermission();
+      //checkPermission();
     }
     debugPrint("appCtrl.availableContact : ${appCtrl.availableContact.length}");
 /*    appCtrl.userContactList = [];

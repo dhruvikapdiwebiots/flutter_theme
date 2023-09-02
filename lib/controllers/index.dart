@@ -17,6 +17,9 @@ export 'theme_controller/contact_list_controller.dart';
 export 'theme_controller/add_participants_controller.dart';
 export 'theme_controller/broadcast_chat_controller.dart';
 export 'theme_controller/group_message_controller.dart';
+
+export 'theme_controller/audio_call_controller.dart';
+export 'theme_controller/video_call_controller.dart';
 export 'theme_controller/create_group_controller.dart';
 export 'theme_controller/all_contact_list_controller.dart';
 export 'common_controller/all_permission_handler.dart';

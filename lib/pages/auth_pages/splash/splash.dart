@@ -14,7 +14,6 @@ class Splash extends StatelessWidget {
     return GetBuilder<SplashController>(builder: (_) {
 
       splashCtrl.pref = pref;
-      splashCtrl.update();
       return Scaffold(
           backgroundColor: appCtrl.appTheme.primary,
           body: Center(

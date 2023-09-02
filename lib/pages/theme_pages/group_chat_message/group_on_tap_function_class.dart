@@ -194,7 +194,7 @@ class GroupOnTapFunctionCall {
     chatCtrl.showPopUp = false;
     chatCtrl.enableReactionPopup = false;
     chatCtrl.update();
-    int index = chatCtrl.localMessage.indexWhere((element) => element.time == title);
+    int index = chatCtrl.localMessage.indexWhere((element) =>  (element.time!.contains("-other") ? element.time!.replaceAll("-other", '') : element.time) == title);
 
     int messageIndex =   chatCtrl.localMessage[index].message!.indexWhere((element) => element.docId == docId);
     chatCtrl.localMessage[index].message![messageIndex].emoji = emoji;

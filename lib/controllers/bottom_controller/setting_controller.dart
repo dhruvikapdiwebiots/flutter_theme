@@ -21,20 +21,22 @@ class SettingController extends GetxController {
 
   //get user info from firebase
   getUserData() async {
-    await FirebaseFirestore.instance
-        .collection(collectionName.users)
-        .doc(FirebaseAuth.instance.currentUser != null
-            ? FirebaseAuth.instance.currentUser!.uid
-            : appCtrl.user["id"])
-        .get()
-        .then((value) {
-      if (value.exists) {
-        user = value.data();
-        appCtrl.storage.write(session.user, user);
-      }
-      update();
-      appCtrl.update();
-    });
+    if(appCtrl.user !=null) {
+      await FirebaseFirestore.instance
+          .collection(collectionName.users)
+          .doc(FirebaseAuth.instance.currentUser != null
+          ? FirebaseAuth.instance.currentUser!.uid
+          : appCtrl.user["id"])
+          .get()
+          .then((value) {
+        if (value.exists) {
+          user = value.data();
+          appCtrl.storage.write(session.user, user);
+        }
+        update();
+        appCtrl.update();
+      });
+    }
   }
 
   //edit profile page navigation

@@ -116,6 +116,9 @@ class SplashController extends GetxController {
     } else {
       appCtrl.user = user;
       appCtrl.update();
+      if(user != null ){
+        getModel(appCtrl.user);
+      }
       //
       PermissionStatus permission = await Permission.contacts.status;
 
@@ -128,10 +131,12 @@ class SplashController extends GetxController {
         final FetchContactController registerAvailableContact =
             Provider.of<FetchContactController>(Get.context!, listen: false);
         registerAvailableContact.fetchContacts(
-            Get.context!, appCtrl.user["phone"], pref!, false);
+            Get.context!, appCtrl.user["phone"], pref!, true);
 
         await Future.delayed(Durations.s1);
       }
+
+
 
       if (isIntro == true && isIntro.toString() == "true") {
         if (isBiometric == true) {
@@ -147,7 +152,7 @@ class SplashController extends GetxController {
 
   ContactModel? getModel(user) {
     appCtrl.cachedModel ??= ContactModel(user["phone"]);
-
+log("appCtrl.cachedModel : ${appCtrl.cachedModel}");
     appCtrl.update();
     return appCtrl.cachedModel;
   }

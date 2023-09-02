@@ -92,7 +92,7 @@ class _FetchContactState extends State<FetchContact> {
                     final FetchContactController contactsProvider =
                         Provider.of<FetchContactController>(context,
                             listen: false);
-
+Fluttertoast.showToast(msg: "Loading..");
                     contactsProvider.fetchContacts(
                         context, appCtrl.user["phone"], widget.prefs!, true);
                   }),

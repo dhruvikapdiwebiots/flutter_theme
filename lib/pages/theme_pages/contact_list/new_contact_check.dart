@@ -133,7 +133,7 @@ class _NewContactState extends State<NewContact> {
                   final dashboardCtrl = Get.isRegistered<DashboardController>()
                       ? Get.find<DashboardController>()
                       : Get.put(DashboardController());
-                  await dashboardCtrl.checkPermission();
+
                   appCtrl.update();
                   registerContact = appCtrl.availableContact;
                   contacts = appCtrl.allContacts;
@@ -155,7 +155,7 @@ class _NewContactState extends State<NewContact> {
                         Get.isRegistered<DashboardController>()
                             ? Get.find<DashboardController>()
                             : Get.put(DashboardController());
-                    await dashboardCtrl.checkPermission();
+
                     appCtrl.update();
                     registerContact = appCtrl.availableContact;
                     contacts = appCtrl.allContacts;

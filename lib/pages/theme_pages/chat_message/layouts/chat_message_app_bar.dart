@@ -191,7 +191,41 @@ log("DOCID L ${chatCtrl.searchChatId[chatCtrl.count!]}");
                                   .inkWell(
                                       onTap: () => chatCtrl.buildPopupDialog())
                             ])
-                          : Container(),
+                          : PopupMenuButton(
+                    color: appCtrl.appTheme.whiteColor,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(maxWidth: Sizes.s170),
+                    iconSize: Sizes.s20,
+                    onSelected: onSelected,
+                    offset: Offset(0.0, appBarHeight),
+                    shape: RoundedRectangleBorder(
+                        borderRadius:
+                        BorderRadius.circular(AppRadius.r8)),
+                    itemBuilder: (ctx) => [
+                      _buildPopupMenuItem(
+                          "audio", svgAssets.audio, 0),
+                      _buildPopupMenuItem("video", svgAssets.video, 1,
+                          isDivider: false),
+                    ],
+                    child: SvgPicture.asset(
+                      svgAssets.audioVideo,
+                      height: Sizes.s22,
+                      colorFilter:ColorFilter.mode(appCtrl.appTheme.blackColor,BlendMode.srcIn),
+                    ).paddingAll(Insets.i10),
+                  )
+                      .decorated(
+                      color: appCtrl.appTheme.whiteColor,
+                      boxShadow: [
+                        const BoxShadow(
+                            offset: Offset(0, 2),
+                            blurRadius: 5,
+                            spreadRadius: 1,
+                            color: Color.fromRGBO(0, 0, 0, 0.05))
+                      ],
+                      borderRadius:
+                      BorderRadius.circular(AppRadius.r10))
+                      .marginSymmetric(vertical: Insets.i23)
+                      .marginOnly(right: Insets.i20),
                   PopupMenuButton(
                     color: appCtrl.appTheme.whiteColor,
                     padding: EdgeInsets.zero,

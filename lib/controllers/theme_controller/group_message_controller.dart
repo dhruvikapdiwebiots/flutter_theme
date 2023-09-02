@@ -785,7 +785,7 @@ class GroupChatMessageController extends GetxController {
   }
 
   //check contact in firebase and if not exists
-  saveContact(userData, {message}) async {
+  saveContact(UserContactModel? userData, {message}) async {
     await FirebaseFirestore.instance
         .collection(collectionName.users)
         .doc(user["id"])
@@ -795,8 +795,8 @@ class GroupChatMessageController extends GetxController {
         .then((value) {
       bool isEmpty = value.docs
           .where((element) =>
-              element.data()["senderId"] == userData["uid"] ||
-              element.data()["receiverId"] == userData["uid"])
+              element.data()["senderId"] == userData!.uid ||
+              element.data()["receiverId"] == userData.uid)
           .isNotEmpty;
       if (!isEmpty) {
         var data = {"chatId": "0", "data": userData, "message": message};
@@ -805,8 +805,8 @@ class GroupChatMessageController extends GetxController {
         Get.toNamed(routeName.chat, arguments: data);
       } else {
         value.docs.asMap().entries.forEach((element) {
-          if (element.value.data()["senderId"] == userData["uid"] ||
-              element.value.data()["receiverId"] == userData["uid"]) {
+          if (element.value.data()["senderId"] == userData!.uid ||
+              element.value.data()["receiverId"] == userData.uid) {
             var data = {
               "chatId": element.value.data()["chatId"],
               "data": userData,
@@ -860,8 +860,8 @@ class GroupChatMessageController extends GetxController {
               overlay.paintBounds.size.height),
         ),
         items: [
-          _buildPopupMenuItem("Chat $pName", 0),
-          _buildPopupMenuItem("Remove $pName", 1),
+          _buildPopupMenuItem("Chat ${value['name']}", 0),
+          _buildPopupMenuItem("Remove ${value['name']}", 1),
         ]);
     if (result == 0) {
       var data = {

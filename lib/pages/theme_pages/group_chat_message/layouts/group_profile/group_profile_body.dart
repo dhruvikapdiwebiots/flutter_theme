@@ -156,36 +156,19 @@ class GroupProfileBody extends StatelessWidget {
                               },
                               addTap: () async {
                                 log("ADD PARTICIPATE : ${appCtrl.contactList.length}");
-                                if (appCtrl.contactList.isEmpty) {
-                                  final groupChatCtrl = Get.isRegistered<
-                                          AddParticipantsController>()
-                                      ? Get.find<AddParticipantsController>()
-                                      : Get.put(AddParticipantsController());
+                                final groupChatCtrl = Get.isRegistered<
+                                    AddParticipantsController>()
+                                    ? Get.find<AddParticipantsController>()
+                                    : Get.put(AddParticipantsController());
 
-                                  groupChatCtrl.refreshContacts();
-                                  var data = {
-                                    "exitsUser": chatCtrl.userList,
-                                    "groupId": chatCtrl.pId
-                                  };
-                                  log("arg : $data");
-                                  Get.toNamed(routeName.addParticipants,
-                                      arguments: data);
-                                } else {
-                                  final groupChatCtrl = Get.isRegistered<
-                                          AddParticipantsController>()
-                                      ? Get.find<AddParticipantsController>()
-                                      : Get.put(AddParticipantsController());
-                                  if (groupChatCtrl.contactList.isEmpty) {
-                                    groupChatCtrl.getFirebaseContact();
-                                  }
-                                  var data = {
-                                    "exitsUser": chatCtrl.userList,
-                                    "groupId": chatCtrl.pId
-                                  };
-                                  log("arg : $data");
-                                  Get.toNamed(routeName.addParticipants,
-                                      arguments: data);
-                                }
+                                groupChatCtrl.refreshContacts();
+                                var data = {
+                                  "exitsUser": chatCtrl.userList,
+                                  "groupId": chatCtrl.pId
+                                };
+                                log("arg : $data");
+                                Get.toNamed(routeName.addParticipants,
+                                    arguments: data);
                               },
                             ),
                             const VSpace(Sizes.s20)
@@ -294,36 +277,13 @@ class GroupProfileBody extends StatelessWidget {
                                   ],
                                 ).inkWell(onTap: ()async{
 
-                                  if (appCtrl.contactList.isEmpty) {
+                                  var data ={
+                                    "exitsUser":chatCtrl.userList,
+                                    "groupId":chatCtrl.pId,
+                                    "isGroup": true
+                                  };
 
-                                    final groupChatCtrl = Get.isRegistered<AddParticipantsController>()
-                                        ? Get.find<AddParticipantsController>()
-                                        : Get.put(AddParticipantsController());
-
-
-                                    groupChatCtrl.refreshContacts();
-                                    var data ={
-                                      "exitsUser":chatCtrl.userList,
-                                      "groupId":chatCtrl.pId,
-                                      "isGroup": true
-                                    };
-
-                                    Get.toNamed(routeName.addParticipants,arguments: data);
-                                  } else {
-                                    final groupChatCtrl = Get.isRegistered<AddParticipantsController>()
-                                        ? Get.find<AddParticipantsController>()
-                                        : Get.put(AddParticipantsController());
-                                    if (groupChatCtrl.contactList.isEmpty) {
-                                      groupChatCtrl.getFirebaseContact();
-                                    }
-                                    var data ={
-                                      "exitsUser":chatCtrl.userList,
-                                      "groupId":chatCtrl.pId,
-                                      "isGroup": true
-                                    };
-
-                                    Get.toNamed(routeName.addParticipants,arguments: data);
-                                  }
+                                  Get.toNamed(routeName.addParticipants,arguments: data);
                                 }),
                                 const VSpace(Sizes.s20),
                                 Row(

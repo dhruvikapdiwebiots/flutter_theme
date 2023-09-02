@@ -193,7 +193,7 @@ class CallListController extends GetxController {
           channelId: channelId,
           isVideoCall: isVideoCall,
           receiver: null);
-      //ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
+
       await FirebaseFirestore.instance
           .collection(collectionName.calls)
           .doc(call.callerId)

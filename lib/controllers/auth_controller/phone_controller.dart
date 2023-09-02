@@ -98,9 +98,9 @@ SharedPreferences? pref;
     final FetchContactController registerAvailableContact =
     Provider.of<FetchContactController>(Get.context!,
         listen: false);
-    log("INIT PAGE");
+    debugPrint("INIT PAGE");
     registerAvailableContact.fetchContacts(
-        Get.context!, appCtrl.user["phone"], pref!, false);
+        Get.context!, appCtrl.user["phone"], pref!, true);
     await getAdminPermission();
 
     await appCtrl.storage.write(session.user, user);
@@ -114,7 +114,7 @@ SharedPreferences? pref;
           .doc(user["id"])
           .update({'status': "Online", "pushToken": token, "isActive": true});
 
-     await Future.delayed(Durations.s5);
+     await Future.delayed(Durations.s3);
 
       isLoading = false;
       update();

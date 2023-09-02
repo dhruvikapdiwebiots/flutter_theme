@@ -176,7 +176,7 @@ class FirebaseCommonController extends GetxController {
               final dashboardCtrl = Get.isRegistered<DashboardController>()
                   ? Get.find<DashboardController>()
                   : Get.put(DashboardController());
-              dashboardCtrl.checkPermission();
+           //   dashboardCtrl.checkPermission();
               if (appCtrl.contactList.isNotEmpty) {
                 List<Map<String, dynamic>> contactsData =
                     appCtrl.contactList.map((contact) {

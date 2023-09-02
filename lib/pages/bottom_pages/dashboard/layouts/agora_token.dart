@@ -1,4 +1,6 @@
 
+import 'dart:developer';
+
 import 'package:flutter_theme/config.dart';
 
 class AgoraToken extends StatelessWidget {
@@ -17,6 +19,7 @@ class AgoraToken extends StatelessWidget {
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasData && snapshot.data!.data()!.isNotEmpty) {
+
                 appCtrl.storage
                     .write(session.agoraToken, snapshot.data!.data());
               }
