@@ -1,17 +1,10 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
-import 'package:agora_uikit/agora_uikit.dart';
 import 'package:audioplayers/audioplayers.dart' as audio_players;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:wakelock/wakelock.dart';
 import '../../config.dart';
-
-
-
-const appId = "b95c25d58d304f07af6a33e50d7b80c0";
-const token = "007eJxTYKg/fGrzO9bExCkHPmUfX6Pj7X/lWH1kfeiH4zE89fW3s/8qMCRZmiYbmaaYWqQYG5ikGZgnppklGhunmhqkmCdZGCQbGG3/mNIQyMjgk/WZkZEBAkF8FgZDI2MTBgYAHBMhXA==";
-
 
 class VideoCallController extends GetxController {
   String? channelName;
@@ -23,7 +16,7 @@ class VideoCallController extends GetxController {
   int? remoteUId;
   List users = <int>[];
   final infoStrings = <String>[];
-  late AgoraClient? client;
+
   // ignore: cancel_subscriptions
   StreamSubscription<int>? timerSubscription;
   bool muted = false;
@@ -35,6 +28,7 @@ class VideoCallController extends GetxController {
   audio_players.AudioPlayer? player;
   AudioCache audioCache = AudioCache();
   int? remoteUidValue;
+  String? token;
 
   // ignore: close_sinks
   StreamController<int>? streamController;
@@ -91,14 +85,16 @@ class VideoCallController extends GetxController {
 
   //initialise agora
   Future<void> initAgora() async {
-var agora = appCtrl.storage.read(session.agoraToken);
+    var agora = appCtrl.storage.read(session.agoraToken);
+    log("token :: ${call!.agoraToken}");
+    log("token :: ${call!.channelId}");
     //create the engine
     engine = createAgoraRtcEngine();
-    await engine.initialize( RtcEngineContext(
+    await engine.initialize(RtcEngineContext(
       appId: agora['agoraAppId'],
       channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
     ));
-update();
+    update();
     engine.registerEventHandler(
       RtcEngineEventHandler(
         onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
@@ -143,7 +139,7 @@ update();
               'started': null,
               'ended': null,
               'callerName':
-              call!.receiver != null ? nameList : call!.callerName,
+                  call!.receiver != null ? nameList : call!.callerName,
             }, SetOptions(merge: true));
             if (call!.receiver != null) {
               List receiver = call!.receiver!;
@@ -167,7 +163,7 @@ update();
                     'started': null,
                     'ended': null,
                     'callerName':
-                    call!.receiver != null ? nameList : call!.callerName,
+                        call!.receiver != null ? nameList : call!.callerName,
                   }, SetOptions(merge: true));
                 }
               });
@@ -192,7 +188,7 @@ update();
                 'started': null,
                 'ended': null,
                 'callerName':
-                call!.receiver != null ? nameList : call!.callerName,
+                    call!.receiver != null ? nameList : call!.callerName,
               }, SetOptions(merge: true));
             }
           }
@@ -201,16 +197,17 @@ update();
           update();
           Get.forceAppUpdate();
         },
-        onUserJoined: (RtcConnection connection, int remoteUserId, int elapsed) {
+        onUserJoined:
+            (RtcConnection connection, int remoteUserId, int elapsed) {
           debugPrint("remote user $remoteUserId joined");
           remoteUId = remoteUserId;
           update();
 
           final info = 'userJoined: $remoteUserId';
           infoStrings.add(info);
-          if(users.isEmpty){
+          if (users.isEmpty) {
             users = [remoteUserId];
-          }else {
+          } else {
             users.add(remoteUserId);
           }
           update();
@@ -278,7 +275,8 @@ update();
           update();
           Get.forceAppUpdate();
         },
-        onUserOffline: (RtcConnection connection, int remoteUid, UserOfflineReasonType reason) {
+        onUserOffline: (RtcConnection connection, int remoteUid,
+            UserOfflineReasonType reason) {
           debugPrint("remote user $remoteUid left channel");
           remoteUid = 0;
           users.remove(remoteUid);
@@ -322,85 +320,89 @@ update();
           }
         },
         onTokenPrivilegeWillExpire: (RtcConnection connection, String token) {
-          debugPrint('[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
+          debugPrint(
+              '[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
         },
         onError: (err, msg) {
-          debugPrint('[onTokenPrivilegeWillExpire] connection: ${err}, token: $msg)');
+          debugPrint(
+              '[onTokenPrivilegeWillExpire] connection: $err, token: $msg)');
         },
         onFirstRemoteAudioFrame: (connection, userId, elapsed) {
           final info = 'firstRemoteVideo: $userId';
           infoStrings.add(info);
           update();
-        },onLeaveChannel: (connection, stats) {
-        remoteUId = null;
-        infoStrings.add('onLeaveChannel');
-        users.clear();
+        },
+        onLeaveChannel: (connection, stats) {
+          remoteUId = null;
+          infoStrings.add('onLeaveChannel');
+          users.clear();
 
-        _dispose();
-        update();
-        if (isAlreadyEndedCall == false) {
-          FirebaseFirestore.instance
-              .collection(collectionName.calls)
-              .doc(call!.callerId)
-              .collection(collectionName.collectionCallHistory)
-              .add({});
-          FirebaseFirestore.instance
-              .collection(collectionName.calls)
-              .doc(call!.callerId)
-              .collection(collectionName.collectionCallHistory)
-              .doc(call!.timestamp.toString())
-              .set({
-            'status': 'ended',
-            'ended': DateTime.now(),
-          }, SetOptions(merge: true));
-          if (call!.receiver != null) {
-            List receiver = call!.receiver!;
-            receiver.asMap().entries.forEach((element) {
-              if (element.value['id'] != userData["id"]) {
-                FirebaseFirestore.instance
-                    .collection(collectionName.calls)
-                    .doc(element.value['id'])
-                    .collection(collectionName.collectionCallHistory)
-                    .doc(call!.timestamp.toString())
-                    .set({
-                  'status': 'ended',
-                  'ended': DateTime.now(),
-                }, SetOptions(merge: true));
-              }
-            });
-          } else {
+          _dispose();
+          update();
+          if (isAlreadyEndedCall == false) {
             FirebaseFirestore.instance
                 .collection(collectionName.calls)
-                .doc(call!.receiverId)
+                .doc(call!.callerId)
+                .collection(collectionName.collectionCallHistory)
+                .add({});
+            FirebaseFirestore.instance
+                .collection(collectionName.calls)
+                .doc(call!.callerId)
                 .collection(collectionName.collectionCallHistory)
                 .doc(call!.timestamp.toString())
                 .set({
               'status': 'ended',
               'ended': DateTime.now(),
             }, SetOptions(merge: true));
+            if (call!.receiver != null) {
+              List receiver = call!.receiver!;
+              receiver.asMap().entries.forEach((element) {
+                if (element.value['id'] != userData["id"]) {
+                  FirebaseFirestore.instance
+                      .collection(collectionName.calls)
+                      .doc(element.value['id'])
+                      .collection(collectionName.collectionCallHistory)
+                      .doc(call!.timestamp.toString())
+                      .set({
+                    'status': 'ended',
+                    'ended': DateTime.now(),
+                  }, SetOptions(merge: true));
+                }
+              });
+            } else {
+              FirebaseFirestore.instance
+                  .collection(collectionName.calls)
+                  .doc(call!.receiverId)
+                  .collection(collectionName.collectionCallHistory)
+                  .doc(call!.timestamp.toString())
+                  .set({
+                'status': 'ended',
+                'ended': DateTime.now(),
+              }, SetOptions(merge: true));
+            }
           }
-        }
-        Wakelock.disable();
-        Get.back();
-        update();
-      },
-
+          Wakelock.disable();
+          Get.back();
+          update();
+        },
       ),
     );
     update();
+    await engine.enableWebSdkInteroperability(true);
     await engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
     await engine.enableVideo();
     await engine.startPreview();
 
     await engine.joinChannel(
-      token: agora['token'],
-      channelId: "1234",
+      token: call!.agoraToken!,
+      channelId: channelName!,
       uid: 0,
       options: const ChannelMediaOptions(),
     );
     update();
+
     update();
-Get.forceAppUpdate();
+    Get.forceAppUpdate();
   }
 
   //on speaker off on
@@ -430,7 +432,7 @@ Get.forceAppUpdate();
   }
 
   Future<void> _dispose() async {
-   await engine.leaveChannel();
+    await engine.leaveChannel();
     await engine.release();
   }
 
@@ -573,7 +575,7 @@ Get.forceAppUpdate();
                 SetOptions(merge: true)).then((value) {
           remoteUId = null;
           channelName = "";
-        //  role = null;
+          //  role = null;
           update();
         });
       }

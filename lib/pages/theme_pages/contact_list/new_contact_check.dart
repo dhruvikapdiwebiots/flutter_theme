@@ -130,9 +130,6 @@ class _NewContactState extends State<NewContact> {
                     .inkWell(onTap: () async {
                   isLoading = true;
                   setState(() {});
-                  final dashboardCtrl = Get.isRegistered<DashboardController>()
-                      ? Get.find<DashboardController>()
-                      : Get.put(DashboardController());
 
                   appCtrl.update();
                   registerContact = appCtrl.availableContact;
@@ -151,10 +148,7 @@ class _NewContactState extends State<NewContact> {
                   onRefresh: () async {
                     isLoading = true;
                     setState(() {});
-                    final dashboardCtrl =
-                        Get.isRegistered<DashboardController>()
-                            ? Get.find<DashboardController>()
-                            : Get.put(DashboardController());
+
 
                     appCtrl.update();
                     registerContact = appCtrl.availableContact;

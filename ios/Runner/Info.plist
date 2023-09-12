@@ -29,7 +29,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.861823949799-vc35cprkp249096uujjn0vvnmcvjppkn</string>
+				<string>com.googleusercontent.apps.432304404919-m2ockjganap7slauecakmqoj6nprccbu</string>
 			</array>
 		</dict>
 	</array>
@@ -54,7 +54,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Used to demonstrate image picker plugin</string>
 	<key>NSContactsUsageDescription</key>
-	<string>Reason we need access to the contact list</string>
+	<string>We need access to the contact list</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Used to face Id Usage</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
@@ -103,5 +103,7 @@
 	<false/>
 	<key>GADApplicationIdentifier</key>
     <string>ca-app-pub-1426383974713305~2668032264</string>
+    <key>SERVER_CLIENT_ID</key>
+    <string>432304404919-m2ockjganap7slauecakmqoj6nprccbu.apps.googleusercontent.com</string>
 </dict>
 </plist>

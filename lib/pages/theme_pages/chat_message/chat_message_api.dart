@@ -1,7 +1,6 @@
-import 'dart:math';
+
 import 'dart:developer' as log;
 import 'package:flutter_theme/models/message_model.dart';
-import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import '../../../config.dart';
 
 class ChatMessageApi {
@@ -115,7 +114,7 @@ class ChatMessageApi {
     groupId,
     content,
     pData,
-   MessageType type,
+    MessageType type,
   ) async {
     var user = appCtrl.storage.read(session.user);
     List receiver = pData["groupData"]["users"];
@@ -164,47 +163,34 @@ class ChatMessageApi {
   //audio and video call api
   audioAndVideoCallApi({toData, isVideoCall}) async {
     try {
-
       var userData = appCtrl.storage.read(session.user);
-      String channelId = Random().nextInt(1000).toString();
+
       int timestamp = DateTime.now().millisecondsSinceEpoch;
-      Call call = Call(
-          timestamp: timestamp,
-          callerId: userData["id"],
-          callerName: userData["name"],
-          callerPic: userData["image"],
-          receiverId: toData["id"],
-          receiverName: toData["name"],
-          receiverPic: toData["image"],
-          callerToken: userData["pushToken"],
-          receiverToken: toData["pushToken"],
-          channelId: channelId,
-          isVideoCall: isVideoCall,
-          receiver: null);
 
-      ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
+      Map<String, dynamic>? response = await firebaseCtrl.getAgoraTokenAndChannelName();
 
-      await FirebaseFirestore.instance
-          .collection(collectionName.calls)
-          .doc(call.callerId)
-          .collection(collectionName.calling)
-          .add({
-        "timestamp": timestamp,
-        "callerId": userData["id"],
-        "callerName": userData["name"],
-        "callerPic": userData["image"],
-        "receiverId": toData["id"],
-        "receiverName": toData["name"],
-        "receiverPic": toData["image"],
-        "callerToken": userData["pushToken"],
-        "receiverToken": toData["pushToken"],
-        "hasDialled": true,
-        "channelId": channelId,
-        "isVideoCall": isVideoCall,
-      }).then((value) async {
+      log.log("FUNCTION ; $response");
+      if(response != null){
+        String channelId = response["channelName"];
+        String token = response["agoraToken"];
+        Call call = Call(
+            timestamp: timestamp,
+            callerId: userData["id"],
+            callerName: userData["name"],
+            callerPic: userData["image"],
+            receiverId: toData["id"],
+            receiverName: toData["name"],
+            receiverPic: toData["image"],
+            callerToken: userData["pushToken"],
+            receiverToken: toData["pushToken"],
+            channelId: channelId,
+            isVideoCall: isVideoCall,
+            agoraToken: token,
+            receiver: null);
+
         await FirebaseFirestore.instance
             .collection(collectionName.calls)
-            .doc(call.receiverId)
+            .doc(call.callerId)
             .collection(collectionName.calling)
             .add({
           "timestamp": timestamp,
@@ -216,50 +202,74 @@ class ChatMessageApi {
           "receiverPic": toData["image"],
           "callerToken": userData["pushToken"],
           "receiverToken": toData["pushToken"],
-          "hasDialled": false,
-          "channelId": channelId,
-          "isVideoCall": isVideoCall
+          "hasDialled": true,
+          "channelId": response['channelName'],
+          "isVideoCall": isVideoCall,
+          "agoraToken": token,
         }).then((value) async {
-          call.hasDialled = true;
-          if (isVideoCall == false) {
-            firebaseCtrl.sendNotification(
-                title: "Incoming Audio Call...",
-                msg: "${call.callerName} audio call",
-                token: call.receiverToken,
-                pName: call.callerName,
-                image: userData["image"],
-                dataTitle: call.callerName);
-            var data = {
-              "channelName": call.channelId,
-              "call": call,
-              "role": role
-            };
-            Get.toNamed(routeName.audioCall, arguments: data);
-          } else {
-            firebaseCtrl.sendNotification(
-                title: "Incoming Video Call...",
-                msg: "${call.callerName} video call",
-                token: call.receiverToken,
-                pName: call.callerName,
-                image: userData["image"],
-                dataTitle: call.callerName);
+          await FirebaseFirestore.instance
+              .collection(collectionName.calls)
+              .doc(call.receiverId)
+              .collection(collectionName.calling)
+              .add({
+            "timestamp": timestamp,
+            "callerId": userData["id"],
+            "callerName": userData["name"],
+            "callerPic": userData["image"],
+            "receiverId": toData["id"],
+            "receiverName": toData["name"],
+            "receiverPic": toData["image"],
+            "callerToken": userData["pushToken"],
+            "receiverToken": toData["pushToken"],
+            "hasDialled": false,
+            "channelId": channelId,
+            "isVideoCall": isVideoCall,
+            "agoraToken": token,
+          }).then((value) async {
+            call.hasDialled = true;
+            if (isVideoCall == false) {
+              firebaseCtrl.sendNotification(
+                  title: "Incoming Audio Call...",
+                  msg: "${call.callerName} audio call",
+                  token: call.receiverToken,
+                  pName: call.callerName,
+                  image: userData["image"],
+                  dataTitle: call.callerName);
+              var data = {
+                "channelName": call.channelId,
+                "call": call,
+                "token": response["agoraToken"]
+              };
+              Get.toNamed(routeName.audioCall, arguments: data);
+            } else {
+              firebaseCtrl.sendNotification(
+                  title: "Incoming Video Call...",
+                  msg: "${call.callerName} video call",
+                  token: call.receiverToken,
+                  pName: call.callerName,
+                  image: userData["image"],
+                  dataTitle: call.callerName);
+    log.log("call.channelId : ${call.channelId}");
+              var data = {
+                "channelName": call.channelId,
+                "call": call,
+                "token": response["agoraToken"]
+              };
 
-            var data = {
-              "channelName": call.channelId,
-              "call": call,
-              "role":role
-            };
-
-            Get.toNamed(routeName.videoCall, arguments: data);
-
-          }
+              Get.toNamed(routeName.videoCall, arguments: data);
+            }
+          });
         });
-      });
+      }else{
+        Fluttertoast.showToast(msg: "Failed to call");
+      }
     } on FirebaseException catch (e) {
       // Caught an exception from Firebase.
       log.log("Failed with error '${e.code}': ${e.message}");
     }
   }
+
+
 
   getLocalMessage() {
     final chatCtrl = Get.isRegistered<ChatController>()
@@ -268,7 +278,6 @@ class ChatMessageApi {
     List<QueryDocumentSnapshot<Object?>> message = chatCtrl.allMessages;
     List reveredList = message.reversed.toList();
     chatCtrl.localMessage = [];
-
 
     reveredList.asMap().entries.forEach((element) {
       log.log("getDate(element.value.id) ; %${getDate(element.value.id)}");
@@ -355,7 +364,7 @@ class ChatMessageApi {
             message[0].docId = element.value.id;
           }
           DateTimeChip dateTimeChip =
-          DateTimeChip(time: getDate(element.value.id), message: message);
+              DateTimeChip(time: getDate(element.value.id), message: message);
           chatCtrl.localMessage.add(dateTimeChip);
         } else {
           int index = chatCtrl.localMessage
@@ -464,7 +473,7 @@ class ChatMessageApi {
             message[0].docId = element.value.id;
           }
           DateTimeChip dateTimeChip =
-          DateTimeChip(time: getDate(element.value.id), message: message);
+              DateTimeChip(time: getDate(element.value.id), message: message);
           chatCtrl.localMessage.add(dateTimeChip);
         } else {
           int index = chatCtrl.localMessage
@@ -521,7 +530,7 @@ class ChatMessageApi {
             message[0].docId = element.value.id;
           }
           DateTimeChip dateTimeChip =
-          DateTimeChip(time: getDate(element.value.id), message: message);
+              DateTimeChip(time: getDate(element.value.id), message: message);
           chatCtrl.localMessage.add(dateTimeChip);
         } else {
           int index = chatCtrl.localMessage
@@ -547,7 +556,7 @@ class ChatMessageApi {
             message[0].docId = element.value.id;
           }
           DateTimeChip dateTimeChip =
-          DateTimeChip(time: getDate(element.value.id), message: message);
+              DateTimeChip(time: getDate(element.value.id), message: message);
           chatCtrl.localMessage.add(dateTimeChip);
         } else {
           int index = chatCtrl.localMessage
@@ -572,7 +581,7 @@ class ChatMessageApi {
             message[0].docId = element.value.id;
           }
           DateTimeChip dateTimeChip =
-          DateTimeChip(time: getDate(element.value.id), message: message);
+              DateTimeChip(time: getDate(element.value.id), message: message);
           chatCtrl.localMessage.add(dateTimeChip);
         } else {
           int index = chatCtrl.localMessage
@@ -587,5 +596,4 @@ class ChatMessageApi {
 
     chatCtrl.update();
   }
-
 }

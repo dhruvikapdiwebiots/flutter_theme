@@ -131,7 +131,7 @@ class SplashController extends GetxController {
         final FetchContactController registerAvailableContact =
             Provider.of<FetchContactController>(Get.context!, listen: false);
         registerAvailableContact.fetchContacts(
-            Get.context!, appCtrl.user["phone"], pref!, true);
+            Get.context!, appCtrl.user["phone"], pref ?? appCtrl.pref!, true);
 
         await Future.delayed(Durations.s1);
       }

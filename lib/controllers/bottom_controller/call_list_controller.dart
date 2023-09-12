@@ -6,7 +6,6 @@ import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/models/firebase_contact_model.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'dart:math' as math;
 
 class CallListController extends GetxController {
   List settingList = [];
@@ -178,43 +177,33 @@ class CallListController extends GetxController {
     try {
 
       var userData = appCtrl.storage.read(session.user);
-      String channelId = math.Random().nextInt(1000).toString();
-      int timestamp = DateTime.now().millisecondsSinceEpoch;
-      Call call = Call(
-          timestamp: timestamp,
-          callerId: userData["id"],
-          callerName: userData["name"],
-          callerPic: userData["image"],
-          receiverId: toData["id"],
-          receiverName: toData["name"],
-          receiverPic: toData["image"],
-          callerToken: userData["pushToken"],
-          receiverToken: toData["pushToken"],
-          channelId: channelId,
-          isVideoCall: isVideoCall,
-          receiver: null);
 
-      await FirebaseFirestore.instance
-          .collection(collectionName.calls)
-          .doc(call.callerId)
-          .collection(collectionName.calling)
-          .add({
-        "timestamp": timestamp,
-        "callerId": userData["id"],
-        "callerName": userData["name"],
-        "callerPic": userData["image"],
-        "receiverId": toData["id"],
-        "receiverName": toData["name"],
-        "receiverPic": toData["image"],
-        "callerToken": userData["pushToken"],
-        "receiverToken": toData["pushToken"],
-        "hasDialled": true,
-        "channelId": channelId,
-        "isVideoCall": isVideoCall,
-      }).then((value) async {
+      int timestamp = DateTime.now().millisecondsSinceEpoch;
+
+      Map<String, dynamic>? response = await firebaseCtrl.getAgoraTokenAndChannelName();
+
+      log("FUNCTION ; $response");
+      if(response != null) {
+        String channelId = response["channelName"];
+        String token = response["agoraToken"];
+        Call call = Call(
+            timestamp: timestamp,
+            callerId: userData["id"],
+            callerName: userData["name"],
+            callerPic: userData["image"],
+            receiverId: toData["id"],
+            receiverName: toData["name"],
+            receiverPic: toData["image"],
+            callerToken: userData["pushToken"],
+            receiverToken: toData["pushToken"],
+            channelId: channelId,
+            isVideoCall: isVideoCall,
+            agoraToken: token,
+            receiver: null);
+
         await FirebaseFirestore.instance
             .collection(collectionName.calls)
-            .doc(call.receiverId)
+            .doc(call.callerId)
             .collection(collectionName.calling)
             .add({
           "timestamp": timestamp,
@@ -226,44 +215,67 @@ class CallListController extends GetxController {
           "receiverPic": toData["image"],
           "callerToken": userData["pushToken"],
           "receiverToken": toData["pushToken"],
-          "hasDialled": false,
+          "hasDialled": true,
           "channelId": channelId,
-          "isVideoCall": isVideoCall
+          "isVideoCall": isVideoCall,
+          "agoraToken": token,
         }).then((value) async {
-          call.hasDialled = true;
-          if (isVideoCall == false) {
-            firebaseCtrl.sendNotification(
-                title: "Incoming Audio Call...",
-                msg: "${call.callerName} audio call",
-                token: call.receiverToken,
-                pName: call.callerName,
-                image: userData["image"],
-                dataTitle: call.callerName);
-            var data = {
-              "channelName": call.channelId,
-              "call": call,
-              "role": "role"
-            };
-            Get.toNamed(routeName.audioCall, arguments: data);
-          } else {
-            firebaseCtrl.sendNotification(
-                title: "Incoming Video Call...",
-                msg: "${call.callerName} video call",
-                token: call.receiverToken,
-                pName: call.callerName,
-                image: userData["image"],
-                dataTitle: call.callerName);
+          await FirebaseFirestore.instance
+              .collection(collectionName.calls)
+              .doc(call.receiverId)
+              .collection(collectionName.calling)
+              .add({
+            "timestamp": timestamp,
+            "callerId": userData["id"],
+            "callerName": userData["name"],
+            "callerPic": userData["image"],
+            "receiverId": toData["id"],
+            "receiverName": toData["name"],
+            "receiverPic": toData["image"],
+            "callerToken": userData["pushToken"],
+            "receiverToken": toData["pushToken"],
+            "hasDialled": false,
+            "channelId": channelId,
+            "isVideoCall": isVideoCall,
+            "agoraToken": token,
+          }).then((value) async {
+            call.hasDialled = true;
+            if (isVideoCall == false) {
+              firebaseCtrl.sendNotification(
+                  title: "Incoming Audio Call...",
+                  msg: "${call.callerName} audio call",
+                  token: call.receiverToken,
+                  pName: call.callerName,
+                  image: userData["image"],
+                  dataTitle: call.callerName);
+              var data = {
+                "channelName": call.channelId,
+                "call": call,
+                "token": response["agoraToken"]
+              };
+              Get.toNamed(routeName.audioCall, arguments: data);
+            } else {
+              firebaseCtrl.sendNotification(
+                  title: "Incoming Video Call...",
+                  msg: "${call.callerName} video call",
+                  token: call.receiverToken,
+                  pName: call.callerName,
+                  image: userData["image"],
+                  dataTitle: call.callerName);
 
-            var data = {
-              "channelName": call.channelId,
-              "call": call,
-              "role": "role"
-            };
+              var data = {
+                "channelName": call.channelId,
+                "call": call,
+                "token": response["agoraToken"]
+              };
 
-            Get.toNamed(routeName.videoCall, arguments: data);
-          }
+              Get.toNamed(routeName.videoCall, arguments: data);
+            }
+          });
         });
-      });
+      }else{
+        Fluttertoast.showToast(msg: "Failed to call");
+      }
     } on FirebaseException catch (e) {
       // Caught an exception from Firebase.
       log("Failed with error '${e.code}': ${e.message}");

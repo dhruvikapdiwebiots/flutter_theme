@@ -12,6 +12,7 @@ class Call {
   bool? isVideoCall;
   String? callerToken;
   String? receiverToken;
+  String? agoraToken;
   List? receiver;
 
   Call({
@@ -28,6 +29,7 @@ class Call {
     this.callerToken,
     this.receiverToken,
     this.receiver,
+    this.agoraToken,
   });
 
   // to map
@@ -45,6 +47,7 @@ class Call {
     callMap["timestamp"] = call.timestamp;
     callMap["callerToken"] = call.callerToken;
     callMap["receiverToken"] = call.receiverToken;
+    callMap["agoraToken"] = call.agoraToken;
     return callMap;
   }
 
@@ -61,5 +64,6 @@ class Call {
     timestamp = callMap["timestamp"];
     callerToken = callMap["callerToken"];
     receiverToken = callMap["receiverToken"];
+    agoraToken = callMap["agoraToken"];
   }
 }

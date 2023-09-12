@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer' as log;
 import 'dart:io';
-import 'dart:math';
 import 'package:dartx/dartx_io.dart';
 import 'package:drishya_picker/drishya_picker.dart';
 import 'package:flutter_theme/config.dart';
@@ -582,53 +581,44 @@ class GroupChatMessageController extends GetxController {
   audioAndVideoCall(isVideoCall) async {
     try {
       var userData = appCtrl.storage.read(session.user);
+      Map<String, dynamic>? response = await firebaseCtrl.getAgoraTokenAndChannelName();
 
-      String channelId = Random().nextInt(1000).toString();
-      //ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
-      int timestamp = DateTime.now().millisecondsSinceEpoch;
-      List receiver = pData["groupData"]["users"];
+      log.log("FUNCTION ; $response");
+      if(response != null) {
+        String channelId = response["channelName"];
+        String token = response["agoraToken"];
+        //ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
+        int timestamp = DateTime
+            .now()
+            .millisecondsSinceEpoch;
+        List receiver = pData["groupData"]["users"];
 
-      receiver.asMap().entries.forEach((element) {
-        FirebaseFirestore.instance
-            .collection(collectionName.users)
-            .doc(element.value["id"])
-            .get()
-            .then((snap) async {
-          Call call = Call(
-              timestamp: timestamp,
-              callerId: userData["id"],
-              callerName: userData["name"],
-              callerPic: userData["image"],
-              receiverId: snap.data()!["id"],
-              receiverName: snap.data()!["name"],
-              receiverPic: snap.data()!["image"],
-              callerToken: userData["pushToken"],
-              receiverToken: snap.data()!["pushToken"],
-              channelId: channelId,
-              isVideoCall: isVideoCall,
-              receiver: receiver);
+        receiver
+            .asMap()
+            .entries
+            .forEach((element) {
+          FirebaseFirestore.instance
+              .collection(collectionName.users)
+              .doc(element.value["id"])
+              .get()
+              .then((snap) async {
+            Call call = Call(
+                timestamp: timestamp,
+                callerId: userData["id"],
+                callerName: userData["name"],
+                callerPic: userData["image"],
+                receiverId: snap.data()!["id"],
+                receiverName: snap.data()!["name"],
+                receiverPic: snap.data()!["image"],
+                callerToken: userData["pushToken"],
+                receiverToken: snap.data()!["pushToken"],
+                channelId: channelId,
+                isVideoCall: isVideoCall,
+                receiver: receiver,agoraToken: token);
 
-          await FirebaseFirestore.instance
-              .collection(collectionName.calls)
-              .doc(call.callerId)
-              .collection(collectionName.calling)
-              .add({
-            "timestamp": timestamp,
-            "callerId": userData["id"],
-            "callerName": userData["name"],
-            "callerPic": userData["image"],
-            "receiverId": snap.data()!["id"],
-            "receiverName": snap.data()!["name"],
-            "receiverPic": snap.data()!["image"],
-            "callerToken": userData["pushToken"],
-            "receiverToken": snap.data()!["pushToken"],
-            "hasDialled": true,
-            "channelId": channelId,
-            "isVideoCall": isVideoCall,
-          }).then((value) async {
             await FirebaseFirestore.instance
                 .collection(collectionName.calls)
-                .doc(call.receiverId)
+                .doc(call.callerId)
                 .collection(collectionName.calling)
                 .add({
               "timestamp": timestamp,
@@ -640,46 +630,69 @@ class GroupChatMessageController extends GetxController {
               "receiverPic": snap.data()!["image"],
               "callerToken": userData["pushToken"],
               "receiverToken": snap.data()!["pushToken"],
-              "hasDialled": false,
+              "hasDialled": true,
               "channelId": channelId,
-              "isVideoCall": isVideoCall
+              "agoraToken": token,
+              "isVideoCall": isVideoCall,
             }).then((value) async {
-              call.hasDialled = true;
-              if (isVideoCall == false) {
-                firebaseCtrl.sendNotification(
-                    title: "Incoming Audio Call...",
-                    msg: "${call.callerName} audio call",
-                    token: call.receiverToken,
-                    pName: call.callerName,
-                    image: userData["image"],
-                    dataTitle: call.callerName);
-                var data = {
-                  "channelName": call.channelId,
-                  "call": call,
-                  "role": "role"
-                };
-                Get.toNamed(routeName.audioCall, arguments: data);
-              } else {
-                firebaseCtrl.sendNotification(
-                    title: "Incoming Video Call...",
-                    msg: "${call.callerName} video call",
-                    token: call.receiverToken,
-                    pName: call.callerName,
-                    image: userData["image"],
-                    dataTitle: call.callerName);
+              await FirebaseFirestore.instance
+                  .collection(collectionName.calls)
+                  .doc(call.receiverId)
+                  .collection(collectionName.calling)
+                  .add({
+                "timestamp": timestamp,
+                "callerId": userData["id"],
+                "callerName": userData["name"],
+                "callerPic": userData["image"],
+                "receiverId": snap.data()!["id"],
+                "receiverName": snap.data()!["name"],
+                "receiverPic": snap.data()!["image"],
+                "callerToken": userData["pushToken"],
+                "receiverToken": snap.data()!["pushToken"],
+                "hasDialled": false,
+                "channelId": channelId,
+                "agoraToken": token,
+                "isVideoCall": isVideoCall
+              }).then((value) async {
+                call.hasDialled = true;
+                if (isVideoCall == false) {
+                  firebaseCtrl.sendNotification(
+                      title: "Incoming Audio Call...",
+                      msg: "${call.callerName} audio call",
+                      token: call.receiverToken,
+                      pName: call.callerName,
+                      image: userData["image"],
+                      dataTitle: call.callerName);
+                  var data = {
+                    "channelName": call.channelId,
+                    "call": call,
+                    "token": response["agoraToken"]
+                  };
+                  Get.toNamed(routeName.audioCall, arguments: data);
+                } else {
+                  firebaseCtrl.sendNotification(
+                      title: "Incoming Video Call...",
+                      msg: "${call.callerName} video call",
+                      token: call.receiverToken,
+                      pName: call.callerName,
+                      image: userData["image"],
+                      dataTitle: call.callerName);
 
-                var data = {
-                  "channelName": call.channelId,
-                  "call": call,
-                  "role": "role",
-                };
+                  var data = {
+                    "channelName": call.channelId,
+                    "call": call,
+                    "token": response["agoraToken"]
+                  };
 
-                Get.toNamed(routeName.videoCall, arguments: data);
-              }
+                  Get.toNamed(routeName.videoCall, arguments: data);
+                }
+              });
             });
           });
         });
-      });
+      }else{
+        Fluttertoast.showToast(msg: "Failed to call");
+      }
     } on FirebaseException catch (e) {
       // Caught an exception from Firebase.
       log.log("err :$e");

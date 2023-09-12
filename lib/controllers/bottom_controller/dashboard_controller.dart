@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/controllers/common_controller/ad_controller.dart';
 import 'package:flutter_theme/controllers/recent_chat_controller.dart';

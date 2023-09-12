@@ -38,12 +38,12 @@ SharedPreferences? pref;
     update();
     try {
       if (phone.text.isNotEmpty) {
-        if (phone.text == "8141833594") {
+        if (phone.text == "8200796842") {
 
           log("GOO");
           await FirebaseFirestore.instance
               .collection(collectionName.users)
-              .where("phone", isEqualTo: "8141833594")
+              .where("phone", isEqualTo: "8200796842")
               .get()
               .then((value) async {
             if (value.docs.isNotEmpty) {

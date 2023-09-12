@@ -8,11 +8,11 @@ const {
 exports.generateToken = functions.https.onCall(async (data, context) => {
   const appId = data.appId;
   const appCertificate = data.appCertificate;
-  const channelName = Math.floor(Math.random()*100).toString();
+  const channelName = Math.floor(Math.random() * 100).toString();
   const uid = 0;
   const role = RtcRole.PUBLISHER;
 
-  const expirationTimeInSeconds = data.expiryTime;
+  const expirationTimeInSeconds = 36000;
   const currentTimestamp = Math.floor(Date.now() / 1000);
   const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds;
 
@@ -32,6 +32,7 @@ exports.generateToken = functions.https.onCall(async (data, context) => {
         role,
         privilegeExpiredTs,
     );
+
     return {
       data: {
         token: token,

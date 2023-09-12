@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:audioplayers/audioplayers.dart' as audio_players;
 import 'package:audioplayers/audioplayers.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:wakelock/wakelock.dart';
 import '../../config.dart';
 
@@ -291,8 +290,8 @@ class AudioCallController extends GetxController {
     await engine.startPreview();
 
     await engine.joinChannel(
-      token: agora['token'],
-      channelId: "1234",
+      token: call!.agoraToken!,
+      channelId: channelName!,
       uid: 0,
       options: const ChannelMediaOptions(),
     );

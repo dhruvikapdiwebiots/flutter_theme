@@ -1,9 +1,7 @@
 
 import 'dart:developer';
 
-import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:camera/camera.dart';
-//import 'package:camera/camera.dart';
 
 import '../../../config.dart';
 
@@ -11,7 +9,6 @@ class PickupBody extends StatelessWidget {
   final Call? call;
   final CameraController? cameraController;
   final String? imageUrl;
- // final ClientRoleType? role;
 
   const PickupBody({Key? key, this.call, this.imageUrl, this.cameraController})
       : super(key: key);
@@ -126,13 +123,11 @@ class PickupBody extends StatelessWidget {
                 const HSpace(Sizes.s30),
                 InkWell(
                     onTap: () async {
-                      log("ISS ; ${call!.timestamp!}");
-ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
                       if (call!.isVideoCall!) {
                         var data = {
                           "channelName": call!.channelId,
                           "call": call,
-                          "role": role
+                          "token": call!.agoraToken
                         };
                         Get.toNamed(routeName.videoCall, arguments: data);
 
@@ -140,7 +135,7 @@ ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
                         var data = {
                           "channelName": call!.channelId,
                           "call": call,
-                          "role":role
+                          "token": call!.agoraToken
                         };
 
                         Get.toNamed(routeName.audioCall, arguments: data);

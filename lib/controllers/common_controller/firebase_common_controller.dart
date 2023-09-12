@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_theme/config.dart';
@@ -173,10 +174,7 @@ class FirebaseCommonController extends GetxController {
                 }
               });
             } else {
-              final dashboardCtrl = Get.isRegistered<DashboardController>()
-                  ? Get.find<DashboardController>()
-                  : Get.put(DashboardController());
-           //   dashboardCtrl.checkPermission();
+
               if (appCtrl.contactList.isNotEmpty) {
                 List<Map<String, dynamic>> contactsData =
                     appCtrl.contactList.map((contact) {
@@ -363,5 +361,32 @@ class FirebaseCommonController extends GetxController {
         }
       }
     });
+  }
+
+  getAgoraTokenAndChannelName() async {
+    var agoraData = appCtrl.storage.read(session.agoraToken);
+
+    try {
+      HttpsCallable httpsCallable =
+      FirebaseFunctions.instance.httpsCallable("generateToken");
+
+      dynamic result = await httpsCallable.call({
+        "appId": agoraData["agoraAppId"],
+        "appCertificate": agoraData["appCertificate"]
+      });
+
+      if (result.data != null) {
+        Map<String, dynamic> response = {
+          "agoraToken": result.data['data']["token"],
+          "channelName": result.data['data']["channelName"],
+        };
+
+        return response;
+      }else{
+        return null;
+      }
+    } catch (e) {
+      log("ERROR WHILE FETCH CREDENTIALS : $e");
+    }
   }
 }

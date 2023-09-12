@@ -1,6 +1,4 @@
 import 'dart:developer';
-
-import 'package:agora_uikit/agora_uikit.dart';
 import 'package:flutter_theme/config.dart';
 
 class VideoCall extends StatefulWidget {
@@ -21,6 +19,7 @@ class _VideoCallState extends State<VideoCall> {
     log("datadata :: $data");
     videoCallCtrl.channelName = data["channelName"];
     videoCallCtrl.call = data["call"];
+    videoCallCtrl.token = data["token"];
     videoCallCtrl.userData = appCtrl.storage.read(session.user);
     setState(() {});
     log("datadata :: $data");
