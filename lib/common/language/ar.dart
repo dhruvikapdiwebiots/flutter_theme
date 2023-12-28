@@ -180,4 +180,5 @@ final dynamic ar = {
   "userName": "اسم المستخدم",
   "email": "بريد إلكتروني",
   "addStatus": "أضف الحالة",
+  "syncNow": 'زامن الآن "لنقل البيانات',
 };

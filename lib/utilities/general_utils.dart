@@ -1,10 +1,12 @@
-
+import 'dart:developer';
 import 'dart:io';
 import 'dart:math' as math;
-import 'package:flutter_contacts/flutter_contacts.dart';
-import 'package:encrypt/encrypt.dart' as encrypt;
+import 'package:encrypt/encrypt.dart';
+import 'package:encrypt/encrypt.dart' as encrypted;
+
 import 'package:intl/intl.dart';
 import '../config.dart';
+import '../main.dart';
 
 var loadingCtrl = Get.find<AppController>();
 
@@ -35,11 +37,10 @@ extension StringCasingExtension on String {
   String toCapitalized() =>
       length > 0 ? '${this[0].toUpperCase()}${substring(1).toLowerCase()}' : '';
 
-  String toTitleCase() =>
-      replaceAll(RegExp(' +'), ' ')
-          .split(' ')
-          .map((str) => str.toCapitalized())
-          .join(' ');
+  String toTitleCase() => replaceAll(RegExp(' +'), ' ')
+      .split(' ')
+      .map((str) => str.toCapitalized())
+      .join(' ');
 }
 
 //phone number split
@@ -49,23 +50,89 @@ String phoneNumberExtension(phoneNumber) {
     if (phone.contains(" ")) {
       phone = phone.replaceAll(" ", "");
     }
-    if (phone.contains("-")) {
-      phone = phone.replaceAll("-", "");
-    }
-    if (phone.contains("+")) {
-      phone = phone.replaceAll("+91", "");
-    }
     if (phone.contains(" ")) {
       phone = phone.replaceAll("  ", "");
     }
   }
-  return phone;
+
+  return phone.replaceAll(RegExp('[^0-9+]'), '');
 }
 
-Future<List<Contact>> getAllContacts() async {
-  var contacts = (await FlutterContacts.getContacts(
-      withPhoto: true, withProperties: true, withThumbnail: true));
-  return contacts;
+
+List phoneList({
+  String? phone,
+  String? dialCode,
+}) {
+  List list = [
+    '+${dialCode!.substring(1)}$phone',
+    '+${dialCode.substring(1)}-$phone',
+    '${dialCode.substring(1)}-$phone',
+    '${dialCode.substring(1)}$phone',
+    '0${dialCode.substring(1)}$phone',
+    '0$phone',
+    '$phone',
+    '+$phone',
+    '+${dialCode.substring(1)}--$phone',
+    '00$phone',
+    '00${dialCode.substring(1)}$phone',
+    '+${dialCode.substring(1)}-0$phone',
+    '+${dialCode.substring(1)}0$phone',
+    '${dialCode.substring(1)}0$phone',
+  ];
+  return list;
+}
+
+phoneNumberVariantsList({
+  String? phone,
+  String countryCode ="",
+}) {
+  bool isNumberContains =false;
+  log("countryCode : $countryCode");
+  List list =[];
+  if(countryCode != "") {
+    list = [
+      '+${countryCode.substring(1)}$phone',
+      '+${countryCode.substring(1)}-$phone',
+      '${countryCode.substring(1)}-$phone',
+      '${countryCode.substring(1)}$phone',
+      '0${countryCode.substring(1)}$phone',
+      '0$phone',
+      '$phone',
+      '+$phone',
+      '+${countryCode.substring(1)}--$phone',
+      '00$phone',
+      '00${countryCode.substring(1)}$phone',
+      '+${countryCode.substring(1)}-0$phone',
+      '+${countryCode.substring(1)}0$phone',
+      '${countryCode.substring(1)}0$phone',
+    ];
+  }else{
+    list = [
+      '+$phone',
+      '+-$phone',
+      '-$phone',
+      '$phone',
+      '0$phone',
+      '$phone',
+      '+--$phone',
+      '00$phone',
+      '+-0$phone',
+      '+0$phone',
+    ];
+  }
+
+  isNumberContains = list.where((element) => element == phone).isEmpty;
+
+  return isNumberContains;
+}
+
+
+getNumberByDialCode(phoneNumber,code){
+  String phone = phoneNumber;
+  if("+$code$phoneNumber" == phoneNumber){
+    phone = phone.replaceAll("+$code", "");
+  }
+  return phone;
 }
 
 const double degrees2Radians = math.pi / 180.0;
@@ -97,7 +164,6 @@ const double alphaOff = 0;
 const double alphaOn = 1;
 const int animDuration = 300;
 
-
 String formatBytes(int bytes, int decimals) {
   if (bytes <= 0) {
     return '0 B';
@@ -113,14 +179,10 @@ String formatBytes(int bytes, int decimals) {
     'ZB',
   ];
   final int i = (math.log(bytes / 100) / math.log(1024)).floor();
-  return '${(bytes / math.pow(1024, i)).toStringAsFixed(
-      decimals)} ${suffixes[i]}';
+  return '${(bytes / math.pow(1024, i)).toStringAsFixed(decimals)} ${suffixes[i]}';
 }
 
-
-String getVideoSize({required File file}) =>
-    formatBytes(file.lengthSync(), 2);
-
+String getVideoSize({required File file}) => formatBytes(file.lengthSync(), 2);
 
 final List colors = [
   const Color(0xffF98BAE),
@@ -134,11 +196,7 @@ final List colors = [
 int getUnseenMessagesNumber(
     List<QueryDocumentSnapshot<Map<String, dynamic>>> items) {
   int counter = 0;
-  items
-      .asMap()
-      .entries
-      .forEach((element) {
-
+  items.asMap().entries.forEach((element) {
     if (!element.value.data()["isSeen"]) {
       counter++;
     }
@@ -146,26 +204,22 @@ int getUnseenMessagesNumber(
   return counter;
 }
 
-
 int getGroupUnseenMessagesNumber(
     List<QueryDocumentSnapshot<Map<String, dynamic>>> items) {
   int counter = 0;
-  items
-      .asMap()
-      .entries
-      .forEach((element) {
-        if(element.value.data().containsKey("seenMessageList")) {
-
-          List seenList =element.value.data()["seenMessageList"];
-          bool isAvailable = seenList
-              .where((availableElement) => availableElement["userId"] == appCtrl.user["id"])
-              .isNotEmpty;
-          if (!isAvailable) {
-            counter++;
-          }
-        }else{
-          counter++;
-        }
+  items.asMap().entries.forEach((element) {
+    if (element.value.data().containsKey("seenMessageList")) {
+      List seenList = element.value.data()["seenMessageList"];
+      bool isAvailable = seenList
+          .where((availableElement) =>
+              availableElement["userId"] == appCtrl.user["id"])
+          .isNotEmpty;
+      if (!isAvailable) {
+        counter++;
+      }
+    } else {
+      counter++;
+    }
   });
   return counter;
 }
@@ -174,8 +228,9 @@ bool checkUserExist(phone) {
   bool isExist = false;
 
   var contain = appCtrl.userContactList.where((element) {
-    return element.phones.isNotEmpty ? phoneNumberExtension(
-        element.phones[0].number.toString()) == phone : false;
+    return element.phones.isNotEmpty
+        ? phoneNumberExtension(element.phones[0].normalizedNumber.toString()) == phone
+        : false;
   });
   if (contain.isNotEmpty) {
     isExist = true;
@@ -184,7 +239,6 @@ bool checkUserExist(phone) {
   }
   return isExist;
 }
-
 
 typedef StringCallback = void Function(String);
 typedef VoidCallBack = void Function();
@@ -201,21 +255,36 @@ const String angryFace = "😡";
 const String astonishedFace = "😲";
 const String thumbsUp = "👍";
 
-final encryptKey = encrypt.Key.fromUtf8('my 32 length key................');
-final iv = encrypt.IV.fromLength(16);
-final encrypter = encrypt.Encrypter(encrypt.AES(encryptKey));
 
-String decryptMessage(content){
-  return encrypter.decrypt(encrypt.Encrypted.fromBase64(content), iv: iv);
+decryptMessage(content) {
+  String decryptedText = decrypt(content);
+  return decryptedText;
 }
+
+String decrypt(encryptedData) {
+  final key = encrypted.Key.fromUtf8(encryptedKey);
+  final encrypter = Encrypter(AES(key, mode: AESMode.cbc));
+  final initVector = IV.fromUtf8(encryptedKey.substring(0, 16));
+  return encrypter.decrypt(Encrypted.fromBase64(encryptedData), iv: initVector);
+}
+
+Encrypted encryptFun(String plainText) {
+  final key = encrypted.Key.fromUtf8(encryptedKey);
+  final encrypter = Encrypter(AES(key, mode: AESMode.cbc));
+  final initVector = IV.fromUtf8(encryptedKey.substring(0, 16));
+  Encrypted encryptedData = encrypter.encrypt(plainText, iv: initVector);
+  return encryptedData;
+}
+
 
 int calculateDifference(DateTime date) {
   DateTime now = DateTime.now();
-  return DateTime(date.year, date.month, date.day).difference(DateTime(now.year, now.month, now.day)).inDays;
+  return DateTime(date.year, date.month, date.day)
+      .difference(DateTime(now.year, now.month, now.day))
+      .inDays;
 }
 
 getDate(date) {
-
   DateTime now = DateTime.now();
   String when;
   DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(int.parse(date));
@@ -243,49 +312,46 @@ getWhen(date) {
   return when;
 }
 
-String messageTypeCondition(MessageType type, content){
-
-  if(type == MessageType.image || type == MessageType.imageArray) {
+String messageTypeCondition(MessageType type, content) {
+  if (type == MessageType.image || type == MessageType.imageArray) {
     return "\u{1F4F8} Photo";
-  } else if(type == MessageType.video) {
+  } else if (type == MessageType.video) {
     return "\u{1F3A5} Video";
-  } else if(type == MessageType.audio) {
+  } else if (type == MessageType.audio) {
     return "\u{1F3A4} Audio";
-  } else if(type == MessageType.doc) {
+  } else if (type == MessageType.doc) {
     return "\u{1f4c4} Document";
-  } else if(type == MessageType.location) {
+  } else if (type == MessageType.location) {
     return "\u{1F4CD} Location";
-  } else if(type == MessageType.link) {
+  } else if (type == MessageType.link) {
     return "\u{1F517} Link";
-  } else if(type == MessageType.contact) {
+  } else if (type == MessageType.contact) {
     return "\u{1F464} ${content.toString().split("-BREAK-")[0]}";
-  }else if(type == MessageType.gif) {
+  } else if (type == MessageType.gif) {
     return "\u{1F47E} GIF";
-  } else{
+  } else {
     return content;
   }
-
 }
-String groupMessageTypeCondition(MessageType type, content){
 
-  if(type == MessageType.image || type == MessageType.imageArray) {
+String groupMessageTypeCondition(MessageType type, content) {
+  if (type == MessageType.image || type == MessageType.imageArray) {
     return "${appCtrl.user["name"]} shared \u{1F4F8} Photo";
-  } else if(type == MessageType.video) {
+  } else if (type == MessageType.video) {
     return "${appCtrl.user["name"]} shared \u{1F3A5} Video";
-  } else if(type == MessageType.audio) {
+  } else if (type == MessageType.audio) {
     return "${appCtrl.user["name"]} shared \u{1F3A4} Audio";
-  } else if(type == MessageType.doc) {
+  } else if (type == MessageType.doc) {
     return "${appCtrl.user["name"]} shared \u{1f4c4} Document";
-  } else if(type == MessageType.location) {
+  } else if (type == MessageType.location) {
     return "${appCtrl.user["name"]} shared \u{1F4CD} Location";
-  } else if(type == MessageType.link) {
+  } else if (type == MessageType.link) {
     return "${appCtrl.user["name"]} shared \u{1F517} Link";
-  } else if(type == MessageType.contact) {
+  } else if (type == MessageType.contact) {
     return "${appCtrl.user["name"]} shared \u{1F464} ${content.toString().split("-BREAK-")[0]}";
-  }else if(type == MessageType.gif) {
+  } else if (type == MessageType.gif) {
     return "${appCtrl.user["name"]} shared \u{1F47E} GIF";
-  } else{
+  } else {
     return content;
   }
-
 }

@@ -1,4 +1,6 @@
 
+
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../../../config.dart';

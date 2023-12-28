@@ -180,4 +180,5 @@ final dynamic kr = {
   "userName": "사용자 이름",
   "email": "이메일",
   "addStatus": "상태 추가",
+  "syncNow": "지금 동기화",
 };

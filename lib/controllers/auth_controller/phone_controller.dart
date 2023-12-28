@@ -11,12 +11,11 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class PhoneController extends GetxController {
   bool mobileNumber = false;
   TextEditingController phone = TextEditingController();
   String dialCode = "";
-  bool isCorrect = false,isLoading=false;
+  bool isCorrect = false, isLoading = false;
   bool visible = false, error = true;
   Timer timer = Timer(const Duration(seconds: 1), () {});
   double val = 0;
@@ -25,7 +24,7 @@ class PhoneController extends GetxController {
   final formKey = GlobalKey<FormState>();
   bool showFrontSide = true;
 
-SharedPreferences? pref;
+  SharedPreferences? pref;
   PhoneNumber number = PhoneNumber(isoCode: 'IN');
 
   // CHECK VALIDATION
@@ -38,14 +37,14 @@ SharedPreferences? pref;
     update();
     try {
       if (phone.text.isNotEmpty) {
-        if (phone.text == "8200796842") {
-
+        if (phone.text == "8141833594") {
           log("GOO");
           await FirebaseFirestore.instance
               .collection(collectionName.users)
-              .where("phone", isEqualTo: "8200796842")
+              .where("phone", isEqualTo: "${dialCode}8141833594")
               .get()
               .then((value) async {
+            log("GOO11 : ${value.docs.isNotEmpty}");
             if (value.docs.isNotEmpty) {
               homeNavigation(value.docs[0].data());
             }
@@ -57,7 +56,7 @@ SharedPreferences? pref;
 
           appCtrl.pref = pref;
           appCtrl.update();
-          isLoading =false;
+          isLoading = false;
           Get.to(() => Otp(pref: pref),
               transition: Transition.downToUp, arguments: phone.text);
         }
@@ -65,11 +64,12 @@ SharedPreferences? pref;
         mobileNumber = true;
       }
       update();
-    }on FirebaseException catch (e) {
+    } on FirebaseException catch (e) {
       // Caught an exception from Firebase.
-      isLoading =false;
+      isLoading = false;
       update();
-      ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(content: Text("Failed with error '${e.code}': ${e.message}")));
+      ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(
+          content: Text("Failed with error '${e.code}': ${e.message}")));
 
       log("Failed with error '${e.code}': ${e.message}");
     }
@@ -86,18 +86,14 @@ SharedPreferences? pref;
     appCtrl.update();
     getModel();
 
-
-
     final RecentChatController recentChatController =
-    Provider.of<RecentChatController>(Get.context!,
-        listen: false);
+        Provider.of<RecentChatController>(Get.context!, listen: false);
     log("INIT PAGE");
 
     recentChatController.getModel(appCtrl.user);
 
     final FetchContactController registerAvailableContact =
-    Provider.of<FetchContactController>(Get.context!,
-        listen: false);
+        Provider.of<FetchContactController>(Get.context!, listen: false);
     debugPrint("INIT PAGE");
     registerAvailableContact.fetchContacts(
         Get.context!, appCtrl.user["phone"], pref!, true);
@@ -112,14 +108,21 @@ SharedPreferences? pref;
       await FirebaseFirestore.instance
           .collection(collectionName.users)
           .doc(user["id"])
-          .update({'status': "Online", "pushToken": token, "isActive": true});
+          .update({
+        'status': "Online",
+        "pushToken": token,
+        "isActive": true,
+        'dialCode': dialCode,
+        'phoneRaw': phone.text,
+        'phone': (dialCode + phone.text).trim(),
+        "dialCodePhoneList": phoneList(phone: phone.text, dialCode: dialCode)
+      });
 
-     await Future.delayed(Durations.s3);
+      await Future.delayed(DurationClass.s3);
 
       isLoading = false;
       update();
-      Get.toNamed(routeName.dashboard,arguments: pref);
-
+      Get.toNamed(routeName.dashboard, arguments: pref);
     });
   }
 
@@ -127,11 +130,9 @@ SharedPreferences? pref;
     appCtrl.cachedModel ??= ContactModel(appCtrl.user["phone"]);
 
     debugPrint("NEW DATA ${appCtrl.cachedModel!.userData}");
-appCtrl.update();
+    appCtrl.update();
     return appCtrl.cachedModel;
   }
-
-
 
   getAdminPermission() async {
     final usageControls = await FirebaseFirestore.instance
@@ -170,7 +171,7 @@ appCtrl.update();
     // TODO: implement onReady
     pref = Get.arguments;
     update();
-    await Future.delayed(Durations.ms150);
+    await Future.delayed(DurationClass.ms150);
     visible = true;
     dismissKeyboard();
     FocusManager.instance.primaryFocus?.unfocus();

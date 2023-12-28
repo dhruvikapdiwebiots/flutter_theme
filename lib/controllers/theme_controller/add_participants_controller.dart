@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import '../recent_chat_controller.dart';
 
 class AddParticipantsController extends GetxController {
-  List<Contact>? contacts;
   List selectedContact = [];
   List existsUser = [];
   dynamic selectedData;
@@ -238,12 +237,12 @@ class AddParticipantsController extends GetxController {
         (element) => element["phone"] == data["phone"],
       );
     } else {
-      /* if(selectedContact.length < appCtrl.usageControlsVal!.groupMembersLimit!) {
-
+       if(selectedContact.length < appCtrl.usageControlsVal!.groupMembersLimit!) {
+         selectedContact.add(data);
       }else{
         snackBarMessengers(message: "You can added only ${isGroup ? appCtrl.usageControlsVal!.groupMembersLimit! :appCtrl.usageControlsVal!.broadCastMembersLimit!} Members in the group");
-      }*/
-      selectedContact.add(data);
+      }
+
     }
 
     update();

@@ -11,6 +11,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'config.dart';
 
+const encryptedKey = "MyCHATIFY32lengthENCRYPTKEY13245";
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();

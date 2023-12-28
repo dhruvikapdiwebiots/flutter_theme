@@ -1,16 +1,20 @@
-
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../config.dart';
 
 class Phone extends StatelessWidget {
+  final SharedPreferences? preferences;
   final phoneCtrl = Get.put(PhoneController());
 
-  Phone({Key? key}) : super(key: key);
+  Phone({Key? key, this.preferences}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<PhoneController>(builder: (_) {
-
+      if (preferences != null) {
+        phoneCtrl.pref = preferences;
+        phoneCtrl.update();
+      }
       return WillPopScope(
         onWillPop: () async {
           return false;
@@ -37,7 +41,7 @@ class Phone extends StatelessWidget {
                           const PhoneBody().paddingAll(Insets.i15)
                         ]),
                   ),
-                  if(phoneCtrl.isLoading)
+                  if (phoneCtrl.isLoading)
                     CommonLoader(isLoading: phoneCtrl.isLoading)
                 ],
               )),

@@ -9,6 +9,7 @@ class Setting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SettingController>(builder: (_) {
+
       return DirectionalityRtl(
           child: Stack(
             children: [

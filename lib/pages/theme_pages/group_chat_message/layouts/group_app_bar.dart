@@ -120,7 +120,7 @@ log("CHECLL");
                             } else {
                               chatCtrl.count = chatCtrl.count! + 1;
                             }
-                            await Future.delayed(Durations.s1).then((value) {
+                            await Future.delayed(DurationClass.s1).then((value) {
                               chatCtrl.selectedIndexId = [];
                               chatCtrl.update();
                             });

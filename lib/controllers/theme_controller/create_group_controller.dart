@@ -1,12 +1,12 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:encrypt/encrypt.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter_theme/controllers/fetch_contact_controller.dart';
 
 class CreateGroupController extends GetxController {
-  List<Contact>? contacts;
   List selectedContact = [];
   dynamic selectedData;
   List newContact = [];
@@ -52,7 +52,7 @@ class CreateGroupController extends GetxController {
     log("AVAILABLE : ${appCtrl.contactList.length}");
     appCtrl.contactList.asMap().entries.forEach((contact) {
       if (user["phone"] !=
-          phoneNumberExtension(contact.value.phones[0].number.toString())) {
+          phoneNumberExtension(contact.value.phones[0].normalizedNumber.toString())) {
         counter++;
 
         update();
@@ -60,7 +60,7 @@ class CreateGroupController extends GetxController {
             .collection(collectionName.users)
             .where("phone",
                 isEqualTo: phoneNumberExtension(
-                    contact.value.phones[0].number.toString()))
+                    contact.value.phones[0].normalizedNumber.toString()))
             .get()
             .then((value) {
           if (value.docs.isNotEmpty) {
@@ -132,18 +132,17 @@ class CreateGroupController extends GetxController {
       update();
       String broadcastId = DateTime.now().millisecondsSinceEpoch.toString();
       final dateTime = DateTime.now().millisecondsSinceEpoch.toString();
-      final key = encrypt.Key.fromUtf8('my 32 length key................');
-      final iv = encrypt.IV.fromLength(16);
+      Encrypted encrypteded = encryptFun(
+          "You created this broadcast");
+      String encrypted = encrypteded.base64;
 
-      final encrypter = encrypt.Encrypter(encrypt.AES(key));
 
-      final encrypted =
-          encrypter.encrypt("You created this broadcast", iv: iv).base64;
-      final fontEncrypted =
-          encrypter.encrypt(fonts.noteEncrypt.tr, iv: iv).base64;
+      Encrypted encrypteded1 = encryptFun(
+          fonts.noteEncrypt.tr);
+      String fontEncrypted = encrypteded1.base64;
 
       await checkChatAvailable();
-      await Future.delayed(Durations.s6);
+      await Future.delayed(DurationClass.s6);
       log("newContact SS: ${newContact.length}");
       isLoading = false;
       update();

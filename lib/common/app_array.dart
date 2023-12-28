@@ -40,6 +40,7 @@ class AppArray{
   //setting list
   var settingList = [
     {'title': "language","icon" : svgAssets.language},
+    {'title': "syncNow","icon" : svgAssets.refresh},
     {'title': "rtl","icon" : svgAssets.rtl},
     {'title': "theme","icon" : svgAssets.sun},
     {'title': "deleteAccount","icon" : svgAssets.trash},

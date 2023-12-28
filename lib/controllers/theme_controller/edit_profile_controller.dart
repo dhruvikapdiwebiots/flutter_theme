@@ -5,6 +5,7 @@ import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/controllers/fetch_contact_controller.dart';
 import 'package:flutter_theme/controllers/recent_chat_controller.dart';
 import 'package:flutter_theme/utilities/helper.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,10 +13,12 @@ class EditProfileController extends GetxController {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final formKey = GlobalKey<FormState>();
   dynamic user;
-  bool emailValidate = false;
+  bool emailValidate = false, isCorrect = false;
   bool nameValidation = false;
   bool phoneValidation = false;
   bool statusValidation = false;
+  bool mobileNumber = false;
+  PhoneNumber number = PhoneNumber(dialCode: "+91",isoCode: 'IN');
 
   TextEditingController nameText = TextEditingController();
   TextEditingController emailText = TextEditingController();
@@ -47,7 +50,7 @@ class EditProfileController extends GetxController {
   bool isLoggedIn = false;
   bool isPhoneLogin = false;
   XFile? imageFile;
-  String imageUrl = "";
+  String imageUrl = "",dialCode ="+91";
   var userId = '';
 
   homeNavigation(userid) async {
@@ -57,7 +60,7 @@ class EditProfileController extends GetxController {
     registerAvailableContact.fetchContacts(
         Get.context!, appCtrl.user["phone"], pref!, false);
     await appCtrl.storage.write(session.isIntro, true);
-    await Future.delayed(Durations.s3);
+    await Future.delayed(DurationClass.s3);
     helper.hideLoading();
     await storage.write(session.id, userid);
     FirebaseFirestore.instance
@@ -113,10 +116,13 @@ class EditProfileController extends GetxController {
               'name': nameText.text,
               'status': "Online",
               "typeStatus": "",
-              "phone": phoneText.text,
+              "phone": (dialCode + phoneText.text).trim(),
+              "dialCode": dialCode,
               "email": emailText.text,
+              "dialCodePhoneList": phoneList(phone: phoneText.text,dialCode: dialCode),
               "statusDesc": statusText.text,
               "pushToken": token,
+              'phoneRaw': phoneText.text,
               "isActive": true
             }).then((result) async {
               debugPrint("new USer true");
@@ -144,7 +150,7 @@ class EditProfileController extends GetxController {
               registerAvailableContact.fetchContacts(
                   Get.context!, appCtrl.user["phone"], pref!, false);
 
-              await Future.delayed(Durations.s5);
+              await Future.delayed(DurationClass.s5);
 
               isLoading = false;
               update();
@@ -154,6 +160,8 @@ class EditProfileController extends GetxController {
             });
           }
         });
+        isLoading = false;
+        update();
       } else {
         FirebaseFirestore.instance
             .collection(collectionName.users)
@@ -169,10 +177,13 @@ class EditProfileController extends GetxController {
             'name': nameText.text,
             'status': "Online",
             "typeStatus": "",
-            "phone": phoneText.text,
+            "phone": (dialCode + phoneText.text).trim(),
             "email": emailText.text,
             "statusDesc": statusText.text,
+            "dialCodePhoneList": phoneList(phone: phoneText.text,dialCode: dialCode),
             "pushToken": token,
+            'phoneRaw': phoneText.text,
+            "dialCode": dialCode,
             "isActive": true
           }).then((result) async {
             await FirebaseFirestore.instance
@@ -199,12 +210,14 @@ class EditProfileController extends GetxController {
             registerAvailableContact.fetchContacts(
                 Get.context!, appCtrl.user["phone"], pref!, false);
 
-            await Future.delayed(Durations.s5);
+            await Future.delayed(DurationClass.s5);
             Get.toNamed(routeName.dashboard, arguments: pref);
 
             isLoading = false;
             update();
           }).catchError((onError) {
+            isLoading = false;
+            update();
             debugPrint("onErrorss :: $onError");
           });
         });
@@ -213,19 +226,26 @@ class EditProfileController extends GetxController {
   }
 
   @override
-  void onReady() {
+  void onReady()async {
     // TODO: implement onReady
     statusText.text = "Hello, I am using Chatter";
     var data = Get.arguments;
+    log("number : $number");
     user = data["resultData"];
     pref = data["pref"];
+    dialCode = user["dialCode"] ?? "";
     isPhoneLogin = data["isPhoneLogin"];
     nameText.text = user["name"] ?? "";
     emailText.text = user["email"] ?? "";
-    phoneText.text = user["phone"] ?? "";
+    phoneText.text = user["phoneRaw"] ?? "";
     statusText.text = user["statusDesc"] ?? "";
     imageUrl = user["image"] ?? "";
+    log("dialCode :$dialCode" );
+
+    String? isoCode =
+         PhoneNumber.getISO2CodeByPrefix(dialCode);
     appCtrl.pref = pref;
+    number = PhoneNumber(dialCode: dialCode,isoCode: isoCode);
     appCtrl.update();
     update();
     super.onReady();

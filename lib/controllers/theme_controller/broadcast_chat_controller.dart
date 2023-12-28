@@ -5,6 +5,8 @@ import 'dart:io';
 import 'package:drishya_picker/drishya_picker.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:dartx/dartx_io.dart';
+import 'package:encrypt/encrypt.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/models/message_model.dart';
 import 'package:flutter_theme/pages/theme_pages/broadcast_chat/layouts/broad_cast_wall_paper.dart';
@@ -57,8 +59,6 @@ class BroadcastChatController extends GetxController {
   TextEditingController textSearchController = TextEditingController();
   ScrollController listScrollController = ScrollController();
   FocusNode focusNode = FocusNode();
-  late encrypt.Encrypter cryptor;
-  final iv = encrypt.IV.fromLength(8);
   List newContact = [];
   List<QueryDocumentSnapshot<Map<String, dynamic>>> allMessages = [];
   StreamSubscription? messageSub;
@@ -132,13 +132,8 @@ class BroadcastChatController extends GetxController {
     });
 
     if (newContact.isNotEmpty) {
-      final key = encrypt.Key.fromUtf8('my 32 length key................');
-      final iv = encrypt.IV.fromLength(16);
-
-      final encrypter = encrypt.Encrypter(encrypt.AES(key));
-
-      final encrypted =
-          encrypter.encrypt("You created this broadcast", iv: iv).base64;
+      Encrypted encrypteded = encryptFun("You created this broadcast");
+      String encrypted = encrypteded.base64;
       await FirebaseFirestore.instance
           .collection(collectionName.users)
           .doc(appCtrl.user["id"])
@@ -350,7 +345,7 @@ class BroadcastChatController extends GetxController {
       Get.toNamed(routeName.contactList)!.then((value) async {
         Contact contact = value;
         onSendMessage(
-            '${contact.displayName}-BREAK-${contact.phones[0].number}-BREAK-${contact.photo!}',
+            '${contact.displayName}-BREAK-${contact.phones[0].normalizedNumber}-BREAK-${contact.photo}',
             MessageType.contact);
       });
     } else {
@@ -380,16 +375,12 @@ class BroadcastChatController extends GetxController {
   // SEND MESSAGE CLICK
   void onSendMessage(String content, MessageType type) async {
     if (content.trim() != '') {
-      final key = encrypt.Key.fromUtf8('my 32 length key................');
-      final iv = encrypt.IV.fromLength(16);
-
-      final encrypter = encrypt.Encrypter(encrypt.AES(key));
-
-      final encrypted = encrypter.encrypt(content, iv: iv).base64;
+      Encrypted encrypteded = encryptFun(content);
+      String encrypted = encrypteded.base64;
 
       textEditingController.clear();
       await saveMessageInLoop(encrypted, type);
-      await Future.delayed(Durations.s4);
+      await Future.delayed(DurationClass.s4);
       String dateTime = DateTime.now().millisecondsSinceEpoch.toString();
 
       MessageModel messageModel = MessageModel(

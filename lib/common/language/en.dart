@@ -180,4 +180,5 @@ final dynamic en = {
   "userName": "User Name",
   "email": "Email",
   "addStatus": "Add Status",
+  "syncNow": "Sync Now",
 };

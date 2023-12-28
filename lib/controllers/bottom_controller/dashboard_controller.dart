@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/controllers/common_controller/ad_controller.dart';
 import 'package:flutter_theme/controllers/recent_chat_controller.dart';
@@ -141,7 +142,7 @@ if(appCtrl.cachedModel != null) {
         ? Get.find<AdController>()
         : Get.put(AdController());
     addCtrl.onInit();
-    await Future.delayed(Durations.ms150);
+    await Future.delayed(DurationClass.ms150);
     bottomList = appArray.bottomList;
     actionList = appArray.actionList;
     statusAction = appArray.statusAction;
@@ -160,188 +161,12 @@ if(appCtrl.cachedModel != null) {
     appCtrl.update();
     //statusCtrl.update();
     update();
-    // await Future.delayed(Durations.s3);
+    // await Future.delayed(DurationClass.s3);
 
     //checkContactList();
-    await Future.delayed(Durations.s3);
+    await Future.delayed(DurationClass.s3);
     statusCtrl.getAllStatus();
     super.onReady();
-  }
-
-
-
-  addContactInFirebase() async {
-    if (appCtrl.contactList.isNotEmpty) {
-      List<Map<String, dynamic>> contactsData = [];
-      List<Map<String, dynamic>> unRegisterContactData = [];
-
-      appCtrl.contactList.asMap().entries.forEach((contact) async {
-        bool isRegister = false;
-        String id = "", name = "";
-        await FirebaseFirestore.instance
-            .collection(collectionName.users)
-            .where("phone",
-                isEqualTo: phoneNumberExtension(
-                    contact.value.phones[0].number.toString()))
-            .get()
-            .then((value) {
-          if (value.docs.isEmpty) {
-            isRegister = false;
-          } else {
-            isRegister = true;
-            id = value.docs[0].id;
-            name = value.docs[0].data()["name"];
-          }
-        });
-        update();
-        if (isRegister) {
-          var objData = {
-            'name': name,
-            'phone': contact.value.phones.isNotEmpty
-                ? phoneNumberExtension(
-                    contact.value.phones[0].number.toString())
-                : null,
-            "isRegister": true,
-            "image": contact.value.photo,
-            "id": id
-            // Include other necessary contact.value details
-          };
-          if (!contactsData.contains(objData)) {
-            contactsData.add(objData);
-          }
-        } else {
-          var objData = {
-            'name': contact.value.displayName,
-            'phone': contact.value.phones.isNotEmpty
-                ? phoneNumberExtension(
-                    contact.value.phones[0].number.toString())
-                : null,
-            "isRegister": false,
-            "image": contact.value.photo,
-            "id": "0"
-            // Include other necessary contact.value details
-          };
-          if (!unRegisterContactData.contains(objData)) {
-            unRegisterContactData.add(objData);
-          }
-        }
-      });
-
-      await FirebaseFirestore.instance
-          .collection(collectionName.users)
-          .doc(appCtrl.user["id"])
-          .collection(collectionName.registerUser)
-          .get()
-          .then((value) async {
-        if (value.docs.isEmpty) {
-          await FirebaseFirestore.instance
-              .collection(collectionName.users)
-              .doc(appCtrl.user["id"])
-              .collection(collectionName.registerUser)
-              .add({"contact": contactsData});
-        } else {
-          log("ALREADY COLLECTION");
-        }
-      });
-
-      await FirebaseFirestore.instance
-          .collection(collectionName.users)
-          .doc(appCtrl.user["id"])
-          .collection(collectionName.unRegisterUser)
-          .get()
-          .then((value) async {
-        if (value.docs.isEmpty) {
-          await FirebaseFirestore.instance
-              .collection(collectionName.users)
-              .doc(appCtrl.user["id"])
-              .collection(collectionName.unRegisterUser)
-              .add({"contact": unRegisterContactData});
-        } else {
-          log("ALREADY COLLECTION");
-        }
-      });
-    }
-
-    /*  if (appCtrl.firebaseContact.isEmpty) {
-      await FirebaseFirestore.instance
-          .collection(collectionName.users)
-          .doc(appCtrl.user["id"])
-          .collection(collectionName.registerUser)
-          .get()
-          .then((value) {
-        List allUserList = value.docs[0].data()["contact"];
-        allUserList.asMap().entries.forEach((element) {
-          if (!appCtrl.firebaseContact.contains(element.value)) {
-            appCtrl.firebaseContact
-                .add(FirebaseContactModel.fromJson(element.value));
-          }
-        });
-      });
-      appCtrl.update();
-    }*/
-  }
-
-  checkContactList() async {
-    appCtrl.availableContact = [];
-
-    debugPrint("FILTERD :: ${appCtrl.allContacts!.length}");
-    if (appCtrl.allContacts!.isNotEmpty) {
-      appCtrl.allContacts!.forEach((key, value) async {
-        await FirebaseFirestore.instance
-            .collection(collectionName.users)
-            .where("phone", isEqualTo: key)
-            .get()
-            .then((docs) async {
-          if (docs.docs.isNotEmpty) {
-            // print('FOUND CONTACT $key');
-
-            appCtrl.availableContact.add(JoinedUserModel(
-                phone: docs.docs[0].data()["phone"] ?? '',
-                name: value ?? docs.docs[0].data()["name"],
-                id: docs.docs[0].id));
-            debugPrint("FOUND CONTACY : ${docs.docs.length}");
-            appCtrl.update();
-          }
-        });
-      });
-      appCtrl.update();
-      Get.forceAppUpdate();
-    } else {
-      //checkPermission();
-    }
-    debugPrint("appCtrl.availableContact : ${appCtrl.availableContact.length}");
-/*    appCtrl.userContactList = [];
-    appCtrl.firebaseContact = [];
-    appCtrl.update();
-
-
-    appCtrl.user = await appCtrl.storage.read(session.user);
-    appCtrl.update();
-    debugPrint("appCtrl.users : ${appCtrl.user}");
-    await FirebaseFirestore.instance
-        .collection(collectionName.users)
-        .get()
-        .then((value) async {
-      if (appCtrl.contactList.isNotEmpty) {
-        value.docs.asMap().entries.forEach((users) {
-          if (users.value["phone"] != appCtrl.user["phone"]) {
-            appCtrl.contactList.asMap().entries.forEach((element) {
-              if (element.value.phones.isNotEmpty) {
-                if (users.value.data()["phone"] ==
-                    phoneNumberExtension(
-                        element.value.phones[0].number.toString())) {
-                  appCtrl.userContactList.add(element.value);
-                }
-              }
-            });
-          }
-          appCtrl.update();
-        });
-      }
-    });
-
-    debugPrint("appCtrl.userContactList : ${appCtrl.userContactList}");
-    update();*/
   }
 
   @override
@@ -352,7 +177,8 @@ if(appCtrl.cachedModel != null) {
   }
 
   onMenuItemSelected(int value) async {
-    debugPrint("value : $value");
+    debugPrint("value ss: $value");
+    debugPrint("value ss: $pref");
     selectedPopTap = value;
     update();
 
@@ -388,8 +214,6 @@ if(appCtrl.cachedModel != null) {
       groupChatCtrl.isAddUser = false;
 
       //   groupChatCtrl.refreshContacts();
-
-      Get.back();
       Get.toNamed(routeName.groupChat, arguments: true);
     } else if (value == 3) {
       await FirebaseFirestore.instance
@@ -408,7 +232,11 @@ if(appCtrl.cachedModel != null) {
         });
       });
     } else {
-      Get.toNamed(routeName.setting);
+      final settingCtrl = Get.isRegistered<SettingController>()
+          ? Get.find<SettingController>()
+          : Get.put(SettingController());
+      Get.toNamed(routeName.setting,arguments: pref);
+      settingCtrl.onReady();
     }
   }
 }

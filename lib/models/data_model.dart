@@ -53,7 +53,11 @@ class ContactModel extends Model {
         .snapshots()
         .listen((user) {
           log("ISERR");
+
+
+
       _currentUser = user.data();
+
       notifyListeners();
     });
 

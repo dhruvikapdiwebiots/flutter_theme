@@ -128,12 +128,14 @@ class SplashController extends GetxController {
         recentChatController.getModel(user);
       }
       if (permission.isGranted) {
-        final FetchContactController registerAvailableContact =
-            Provider.of<FetchContactController>(Get.context!, listen: false);
-        registerAvailableContact.fetchContacts(
-            Get.context!, appCtrl.user["phone"], pref ?? appCtrl.pref!, true);
+        if(user != null ) {
+          final FetchContactController registerAvailableContact =
+          Provider.of<FetchContactController>(Get.context!, listen: false);
+          registerAvailableContact.fetchContacts(
+              Get.context!, appCtrl.user["phone"], pref ?? appCtrl.pref!, true);
 
-        await Future.delayed(Durations.s1);
+          await Future.delayed(DurationClass.s1);
+        }
       }
 
 

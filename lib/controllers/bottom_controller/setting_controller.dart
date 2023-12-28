@@ -1,19 +1,26 @@
 import 'dart:developer';
 
 import 'package:flutter_theme/config.dart';
+import 'package:flutter_theme/controllers/fetch_contact_controller.dart';
 import 'package:flutter_theme/controllers/theme_controller/add_fingerprint_controller.dart';
 import 'package:launch_review/launch_review.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingController extends GetxController {
   List settingList = [];
   dynamic user;
-  bool isLoading =false;
+  bool isLoading = false;
+
+  SharedPreferences? pref;
 
   @override
   void onReady() {
     // TODO: implement onReady
     settingList = appArray.settingList;
     user = appCtrl.storage.read(session.user) ?? "";
+    pref = Get.arguments;
+    log("Get.arguments : ${Get.arguments}");
     update();
     getUserData();
     super.onReady();
@@ -21,12 +28,12 @@ class SettingController extends GetxController {
 
   //get user info from firebase
   getUserData() async {
-    if(appCtrl.user !=null) {
+    if (appCtrl.user != null) {
       await FirebaseFirestore.instance
           .collection(collectionName.users)
           .doc(FirebaseAuth.instance.currentUser != null
-          ? FirebaseAuth.instance.currentUser!.uid
-          : appCtrl.user["id"])
+              ? FirebaseAuth.instance.currentUser!.uid
+              : appCtrl.user["id"])
           .get()
           .then((value) {
         if (value.exists) {
@@ -42,7 +49,7 @@ class SettingController extends GetxController {
   //edit profile page navigation
   editProfile() {
     user = appCtrl.storage.read(session.user);
-
+    log("UUUU : $user");
     Get.toNamed(routeName.editProfile,
         arguments: {"resultData": user, "isPhoneLogin": false});
   }
@@ -52,19 +59,77 @@ class SettingController extends GetxController {
     if (index == 0) {
       language();
     } else if (index == 1) {
+      final FetchContactController contactCtrl =
+          Provider.of<FetchContactController>(Get.context!, listen: false);
+      FirebaseFirestore.instance
+          .collection(collectionName.users)
+          .doc(FirebaseAuth.instance.currentUser != null
+              ? FirebaseAuth.instance.currentUser!.uid
+              : appCtrl.user["id"])
+          .collection(collectionName.userContact)
+          .get()
+          .then((value) async {
+        if (value.docs.isEmpty) {
+          FirebaseFirestore.instance
+              .collection(collectionName.users)
+              .doc(FirebaseAuth.instance.currentUser != null
+                  ? FirebaseAuth.instance.currentUser!.uid
+                  : appCtrl.user["id"])
+              .collection(collectionName.userContact)
+              .add({
+            'contacts':
+                RegisterContactDetail.encode(contactCtrl.registerContactUser)
+          });
+        } else {
+
+          if(value.docs.length > 1){
+            value.docs.asMap().entries.forEach((element) {
+              element.value.reference.delete();
+            });
+            FirebaseFirestore.instance
+                .collection(collectionName.users)
+                .doc(FirebaseAuth.instance.currentUser != null
+                ? FirebaseAuth.instance.currentUser!.uid
+                : appCtrl.user["id"])
+                .collection(collectionName.userContact)
+                .add({
+              'contacts':
+              RegisterContactDetail.encode(contactCtrl.registerContactUser)
+            });
+          }else {
+
+            await FirebaseFirestore.instance
+                .collection(collectionName.users)
+                .doc(appCtrl.user["id"])
+                .collection(collectionName.userContact)
+                .doc(value.docs[0].id)
+                .update({
+              'contacts':
+              RegisterContactDetail.encode(contactCtrl.registerContactUser)
+            });
+          }
+          FirebaseFirestore.instance
+              .collection(collectionName.users)
+              .doc(FirebaseAuth.instance.currentUser != null
+                  ? FirebaseAuth.instance.currentUser!.uid
+                  : appCtrl.user["id"])
+              .update({'isWebLogin': false});
+        }
+      });
+    } else if (index == 2) {
       appCtrl.isRTL = !appCtrl.isRTL;
       appCtrl.update();
       await appCtrl.storage.write(session.isRTL, appCtrl.isRTL);
       Get.forceAppUpdate();
-    } else if (index == 2) {
+    } else if (index == 3) {
       appCtrl.isTheme = !appCtrl.isTheme;
 
       appCtrl.update();
       ThemeService().switchTheme(appCtrl.isTheme);
       await appCtrl.storage.write(session.isDarkMode, appCtrl.isTheme);
-    } else if (index == 3) {
-      deleteUser();
     } else if (index == 4) {
+      deleteUser();
+    } else if (index == 5) {
       log("appCtrl.isBiometric  : ${appCtrl.isBiometric}");
       if (appCtrl.isBiometric == false) {
         final fingerPrintCtrl = Get.isRegistered<AddFingerprintController>()
@@ -78,7 +143,7 @@ class SettingController extends GetxController {
         appCtrl.update();
       }
       Get.forceAppUpdate();
-    } else if (index == 5) {
+    } else if (index == 6) {
       LaunchReview.launch(
           androidAppId: appCtrl.userAppSettingsVal!.rateApp,
           iOSAppId: " ${appCtrl.userAppSettingsVal!.rateAppIos}");
@@ -93,7 +158,8 @@ class SettingController extends GetxController {
         "lastSeen": DateTime.now().millisecondsSinceEpoch.toString()
       });
       FirebaseAuth.instance.signOut();
-
+      pref!.clear();
+      appCtrl.pref!.clear();
       await appCtrl.storage.remove(session.user);
       await appCtrl.storage.remove(session.id);
       await appCtrl.storage.remove(session.isDarkMode);
@@ -101,7 +167,9 @@ class SettingController extends GetxController {
       await appCtrl.storage.remove(session.languageCode);
       await appCtrl.storage.remove(session.languageCode);
       await appCtrl.storage.erase();
-      Get.offAllNamed(routeName.phone, arguments: appCtrl.pref);
+      Get.offAllNamed(
+        routeName.phoneWrap,
+      );
     }
   }
 
@@ -146,7 +214,7 @@ class SettingController extends GetxController {
                     color: appCtrl.appTheme.primary,
                     borderRadius: BorderRadius.circular(AppRadius.r25)),
           ).inkWell(onTap: () async {
-            isLoading =true;
+            isLoading = true;
             update();
 
             await FirebaseFirestore.instance
@@ -216,10 +284,9 @@ class SettingController extends GetxController {
             await appCtrl.storage.remove(session.user);
             await appCtrl.storage.remove(session.id);
             FirebaseAuth.instance.signOut();
-            isLoading =false;
+            isLoading = false;
             update();
             Get.offAllNamed(routeName.phone, arguments: appCtrl.pref);
-
           })
         ],
       ),

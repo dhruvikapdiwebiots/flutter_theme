@@ -1,5 +1,6 @@
 
 import 'dart:io';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_theme/models/data_model.dart';
 import 'package:flutter_theme/models/firebase_contact_model.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -35,6 +36,7 @@ SharedPreferences? pref;
   String languageVal = "in";
   List drawerList = [];
   dynamic user;
+  bool isCallStream =false;
   int currVal = 1;
   String deviceName = "";
   String device = "";

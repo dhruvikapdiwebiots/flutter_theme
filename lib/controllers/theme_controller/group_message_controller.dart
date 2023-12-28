@@ -3,6 +3,8 @@ import 'dart:developer' as log;
 import 'dart:io';
 import 'package:dartx/dartx_io.dart';
 import 'package:drishya_picker/drishya_picker.dart';
+import 'package:encrypt/encrypt.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/models/message_model.dart';
 import 'package:flutter_theme/pages/theme_pages/group_chat_message/group_message_api.dart';
@@ -397,7 +399,7 @@ class GroupChatMessageController extends GetxController {
         if (value != null) {
           Contact contact = value;
           onSendMessage(
-              '${contact.displayName}-BREAK-${contact.phones[0].number}-BREAK-${contact.photo}',
+              '${contact.displayName}-BREAK-${contact.phones[0].normalizedNumber}-BREAK-${contact.photo}',
               MessageType.contact);
         }
       });
@@ -441,12 +443,9 @@ class GroupChatMessageController extends GetxController {
     isLoading = true;
     textEditingController.clear();
     update();
-    final key = encrypt.Key.fromUtf8('my 32 length key................');
-    final iv = encrypt.IV.fromLength(16);
+    Encrypted encrypteded = encryptFun(content);
+    String encrypted = encrypteded.base64;
 
-    final encrypter = encrypt.Encrypter(encrypt.AES(key));
-
-    final encrypted = encrypter.encrypt(content, iv: iv).base64;
 
     if (content.trim() != '') {
       var user = appCtrl.storage.read(session.user);

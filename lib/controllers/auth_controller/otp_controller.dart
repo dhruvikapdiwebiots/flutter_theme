@@ -40,7 +40,6 @@ class OtpController extends GetxController {
     if (seconds < 0) {
       isCountDown = false;
       countdownTimer!.cancel();
-
     } else {
       myDuration = Duration(seconds: seconds);
     }
@@ -54,19 +53,15 @@ class OtpController extends GetxController {
 
   //navigate to dashboard
   homeNavigation(user) async {
-
     final RecentChatController recentChatController =
-    Provider.of<RecentChatController>(Get.context!,
-        listen: false);
+        Provider.of<RecentChatController>(Get.context!, listen: false);
     log("INIT PAGE");
 
     recentChatController.getModel(appCtrl.user);
 
     final FetchContactController registerAvailableContact =
-    Provider.of<FetchContactController>(Get.context!,
-        listen: false);
+        Provider.of<FetchContactController>(Get.context!, listen: false);
     log("INIT PAGE");
-
 
     registerAvailableContact.fetchContacts(
         Get.context!, appCtrl.user["phone"], pref!, false);
@@ -74,7 +69,6 @@ class OtpController extends GetxController {
     update();
     appCtrl.pref = pref;
     appCtrl.update();
-
 
     await appCtrl.storage.write(session.isIntro, true);
     Get.forceAppUpdate();
@@ -84,16 +78,22 @@ class OtpController extends GetxController {
       await FirebaseFirestore.instance
           .collection(collectionName.users)
           .doc(user["id"])
-          .update({'status': "Online", "pushToken": token, "isActive": true});
-      await Future.delayed(Durations.s6);
+          .update({
+        'status': "Online",
+        "pushToken": token,
+        "isActive": true,
+        'phoneRaw': mobileNumber,
+        'phone': (dialCodeVal! + mobileNumber!).trim(),
+        "dialCodePhoneList":
+            phoneList(phone: mobileNumber, dialCode: dialCodeVal)
+      });
+      await Future.delayed(DurationClass.s6);
       helper.hideLoading();
       update();
 
-      Get.toNamed(routeName.dashboard,arguments:  pref);
-
+      Get.toNamed(routeName.dashboard, arguments: pref);
     });
   }
-
 
   //show toast
   void showToast(message, Color color) {
@@ -161,23 +161,22 @@ class OtpController extends GetxController {
     firebaseAuth
         .signInWithCredential(authCredential)
         .then((UserCredential value) async {
-
       if (value.user != null) {
         User user = value.user!;
         try {
           FirebaseFirestore.instance
               .collection(collectionName.users)
-              .where("phone", isEqualTo: mobileNumber)
+              .where("phone", isEqualTo: "$dialCodeVal$mobileNumber")
               .limit(1)
               .get()
               .then((value) async {
             if (value.docs.isNotEmpty) {
-
               if (value.docs[0].data()["name"] == "") {
                 Get.toNamed(routeName.editProfile, arguments: {
                   "resultData": value.docs[0].data(),
                   "isPhoneLogin": true,
-                  "pref":pref
+                  'dialCode': dialCodeVal,
+                  "pref": pref
                 });
               } else {
                 await appCtrl.storage.write(session.user, value.docs[0].data());
@@ -196,9 +195,10 @@ class OtpController extends GetxController {
                 Get.toNamed(routeName.editProfile, arguments: {
                   "resultData": resultData,
                   "isPhoneLogin": true,
-                  "pref":pref
+                  'dialCode': dialCodeVal,
+                  "pref": pref
                 });
-                await appCtrl.storage.write(session.user, value.docs[0].data());
+                await appCtrl.storage.write(session.user, resultData);
               } else {
                 await appCtrl.storage.write(session.user, resultData);
                 await appCtrl.storage.write(session.user, resultData);
@@ -260,8 +260,12 @@ class OtpController extends GetxController {
           'name': user.displayName ?? "",
           'pushToken': token,
           'status': "Offline",
+          'phoneRaw': mobileNumber,
+          "dialCode": dialCodeVal,
           "typeStatus": "Offline",
-          "phone": mobileNumber,
+          "phone": (dialCodeVal! + mobileNumber!).trim(),
+          "dialCodePhoneList":
+              phoneList(phone: mobileNumber, dialCode: dialCodeVal),
           "email": user.email,
           "deviceName": appCtrl.deviceName,
           "isActive": false,
@@ -277,13 +281,13 @@ class OtpController extends GetxController {
   }
 
   getAdminPermission() async {
-      final usageControls = await FirebaseFirestore.instance
+    final usageControls = await FirebaseFirestore.instance
         .collection(collectionName.config)
         .doc(collectionName.usageControls)
         .get();
 
-    appCtrl.usageControlsVal = UsageControlModel.fromJson(usageControls.data()!);
-
+    appCtrl.usageControlsVal =
+        UsageControlModel.fromJson(usageControls.data()!);
 
     appCtrl.storage.write(session.usageControls, usageControls.data());
     update();
@@ -291,12 +295,13 @@ class OtpController extends GetxController {
         .collection(collectionName.config)
         .doc(collectionName.userAppSettings)
         .get();
-      appCtrl.userAppSettingsVal = UserAppSettingModel.fromJson(userAppSettings.data()!);
+    appCtrl.userAppSettingsVal =
+        UserAppSettingModel.fromJson(userAppSettings.data()!);
     final agoraToken = await FirebaseFirestore.instance
         .collection(collectionName.config)
         .doc(collectionName.agoraToken)
         .get();
- await   appCtrl.storage.write(session.agoraToken, agoraToken.data());
+    await appCtrl.storage.write(session.agoraToken, agoraToken.data());
     update();
     appCtrl.update();
   }

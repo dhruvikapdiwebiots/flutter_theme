@@ -136,20 +136,7 @@ class PermissionHandlerController extends GetxController {
     }
   }
 
-  //check permission and get contact
- Future<List<Contact>> getContact() async {
-   List<Contact> contacts = [];
-    bool permissionStatus = await permissionGranted();
-    log("permissionStatus : $permissionStatus");
-    if (permissionStatus) {
 
-      contacts = await getAllContacts();
-      appCtrl.storage.write(session.contactList, contacts);
-      appCtrl.update();
-    }
-   debugPrint("GET contacts : $contacts");
-    return contacts;
-  }
 
 
 

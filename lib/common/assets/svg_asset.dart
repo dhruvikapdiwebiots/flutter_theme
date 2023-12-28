@@ -53,4 +53,5 @@ class SvgAssets{
   final String lock = "assets/svg/lock.svg";
   final String emoji = "assets/svg/emoji.svg";
   final String volume = "assets/svg/volume.svg";
+  final String refresh = "assets/svg/refresh.svg";
 }

@@ -134,7 +134,7 @@ class _NewContactState extends State<NewContact> {
                   appCtrl.update();
                   registerContact = appCtrl.availableContact;
                   contacts = appCtrl.allContacts;
-                  await Future.delayed(Durations.s2);
+                  await Future.delayed(DurationClass.s2);
                   debugPrint("registerContact :: ${registerContact.length}");
                   debugPrint("contacts :: ${contacts!.length}");
                   isLoading = false;
@@ -153,7 +153,7 @@ class _NewContactState extends State<NewContact> {
                     appCtrl.update();
                     registerContact = appCtrl.availableContact;
                     contacts = appCtrl.allContacts;
-                    await Future.delayed(Durations.s2);
+                    await Future.delayed(DurationClass.s2);
                     isLoading = false;
                     setState(() {});
                   },

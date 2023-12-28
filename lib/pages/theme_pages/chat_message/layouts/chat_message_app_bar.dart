@@ -125,7 +125,7 @@ log("DOCID L ${chatCtrl.searchChatId[chatCtrl.count!]}");
                                 } else {
                                   chatCtrl.count = chatCtrl.count! + 1;
                                 }
-                                await Future.delayed(Durations.s1)
+                                await Future.delayed(DurationClass.s1)
                                     .then((value) {
                                   chatCtrl.selectedIndexId = [];
                                   chatCtrl.update();

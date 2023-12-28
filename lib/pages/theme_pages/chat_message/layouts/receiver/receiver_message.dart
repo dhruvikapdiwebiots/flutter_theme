@@ -87,7 +87,7 @@ class _ReceiverMessageState extends State<ReceiverMessage> {
                     if (widget.document!.type! == MessageType.image.name)
                       ReceiverImage(
                           onTap: () => OnTapFunctionCall().imageTap(
-                              chatCtrl, widget.docId, widget.document),
+                              chatCtrl, widget.docId, widget.document!),
                           document: widget.document,
                           onLongPress: () =>
                               chatCtrl.onLongPressFunction(widget.docId)),
@@ -130,7 +130,7 @@ class _ReceiverMessageState extends State<ReceiverMessage> {
                               isReceiver: true,
                               document: widget.document,
                               onTap: () => OnTapFunctionCall().pdfTap(
-                                  chatCtrl, widget.docId, widget.document),
+                                  chatCtrl, widget.docId, widget.document!),
                               onLongPress: () =>
                                   chatCtrl.onLongPressFunction(widget.docId))
                           : (decryptMessage(widget.document!.content).contains(".doc"))
@@ -138,7 +138,7 @@ class _ReceiverMessageState extends State<ReceiverMessage> {
                                   isReceiver: true,
                                   document: widget.document,
                                   onTap: () => OnTapFunctionCall().docTap(
-                                      chatCtrl, widget.docId, widget.document),
+                                      chatCtrl, widget.docId, widget.document!),
                                   onLongPress: () => chatCtrl
                                       .onLongPressFunction(widget.docId))
                               : (decryptMessage(widget.document!.content).contains(".xlsx"))

@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:encrypt/encrypt.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 
@@ -30,7 +31,7 @@ class GroupFirebaseApi {
     final now = DateTime.now();
     String id = now.microsecondsSinceEpoch.toString();
 
-    await Future.delayed(Durations.s3);
+    await Future.delayed(DurationClass.s3);
 
     await FirebaseFirestore.instance
         .collection(collectionName.groups)
@@ -45,13 +46,10 @@ class GroupFirebaseApi {
       'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
     });
 
-    final key = encrypt.Key.fromUtf8('my 32 length key................');
-    final iv = encrypt.IV.fromLength(16);
 
-    final encrypter = encrypt.Encrypter(encrypt.AES(key));
-
-    final encrypted =
-        encrypter.encrypt("${ user["id"] == appCtrl.user["id"]? "You" : user["name"] } created this group", iv: iv).base64;
+    Encrypted encrypteded = encryptFun(
+        "${user["id"] == appCtrl.user["id"]? "You" : user["name"] } created this group");
+    String encrypted = encrypteded.base64;
 
     groupCtrl.selectedContact.asMap().entries.forEach((e) async {
       log("USER ID :: ${e.value["id"]}");

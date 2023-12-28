@@ -1,5 +1,6 @@
 //app file
 
+import 'package:flutter_theme/pages/auth_pages/phone/phone_wrap.dart';
 import 'package:flutter_theme/pages/bottom_pages/call_list/layouts/call_contact_list.dart';
 import 'package:flutter_theme/pages/theme_pages/all_contact/all_contact_list.dart';
 import 'package:flutter_theme/pages/theme_pages/broadcast_chat/layouts/broadcast_profile/broadcast_search_user.dart';
@@ -24,6 +25,7 @@ class AppRoute {
   final List<GetPage> getPages = [
     GetPage(name: _routeName.intro, page: () => const Intro()),
     GetPage(name: _routeName.phone, page: () => Phone()),
+    GetPage(name: _routeName.phoneWrap, page: () =>const PhoneWrap()),
     GetPage(name: _routeName.otp, page: () => Otp()),
     GetPage(name: _routeName.dashboard, page: () =>const Dashboard()),
     GetPage(name: _routeName.editProfile, page: () => EditProfile()),

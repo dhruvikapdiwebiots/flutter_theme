@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:dartx/dartx_io.dart';
 import 'package:drishya_picker/drishya_picker.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
+import 'package:encrypt/encrypt.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/models/message_model.dart';
 import 'package:flutter_theme/pages/theme_pages/chat_message/layouts/chat_wall_paper.dart';
@@ -361,14 +363,12 @@ class ChatController extends GetxController {
         chatId == "0" ? now.microsecondsSinceEpoch.toString() : chatId;
     chatId = newChatId;
     update();
-    final key = encrypt.Key.fromUtf8('my 32 length key................');
-    final iv = encrypt.IV.fromLength(16);
 
-    final encrypter = encrypt.Encrypter(encrypt.AES(key));
 
     if (allData["isBlock"] == true) {
-      final encrypted =
-          encrypter.encrypt("You unblock this contact", iv: iv).base64;
+      Encrypted encrypteded = encryptFun("You unblock this contact");
+      String encrypted = encrypteded.base64;
+
 
       ChatMessageApi().saveMessage(
           newChatId,
@@ -389,8 +389,8 @@ class ChatController extends GetxController {
         isBlock: false,
       );
     } else {
-      final encrypted =
-          encrypter.encrypt("You block this contact", iv: iv).base64;
+      Encrypted encrypteded = encryptFun("You block this contact");
+      String encrypted = encrypteded.base64;
 
       ChatMessageApi().saveMessage(
           newChatId,
@@ -509,7 +509,7 @@ class ChatController extends GetxController {
           isLoading = true;
           update();
           onSendMessage(
-              '${contact.displayName}-BREAK-${contact.phones[0].number}-BREAK-${contact.photo}',
+              '${contact.displayName}-BREAK-${contact.phones[0].normalizedNumber}-BREAK-${contact.photo}',
               MessageType.contact);
         }
       });
@@ -552,12 +552,8 @@ class ChatController extends GetxController {
     // isLoading = true;
     update();
     Get.forceAppUpdate();
-    final key = encrypt.Key.fromUtf8('my 32 length key................');
-    final iv = encrypt.IV.fromLength(16);
-
-    final encrypter = encrypt.Encrypter(encrypt.AES(key));
-
-    final encrypted = encrypter.encrypt(content, iv: iv).base64;
+    Encrypted encrypteded = encryptFun(content);
+    String encrypted = encrypteded.base64;
 
     if (content.trim() != '') {
       textEditingController.clear();

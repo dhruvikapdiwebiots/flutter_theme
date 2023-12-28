@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -82,7 +83,7 @@ class MessageController extends GetxController {
     });
     _showBannerAd();
     update();
-    await Future.delayed(Durations.s2);
+    await Future.delayed(DurationClass.s2);
     isLoading = false;
     update();
     super.onReady();

@@ -2,6 +2,7 @@ class RouteName {
   final String intro = '/intro';
   final String dashboard = '/dashboard';
   final String phone = '/phone';
+  final String phoneWrap = '/phoneWrap';
   final String otp = '/otp';
   final String editProfile = '/editProfile';
   final String chat = '/chat';

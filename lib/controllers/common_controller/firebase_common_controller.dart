@@ -135,76 +135,13 @@ class FirebaseCommonController extends GetxController {
     await Firebase.initializeApp();
     dynamic user = appCtrl.storage.read(session.user);
     if (user != null) {
-      await FirebaseFirestore.instance
-          .collection(collectionName.users)
-          .doc(user["id"])
-          .get()
-          .then((value) async {
-        if (value.exists) {
-          bool isWebLogin = value.data()!["isWebLogin"] ?? false;
-          if (isWebLogin == true) {
-            if (appCtrl.contactList.isNotEmpty) {
-              List<Map<String, dynamic>> contactsData =
-                  appCtrl.contactList.map((contact) {
-                return {
-                  'name': contact.displayName,
-                  'phoneNumber': contact.phones.isNotEmpty
-                      ? phoneNumberExtension(
-                          contact.phones[0].number.toString())
-                      : null,
-                  // Include other necessary contact details
-                };
-              }).toList();
-              await FirebaseFirestore.instance
-                  .collection(collectionName.users)
-                  .doc(FirebaseAuth.instance.currentUser != null
-                      ? FirebaseAuth.instance.currentUser!.uid
-                      : user["id"])
-                  .collection(collectionName.userContact)
-                  .get()
-                  .then((allContact) {
-                if (allContact.docs.isEmpty) {
-                  FirebaseFirestore.instance
-                      .collection(collectionName.users)
-                      .doc(FirebaseAuth.instance.currentUser != null
-                          ? FirebaseAuth.instance.currentUser!.uid
-                          : user["id"])
-                      .collection(collectionName.userContact)
-                      .add({'contacts': contactsData});
-                }
-              });
-            } else {
 
-              if (appCtrl.contactList.isNotEmpty) {
-                List<Map<String, dynamic>> contactsData =
-                    appCtrl.contactList.map((contact) {
-                  return {
-                    'name': contact.displayName,
-                    'phoneNumber': contact.phones.isNotEmpty
-                        ? phoneNumberExtension(
-                            contact.phones[0].number.toString())
-                        : null,
-                    // Include other necessary contact details
-                  };
-                }).toList();
-                await FirebaseFirestore.instance
-                    .collection(collectionName.users)
-                    .doc(appCtrl.user["id"])
-                    .collection(collectionName.userContact)
-                    .get()
-                    .then((allContact) {
-                  if (allContact.docs.isEmpty) {
-                    FirebaseFirestore.instance
-                        .collection(collectionName.users)
-                        .doc(appCtrl.user["id"])
-                        .collection(collectionName.userContact)
-                        .add({'contacts': contactsData});
-                  }
-                });
-              }
-            }
-          }
-        }
+      FirebaseFirestore.instance
+          .collection(collectionName.users)
+          .doc(user["id"]).snapshots().listen((event) {
+            log("djfhjd : ${event.data()}");
+            bool isWebLogin = event.data()!["isWebLogin"] ?? false;
+            log("djfhjd : $isWebLogin");
       });
     }
   }

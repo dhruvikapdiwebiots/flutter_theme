@@ -47,7 +47,7 @@ class PopUpAction extends StatelessWidget {
                                       .textColor(appCtrl.appTheme.blackColor),
                                 ).inkWell(onTap: () {
                                   Get.back();
-                                  Get.toNamed(routeName.setting);
+                                  Get.toNamed(routeName.setting,arguments: dashboardCtrl.pref);
                                 }),
                               ))
                           .toList(),
@@ -92,7 +92,7 @@ class PopUpAction extends StatelessWidget {
                                       });
                                     });
                                   } else {
-                                    Get.toNamed(routeName.setting);
+                                    Get.toNamed(routeName.setting,arguments: dashboardCtrl.pref);
                                   }
                                 }),
                               ))

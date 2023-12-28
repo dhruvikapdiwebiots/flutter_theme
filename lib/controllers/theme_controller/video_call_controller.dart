@@ -71,6 +71,18 @@ class VideoCallController extends GetxController {
 
     return streamController!.stream;
   }
+  //start time count
+  startTimerNow() {
+    timerStream = stopWatchStream();
+    timerSubscription = timerStream!.listen((int newTick) {
+      hoursStr =
+          ((newTick / (60 * 60)) % 60).floor().toString().padLeft(2, '0');
+      minutesStr = ((newTick / 60) % 60).floor().toString().padLeft(2, '0');
+      secondsStr = (newTick % 60).floor().toString().padLeft(2, '0');
+      update();
+
+    });
+  }
 
   @override
   void onReady() {
@@ -101,7 +113,7 @@ class VideoCallController extends GetxController {
           debugPrint("local user ;;;${connection.localUid} joined");
           localUserJoined = true;
           update();
-
+          startTimerNow();
           final info = 'onJoinChannel: $channel, uid: ${connection.localUid}';
           infoStrings.add(info);
           log("info :info");

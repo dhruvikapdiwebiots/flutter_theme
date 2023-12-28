@@ -13,7 +13,7 @@ class RecentChatController with ChangeNotifier {
   ContactModel? getModel(user) {
     if(appCtrl.isSearch ==false) {
       appCtrl.cachedModel ??= ContactModel(user["phone"]);
-      Future.delayed(Durations.s1).then((value) {
+      Future.delayed(DurationClass.s1).then((value) {
         userData = appCtrl.cachedModel!.userData;
         getMessageList();
       });

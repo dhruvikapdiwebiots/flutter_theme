@@ -51,7 +51,7 @@ class _SenderMessageState extends State<SenderMessage> {
                         SenderImage(
                             onPressed: () =>
                                 OnTapFunctionCall().imageTap(
-                                    chatCtrl, widget.docId, widget.document),
+                                    chatCtrl, widget.docId, widget.document!),
                             document: widget.document,
                             onLongPress: () =>
                                 chatCtrl.onLongPressFunction(widget.docId)),
@@ -96,7 +96,7 @@ class _SenderMessageState extends State<SenderMessage> {
                             ? PdfLayout(
                             onTap: () =>
                                 OnTapFunctionCall().pdfTap(
-                                    chatCtrl, widget.docId, widget.document),
+                                    chatCtrl, widget.docId, widget.document!),
                             document: widget.document,
                             onLongPress: () =>
                                 chatCtrl.onLongPressFunction(widget.docId))
@@ -108,7 +108,7 @@ class _SenderMessageState extends State<SenderMessage> {
                                 OnTapFunctionCall().docTap(
                                     chatCtrl,
                                     widget.docId,
-                                    widget.document),
+                                    widget.document!),
                             onLongPress: () =>
                                 chatCtrl
                                     .onLongPressFunction(widget.docId))

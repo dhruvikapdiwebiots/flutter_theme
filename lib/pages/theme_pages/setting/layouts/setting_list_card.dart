@@ -18,6 +18,7 @@ class SettingListCard extends StatelessWidget {
           Row(children: [
             SvgPicture.asset(
               data["icon"],
+              height: Sizes.s22,width: Sizes.s22,
             ).paddingAll(Insets.i10).decorated(
                   color: appCtrl.appTheme.profileSettingColor,
                   borderRadius:
@@ -30,8 +31,8 @@ class SettingListCard extends StatelessWidget {
                 Text(trans(data["title"]),
                     style: AppCss.poppinsMedium14
                         .textColor(appCtrl.appTheme.blackColor)),
-                if (index == 0)
-                  Text(
+                if (index == 0 || index ==1)
+                  index == 0? Text(
                       appCtrl.languageVal == "en"
                           ? "English"
                           : appCtrl.languageVal == "ar"
@@ -39,6 +40,9 @@ class SettingListCard extends StatelessWidget {
                               : appCtrl.languageVal == "hi"
                                   ? "Hindi"
                                   : "Gujarati",
+                      style: AppCss.poppinsLight12
+                          .textColor(appCtrl.appTheme.txtColor)).marginOnly(top: Insets.i3) : Text(
+                     "Sync contact for web Login access",
                       style: AppCss.poppinsLight12
                           .textColor(appCtrl.appTheme.txtColor)).marginOnly(top: Insets.i3)
               ],

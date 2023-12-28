@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:typed_data';
 import 'package:async/async.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
@@ -13,6 +14,7 @@ class UserData {
   final Int8List? photoBytes;
   final String id, name, photoURL, aboutUser;
   final String idVariants;
+  final List<dynamic>? dialCodePhoneList;
 
   UserData({
     required this.id,
@@ -23,6 +25,7 @@ class UserData {
     required this.name,
     required this.photoURL,
     this.photoBytes,
+    this.dialCodePhoneList,
   });
 
   factory UserData.fromJson(Map<String, dynamic> jsonData) {
@@ -35,6 +38,7 @@ class UserData {
       photoBytes: jsonData['bytes'],
       userType: jsonData['type'],
       time: jsonData['time'],
+      dialCodePhoneList: jsonData['dialCodePhoneList'],
     );
   }
 
@@ -47,6 +51,7 @@ class UserData {
     'bytes': user.photoBytes,
     'type': user.userType,
     'time': user.time,
+    'dialCodePhoneList': user.dialCodePhoneList,
   };
 
   static String encode(List<UserData> users) => json.encode(
@@ -147,8 +152,9 @@ class FetchContactController with ChangeNotifier {
         if(doc.docs[0].data()["isActive"] == true){
           var userDataModel = UserData(
               aboutUser: doc.docs[0].data()["statusDesc"] ?? "",
-              idVariants: doc.docs[0].data()["phone"] ?? [userid],
+              idVariants: doc.docs[0].data()["phone"] ,
               id: doc.docs[0].data()["id"],
+              dialCodePhoneList: doc.docs[0].data()["dialCodePhoneList"] ?? [userid],
               userType: 0,
               time: DateTime.now().millisecondsSinceEpoch,
               name: doc.docs[0].data()["name"],
@@ -180,6 +186,7 @@ class FetchContactController with ChangeNotifier {
               id: doc.data()!["id"],
               idVariants: doc.data()!["phone"],
               userType: 0,
+              dialCodePhoneList: doc.data()!["dialCodePhoneList"] ?? [userid],
               aboutUser: doc.data()!["statusDesc"],
               time: DateTime.now().millisecondsSinceEpoch,
               name: doc.data()!["name"],
@@ -202,6 +209,7 @@ class FetchContactController with ChangeNotifier {
         if (user.idVariants != appCtrl.user["phone"]) {
           registerContactUser.add(RegisterContactDetail(
               phone: user.idVariants,
+              dialCode: appCtrl.user["dialCode"] ?? "",
               name: user.name,
               id: user.id,
               image: user.photoURL,
@@ -301,6 +309,8 @@ class FetchContactController with ChangeNotifier {
                 withPhoto: true, withProperties: true, withThumbnail: true)
                 .then((Iterable<Contact> contacts) async {
               for (Contact p in contacts.where((c) => c.phones.isNotEmpty)) {
+                appCtrl.contactList.add(p);
+
                 if (p.phones.isNotEmpty) {
                   List<String?> numbers = p.phones
                       .map((number) {
@@ -319,7 +329,7 @@ class FetchContactController with ChangeNotifier {
                   }
                 }
               }
-
+              appCtrl.update();
               completer.complete(cachedContacts);
             });
             notifyListeners();
@@ -379,11 +389,13 @@ class FetchContactController with ChangeNotifier {
   }
 
   Future<List<QueryDocumentSnapshot>?> getUsersUsingChunks(chunks) async {
+
     QuerySnapshot result = await FirebaseFirestore.instance
         .collection("users")
-        .where("phone", isEqualTo: chunks)
+        .where('dialCodePhoneList', arrayContainsAny: chunks)
         .get();
     if (result.docs.isNotEmpty) {
+      log("result.docs : ${result.docs.length}");
       return result.docs;
     } else {
       return null;
@@ -428,44 +440,69 @@ class FetchContactController with ChangeNotifier {
 
       List<String> myArray =
       contactList!.entries.toList().map((e) => e.key.toString()).toList();
+      List<List<String>> chunkList = divideIntoChuncks(myArray, 10);
 
-      var futureGroup = FutureGroup();
+      List<List<List<String>>> chunkgroups = divideIntoChuncksGroup(
+          chunkList, 150);
+      for (var chunks in chunkgroups) {
+        var futureGroup = FutureGroup();
 
-      for (var chunk in myArray) {
-        futureGroup
-            .add(getUsersUsingChunks(chunk.toString().replaceAll("+91", "")));
-      }
+        for (var chunk in chunks) {
+          futureGroup
+              .add(getUsersUsingChunks(chunk));
+        }
 
-      futureGroup.close();
-      var p = await futureGroup.future;
-      for (var batch in p) {
-        if (batch != null) {
-          for (QueryDocumentSnapshot<Map<String, dynamic>> registeredUser
-          in batch) {
-            if (registeredUser.data()["isActive"] == true) {
-              if (registerContactUser.indexWhere((element) =>
-              element.phone == registeredUser.data()["phone"]) <
-                  0 &&
-                  registeredUser.data()["phone"] != currentUserPhone) {
-                registerContactUser.add(RegisterContactDetail(
-                    phone: registeredUser.data()["phone"] ?? '',
-                    name: registeredUser.data()["name"],
-                    image: registeredUser.data()["image"],
-                    statusDesc: registeredUser.data()["statusDesc"],
-                    id: registeredUser.data()["id"]));
+        futureGroup.close();
+        var p = await futureGroup.future;
+        for (var batch in p) {
+          if (batch != null) {
+            for (QueryDocumentSnapshot<Map<String, dynamic>> registeredUser
+            in batch) {
+              if (registeredUser.data()["isActive"] == true) {
+                if (registerContactUser.indexWhere((element) =>
+                element.phone == registeredUser.data()["phone"]) <
+                    0 &&
+                    registeredUser.data()["phone"] != currentUserPhone) {
 
-                addData(
-                    prefs: existingPrefs,
-                    localUserData: UserData(
-                        aboutUser: registeredUser.data()["statusDesc"] ?? "",
-                        id: registeredUser.data()["id"],
-                        idVariants: registeredUser.data()["phone"],
-                        userType: 0,
-                        time:
-                        DateTime.now().millisecondsSinceEpoch,
+                  for (var phone in registeredUser
+                      .data()["dialCodePhoneList"]
+                      .toList()) {
+                    oldPhoneData.add(RegisterContactDetail(
+                        phone: phone,
                         name: registeredUser.data()["name"],
-                        photoURL: registeredUser.data()["image"] ?? ""),
-                    isListener: true);
+                        image: registeredUser.data()["image"],
+                        dialCode: registeredUser.data()["dialCode"] ?? "",
+
+                        statusDesc: registeredUser.data()["statusDesc"],
+                        id: registeredUser.data()["id"]));
+                  }
+
+                  registerContactUser.add(RegisterContactDetail(
+                      phone: registeredUser.data()["phone"] ?? '',
+                      dialCode: registeredUser.data()["dialCode"] ?? '',
+                      name: registeredUser.data()["name"],
+                      image: registeredUser.data()["image"],
+                      statusDesc: registeredUser.data()["statusDesc"],
+                      id: registeredUser.data()["id"]));
+
+                  addData(
+                      prefs: existingPrefs,
+                      localUserData: UserData(
+                          aboutUser: registeredUser.data()["statusDesc"] ?? "",
+                          id: registeredUser.data()["id"],
+                          idVariants: registeredUser.data()["phone"],
+                          userType: 0,
+                          time:
+                          DateTime
+                              .now()
+                              .millisecondsSinceEpoch,
+                          dialCodePhoneList: registeredUser
+                              .data()["dialCodePhoneList"] ??
+                              [registeredUser.data()["phone"]],
+                          name: registeredUser.data()["name"],
+                          photoURL: registeredUser.data()["image"] ?? ""),
+                      isListener: true);
+                }
               }
             }
           }
@@ -482,6 +519,29 @@ class FetchContactController with ChangeNotifier {
       finishLoadingTasks( existingPrefs, currentUserPhone,
           fonts.done);
     }
+  }
+
+  static List<List<String>> divideIntoChuncks(List<String> array, int size) {
+    List<List<String>> chunks = [];
+    int i = 0;
+    while (i < array.length) {
+      int j = i + size;
+      chunks.add(array.sublist(i, j > array.length ? array.length : j));
+      i = j;
+    }
+    return chunks;
+  }
+
+  static List<List<List<String>>> divideIntoChuncksGroup(
+      List<List<String>> array, int size) {
+    List<List<List<String>>> chunks = [];
+    int i = 0;
+    while (i < array.length) {
+      int j = i + size;
+      chunks.add(array.sublist(i, j > array.length ? array.length : j));
+      i = j;
+    }
+    return chunks;
   }
 
   finishLoadingTasks(SharedPreferences existingPrefs,
@@ -521,14 +581,14 @@ class FetchContactController with ChangeNotifier {
 }
 
 class RegisterContactDetail {
-  final String? phone;
+  final String? phone,dialCode;
   final String? name;
   final String id;
   final String? image;
   final String? statusDesc;
 
   RegisterContactDetail(
-      {this.phone, this.name, required this.id, this.image, this.statusDesc});
+      {this.phone, this.name, required this.id, this.image, this.statusDesc, this.dialCode});
 
   factory RegisterContactDetail.fromJson(Map<String, dynamic> jsonData) {
     return RegisterContactDetail(

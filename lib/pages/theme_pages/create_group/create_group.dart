@@ -21,7 +21,7 @@ class GroupChat extends StatelessWidget {
         onWillPop: () async {
           groupChatCtrl.selectedContact = [];
           groupChatCtrl.update();
-          Get.back();
+
           return true;
         },
         child: GetBuilder<AppController>(builder: (appCtrl) {
@@ -61,7 +61,10 @@ class GroupChat extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 if (groupChatCtrl.selectedContact.isNotEmpty)
-                                  const SelectedContactList(),
+                                   SelectedContactList(selectedContact: groupChatCtrl.selectedContact,onTap: (p0) {
+                                     groupChatCtrl.selectedContact.remove(p0);
+              groupChatCtrl.update();
+                                   },),
                                 if (registerAvailableContact.registerContactUser.isNotEmpty)
                                   Column(children: [
                                     ...registerAvailableContact.registerContactUser

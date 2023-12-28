@@ -180,4 +180,5 @@ final dynamic hi = {
   "userName": "उपयोगकर्ता नाम",
   "email": "ईमेल",
   "addStatus": "स्थिति जोड़ें",
+  "syncNow": "अभी सिंक करें",
 };
