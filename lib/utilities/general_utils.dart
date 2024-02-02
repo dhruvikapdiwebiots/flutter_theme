@@ -3,9 +3,12 @@ import 'dart:io';
 import 'dart:math' as math;
 import 'package:encrypt/encrypt.dart';
 import 'package:encrypt/encrypt.dart' as encrypted;
+import 'package:flutter/cupertino.dart';
 
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import '../config.dart';
+import '../controllers/fetch_contact_controller.dart';
 import '../main.dart';
 
 var loadingCtrl = Get.find<AppController>();
@@ -354,4 +357,78 @@ String groupMessageTypeCondition(MessageType type, content) {
   } else {
     return content;
   }
+}
+
+
+contactPermission(pref) {
+  showDialog(
+      context: Get.context!,
+      builder: (context) {
+        return AlertDialog(
+            contentPadding: EdgeInsets.zero,
+            shape: const RoundedRectangleBorder(
+                borderRadius:
+                BorderRadius.all(Radius.circular(AppRadius.r8))),
+            backgroundColor: appCtrl.appTheme.white,
+            titlePadding: const EdgeInsets.all(Insets.i20),
+            title: Column(
+
+                children: [
+                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                    Text(fonts.contactList.tr,
+                        style: AppCss.poppinsBold18
+                            .textColor(appCtrl.appTheme.txt)),
+                    Icon(CupertinoIcons.multiply,
+                        color: appCtrl.appTheme.txt)
+                        .inkWell(onTap: () => Get.back())
+                  ])
+                ]),
+            content: Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisSize: MainAxisSize.min, children: [
+
+              const VSpace(Sizes.s20),
+
+              Text(fonts.contactPer.tr ,
+                  style: AppCss.poppinsLight12
+                      .textColor(appCtrl.appTheme.txt).textHeight(1.3)),
+              const VSpace(Sizes.s15),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Divider(
+                      height: 1,
+                      color: appCtrl.appTheme.borderGray,
+                      thickness: 1),
+                  const VSpace(Sizes.s15),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CommonButton(
+                          color: appCtrl.appTheme.whiteColor,border: Border.all(color: appCtrl.appTheme.primary),
+                          title: fonts.cancel.tr,style: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.primary),onTap: () async{
+                          Get.back();   final FetchContactController registerAvailableContact =
+                          Provider.of<FetchContactController>(Get.context!, listen: false);
+                          registerAvailableContact.setIsLoading(false);
+
+                        }),
+                      ),
+                      const HSpace(Sizes.s15),
+
+                      Expanded(
+                        child: CommonButton(title: fonts.accept.tr,style: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.white),onTap: ()async {
+
+                          final FetchContactController registerAvailableContact =
+                          Provider.of<FetchContactController>(Get.context!, listen: false);
+                          debugPrint("INIT PAGE");
+                          registerAvailableContact.fetchContacts(
+                              Get.context!, appCtrl.user["phone"], pref!, true);
+                          Get.back();
+                        } ,),
+                      ),
+                    ],
+                  )
+
+                ],
+              ).width(MediaQuery.of(context).size.width)
+            ]).padding(horizontal: Sizes.s20, bottom: Insets.i20));
+      });
 }

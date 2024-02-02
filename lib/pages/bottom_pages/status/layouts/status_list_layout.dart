@@ -24,7 +24,9 @@ class StatusListBodyLayout extends StatelessWidget {
             const StatusListLayout(),
             const VSpace(Sizes.s10),
 
+            if(statusCtrl.allViewStatusList.isNotEmpty)
             StatusClass().titleLayout(fonts.viewUpdate),
+                if(statusCtrl.allViewStatusList.isNotEmpty)
             const VSpace(Sizes.s10),
             //all contacts user status list
             const ViewAllStatusListLayout()

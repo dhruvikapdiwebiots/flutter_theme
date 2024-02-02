@@ -146,12 +146,14 @@ class RecentChatController with ChangeNotifier {
                         currentUserId: appCtrl.user["id"])
                         .marginOnly(bottom: Insets.i12));
                   }
+                  notifyListeners();
                 } else if (element.value.data()["isGroup"] == true) {
                   messageWidgetList.add(GroupMessageCard(
                     document: element.value,
                     data: data,
                     currentUserId: appCtrl.user["id"],
                   ).marginOnly(bottom: Insets.i12));
+                  notifyListeners();
                 } else if (element.value.data()["isBroadcast"] == true) {
                   element.value.data()["senderId"] == appCtrl.user["id"]
                       ? messageWidgetList.add(BroadCastMessageCard(
@@ -164,6 +166,7 @@ class RecentChatController with ChangeNotifier {
                       currentUserId: appCtrl.user["id"],
                       blockBy: appCtrl.user["id"])
                       .marginOnly(bottom: Insets.i12));
+                  notifyListeners();
                 } else {
                   messageWidgetList.add(Container());
                 }
@@ -178,6 +181,7 @@ class RecentChatController with ChangeNotifier {
                       currentUserId: appCtrl.user["id"],
                       blockBy: appCtrl.user['id'])
                       .marginOnly(bottom: Insets.i12));
+                  notifyListeners();
                 } else {
                   messageWidgetList.add(MessageCard(
                       data: data,
@@ -185,6 +189,7 @@ class RecentChatController with ChangeNotifier {
                       document: element.value,
                       currentUserId: appCtrl.user["id"])
                       .marginOnly(bottom: Insets.i12));
+                  notifyListeners();
                 }
               } else if (element.value.data()["isGroup"] == true) {
                 messageWidgetList.add(GroupMessageCard(
@@ -192,6 +197,7 @@ class RecentChatController with ChangeNotifier {
                   data: data,
                   currentUserId: appCtrl.user["id"],
                 ).marginOnly(bottom: Insets.i12));
+                notifyListeners();
               } else if (element.value.data()["isBroadcast"] == true) {
                 element.value.data()["senderId"] == appCtrl.user["id"]
                     ? messageWidgetList.add(BroadCastMessageCard(
@@ -204,6 +210,7 @@ class RecentChatController with ChangeNotifier {
                     currentUserId: appCtrl.user["id"],
                     blockBy: appCtrl.user["id"])
                     .marginOnly(bottom: Insets.i12));
+                notifyListeners();
               } else {
                 messageWidgetList.add(Container());
               }

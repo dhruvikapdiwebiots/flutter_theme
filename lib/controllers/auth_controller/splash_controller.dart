@@ -121,7 +121,7 @@ class SplashController extends GetxController {
       }
       //
       PermissionStatus permission = await Permission.contacts.status;
-
+log("permission :${permission}");
       final RecentChatController recentChatController =
           Provider.of<RecentChatController>(Get.context!, listen: false);
       if (user != null) {
@@ -136,6 +136,11 @@ class SplashController extends GetxController {
 
           await Future.delayed(DurationClass.s1);
         }
+      }else{
+        final FetchContactController registerAvailableContact =
+        Provider.of<FetchContactController>(Get.context!, listen: false);
+        registerAvailableContact.setIsLoading(false);
+        await Future.delayed(DurationClass.s1);
       }
 
 

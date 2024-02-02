@@ -1,3 +1,5 @@
+
+
 class Status {
   String? uid;
   String? docId;
@@ -12,15 +14,15 @@ class Status {
 
   Status(
       {this.uid,
-      this.username,
-      this.docId,
-      this.phoneNumber,
-      this.photoUrl,
-      this.seenAllStatus,
-      this.createdAt,
-      this.updateAt,
-      this.profilePic,
-      this.isSeenByOwn});
+        this.username,
+        this.docId,
+        this.phoneNumber,
+        this.photoUrl,
+        this.seenAllStatus,
+        this.createdAt,
+        this.updateAt,
+        this.profilePic,
+        this.isSeenByOwn});
 
   Status.fromJson(Map<String, dynamic> json) {
     uid = json['uid'];
@@ -70,8 +72,9 @@ class PhotoUrl {
   String? statusBgColor;
   bool? isExpired;
   List? seenBy;
+  String? expiryDate;
 
-  PhotoUrl({this.image, this.timestamp, this.isExpired, this.statusType});
+  PhotoUrl({this.image, this.timestamp, this.isExpired, this.statusType,this.expiryDate});
 
   PhotoUrl.fromJson(Map<String, dynamic> json) {
     image = json['image'];
@@ -81,6 +84,7 @@ class PhotoUrl {
     statusText = json['statusText'];
     statusBgColor = json['statusBgColor'];
     seenBy = json['seenBy'] ?? [];
+    expiryDate = json['expiryDate'];
   }
 
   Map<String, dynamic> toJson() {
@@ -91,6 +95,7 @@ class PhotoUrl {
     data['statusType'] = statusType;
     data['statusText'] = statusText;
     data['statusBgColor'] = statusBgColor;
+    data['expiryDate'] = expiryDate;
     if (seenBy!.isNotEmpty) {
       data['seenBy'] = seenBy;
     }

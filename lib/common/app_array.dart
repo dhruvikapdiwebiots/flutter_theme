@@ -46,6 +46,13 @@ class AppArray{
     {'title': "deleteAccount","icon" : svgAssets.trash},
     {'title': "fingerprintLock","icon" : svgAssets.fingerLock},
     {'title': "rateApp","icon" : svgAssets.star},
+    {
+      "icon": svgAssets.trash,
+      "title": "clearStorage"
+    },  {
+      "icon": svgAssets.info,
+      "title": "privacyPolicy"
+    },
     {'title': "logout","icon" : svgAssets.logout},
   ];
 

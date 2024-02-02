@@ -181,4 +181,18 @@ final dynamic en = {
   "email": "Email",
   "addStatus": "Add Status",
   "syncNow": "Sync Now",
+  "clearStorage": "Clear Storage",
+  "successfullyCacheClear": "Cache clear successfully!",
+  "reOpenApp":
+  "By click on 'Re-open' you will exit from the app and your app will be closed.",
+  "reOpen": "Re-open",
+  "contactSync": "Contact sync successfully",
+  "contactSync1": "Contact sync",
+  "contactList": "Contact List",
+  "success": "Success",
+  "syncDesc": "Your contacts will be sync automatic in web once you click on 'Sync Now' button",
+
+  "contactPer": "Chatify app uses your Contact list after you click on 'Accept' button for Chats, Calling and share status stories to only register users. App does not store the contacts to any server." ,
+  "accept": "Accept" ,
+  "privacyPolicy": "Privacy Policy" ,
 };

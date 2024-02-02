@@ -8,7 +8,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   log('Handling a background message ${message.messageId}');
   log("message.data : ${message.data}");
-  firebaseCtrl.syncContact();
 }
 
 /// Create a [AndroidNotificationChannel] for heads up notifications
@@ -50,7 +49,6 @@ class CustomNotificationController extends GetxController {
     FirebaseMessaging.instance
         .getInitialMessage()
         .then((RemoteMessage? message) {
-      firebaseCtrl.syncContact();
       if (message != null) {
         flutterLocalNotificationsPlugin.cancelAll();
         Map<String, dynamic>? notificationData = message.data;
@@ -92,7 +90,7 @@ class CustomNotificationController extends GetxController {
     //when app in foreground
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       RemoteNotification notification = message.notification!;
-      firebaseCtrl.syncContact();
+
       AndroidNotification? android = message.notification?.android;
       if (android != null && !kIsWeb) {
         flutterLocalNotificationsPlugin.show(

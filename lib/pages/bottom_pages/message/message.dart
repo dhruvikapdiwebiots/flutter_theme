@@ -30,6 +30,7 @@ class _MessageState extends State<Message>
       firebaseCtrl.setLastSeen();
     }
     firebaseCtrl.statusDeleteAfter24Hours();
+    firebaseCtrl.deleteForAllUsers();
 
   }
 

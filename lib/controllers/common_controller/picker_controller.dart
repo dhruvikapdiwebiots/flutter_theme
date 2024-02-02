@@ -1,10 +1,12 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:dartx/dartx_io.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:light_compressor/light_compressor.dart' as light;
+import 'package:video_compress_plus/video_compress_plus.dart';
 
 class PickerController extends GetxController {
   XFile? imageFile;
@@ -13,6 +15,7 @@ class PickerController extends GetxController {
   File? video;
   String? imageUrl;
   String? audioUrl;
+  List<File> selectedImages = [];
 
 
 // GET IMAGE FROM GALLERY
@@ -39,9 +42,7 @@ class PickerController extends GetxController {
         File compressedFile = await FlutterNativeImage.compressImage(
             croppedFile.path,
             quality: 30,
-            targetWidth: 600,
-            targetHeight: 300,
-            percentage: 20);
+            );
         update();
 
         log("image : ${compressedFile.lengthSync()}");
@@ -63,7 +64,24 @@ class PickerController extends GetxController {
 
 // GET IMAGE FROM GALLERY
   Future getMultipleImage() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowMultiple: true,
+      allowedExtensions: ['jpg', 'png', 'jpeg',],
+    );
 
+    log("resultresult: $result");
+    if (result != null) {
+      for (var i = 0; i < result.files.length; i++) {
+        selectedImages.add(File(result.files[i].path!));
+      }
+      return selectedImages;
+    } else {
+      // If no image is selected it will show a
+      // snackbar saying nothing is selected
+      ScaffoldMessenger.of(Get.context!)
+          .showSnackBar(const SnackBar(content: Text('Nothing is selected')));
+    }
   }
 
 // GET VIDEO FROM GALLERY
@@ -101,7 +119,24 @@ class PickerController extends GetxController {
 
 // GET VIDEO FROM GALLERY
   Future getMultipleVideo() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowMultiple: true,
+      allowedExtensions: ['mp4'],
+    );
 
+    log("resultresult: $result");
+    if (result != null) {
+      for (var i = 0; i < result.files.length; i++) {
+        selectedImages.add(File(result.files[i].path!));
+      }
+      return selectedImages;
+    } else {
+      // If no image is selected it will show a
+      // snackbar saying nothing is selected
+      ScaffoldMessenger.of(Get.context!)
+          .showSnackBar(const SnackBar(content: Text('Nothing is selected')));
+    }
   }
 
 // FOR Dismiss KEYBOARD
@@ -150,16 +185,137 @@ class PickerController extends GetxController {
                 if (value != null) {
                   if (isGroup) {
                     final chatCtrl = Get.find<GroupChatMessageController>();
-
+                    chatCtrl.selectedImages = value;
                     chatCtrl.isLoading = true;
                     chatCtrl.update();
+                    chatCtrl.selectedImages.asMap().entries.forEach((element) async {
+                      File? videoFile =  element.value;
+                      File? video;
+                      if (element.value.name.contains("mp4")) {
+                        final light.LightCompressor lightCompressor =
+                        light.LightCompressor();
+                        final dynamic response =
+                        await lightCompressor.compressVideo(
+                          path: videoFile.path,
+                          videoQuality: light.VideoQuality.very_low,
+                          isMinBitrateCheckEnabled: false,
+                          video: light.Video(videoName: element.value.name),
+                          android: light.AndroidConfig(
+                              isSharedStorage: true, saveAt: light.SaveAt.Movies),
+                          ios: light.IOSConfig(saveInGallery: false),
+                        );
 
+                        video = File(videoFile.path);
+                        if (response is light.OnSuccess) {
+                          log("videoFile!.path 1: ${getVideoSize(
+                              file: File(response.destinationPath))}}");
+                          video = File(response.destinationPath);
+                        }
+                      } else {
+                        File compressedFile =
+                        await FlutterNativeImage.compressImage(videoFile.path,
+                            quality: 30,);
+
+                        log("image : ${compressedFile.lengthSync()}");
+
+                        video = File(compressedFile.path);
+                        if (video.lengthSync() / 1000000 > appCtrl.usageControlsVal!.maxFileSize!) {
+                          video = null;
+                          snackBar(
+                              "Image Should be less than ${video!.lengthSync() /
+                                  1000000 > appCtrl.usageControlsVal!.maxFileSize!}");
+                        }
+                      }
+
+                      chatCtrl.uploadMultipleFile(videoFile,element.value.name.contains("mp4") ? MessageType.video : MessageType.image);
+                      selectedImages = [];
+                      update();
+                    });
                   } else if (isSingleChat) {
                     final singleChatCtrl = Get.find<ChatController>();
+                    singleChatCtrl.selectedImages = value;
+                    singleChatCtrl.selectedImages
+                        .asMap()
+                        .entries
+                        .forEach((element) async {
+                      File? videoFile =  element.value;
+                      singleChatCtrl.isLoading = true;
+                      singleChatCtrl.update();
+                      File compressedFile =
+                      await FlutterNativeImage.compressImage(
+                          videoFile.path,
+                          quality: 30,
+                          );
 
+                      log("image : ${compressedFile.lengthSync()}");
+                      log("MAX SIZE IMAGE ${appCtrl.usageControlsVal!.maxFileSize!}");
+
+                      video = File(compressedFile.path);
+                      if (video!.lengthSync() / 1000000 >
+                          appCtrl.usageControlsVal!.maxFileSize!) {
+                        video = null;
+                        singleChatCtrl.isLoading = false;
+                        singleChatCtrl.update();
+                        snackBar(
+                            "Image Should be less than ${video!.lengthSync() / 1000000 > appCtrl.usageControlsVal!.maxFileSize!}");
+                      }
+
+                      singleChatCtrl.uploadMultipleFile(
+                          video!,
+                          element.value.name.contains("mp4")
+                              ? MessageType.video
+                              : MessageType.image);
+                    });
+                    selectedImages = [];
+                    update();
                   } else {
                     final broadcastCtrl = Get.find<BroadcastChatController>();
+                    broadcastCtrl.selectedImages = value;
+                    broadcastCtrl.selectedImages.asMap().entries.forEach((
+                        element) async {
+                      File? videoFile =  element.value;
+                      File? video;
+                      if (element.value.name.contains("mp4")) {
+                        final light.LightCompressor lightCompressor =
+                        light.LightCompressor();
+                        final dynamic response =
+                        await lightCompressor.compressVideo(
+                          path: videoFile.path,
+                          videoQuality: light.VideoQuality.very_low,
+                          isMinBitrateCheckEnabled: false,
+                          video: light.Video(videoName: element.value.name),
+                          android: light.AndroidConfig(
+                              isSharedStorage: true, saveAt: light.SaveAt.Movies),
+                          ios: light.IOSConfig(saveInGallery: false),
+                        );
 
+                        video = File(videoFile!.path);
+                        if (response is light.OnSuccess) {
+                          log("videoFile!.path 1: ${getVideoSize(
+                              file: File(response.destinationPath))}}");
+                          video = File(response.destinationPath);
+                        }
+                      } else {
+                        File compressedFile =
+                        await FlutterNativeImage.compressImage(videoFile!.path,
+                            quality: 30,
+                            );
+
+                        log("image : ${compressedFile.lengthSync()}");
+
+                        video = File(compressedFile.path);
+                        if (video.lengthSync() / 1000000 > appCtrl.usageControlsVal!.maxFileSize!) {
+                          video = null;
+                          snackBar(
+                              "Image Should be less than ${video!.lengthSync() /
+                                  1000000 > appCtrl.usageControlsVal!.maxFileSize!}");
+                        }
+                      }
+
+                      broadcastCtrl.uploadMultipleFile(video,element.value.name.contains("mp4") ? MessageType.video : MessageType.image);
+                      selectedImages = [];
+                      update();
+                    });
                   }
                 }
               });
@@ -198,14 +354,74 @@ class PickerController extends GetxController {
             await getMultipleVideo().then((value) {
               if (isGroup) {
                 final chatCtrl = Get.find<GroupChatMessageController>();
-
+                chatCtrl.selectedImages = value;
+                chatCtrl.selectedImages.asMap().entries.forEach((
+                    element) async {
+                  File? videoFile =  element.value;
+                  File? video;
+                  log("VIDEO FILE $videoFile");
+                  if (element.value.name.contains("mp4")) {
+                    final info = await VideoCompress.compressVideo(
+                      videoFile.path,
+                      quality: VideoQuality.MediumQuality,
+                      deleteOrigin: false,
+                      includeAudio: true,
+                    );
+                    video = File(info!.path!);
+                  }
+                  chatCtrl.uploadMultipleFile(video!, MessageType.video);
+                  selectedImages = [];
+                  update();
+                });
               } else if (isSingleChat) {
                 final singleChatCtrl = Get.find<ChatController>();
+                singleChatCtrl.selectedImages = value;
+                singleChatCtrl.selectedImages
+                    .asMap()
+                    .entries
+                    .forEach((element) async {
+                  File? videoFile =  element.value;
 
+                  appCtrl.isLoading = true;
+                  appCtrl.update();
+
+
+                  if (element.value.name.contains("mp4")) {
+                    final info = await VideoCompress.compressVideo(
+                      videoFile.path,
+                      quality: VideoQuality.MediumQuality,
+                      deleteOrigin: false,
+                      includeAudio: true,
+                    );
+                    video = File(info!.path!);
+                  }
+                  appCtrl.isLoading = false;
+                  appCtrl.update();
+                  singleChatCtrl.uploadMultipleFile(
+                      videoFile, MessageType.video);
+                });
+                selectedImages = [];
+                update();
+                Get.back();
               } else {
                 final broadcastCtrl = Get.find<BroadcastChatController>();
-
-
+                broadcastCtrl.selectedImages = value;
+                broadcastCtrl.selectedImages.asMap().entries.forEach((
+                    element) async {
+                  File? videoFile = element.value;
+                  if (element.value.name.contains("mp4")) {
+                    final info = await VideoCompress.compressVideo(
+                      videoFile.path,
+                      quality: VideoQuality.MediumQuality,
+                      deleteOrigin: false,
+                      includeAudio: true,
+                    );
+                    video = File(info!.path!);
+                  }
+                  broadcastCtrl.uploadMultipleFile(videoFile, MessageType.video);
+                  selectedImages = [];
+                  update();
+                });
               }
             });
             Get.back();

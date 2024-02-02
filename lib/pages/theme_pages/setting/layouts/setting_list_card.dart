@@ -1,5 +1,7 @@
 
 
+import 'package:flutter_switch/flutter_switch.dart';
+
 import '../../../../config.dart';
 
 class SettingListCard extends StatelessWidget {
@@ -51,19 +53,26 @@ class SettingListCard extends StatelessWidget {
           data["title"] == "rtl" ||
                   data["title"] == "theme" ||
                   data["title"] == "fingerprintLock"
-              ? Switch(
-                  // This bool value toggles the switch.
-                  value: data["title"] == "rtl"
-                      ? appCtrl.isRTL
-                      : data["title"] == "theme"
-                          ? appCtrl.isTheme
-                          : appCtrl.isBiometric,
-                  activeColor: appCtrl.appTheme.primary,
-                  onChanged: (bool value) {
-                    settingCtrl.onSettingTap(index);
-                    appCtrl.update();
-                  },
-                )
+              ?
+          FlutterSwitch(
+              activeColor: appCtrl.appTheme.primary.withOpacity(0.2),
+              activeToggleColor: appCtrl.appTheme.primary,
+              inactiveToggleColor:appCtrl.appTheme.whiteColor ,
+              inactiveColor: appCtrl.appTheme.profileSettingColor,
+              width: Sizes.s40,
+              height: Sizes.s24,
+              toggleSize: Sizes.s16,
+              value: data["title"] == "rtl"
+                  ? appCtrl.isRTL
+                  : data["title"] == "theme"
+                  ? appCtrl.isTheme
+                  : appCtrl.isBiometric,
+              borderRadius: AppRadius.r12,
+              onToggle: (value) {
+                settingCtrl.onSettingTap(index);
+                appCtrl.update();
+              },
+          )
               : SvgPicture.asset(
                       appCtrl.isRTL
                           ? svgAssets.arrowBack

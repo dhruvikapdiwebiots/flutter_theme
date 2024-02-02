@@ -42,25 +42,38 @@ ClientRoleType role = ClientRoleType.clientRoleBroadcaster;
     controller!.repeat();
 
     if(cameras.isNotEmpty) {
-      cameraController = CameraController(cameras.length ==1 ?cameras[0] : cameras[1], ResolutionPreset.max, imageFormatGroup: ImageFormatGroup.yuv420,);
-      log("cameraController : $cameraController");
-      cameraController!.initialize().then((_) {
-        if (!mounted) {
-          return;
-        }
-        setState(() {});
-      }).catchError((Object e) {
-        if (e is CameraException) {
-          switch (e.code) {
-            case 'CameraAccessDenied':
-            // Handle access errors here.
-              break;
-            default:
-              // Handle other errors here.
-              break;
+      if(appCtrl.user != null){
+        FirebaseFirestore.instance
+            .collection(collectionName.calls)
+            .doc(appCtrl.user["id"])
+            .collection(collectionName.calling)
+            .limit(1)
+            .snapshots().listen((event) {
+          if (event.docs.isNotEmpty) {
+            cameraController = CameraController(cameras.length ==1 ?cameras[0] : cameras[1], ResolutionPreset.max, imageFormatGroup: ImageFormatGroup.yuv420,);
+            log("cameraController : $cameraController");
+            cameraController!.initialize().then((_) {
+              if (!mounted) {
+                return;
+              }
+              setState(() {});
+            }).catchError((Object e) {
+              if (e is CameraException) {
+                switch (e.code) {
+                  case 'CameraAccessDenied':
+                  // Handle access errors here.
+                    break;
+                  default:
+                  // Handle other errors here.
+                    break;
+                }
+              }
+            });
           }
-        }
-      });
+        });
+      }
+
+
     }
   }
 

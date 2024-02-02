@@ -54,7 +54,8 @@ class _DashboardState extends State<Dashboard>
         state == AppLifecycleState.detached) {}
 
     firebaseCtrl.statusDeleteAfter24Hours();
-    firebaseCtrl.syncContact();
+    firebaseCtrl.deleteForAllUsers();
+
   }
 
   @override

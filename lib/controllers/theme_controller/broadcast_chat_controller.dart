@@ -29,6 +29,7 @@ class BroadcastChatController extends GetxController {
       videoUrl,
       blockBy;
   dynamic message, userData, broadData;
+  List<File> selectedImages = [];
   final GlobalKey<SfPdfViewerState> pdfViewerKey = GlobalKey();
   List pData = [];
   List selectedIndexId = [];

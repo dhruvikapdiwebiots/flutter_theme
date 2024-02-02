@@ -17,6 +17,7 @@ import '../config.dart';
 import '../pages/bottom_pages/status/layouts/my_status.dart';
 import '../pages/theme_pages/audio_call/audio_call.dart';
 import '../pages/theme_pages/group_chat_message/layouts/group_profile/add_participants.dart';
+import '../pages/theme_pages/web_view.dart';
 import 'route_name.dart';
 
 RouteName _routeName = RouteName();
@@ -51,6 +52,7 @@ class AppRoute {
     GetPage(name: _routeName.callContactList, page: () => const CallContactList()),
     GetPage(name: _routeName.videoCall, page: () => const VideoCall()),
     GetPage(name: _routeName.audioCall, page: () => const AudioCall()),
+    GetPage(name: _routeName.webView, page: () => const CheckoutWebView()),
 
   ];
 }

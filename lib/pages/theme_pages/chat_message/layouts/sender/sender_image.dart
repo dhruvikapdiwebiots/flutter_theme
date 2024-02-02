@@ -53,7 +53,7 @@ class SenderImage extends StatelessWidget {
                         imageUrl: decryptMessage(document!.content),
                         width: Sizes.s160,
                         height: Sizes.s150,
-                        fit: BoxFit.fill,
+                        fit: BoxFit.cover,
                       ),
                     ).paddingAll(Insets.i10),
                   ),

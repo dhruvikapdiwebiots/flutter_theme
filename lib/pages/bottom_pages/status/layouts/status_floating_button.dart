@@ -17,8 +17,9 @@ class StatusFloatingButton extends StatelessWidget {
         children: [
           Container(
             height: Sizes.s40,
+            width: Sizes.s40,
             margin: const EdgeInsets.only(bottom: Insets.i15),
-            child: FloatingActionButton(
+            child: FloatingActionButton.small(
                 backgroundColor: const Color(0xff999EA6),
                 child: SvgPicture.asset(svgAssets.edit, height: Sizes.s15),
                 onPressed: () => Get.to(const TextStatus())!.then((value) {

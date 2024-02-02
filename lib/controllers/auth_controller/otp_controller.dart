@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/controllers/fetch_contact_controller.dart';
 import 'package:flutter_theme/controllers/recent_chat_controller.dart';
@@ -59,40 +60,148 @@ class OtpController extends GetxController {
 
     recentChatController.getModel(appCtrl.user);
 
-    final FetchContactController registerAvailableContact =
-        Provider.of<FetchContactController>(Get.context!, listen: false);
-    log("INIT PAGE");
+   contactPermissions(user);
+  }
 
-    registerAvailableContact.fetchContacts(
-        Get.context!, appCtrl.user["phone"], pref!, false);
-    helper.showLoading();
-    update();
-    appCtrl.pref = pref;
-    appCtrl.update();
 
-    await appCtrl.storage.write(session.isIntro, true);
-    Get.forceAppUpdate();
+  contactPermissions(user) {
+    showDialog(
+        context: Get.context!,
+        builder: (context) {
+          return AlertDialog(
+              contentPadding: EdgeInsets.zero,
+              shape: const RoundedRectangleBorder(
+                  borderRadius:
+                  BorderRadius.all(Radius.circular(AppRadius.r8))),
+              backgroundColor: appCtrl.appTheme.white,
+              titlePadding: const EdgeInsets.all(Insets.i20),
+              title: Column(
 
-    final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-    firebaseMessaging.getToken().then((token) async {
-      await FirebaseFirestore.instance
-          .collection(collectionName.users)
-          .doc(user["id"])
-          .update({
-        'status': "Online",
-        "pushToken": token,
-        "isActive": true,
-        'phoneRaw': mobileNumber,
-        'phone': (dialCodeVal! + mobileNumber!).trim(),
-        "dialCodePhoneList":
-            phoneList(phone: mobileNumber, dialCode: dialCodeVal)
-      });
-      await Future.delayed(DurationClass.s6);
-      helper.hideLoading();
-      update();
+                  children: [
+                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                      Text(fonts.contactList.tr,
+                          style: AppCss.poppinsBold18
+                              .textColor(appCtrl.appTheme.txt)),
+                      Icon(CupertinoIcons.multiply,
+                          color: appCtrl.appTheme.txt)
+                          .inkWell(onTap: () => Get.back())
+                    ])
+                  ]),
+              content: Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisSize: MainAxisSize.min, children: [
 
-      Get.toNamed(routeName.dashboard, arguments: pref);
-    });
+                const VSpace(Sizes.s20),
+
+                Text(fonts.contactPer.tr ,
+                    style: AppCss.poppinsLight12
+                        .textColor(appCtrl.appTheme.txt).textHeight(1.3)),
+                const VSpace(Sizes.s15),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Divider(
+                        height: 1,
+                        color: appCtrl.appTheme.borderGray,
+                        thickness: 1),
+                    const VSpace(Sizes.s15),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: CommonButton(
+                            color: appCtrl.appTheme.whiteColor,border: Border.all(color: appCtrl.appTheme.primary),
+                            title: fonts.cancel.tr,style: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.primary),onTap: () async{
+                            Get.back();
+                            final FetchContactController registerAvailableContact =
+                            Provider.of<FetchContactController>(Get.context!, listen: false);
+                            registerAvailableContact.setIsLoading(false);
+
+                            await getAdminPermission();
+                            helper.showLoading();
+                            update();
+                            appCtrl.pref = pref;
+                            appCtrl.update();
+
+                            await appCtrl.storage.write(session.user, user);
+                            await appCtrl.storage.write(session.isIntro, true);
+                            Get.forceAppUpdate();
+
+                            await appCtrl.storage.write(session.isIntro, true);
+                            Get.forceAppUpdate();
+
+                            final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+                            firebaseMessaging.getToken().then((token) async {
+                              await FirebaseFirestore.instance
+                                  .collection(collectionName.users)
+                                  .doc(user["id"])
+                                  .update({
+                                'status': "Online",
+                                "pushToken": token,
+                                "isActive": true,
+                                'phoneRaw': mobileNumber,
+                                'phone': (dialCodeVal! + mobileNumber!).trim(),
+                                "dialCodePhoneList":
+                                phoneList(phone: mobileNumber, dialCode: dialCodeVal)
+                              });
+                              await Future.delayed(DurationClass.s6);
+                              helper.hideLoading();
+                              update();
+
+                              Get.toNamed(routeName.dashboard, arguments: pref);
+                            });
+                          } ,),
+                        ),
+                        const HSpace(Sizes.s15),
+
+                        Expanded(
+                          child: CommonButton(title: fonts.accept.tr,style: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.white),onTap: ()async {
+                            Get.back();
+                            await getAdminPermission();
+                            await appCtrl.storage.write(session.user, user);
+                            await appCtrl.storage.write(session.isIntro, true);
+                            Get.forceAppUpdate();
+
+                            final FetchContactController registerAvailableContact =
+                            Provider.of<FetchContactController>(Get.context!, listen: false);
+                            log("INIT PAGE");
+
+                            registerAvailableContact.fetchContacts(
+                                Get.context!, appCtrl.user["phone"], pref!, false);
+                            helper.showLoading();
+                            update();
+                            appCtrl.pref = pref;
+                            appCtrl.update();
+
+                            await appCtrl.storage.write(session.isIntro, true);
+                            Get.forceAppUpdate();
+
+                            final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+                            firebaseMessaging.getToken().then((token) async {
+                              await FirebaseFirestore.instance
+                                  .collection(collectionName.users)
+                                  .doc(user["id"])
+                                  .update({
+                                'status': "Online",
+                                "pushToken": token,
+                                "isActive": true,
+                                'phoneRaw': mobileNumber,
+                                'phone': (dialCodeVal! + mobileNumber!).trim(),
+                                "dialCodePhoneList":
+                                phoneList(phone: mobileNumber, dialCode: dialCodeVal)
+                              });
+                              await Future.delayed(DurationClass.s6);
+                              helper.hideLoading();
+                              update();
+
+                              Get.toNamed(routeName.dashboard, arguments: pref);
+                            });
+                          } ,),
+                        ),
+                      ],
+                    )
+
+                  ],
+                ).width(MediaQuery.of(context).size.width)
+              ]).padding(horizontal: Sizes.s20, bottom: Insets.i20));
+        });
   }
 
   //show toast
@@ -105,6 +214,10 @@ class OtpController extends GetxController {
         textColor: appCtrl.appTheme.whiteColor,
         fontSize: 16.0);
   }
+
+
+
+
 
   //on verify code
   void onVerifyCode(phone, dialCode) {

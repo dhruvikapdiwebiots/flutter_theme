@@ -25,6 +25,7 @@ class ChatController extends GetxController {
       videoUrl,
       blockBy;
   List message = [];
+  List<File> selectedImages = [];
   List<DateTimeChip> localMessage = [];
   dynamic pData, allData, userData;
   List<QueryDocumentSnapshot<Map<String, dynamic>>> allMessages = [];

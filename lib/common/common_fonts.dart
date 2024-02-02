@@ -155,6 +155,18 @@ class Fonts{
   final existGroup = "existGroup";
   final userName = "userName";
   final email = "email";
+  final successfullyCacheClear = "successfullyCacheClear";
+  final reOpenApp = "reOpenApp";
+  final reOpen = "reOpen";
   final addStatus = "addStatus";
+  final syncNow = "syncNow";
+  final contactSync = "contactSync";
+  final contactSync1 = "contactSync1";
+  final syncDesc = "syncDesc";
+  final success = "success";
+  final contactList = "contactList";
+  final contactPer = "contactPer";
+  final accept = "accept";
+  final privacyPolicy = "privacyPolicy";
   String unblockUser(val) => "unblockUser".trParams({'pName':val});
 }

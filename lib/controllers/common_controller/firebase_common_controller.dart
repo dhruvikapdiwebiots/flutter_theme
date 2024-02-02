@@ -81,7 +81,6 @@ class FirebaseCommonController extends GetxController {
   }
 
   //status delete after 24 hours
-  //status delete after 24 hours
   statusDeleteAfter24Hours() async {
     var user = appCtrl.storage.read(session.user) ?? "";
     if (user != "") {
@@ -92,16 +91,11 @@ class FirebaseCommonController extends GetxController {
           .get()
           .then((value) async {
         if (value.docs.isNotEmpty) {
-          List<PhotoUrl> photoUrls = [];
-          List<PhotoUrl> photoUrl = [];
-          update();
           Status status = Status.fromJson(value.docs[0].data());
-
-          photoUrl = status.photoUrl!;
+          List<PhotoUrl> photoUrl = status.photoUrl!;
           await getPhotoUrl(status.photoUrl!).then((list) async {
-            photoUrls = list;
-            update();
-
+            List<PhotoUrl> photoUrls = list;
+            log("photoUrls : ${photoUrls.length}");
             if (photoUrls.isEmpty) {
               FirebaseFirestore.instance
                   .collection(collectionName.users)
@@ -111,6 +105,7 @@ class FirebaseCommonController extends GetxController {
                   .delete();
             } else {
               if (photoUrls.length <= status.photoUrl!.length) {
+                log("URL : ${photoUrls.length <= status.photoUrl!.length}");
                 var statusesSnapshot = await FirebaseFirestore.instance
                     .collection(collectionName.users)
                     .doc(user["id"])
@@ -122,7 +117,7 @@ class FirebaseCommonController extends GetxController {
                     .collection(collectionName.status)
                     .doc(statusesSnapshot.docs[0].id)
                     .update(
-                        {'photoUrl': photoUrl.map((e) => e.toJson()).toList()});
+                    {'photoUrl': photoUrl.map((e) => e.toJson()).toList()});
               }
             }
           });
@@ -131,56 +126,174 @@ class FirebaseCommonController extends GetxController {
     }
   }
 
-  syncContact() async {
-    await Firebase.initializeApp();
-    dynamic user = appCtrl.storage.read(session.user);
-    if (user != null) {
+  bool isMoreThan24HoursAgo(DateTime givenTime) {
+    // Get the current time
+    DateTime currentTime = DateTime.now();
 
-      FirebaseFirestore.instance
-          .collection(collectionName.users)
-          .doc(user["id"]).snapshots().listen((event) {
-            log("djfhjd : ${event.data()}");
-            bool isWebLogin = event.data()!["isWebLogin"] ?? false;
-            log("djfhjd : $isWebLogin");
-      });
-    }
+    // Calculate the time difference
+    Duration timeDifference = currentTime.difference(givenTime);
+    int hour =
+    int.parse(appCtrl.usageControlsVal!.statusDeleteTime!.split(" hrs")[0]);
+    // Check if the time difference is greater than 24 hours
+    return timeDifference.inHours > hour;
+  }
+
+  bool isMoreThanMinAgo(DateTime givenTime) {
+    // Get the current time
+    DateTime currentTime = DateTime.now();
+
+    // Calculate the time difference
+    Duration timeDifference = currentTime.difference(givenTime);
+    int hour =
+    int.parse(appCtrl.usageControlsVal!.statusDeleteTime!.split(" min")[0]);
+
+
+
+    // Check if the time difference is greater than 24 hours
+    return timeDifference.inMinutes >= hour;
   }
 
   Future<List<PhotoUrl>> getPhotoUrl(List<PhotoUrl> photoUrl) async {
-    newPhotoList = [];
-    update();
     for (int i = 0; i < photoUrl.length; i++) {
-      var millis = int.parse(photoUrl[i].timestamp.toString());
-      DateTime dt = DateTime.fromMillisecondsSinceEpoch(millis);
+      newPhotoList = [];
+
+      DateTime dt = DateTime.fromMillisecondsSinceEpoch(photoUrl[i].expiryDate != null ? int.parse(photoUrl[i].expiryDate!
+          .toString()) : DateTime.now().millisecondsSinceEpoch);
       var date = DateTime.now();
 
+      debugPrint("diff : ${dt.hour}");
+
+      debugPrint("diff : ${date.hour}");
+      debugPrint(
+          "diff : ${appCtrl.usageControlsVal!.statusDeleteTime!.contains(" hrs")}");
       if (appCtrl.usageControlsVal!.statusDeleteTime!.contains(" hrs")) {
-        if (dt.day == date.day) {
-          newPhotoList.add(photoUrl[i]);
-        } else {
-
-          if (dt.day <= date.day) {
-            log("NOO 1${dt.day <= date.day}");
-          } else {
-
-            if (dt.hour <= date.hour) {
-              if (dt.minute <= date.minute) {
-                newPhotoList.add(photoUrl[i]);
-              }
-            }
-          }
-        }
-      } else if (appCtrl.usageControlsVal!.statusDeleteTime!.contains(" min")) {
-        if (dt.minute <= date.minute) {
-          if (dt.second <= date.second) {
+        /* if (dt.hour <= date.hour) {
+          debugPrint("minute : ${dt.minute}");
+          debugPrint("minute : ${date.minute}");
+          if (dt.minute <= date.minute) {
+            debugPrint("minute : ${dt.minute}");
+            debugPrint("minute : ${date.minute}");
             newPhotoList.add(photoUrl[i]);
           }
+        }*/
+        bool isMoreThan24Hours = isMoreThan24HoursAgo(dt);
+        if (!isMoreThan24Hours) {
+          newPhotoList.add(photoUrl[i]);
+        }
+      } else if (appCtrl.usageControlsVal!.statusDeleteTime!.contains(" min")) {
+        log("ISIIS:");
+        bool isMoreThan24Hours = isMoreThanMinAgo(dt);
+        log("isMoreThan24Hours: $isMoreThan24Hours");
+        if (!isMoreThan24Hours) {
+
+          newPhotoList.add(photoUrl[i]);
         }
       }
       update();
     }
     update();
+    log("NEWLIST : ${newPhotoList.length}");
+
     return newPhotoList;
+  }
+
+  deleteForAllUsers() async {
+    await FirebaseFirestore.instance
+        .collection(collectionName.users)
+        .get()
+        .then((value) async {
+      for (QueryDocumentSnapshot<Map<String, dynamic>> user in value.docs) {
+        if(appCtrl.user != null) {
+          if (user.id != appCtrl.user['id']) {
+            await FirebaseFirestore.instance
+                .collection(collectionName.users)
+                .doc(user.id)
+                .collection(collectionName.status)
+                .get()
+                .then((statusData) {
+              for (QueryDocumentSnapshot<Map<String, dynamic>> statusVal
+              in statusData.docs) {
+                Status status = Status.fromJson(statusVal.data());
+                List<PhotoUrl> photoList = status.photoUrl ?? [];
+                List<PhotoUrl> newList = [];
+
+                for (PhotoUrl photoUrl in photoList) {
+                  DateTime expiryDate = DateTime.fromMillisecondsSinceEpoch(
+                      int.parse(photoUrl.expiryDate ?? DateTime
+                          .now()
+                          .millisecondsSinceEpoch
+                          .toString()));
+                  if (appCtrl.usageControlsVal!.statusDeleteTime!
+                      .contains(" hrs")) {
+                    bool isMoreThan24Hours = isMoreThan24HoursAgo(expiryDate);
+                    if (!isMoreThan24Hours) {
+                      newList.add(photoUrl);
+                    }
+                  } else if (appCtrl.usageControlsVal!.statusDeleteTime!
+                      .contains(" min")) {
+                    bool isMoreThan24Hours = isMoreThanMinAgo(expiryDate);
+
+                    if (!isMoreThan24Hours) {
+                      newList.add(photoUrl);
+                    }
+                  }
+                }
+                FirebaseFirestore.instance
+                    .collection(collectionName.users)
+                    .doc(user.id)
+                    .collection(collectionName.status)
+                    .doc(statusVal.id)
+                    .update(
+                    {"photoUrl": newPhotoList.map((e) => e.toJson()).toList()});
+              }
+            });
+          }
+        }else{
+          await FirebaseFirestore.instance
+              .collection(collectionName.users)
+              .doc(user.id)
+              .collection(collectionName.status)
+              .get()
+              .then((statusData) {
+            for (QueryDocumentSnapshot<Map<String, dynamic>> statusVal
+            in statusData.docs) {
+              Status status = Status.fromJson(statusVal.data());
+              List<PhotoUrl> photoList = status.photoUrl ?? [];
+              List<PhotoUrl> newList = [];
+
+              for (PhotoUrl photoUrl in photoList) {
+                DateTime expiryDate = DateTime.fromMillisecondsSinceEpoch(
+                    int.parse(photoUrl.expiryDate ?? DateTime
+                        .now()
+                        .millisecondsSinceEpoch
+                        .toString()));
+                if (appCtrl.usageControlsVal!.statusDeleteTime!
+                    .contains(" hrs")) {
+                  bool isMoreThan24Hours = isMoreThan24HoursAgo(expiryDate);
+                  if (!isMoreThan24Hours) {
+                    newList.add(photoUrl);
+                  }
+                } else if (appCtrl.usageControlsVal!.statusDeleteTime!
+                    .contains(" min")) {
+                  bool isMoreThan24Hours = isMoreThanMinAgo(expiryDate);
+
+                  if (!isMoreThan24Hours) {
+                    newList.add(photoUrl);
+                  }
+                }
+              }
+              FirebaseFirestore.instance
+                  .collection(collectionName.users)
+                  .doc(user.id)
+                  .collection(collectionName.status)
+                  .doc(statusVal.id)
+                  .update(
+                  {"photoUrl": newPhotoList.map((e) => e.toJson()).toList()});
+            }
+          });
+        }
+      }
+    });
   }
 
   //send notification
@@ -305,7 +418,7 @@ class FirebaseCommonController extends GetxController {
 
     try {
       HttpsCallable httpsCallable =
-      FirebaseFunctions.instance.httpsCallable("generateToken");
+      FirebaseFunctions.instance.httpsCallable("generateToken",);
 
       dynamic result = await httpsCallable.call({
         "appId": agoraData["agoraAppId"],

@@ -210,6 +210,7 @@ class AppTheme {
         surface: bg1,
         onBackground: txt,
         onSurface: txt,
+        surfaceTint: white,
         onError: txt,
         onPrimary: accent,
         onSecondary: accent,

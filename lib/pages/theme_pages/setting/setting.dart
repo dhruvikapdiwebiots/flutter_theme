@@ -94,7 +94,8 @@ class Setting extends StatelessWidget {
                                   .paddingSymmetric(
                                   vertical: Insets.i15)
                           ]))
-                              .toList()
+                              .toList(),
+                          const VSpace(Sizes.s15),
                         ]).paddingSymmetric(horizontal: Insets.i20),
                       ],
                     );

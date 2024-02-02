@@ -26,4 +26,6 @@ class ImageAssets{
   final String background4 = "assets/images/background/wallpaper4.png";
   final String background5 = "assets/images/background/wallpaper5.png";
   final String background6 = "assets/images/background/wallpaper6.png";
+
+  final String successTick = "assets/images/successTick.png";
 }

@@ -112,9 +112,10 @@ dependencies:
   shared_preferences: ^2.2.0
   localstorage: ^4.0.1+4
   scoped_model: ^2.0.0
-  cloud_functions: ^4.4.0
+  cloud_functions: ^4.6.3
   async: ^2.11.0
-
+  flutter_switch: ^0.3.2
+  webview_flutter: ^4.4.2
 
 
 

@@ -8,25 +8,41 @@ class StatusFirebaseApi {
   addStatus(imageUrl, statusType, {statusText, statusBgColor}) async {
     var user = appCtrl.storage.read(session.user);
     List<PhotoUrl> statusImageUrls = [];
+    int minHrs = appCtrl.usageControlsVal!.statusDeleteTime!.contains(" hrs")
+        ? int.parse(
+        appCtrl.usageControlsVal!.statusDeleteTime!.split(" hrs")[0])
+        : int.parse(
+        appCtrl.usageControlsVal!.statusDeleteTime!.split(" min")[0]);
     log("userISS :${user["id"]}");
-    await  FirebaseFirestore.instance
-        .collection(collectionName.users).doc(user["id"]).collection(collectionName.status)
-        .get().then((statusesSnapshot) async {
+    await FirebaseFirestore.instance
+        .collection(collectionName.users)
+        .doc(user["id"])
+        .collection(collectionName.status)
+        .get()
+        .then((statusesSnapshot) async {
       log("statusesSnapshot.docs.isNotEmpty :${statusesSnapshot.docs}");
+      final time = DateTime.now().millisecondsSinceEpoch.toString();
+      DateTime expiry =
+      appCtrl.usageControlsVal!.statusDeleteTime!.contains(" hrs")
+          ? DateTime.now().add(Duration(hours: minHrs))
+          : DateTime.now().add(Duration(minutes: minHrs));
+      final exp = expiry.millisecondsSinceEpoch.toString();
       if (statusesSnapshot.docs.isNotEmpty) {
         Status status = Status.fromJson(statusesSnapshot.docs[0].data());
         statusImageUrls = status.photoUrl!;
+
+        log("DATTTTT : ${appCtrl.usageControlsVal!.statusDeleteTime!.contains(" hrs") ? DateTime.now().add(Duration(hours: minHrs)) : DateTime.now().add(Duration(minutes: minHrs))}");
+
         var data = {
           "image": statusType == StatusType.text.name ? "" : imageUrl!,
-          "timestamp": DateTime
-              .now()
-              .millisecondsSinceEpoch
-              .toString(),
+          "timestamp": time,
           "isExpired": false,
           "statusType": statusType,
           "statusText": statusText,
           "statusBgColor": statusBgColor,
+          "expiryDate": exp,
         };
+        log("DATAAA : $data");
 
         statusImageUrls.add(PhotoUrl.fromJson(data));
         await FirebaseFirestore.instance
@@ -36,28 +52,26 @@ class StatusFirebaseApi {
             .doc(statusesSnapshot.docs[0].id)
             .update({
           'photoUrl': statusImageUrls.map((e) => e.toJson()).toList(),
-          "updateAt": DateTime
-              .now()
-              .millisecondsSinceEpoch
-              .toString()
+          "updateAt": time
         }).then((value) {
           final statusCtrl = Get.find<StatusController>();
           statusCtrl.isLoading = false;
           statusCtrl.update();
         });
+        log("jdhfhjdf");
+
         return;
       } else {
         var data = {
           "image": statusType == StatusType.text.name ? "" : imageUrl!,
-          "timestamp": DateTime
-              .now()
-              .millisecondsSinceEpoch
-              .toString(),
+          "timestamp": time,
           "isExpired": false,
           "statusType": statusType,
           "statusText": statusText,
           "statusBgColor": statusBgColor,
+          "expiryDate": exp
         };
+        log("DATAAA : $data");
         statusImageUrls = [PhotoUrl.fromJson(data)];
       }
 
@@ -65,14 +79,8 @@ class StatusFirebaseApi {
           username: user["name"],
           phoneNumber: user["phone"],
           photoUrl: statusImageUrls,
-          createdAt: DateTime
-              .now()
-              .millisecondsSinceEpoch
-              .toString(),
-          updateAt: DateTime
-              .now()
-              .millisecondsSinceEpoch
-              .toString(),
+          createdAt: DateTime.now().millisecondsSinceEpoch.toString(),
+          updateAt: DateTime.now().millisecondsSinceEpoch.toString(),
           profilePic: user["image"],
           uid: user["id"],
           isSeenByOwn: false);

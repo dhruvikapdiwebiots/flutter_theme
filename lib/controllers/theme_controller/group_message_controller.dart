@@ -30,6 +30,7 @@ class GroupChatMessageController extends GetxController {
   dynamic pData, allData;
   List message = [];
   bool positionStreamStarted = false;
+  List<File> selectedImages = [];
   int pageSize = 20;
   String? wallPaperType;
   XFile? imageFile, videoFile;

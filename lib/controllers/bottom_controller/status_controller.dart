@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
+import 'package:dartx/dartx_io.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 
 import 'package:facebook_audience_network/facebook_audience_network.dart';
@@ -24,7 +25,8 @@ class StatusController extends GetxController {
   List<Status> allViewStatusList = [];
   Image? contactPhoto;
   dynamic user;
-  XFile? imageFile;
+  File? imageFile;
+  XFile? imageFiles;
   File? image;
   bool isLoading = false, isData = false;
   List selectedContact = [];
@@ -184,7 +186,7 @@ class StatusController extends GetxController {
     }
     return statusList;
   }
-
+/*
   Future getImage(source) async {
     final ImagePicker picker = ImagePicker();
     imageFile = (await picker.pickImage(source: source, imageQuality: 30))!;
@@ -230,7 +232,7 @@ class StatusController extends GetxController {
       return image;
 
     }
-  }
+  }*/
 
   imagePickerOption(
     BuildContext context,
@@ -245,7 +247,7 @@ class StatusController extends GetxController {
           // return your layout
           return ImagePickerLayout(cameraTap: () async {
             dismissKeyboard();
-            await getImage(ImageSource.camera).then((value) async {
+            await getImage(source: ImageSource.camera).then((value) async {
               log("VALUE : $value");
               String fileName =
                   DateTime.now().millisecondsSinceEpoch.toString();
@@ -269,12 +271,144 @@ class StatusController extends GetxController {
   pickAssets() async {
     try {
       log("COUNT : ${appCtrl.usageControlsVal!.maxFilesMultiShare}");
+      await getImage().then((value) async {
+        log("VALUE : $value");
+        String fileName =
+        DateTime.now().millisecondsSinceEpoch.toString();
 
+        reference = FirebaseStorage.instance.ref().child(fileName);
+        update();
+        try {
+          await addStatus(image!, StatusType.image);
+        } catch (e) {
+          appCtrl.isLoading = false;
+          appCtrl.update();
+        }
+      });
     } catch (e) {
       isLoading = false;
       update();
     }
     Get.forceAppUpdate();
+  }
+
+
+  Future getImage({source}) async {
+    if (source != null) {
+      final ImagePicker picker = ImagePicker();
+      imageFiles = (await picker.pickImage(source: source, imageQuality: 30))!;
+      if (imageFiles != null) {
+        final croppedFile = await ImageCropper().cropImage(
+          sourcePath: imageFiles!.path,
+          compressQuality: 100,
+          uiSettings: [
+            AndroidUiSettings(
+                toolbarTitle: 'Cropper',
+                toolbarColor: appCtrl.appTheme.primary,
+                toolbarWidgetColor: appCtrl.appTheme.white,
+                initAspectRatio: CropAspectRatioPreset.original,
+                lockAspectRatio: false),
+            IOSUiSettings(
+              title: 'Cropper',
+            ),
+          ],
+        );
+        if (croppedFile != null) {
+          File compressedFile = await FlutterNativeImage.compressImage(
+              croppedFile.path,
+              quality: 30,
+              );
+          update();
+
+          log("image : ${compressedFile.lengthSync()}");
+
+          image = File(compressedFile.path);
+          if (image!.lengthSync() / 1000000 >
+              appCtrl.usageControlsVal!.maxFileSize!) {
+            image = null;
+            snackBar(
+                "Image Should be less than ${image!.lengthSync() / 1000000 > appCtrl.usageControlsVal!.maxFileSize!}");
+          }
+        }
+        log("image1 : $image");
+        log("image1 : ${image!.lengthSync() / 1000000 > 60}");
+
+        Get.forceAppUpdate();
+        return image;
+      }
+    } else {
+      List<File> selectedImages = [];
+      dismissKeyboard();
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['jpg', 'png', 'jpeg', 'mp4'],
+      );
+
+      log("resultresult: $result");
+      if (result != null) {
+        for (var i = 0; i < result.files.length; i++) {
+          selectedImages.add(File(result.files[i].path!));
+        }
+      }
+      imageFile = selectedImages[0];
+      if (selectedImages[0].name.contains(".mp4")) {
+        appCtrl.isLoading = true;
+        appCtrl.update();
+        Get.forceAppUpdate();
+
+        image = File(imageFile!.path);
+        log("imageimageimage :$image");
+        if (image!.lengthSync() / 1000000 >
+            appCtrl.usageControlsVal!.maxFileSize!) {
+          image = null;
+          snackBar(
+              "Image Should be less than ${image!.lengthSync() / 1000000 > appCtrl.usageControlsVal!.maxFileSize!}");
+        }
+        return image;
+      } else {
+        if (imageFile != null) {
+          final croppedFile = await ImageCropper().cropImage(
+            sourcePath: imageFile!.path,
+            compressQuality: 100,
+            uiSettings: [
+              AndroidUiSettings(
+                  toolbarTitle: 'Cropper',
+                  toolbarColor: appCtrl.appTheme.primary,
+                  toolbarWidgetColor: appCtrl.appTheme.white,
+                  initAspectRatio: CropAspectRatioPreset.original,
+                  lockAspectRatio: false),
+              IOSUiSettings(
+                title: 'Cropper',
+              ),
+            ],
+          );
+
+          appCtrl.isLoading = true;
+          appCtrl.update();
+          Get.forceAppUpdate();
+          if (croppedFile != null) {
+            File compressedFile = await FlutterNativeImage.compressImage(
+              croppedFile.path,
+              quality: 30,
+            );
+            update();
+
+            log("image : ${compressedFile.lengthSync()}");
+
+            image = File(compressedFile.path);
+            if (image!.lengthSync() / 1000000 >
+                appCtrl.usageControlsVal!.maxFileSize!) {
+              image = null;
+              snackBar(
+                  "Image Should be less than ${image!.lengthSync() / 1000000 > appCtrl.usageControlsVal!.maxFileSize!}");
+            }
+          }
+          log("image1 : $image");
+          Get.forceAppUpdate();
+          return image;
+        }
+      }
+    }
   }
 
   Future<List<QueryDocumentSnapshot>?> getStatusUsingChunks(chunks) async {

@@ -310,6 +310,7 @@ class FetchContactController with ChangeNotifier {
                 .then((Iterable<Contact> contacts) async {
               for (Contact p in contacts.where((c) => c.phones.isNotEmpty)) {
                 appCtrl.contactList.add(p);
+                appCtrl.storage.write(session.contactPermission, true);
 
                 if (p.phones.isNotEmpty) {
                   List<String?> numbers = p.phones
@@ -336,6 +337,8 @@ class FetchContactController with ChangeNotifier {
           }
           // }
         });
+      }else{
+        setIsLoading(false);
       }
       notifyListeners();
     }).catchError((onError) {
