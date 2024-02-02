@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:drishya_picker/drishya_picker.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:dartx/dartx_io.dart';
 import 'package:encrypt/encrypt.dart';
@@ -30,7 +29,6 @@ class BroadcastChatController extends GetxController {
       videoUrl,
       blockBy;
   dynamic message, userData, broadData;
-  List<DrishyaEntity>? entities;
   final GlobalKey<SfPdfViewerState> pdfViewerKey = GlobalKey();
   List pData = [];
   List selectedIndexId = [];

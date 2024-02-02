@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:developer' as log;
 import 'dart:io';
 import 'package:dartx/dartx_io.dart';
-import 'package:drishya_picker/drishya_picker.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_theme/config.dart';
@@ -38,7 +37,6 @@ class GroupChatMessageController extends GetxController {
   List searchUserList = [];
   List selectedIndexId = [];
   List searchChatId = [];
-  List<DrishyaEntity>? entities;
   File? image;
   bool isLoading = true,
       isTextBox = false,

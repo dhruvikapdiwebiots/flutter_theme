@@ -1,5 +1,4 @@
 
-import 'package:giphy_get/giphy_get.dart';
 
 import '../../../../config.dart';
 
@@ -91,18 +90,6 @@ class GroupInputBox extends StatelessWidget {
                           color: appCtrl.appTheme.primary),
                       onTap: () async {
 
-                        GiphyGif? gif = await GiphyGet.getGif(
-                          tabColor: appCtrl.appTheme.primary,
-                          context: context,
-
-                          apiKey: appCtrl.userAppSettingsVal!.gifAPI!,
-                          //YOUR API KEY HERE
-                          lang: GiphyLanguage.english,
-                        );
-                        if (gif != null) {
-                          chatCtrl.onSendMessage(
-                              gif.images!.original!.url, MessageType.gif);
-                        }
                       },
                     ).marginOnly(
                         right: appCtrl.isRTL || appCtrl.languageVal == "ar"

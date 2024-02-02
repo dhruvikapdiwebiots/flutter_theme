@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:video_player/video_player.dart';
-import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
 import '../../../../config.dart';
 
@@ -25,13 +24,7 @@ class _ConfirmStatusScreenState extends State<ConfirmStatusScreen> {
   @override
   void initState() {
     // TODO: implement initState
-    List<AssetEntity> data = Get.arguments;
-    if (data[0].title!.contains("mp4")) {
-      getVideo(data[0]);
-    } else {
-      getImage(data[0]);
-    }
-    setState(() {});
+
 
     super.initState();
   }

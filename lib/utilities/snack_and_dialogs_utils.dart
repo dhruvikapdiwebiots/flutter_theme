@@ -10,7 +10,7 @@ snackBar(message, {context, duration, textColor, backgroundColor, icon}) {
         const HSpace(Sizes.s15),
         Text(
           message,
-          style: AppCss.poppinsSemiBold14.textColor(textColor),
+          style: AppCss.poppinsSemiBold14.textColor(textColor ?? appCtrl.appTheme.redColor),
         ),
       ],
     ),

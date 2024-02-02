@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'package:dartx/dartx_io.dart';
-import 'package:drishya_picker/drishya_picker.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:encrypt/encrypt.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
@@ -28,7 +27,6 @@ class ChatController extends GetxController {
   List message = [];
   List<DateTimeChip> localMessage = [];
   dynamic pData, allData, userData;
-  List<DrishyaEntity>? entities;
   List<QueryDocumentSnapshot<Map<String, dynamic>>> allMessages = [];
   UserContactModel? userContactModel;
   bool positionStreamStarted = false;
@@ -603,6 +601,9 @@ class ChatController extends GetxController {
           localMessage[index].message!.add(messageModel);
         }
       }
+      isLoading = false;
+      update();
+      Get.forceAppUpdate();
       if (allData != null && allData != "") {
         if (allData["isBlock"] == true) {
           if (allData["blockUserId"] == pId) {

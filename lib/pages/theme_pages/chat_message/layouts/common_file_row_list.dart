@@ -29,7 +29,7 @@ class CommonFileRowList extends StatelessWidget {
           const HSpace(Sizes.s40),
           IconCreation(
               onTap: () {
-              // Get.back();
+               Get.back();
                 chatCtrl.pickerCtrl.imagePickerOption(Get.context!,isSingleChat: true);
 
               },

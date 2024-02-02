@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:drishya_picker/drishya_picker.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -14,25 +13,7 @@ class PickerController extends GetxController {
   File? video;
   String? imageUrl;
   String? audioUrl;
-  List<DrishyaEntity>? entities;
 
-  GallerySetting gallerySetting = GallerySetting(
-    enableCamera: false,
-    maximumCount: appCtrl.usageControlsVal != null
-        ? appCtrl.usageControlsVal!.maxFilesMultiShare!
-        : 1,
-    requestType: RequestType.image,
-    cameraSetting: const CameraSetting(videoDuration: Duration(seconds: 15)),
-  );
-
-  GallerySetting galleryVideoSetting = GallerySetting(
-    enableCamera: false,
-    maximumCount: appCtrl.usageControlsVal != null
-        ? appCtrl.usageControlsVal!.maxFilesMultiShare!
-        : 1,
-    requestType: RequestType.video,
-    cameraSetting: const CameraSetting(videoDuration: Duration(seconds: 15)),
-  );
 
 // GET IMAGE FROM GALLERY
   Future getImage(source) async {
@@ -82,14 +63,7 @@ class PickerController extends GetxController {
 
 // GET IMAGE FROM GALLERY
   Future getMultipleImage() async {
-    GalleryController controller = GalleryController();
-    entities = await controller.pick(
-      Get.context!,
-      setting: gallerySetting,
-    );
 
-    update();
-    return entities;
   }
 
 // GET VIDEO FROM GALLERY
@@ -127,14 +101,7 @@ class PickerController extends GetxController {
 
 // GET VIDEO FROM GALLERY
   Future getMultipleVideo() async {
-    GalleryController controller = GalleryController();
-    entities = await controller.pick(
-      Get.context!,
-      setting: galleryVideoSetting,
-    );
 
-    update();
-    return entities;
   }
 
 // FOR Dismiss KEYBOARD
@@ -183,145 +150,16 @@ class PickerController extends GetxController {
                 if (value != null) {
                   if (isGroup) {
                     final chatCtrl = Get.find<GroupChatMessageController>();
-                    chatCtrl.entities = value;
+
                     chatCtrl.isLoading = true;
                     chatCtrl.update();
-                    chatCtrl.entities!.asMap().entries.forEach((element) async {
-                      File? videoFile = await element.value.file;
-                      File? video;
-                      if (element.value.title!.contains("mp4")) {
-                        final light.LightCompressor lightCompressor =
-                            light.LightCompressor();
-                        final dynamic response =
-                            await lightCompressor.compressVideo(
-                          path: videoFile!.path,
-                          videoQuality: light.VideoQuality.very_low,
-                          isMinBitrateCheckEnabled: false,
-                          video: light.Video(videoName: element.value.title!),
-                          android: light.AndroidConfig(
-                              isSharedStorage: true,
-                              saveAt: light.SaveAt.Movies),
-                          ios: light.IOSConfig(saveInGallery: false),
-                        );
 
-                        video = File(videoFile.path);
-                        if (response is light.OnSuccess) {
-                          log("videoFile!.path 1: ${getVideoSize(file: File(response.destinationPath))}}");
-                          video = File(response.destinationPath);
-                        }
-                      } else {
-                        File compressedFile =
-                            await FlutterNativeImage.compressImage(
-                                videoFile!.path,
-                                quality: 30,
-                                targetWidth: 600,
-                                targetHeight: 300,
-                                percentage: 20);
-
-                        log("image : ${compressedFile.lengthSync()}");
-
-                        video = File(compressedFile.path);
-                        if (video.lengthSync() / 1000000 >
-                            appCtrl.usageControlsVal!.maxFileSize!) {
-                          video = null;
-                          snackBar(
-                              "Image Should be less than ${video!.lengthSync() / 1000000 > appCtrl.usageControlsVal!.maxFileSize!}");
-                        }
-                      }
-
-                      chatCtrl.uploadMultipleFile(
-                          videoFile,
-                          element.value.title!.contains("mp4")
-                              ? MessageType.video
-                              : MessageType.image);
-                    });
                   } else if (isSingleChat) {
                     final singleChatCtrl = Get.find<ChatController>();
-                    singleChatCtrl.entities = value;
-                    singleChatCtrl.entities!
-                        .asMap()
-                        .entries
-                        .forEach((element) async {
-                      File? videoFile = await element.value.file;
-                      File compressedFile =
-                          await FlutterNativeImage.compressImage(
-                              videoFile!.path,
-                              quality: 30,
-                              targetWidth: 600,
-                              targetHeight: 300,
-                              percentage: 20);
 
-                      log("image : ${compressedFile.lengthSync()}");
-
-                      video = File(compressedFile.path);
-                      if (video!.lengthSync() / 1000000 >
-                          appCtrl.usageControlsVal!.maxFileSize!) {
-                        video = null;
-                        snackBar(
-                            "Image Should be less than ${video!.lengthSync() / 1000000 > appCtrl.usageControlsVal!.maxFileSize!}");
-                      }
-
-                      singleChatCtrl.uploadMultipleFile(
-                          video!,
-                          element.value.title!.contains("mp4")
-                              ? MessageType.video
-                              : MessageType.image);
-                    });
                   } else {
                     final broadcastCtrl = Get.find<BroadcastChatController>();
-                    broadcastCtrl.entities = value;
-                    broadcastCtrl.entities!
-                        .asMap()
-                        .entries
-                        .forEach((element) async {
-                      File? videoFile = await element.value.file;
-                      File? video;
-                      if (element.value.title!.contains("mp4")) {
-                        final light.LightCompressor lightCompressor =
-                            light.LightCompressor();
-                        final dynamic response =
-                            await lightCompressor.compressVideo(
-                          path: videoFile!.path,
-                          videoQuality: light.VideoQuality.very_low,
-                          isMinBitrateCheckEnabled: false,
-                          video: light.Video(videoName: element.value.title!),
-                          android: light.AndroidConfig(
-                              isSharedStorage: true,
-                              saveAt: light.SaveAt.Movies),
-                          ios: light.IOSConfig(saveInGallery: false),
-                        );
 
-                        video = File(videoFile.path);
-                        if (response is light.OnSuccess) {
-                          log("videoFile!.path 1: ${getVideoSize(file: File(response.destinationPath))}}");
-                          video = File(response.destinationPath);
-                        }
-                      } else {
-                        File compressedFile =
-                            await FlutterNativeImage.compressImage(
-                                videoFile!.path,
-                                quality: 30,
-                                targetWidth: 600,
-                                targetHeight: 300,
-                                percentage: 20);
-
-                        log("image : ${compressedFile.lengthSync()}");
-
-                        video = File(compressedFile.path);
-                        if (video.lengthSync() / 1000000 >
-                            appCtrl.usageControlsVal!.maxFileSize!) {
-                          video = null;
-                          snackBar(
-                              "Image Should be less than ${video!.lengthSync() / 1000000 > appCtrl.usageControlsVal!.maxFileSize!}");
-                        }
-                      }
-
-                      broadcastCtrl.uploadMultipleFile(
-                          video,
-                          element.value.title!.contains("mp4")
-                              ? MessageType.video
-                              : MessageType.image);
-                    });
                   }
                 }
               });
@@ -360,95 +198,14 @@ class PickerController extends GetxController {
             await getMultipleVideo().then((value) {
               if (isGroup) {
                 final chatCtrl = Get.find<GroupChatMessageController>();
-                chatCtrl.entities = value;
-                chatCtrl.entities!.asMap().entries.forEach((element) async {
-                  File? videoFile = await element.value.file;
-                  File? video;
-                  if (element.value.title!.contains("mp4")) {
-                    final light.LightCompressor lightCompressor =
-                        light.LightCompressor();
-                    final dynamic response =
-                        await lightCompressor.compressVideo(
-                      path: videoFile!.path,
-                      videoQuality: light.VideoQuality.very_low,
-                      isMinBitrateCheckEnabled: false,
-                      video: light.Video(videoName: element.value.title!),
-                      android: light.AndroidConfig(
-                          isSharedStorage: true, saveAt: light.SaveAt.Movies),
-                      ios: light.IOSConfig(saveInGallery: false),
-                    );
 
-                    video = File(videoFile.path);
-                    if (response is light.OnSuccess) {
-                      log("videoFile!.path 1: ${getVideoSize(file: File(response.destinationPath))}}");
-                      video = File(response.destinationPath);
-                    }
-                  }
-                  chatCtrl.uploadMultipleFile(video!, MessageType.video);
-                });
               } else if (isSingleChat) {
                 final singleChatCtrl = Get.find<ChatController>();
-                singleChatCtrl.entities = value;
-                singleChatCtrl.entities!
-                    .asMap()
-                    .entries
-                    .forEach((element) async {
-                  File? videoFile = await element.value.file;
 
-                  if (element.value.title!.contains("mp4")) {
-                    final light.LightCompressor lightCompressor =
-                        light.LightCompressor();
-                    final dynamic response =
-                        await lightCompressor.compressVideo(
-                      path: videoFile!.path,
-                      videoQuality: light.VideoQuality.very_low,
-                      isMinBitrateCheckEnabled: false,
-                      video: light.Video(videoName: element.value.title!),
-                      android: light.AndroidConfig(
-                          isSharedStorage: true, saveAt: light.SaveAt.Movies),
-                      ios: light.IOSConfig(saveInGallery: false),
-                    );
-
-                    video = File(videoFile.path);
-                    if (response is light.OnSuccess) {
-                      log("videoFile!.path 1: ${getVideoSize(file: File(response.destinationPath))}}");
-                      video = File(response.destinationPath);
-                    }
-                  }
-                  singleChatCtrl.uploadMultipleFile(
-                      videoFile!, MessageType.video);
-                });
               } else {
                 final broadcastCtrl = Get.find<BroadcastChatController>();
-                broadcastCtrl.entities = value;
-                broadcastCtrl.entities!
-                    .asMap()
-                    .entries
-                    .forEach((element) async {
-                  File? videoFile = await element.value.file;
-                  if (element.value.title!.contains("mp4")) {
-                    final light.LightCompressor lightCompressor =
-                        light.LightCompressor();
-                    final dynamic response =
-                        await lightCompressor.compressVideo(
-                      path: videoFile!.path,
-                      videoQuality: light.VideoQuality.very_low,
-                      isMinBitrateCheckEnabled: false,
-                      video: light.Video(videoName: element.value.title!),
-                      android: light.AndroidConfig(
-                          isSharedStorage: true, saveAt: light.SaveAt.Movies),
-                      ios: light.IOSConfig(saveInGallery: false),
-                    );
 
-                    video = File(videoFile.path);
-                    if (response is light.OnSuccess) {
-                      log("videoFile!.path 1: ${getVideoSize(file: File(response.destinationPath))}}");
-                      video = File(response.destinationPath);
-                    }
-                  }
-                  broadcastCtrl.uploadMultipleFile(
-                      videoFile!, MessageType.video);
-                });
+
               }
             });
             Get.back();

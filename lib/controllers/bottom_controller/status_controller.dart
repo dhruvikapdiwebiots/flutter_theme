@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:drishya_picker/drishya_picker.dart';
+
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
@@ -185,15 +185,6 @@ class StatusController extends GetxController {
     return statusList;
   }
 
-  GallerySetting gallerySetting = const GallerySetting(
-    enableCamera: false,
-    maximumCount: 10,
-    requestType: RequestType.all,
-    cameraSetting:  CameraSetting(videoDuration: Duration(seconds: 15)),
-    cameraTextEditorSetting: EditorSetting(),
-    cameraPhotoEditorSetting: EditorSetting(),
-  );
-
   Future getImage(source) async {
     final ImagePicker picker = ImagePicker();
     imageFile = (await picker.pickImage(source: source, imageQuality: 30))!;
@@ -278,64 +269,7 @@ class StatusController extends GetxController {
   pickAssets() async {
     try {
       log("COUNT : ${appCtrl.usageControlsVal!.maxFilesMultiShare}");
-      GalleryController controller = GalleryController();
 
-      final entities = await controller.pick(
-        Get.context!,
-        setting: gallerySetting,
-      );
-
-      log("entities :: $entities");
-
-      if (entities.isNotEmpty) {
-        File? videoFile = await entities[0].file;
-        File? video;
-        if (entities[0].title!.contains("mp4")) {
-          final light.LightCompressor lightCompressor = light.LightCompressor();
-          final dynamic response = await lightCompressor.compressVideo(
-            path: videoFile!.path,
-            videoQuality: light.VideoQuality.very_low,
-            isMinBitrateCheckEnabled: false,
-            video: light.Video(videoName: entities[0].title!),
-            android: light.AndroidConfig(
-                isSharedStorage: true, saveAt: light.SaveAt.Movies),
-            ios: light.IOSConfig(saveInGallery: false),
-          );
-
-          video = File(videoFile.path);
-          if (response is light.OnSuccess) {
-            log("videoFile!.path 1: ${getVideoSize(file: File(response.destinationPath))}}");
-            video = File(response.destinationPath);
-          }
-        } else {
-          File compressedFile = await FlutterNativeImage.compressImage(
-            videoFile!.path,
-            quality: 35,
-          );
-
-          log("image : ${compressedFile.lengthSync()}");
-
-          video = File(compressedFile.path);
-          if (video.lengthSync() / 1000000 > 60) {
-            video = null;
-            snackBar(
-                "Image Should be less than ${video!.lengthSync() / 1000000 > 60}");
-          }
-        }
-        appCtrl.isLoading = true;
-        appCtrl.update();
-        Get.forceAppUpdate();
-        log("CHECK ON ADD");
-        String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-
-        reference = FirebaseStorage.instance.ref().child(fileName);
-        update();
-        await addStatus(
-            video,
-            entities[0].title!.contains("mp4")
-                ? StatusType.video
-                : StatusType.image);
-      }
     } catch (e) {
       isLoading = false;
       update();
