@@ -52,6 +52,9 @@ class AppArray{
     },  {
       "icon": svgAssets.info,
       "title": "privacyPolicy"
+    }, {
+      "icon": svgAssets.info,
+      "title": "termsCondition"
     },
     {'title': "logout","icon" : svgAssets.logout},
   ];

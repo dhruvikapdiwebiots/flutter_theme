@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import '../../config.dart';
 
 class LanguageController extends GetxController {
@@ -25,6 +27,7 @@ class LanguageController extends GetxController {
     appCtrl.update();
     await appCtrl.storage.write("index", selectedIndex);
 
+    log("data['code'] #${data['code']}");
     await appCtrl.storage.write(session.locale, data["code"]);
     Locale locale = Locale(data['code']);
     Get.updateLocale(locale);
@@ -47,7 +50,7 @@ class LanguageController extends GetxController {
           .listen((event) {
         if (event.exists) {
           List lan = event.data()!["language"];
-
+log("lan :$lan");
           appCtrl.languagesLists =
               lan.where((element) => element['isActive'] == true).toList();
         }
@@ -74,6 +77,8 @@ class LanguageController extends GetxController {
         update();
       }
     }
+
+    log("LIST :${appCtrl.languagesLists.length}");
   }
 
 }

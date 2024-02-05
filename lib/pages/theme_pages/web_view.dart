@@ -32,7 +32,7 @@ class CheckoutWebViewState extends State<CheckoutWebView> {
       builder: (_) {
         return Scaffold(
             backgroundColor: appCtrl.appTheme.whiteColor,
-            appBar: CommonAppBar(text: fonts.privacyPolicy.tr),
+            appBar: CommonAppBar(text: paymentCtrl.isPolicy? fonts.privacyPolicy.tr:fonts.termsCondition.tr),
             body: Stack(children: [
 
                 WebViewWidget(controller: paymentCtrl.controller!),

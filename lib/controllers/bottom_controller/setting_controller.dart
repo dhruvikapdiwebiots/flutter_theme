@@ -103,7 +103,11 @@ class SettingController extends GetxController {
       cacheDialog();
     } else if (index == 8) {
       Get.toNamed(routeName.webView,
-          arguments: "https://www.freeprivacypolicy.com/live/e2ef8594-33c3-444c-925a-c3ed711ecf06"
+          arguments: {"url":"https://themes.pixelstrap.net/chatify-flutter/privacy_policy.html","isPolicy":true}
+          );
+    }else if (index == 9) {
+      Get.toNamed(routeName.webView,
+          arguments: {"url":"https://themes.pixelstrap.net/chatify-flutter/privacy_policy.html","isPolicy":false}
           );
     } else {
       var user = appCtrl.storage.read(session.user);

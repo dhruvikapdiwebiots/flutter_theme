@@ -1694,7 +1694,6 @@ string confirm_device_credential_password
 string copy_toast_msg
 string default_error_msg
 string default_notification_channel_name
-string default_web_client_id
 string exo_download_completed
 string exo_download_description
 string exo_download_downloading

@@ -168,5 +168,8 @@ class Fonts{
   final contactPer = "contactPer";
   final accept = "accept";
   final privacyPolicy = "privacyPolicy";
+  final select = "select";
+  final termsCondition = "termsCondition";
+  final termsConditions = "termsConditions";
   String unblockUser(val) => "unblockUser".trParams({'pName':val});
 }

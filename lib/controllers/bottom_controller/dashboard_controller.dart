@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
-
+import 'package:country_codes/country_codes.dart';
+import 'package:timezone/data/latest.dart' as tz;
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
@@ -160,6 +161,9 @@ if(appCtrl.cachedModel != null) {
     user = appCtrl.storage.read(session.user);
     appCtrl.update();
     //statusCtrl.update();
+fetchLan();
+await CountryCodes.init();
+fetch();
     update();
     // await Future.delayed(DurationClass.s3);
 
@@ -168,6 +172,29 @@ if(appCtrl.cachedModel != null) {
     statusCtrl.getAllStatus();
     super.onReady();
   }
+
+  fetchLan() async {
+    final lan = Get.isRegistered<LanguageController>()
+        ? Get.find<LanguageController>()
+        : Get.put(LanguageController());
+    lan.getLanguageList();
+  }
+
+  fetch() async {
+    final Locale systemLocales =
+        WidgetsBinding.instance.platformDispatcher.locale;
+    log("LOCAKE : $systemLocales");
+    final CountryDetails deviceLocale = CountryCodes.detailsForLocale();
+    log("LOCAKE : ${deviceLocale.localizedName}");
+    tz.initializeTimeZones();
+
+    /*var detroit = tz.getLocation(deviceLocale.localizedName!);
+    var now = tz.TZDateTime.now(detroit);
+    var timeZone = detroit.timeZone(now.millisecondsSinceEpoch);
+    log("timeZone : $timeZone");
+    log("timeZone : $now");*/
+  }
+
 
   @override
   void dispose() {

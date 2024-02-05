@@ -224,6 +224,12 @@
       "languageVersion": "2.18"
     },
     {
+      "name": "country_codes",
+      "rootUri": "file:///Users/officepc/.pub-cache/hosted/pub.dev/country_codes-2.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "cross_file",
       "rootUri": "file:///Users/officepc/.pub-cache/hosted/pub.dev/cross_file-0.3.3+8",
       "packageUri": "lib/",
@@ -1526,7 +1532,7 @@
       "languageVersion": "2.19"
     }
   ],
-  "generated": "2024-02-05T03:59:59.581281Z",
+  "generated": "2024-02-05T09:13:32.736989Z",
   "generator": "pub",
   "generatorVersion": "3.2.1"
 }

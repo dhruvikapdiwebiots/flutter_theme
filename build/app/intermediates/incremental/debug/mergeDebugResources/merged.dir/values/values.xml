@@ -847,7 +847,6 @@
     <string name="copy_toast_msg">Link copied to clipboard</string>
     <string name="default_error_msg">Unknown error</string>
     <string name="default_notification_channel_name">Now playing</string>
-    <string name="default_web_client_id" translatable="false">432304404919-7s6rdiin4gmpc5on6p98uapkuk36bvnd.apps.googleusercontent.com</string>
     <string name="exo_download_completed">Download completed</string>
     <string name="exo_download_description">Download</string>
     <string name="exo_download_downloading">Downloading</string>
@@ -871,14 +870,14 @@
     <string name="fingerprint_error_no_fingerprints">No fingerprints enrolled.</string>
     <string name="fingerprint_error_user_canceled">Fingerprint operation canceled by user.</string>
     <string name="fingerprint_not_recognized">Not recognized</string>
-    <string name="gcm_defaultSenderId" translatable="false">432304404919</string>
+    <string name="gcm_defaultSenderId" translatable="false">746529411345</string>
     <string name="generic_error_no_device_credential">No PIN, pattern, or password set.</string>
     <string name="generic_error_no_keyguard">This device does not support PIN, pattern, or password.</string>
     <string name="generic_error_user_canceled">Authentication canceled by user.</string>
-    <string name="google_api_key" translatable="false">AIzaSyC8KZg3dThiLxP3BBvmjJ7Z7LYtsU6r9rQ</string>
-    <string name="google_app_id" translatable="false">1:432304404919:android:239450fc5740dcb9045032</string>
-    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyC8KZg3dThiLxP3BBvmjJ7Z7LYtsU6r9rQ</string>
-    <string name="google_storage_bucket" translatable="false">chatify-195b1.appspot.com</string>
+    <string name="google_api_key" translatable="false">AIzaSyAUAIKV1J18MkkM3mTO7npDdQPIpB4vfBg</string>
+    <string name="google_app_id" translatable="false">1:746529411345:android:3377ff828cefe162617cb0</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyAUAIKV1J18MkkM3mTO7npDdQPIpB4vfBg</string>
+    <string name="google_storage_bucket" translatable="false">chatify-eee03.appspot.com</string>
     <string description="This string appears within a window that describes an ad&apos;s contents. It indicates that the following text would be the body field (textual content) of the native ad. [CHAR_LIMIT=NONE]" name="native_body">
     Body
   </string>
@@ -904,7 +903,7 @@
       Open ad when you\'re back online.</string>
     <string name="pause_button_content_description">Pause</string>
     <string name="play_button_content_description">Play</string>
-    <string name="project_id" translatable="false">chatify-195b1</string>
+    <string name="project_id" translatable="false">chatify-eee03</string>
     <string name="s1">Save image</string>
     <string name="s2">"Allow Ad to store image in Picture gallery?"</string>
     <string name="s3">Accept</string>

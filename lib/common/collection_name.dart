@@ -25,6 +25,6 @@ class CollectionName{
   String registerUser ="registerUser";
   String unRegisterUser ="unRegisterUser";
   String languages ="languages";
-  String defaultLanguage ="defaultLanguage";
+  String defaultLanguage ="default_language";
   String language ="language";
 }

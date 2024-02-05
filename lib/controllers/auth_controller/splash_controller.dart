@@ -223,6 +223,7 @@ log("appCtrl.cachedModel : ${appCtrl.cachedModel}");
         .doc(collectionName.defaultLanguage)
         .get().then((value) {
       if(value.exists){
+        log("LANGGG :${value.data()!["language"]}");
         lan = value.data()!["language"];
       }
     });
@@ -238,7 +239,7 @@ log("appCtrl.cachedModel : ${appCtrl.cachedModel}");
       update();
     }
 */
-
+log("lanlan :$lan");
     Future.delayed(const Duration(milliseconds: 2300), () {
       if (isOnBoard) {
         if (user == "" || user == null) {
