@@ -1,3 +1,5 @@
+import 'package:flutter_theme/pages/theme_pages/language/language_layout.dart';
+
 import '../../../config.dart';
 
 class LanguageScreen extends StatelessWidget {
@@ -11,7 +13,7 @@ class LanguageScreen extends StatelessWidget {
       return GetBuilder<AppController>(builder: (appCtrl) {
         return Scaffold(
           backgroundColor: appCtrl.appTheme.white,
-          body: Column(
+       /*   body: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -54,7 +56,44 @@ class LanguageScreen extends StatelessWidget {
                         ),
                       ));
                 }).toList()
-              ]),
+              ]),*/
+          body: Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              SingleChildScrollView(
+                  child:  GridView.builder(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.only(bottom: Insets.i100),
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: appCtrl.languagesLists.length,
+                      gridDelegate:
+                      const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisSpacing: 20,
+                          mainAxisExtent: 90,
+                          mainAxisSpacing: 20.0,
+                          crossAxisCount: 3),
+                      itemBuilder: (context, index) {
+                        return appCtrl.languagesLists[index]
+                        ["isActive"] ==
+                            true
+                            ? LanguageLayout(
+                            value: appCtrl.languagesLists[index],
+                            index: index,
+                            selectedIndex: languageCtrl.selectedIndex,
+                            onTap: () =>
+                                languageCtrl.onLanguageSelectTap(
+                                    index,
+                                    appCtrl
+                                        .languagesLists[index]))
+                            : Container();
+                      }).paddingAll(Insets.i20)
+              ),
+              /*ButtonCommon(
+                  margin: Insets.i20,
+                  title: appFonts.select,
+                  onTap: () => Get.back()).backgroundColor(appCtrl.appTheme.screenBG).paddingOnly(bottom: Insets.i20).backgroundColor(appCtrl.appTheme.screenBG).height(66)*/
+            ],
+          ),
         );
       });
     });

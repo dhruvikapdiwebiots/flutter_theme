@@ -53,6 +53,7 @@ class AppRoute {
     GetPage(name: _routeName.videoCall, page: () => const VideoCall()),
     GetPage(name: _routeName.audioCall, page: () => const AudioCall()),
     GetPage(name: _routeName.webView, page: () => const CheckoutWebView()),
+    GetPage(name: _routeName.language, page: () =>  LanguageScreen()),
 
   ];
 }

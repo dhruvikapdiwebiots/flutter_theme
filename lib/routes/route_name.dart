@@ -30,4 +30,5 @@ class RouteName {
   final String myMessageViewer = '/myMessageViewer';
   final String callContactList = '/callContactList';
   final String webView = '/webView';
+  final String language = '/language';
 }

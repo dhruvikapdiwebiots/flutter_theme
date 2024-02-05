@@ -23,8 +23,9 @@ class AppController extends GetxController {
   AppTheme get appTheme => _appTheme;
   int selectedIndex = 0;
 SharedPreferences? pref;
-
-
+Locale? locale;
+  String languageVal = "en";
+  List languagesLists = [];
   Map<String?, String?> cachedContacts = {};
   Map<String?, String?>? allContacts =  <String, String>{};
   List<JoinedUserModel> availableContact = [];
@@ -33,7 +34,7 @@ SharedPreferences? pref;
   bool isTheme = false,isTyping =false,contactPermission = false;
   bool isBiometric = false;
   bool isRTL = false,isLoading =false,isSearch =false;
-  String languageVal = "in";
+
   List drawerList = [];
   dynamic user;
   bool isCallStream =false;

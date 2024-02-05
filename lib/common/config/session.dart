@@ -18,4 +18,6 @@ class Session {
   String statusList = 'statusList';
   String contactPermission = 'contactPermission';
   String isBiometric = 'isBiometric';
+  String locale = 'locale';
+  String languageList = 'languageList';
 }

@@ -1,58 +1,79 @@
 import '../../config.dart';
 
 class LanguageController extends GetxController {
-  final storage = GetStorage();
+  int selectedIndex = 0;
 
-  //language selection
-  languageSelection(e) async {
-    if (e['name'] == "english" ||
-        e['name'] == 'अंग्रेजी' ||
-        e['name'] == 'انجليزي' ||
-        e['name'] == '영어' ||
-        e['name'] == 'Anglais') {
-      var locale = const Locale("en", 'US');
-      Get.updateLocale(locale);
+  onTapLanguage(index) {
+    selectedIndex = index;
+    update();
+  }
+
+  //on language select
+  onLanguageSelectTap(index, data) async {
+    selectedIndex = index;
+    /*if (data["code"].toString().contains("en")) {
       appCtrl.languageVal = "en";
-      storage.write(session.languageCode, "en");
-      storage.write(session.countryCode, "US");
-    } else if (e['name'] == "arabic" ||
-        e['name'] == 'अरबी' ||
-        e['name'] == 'عربي' ||
-        e['name'] == '아랍어' ||
-        e['name'] == 'arabe') {
-      var locale = const Locale("ar", 'AE');
-      Get.updateLocale(locale);
-      appCtrl.languageVal = "ar";
-      storage.write(session.languageCode, "ar");
-      storage.write(session.countryCode, "AE");
-    } else if (e['name'] == "korean" ||
-        e['name'] == 'कोरियाई' ||
-        e['name'] == 'كوري' ||
-        e['name'] == '한국어' ||
-        e['name'] == 'coréen') {
-      var locale = const Locale("ko", 'KR');
-      Get.updateLocale(locale);
-
-      appCtrl.languageVal = "ko";
-      storage.write(session.languageCode, "ko");
-      storage.write(session.countryCode, "KR");
-    } else if (e['name'] == "hindi" ||
-        e['name'] == 'हिंदी' ||
-        e['name'] == 'هندي' ||
-        e['name'] == '힌디어') {
+    } else if (data["code"].toString().contains("hi")) {
       appCtrl.languageVal = "hi";
-      var locale = const Locale("hi", 'IN');
-      Get.updateLocale(locale);
+    } else if (data["code"].toString().contains("ar")) {
+      appCtrl.languageVal = "ar";
+    } else if (data["code"] == "ko") {
+      appCtrl.languageVal = "ko";
+    }*/
+    appCtrl.languageVal = data["code"].toString().split("_")[0];
 
-      storage.write(session.languageCode, "hi");
-      storage.write(session.countryCode, "IN");
-    }
+    appCtrl.update();
+    await appCtrl.storage.write("index", selectedIndex);
+
+    await appCtrl.storage.write(session.locale, data["code"]);
+    Locale locale = Locale(data['code']);
+    Get.updateLocale(locale);
     update();
     appCtrl.update();
-
     Get.forceAppUpdate();
+  }
 
-    Get.back();
+
+  List orderByName = [];
+
+  getLanguageList() async {
+    List storageList = appCtrl.storage.read(session.languageList) ?? [];
+    Locale locale = appCtrl.locale!;
+    if(storageList.isEmpty) {
+      FirebaseFirestore.instance
+          .collection(collectionName.languages)
+          .doc(collectionName.language)
+          .snapshots()
+          .listen((event) {
+        if (event.exists) {
+          List lan = event.data()!["language"];
+
+          appCtrl.languagesLists =
+              lan.where((element) => element['isActive'] == true).toList();
+        }
+        appCtrl.languagesLists.sort((a, b) => a["title"].compareTo(b["title"]));
+        appCtrl.update();
+        appCtrl.storage.write(session.languageList, appCtrl.languagesLists);
+        appCtrl.update();
+        int index = appCtrl.languagesLists.indexWhere((element) {
+
+          return element['code'].toString() == locale.toString();
+        });
+        selectedIndex = index;
+        update();
+      });
+    }else{
+      if(storageList.isNotEmpty){
+        appCtrl.languagesLists = storageList;
+        appCtrl.update();
+        int index = appCtrl.languagesLists.indexWhere((element) {
+
+          return element['code'].toString() == locale.toString();
+        });
+        selectedIndex = index;
+        update();
+      }
+    }
   }
 
 }

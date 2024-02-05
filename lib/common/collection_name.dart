@@ -24,4 +24,7 @@ class CollectionName{
   String allContact ="allContact";
   String registerUser ="registerUser";
   String unRegisterUser ="unRegisterUser";
+  String languages ="languages";
+  String defaultLanguage ="defaultLanguage";
+  String language ="language";
 }

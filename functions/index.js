@@ -5,10 +5,7 @@ const {
   RtcRole,
 } = require("agora-token");
 
-exports.generateToken = functions .runWith({
-  enforceAppCheck: true,
-  consumeAppCheckToken: true,
-}).https.onCall(async (data, context) => {
+exports.generateToken = functions.https.onCall(async (data, context) => {
   const appId = data.appId;
   const appCertificate = data.appCertificate;
   const channelName = Math.floor(Math.random() * 100).toString();

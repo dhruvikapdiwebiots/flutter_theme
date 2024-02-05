@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.fluttertheme.flutter_theme.app-mergeReleaseResources-55:/values-w820dp-v13/values-w820dp-v13.xml",
+            "map": [
+                {
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/2f9e6204ae327948bb6b5535c3ecba93/transformed/jetified-flutter_sound_core-9.2.13/res/values-w820dp-v13/values-w820dp-v13.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "57",
+                        "endOffsets": "108"
+                    }
+                }
+            ]
+        }
+    ]
+}

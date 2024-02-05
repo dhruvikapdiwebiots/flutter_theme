@@ -60,7 +60,7 @@ class SettingController extends GetxController {
   //on setting tap
   onSettingTap(index) async {
     if (index == 0) {
-      language();
+      Get.toNamed(routeName.language);
     } else if (index == 1) {
       final FetchContactController contactCtrl =
       Provider.of<FetchContactController>(Get.context!, listen: false);

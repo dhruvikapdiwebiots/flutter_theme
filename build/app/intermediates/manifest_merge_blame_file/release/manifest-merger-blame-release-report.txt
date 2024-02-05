@@ -1,0 +1,1303 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.fluttertheme.flutter_theme"
+4    android:versionCode="26"
+5    android:versionName="1.1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="24"
+8-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml
+9        android:targetSdkVersion="34" />
+9-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml
+10
+11    <uses-feature
+11-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:4:5-6:36
+12        android:name="android.hardware.camera"
+12-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:5:9-47
+13        android:required="false" />
+13-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:6:9-33
+14
+15    <uses-permission android:name="android.permission.INTERNET" />
+15-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:8:5-67
+15-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:8:22-64
+16    <uses-permission android:name="android.permission.READ_CONTACTS" />
+16-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:9:5-72
+16-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:9:22-69
+17    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+17-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:10:5-73
+17-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:10:22-70
+18    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+18-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:11:5-81
+18-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:11:22-78
+19    <uses-permission
+19-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:12:5-80
+20        android:name="android.permission.READ_EXTERNAL_STORAGE"
+20-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:12:22-77
+21        android:maxSdkVersion="32" />
+21-->[:open_filex] /Users/officepc/Documents/flutter-projects/flutter_theme/build/open_filex/intermediates/merged_manifest/release/AndroidManifest.xml:10:9-35
+22    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+22-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:13:5-79
+22-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:13:22-76
+23    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+23-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:14:5-79
+23-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:14:22-76
+24    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+24-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:15:5-81
+24-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:15:22-78
+25    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+25-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:16:5-71
+25-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:16:22-68
+26    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+26-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:17:5-76
+26-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:17:22-73
+27    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+27-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:18:5-75
+27-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:18:22-72
+28    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+28-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:19:5-75
+28-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:19:22-72
+29    <uses-permission android:name="android.permission.BLUETOOTH" />
+29-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:20:5-68
+29-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:20:22-65
+30    <uses-permission android:name="android.permission.INTERNET" />
+30-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:8:5-67
+30-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:8:22-64
+31    <uses-permission android:name="android.permission.CAMERA" />
+31-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:22:5-65
+31-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:22:22-62
+32    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+32-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:23:5-80
+32-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:23:22-77
+33    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+33-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:24:5-77
+33-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:24:22-74
+34    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+34-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:25:5-76
+34-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:25:22-73
+35    <uses-permission android:name="android.permission.WAKE_LOCK" />
+35-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:26:5-68
+35-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:26:22-65
+36    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
+36-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:27:5-29:11
+36-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:27:22-77
+37    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+37-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:30:5-72
+37-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:30:22-69
+38    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
+38-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:31:5-32:47
+38-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:31:22-83
+39
+40    <!-- Provide required visibility configuration for API level 30 and above -->
+41    <queries>
+41-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:36:5-47:15
+42
+43        <!-- If your app checks for SMS support -->
+44        <intent>
+44-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:38:9-41:18
+45            <action android:name="android.intent.action.VIEW" />
+45-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:39:13-65
+45-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:39:21-62
+46
+47            <data android:scheme="sms" />
+47-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:40:13-42
+47-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:40:19-39
+48        </intent>
+49        <!-- If your app checks for call support -->
+50        <intent>
+50-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:43:9-46:18
+51            <action android:name="android.intent.action.VIEW" />
+51-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:39:13-65
+51-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:39:21-62
+52
+53            <data android:scheme="tel" />
+53-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:40:13-42
+53-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:40:19-39
+54        </intent>
+55        <intent>
+55-->[:file_picker] /Users/officepc/Documents/flutter-projects/flutter_theme/build/file_picker/intermediates/merged_manifest/release/AndroidManifest.xml:10:9-14:18
+56            <action android:name="android.intent.action.GET_CONTENT" />
+56-->[:file_picker] /Users/officepc/Documents/flutter-projects/flutter_theme/build/file_picker/intermediates/merged_manifest/release/AndroidManifest.xml:11:13-72
+56-->[:file_picker] /Users/officepc/Documents/flutter-projects/flutter_theme/build/file_picker/intermediates/merged_manifest/release/AndroidManifest.xml:11:21-69
+57
+58            <data android:mimeType="*/*" />
+58-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:40:13-42
+59        </intent> <!-- For browser content -->
+60        <intent>
+60-->[com.google.android.gms:play-services-ads-lite:22.0.0] /Users/officepc/.gradle/caches/transforms-3/86c9297c067f441c6f71078db3ae2a57/transformed/jetified-play-services-ads-lite-22.0.0/AndroidManifest.xml:35:9-41:18
+61            <action android:name="android.intent.action.VIEW" />
+61-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:39:13-65
+61-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:39:21-62
+62
+63            <category android:name="android.intent.category.BROWSABLE" />
+63-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:109:17-78
+63-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:109:27-75
+64
+65            <data android:scheme="https" />
+65-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:40:13-42
+65-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:40:19-39
+66        </intent> <!-- End of browser content -->
+67        <!-- For CustomTabsService -->
+68        <intent>
+68-->[com.google.android.gms:play-services-ads-lite:22.0.0] /Users/officepc/.gradle/caches/transforms-3/86c9297c067f441c6f71078db3ae2a57/transformed/jetified-play-services-ads-lite-22.0.0/AndroidManifest.xml:44:9-46:18
+69            <action android:name="android.support.customtabs.action.CustomTabsService" />
+69-->[com.google.android.gms:play-services-ads-lite:22.0.0] /Users/officepc/.gradle/caches/transforms-3/86c9297c067f441c6f71078db3ae2a57/transformed/jetified-play-services-ads-lite-22.0.0/AndroidManifest.xml:45:13-90
+69-->[com.google.android.gms:play-services-ads-lite:22.0.0] /Users/officepc/.gradle/caches/transforms-3/86c9297c067f441c6f71078db3ae2a57/transformed/jetified-play-services-ads-lite-22.0.0/AndroidManifest.xml:45:21-87
+70        </intent>
+71
+72        <package android:name="com.facebook.katana" />
+72-->[com.facebook.android:audience-network-sdk:6.16.0] /Users/officepc/.gradle/caches/transforms-3/215ca824946d1319c07097d44d9b4c11/transformed/jetified-audience-network-sdk-6.16.0/AndroidManifest.xml:12:9-55
+72-->[com.facebook.android:audience-network-sdk:6.16.0] /Users/officepc/.gradle/caches/transforms-3/215ca824946d1319c07097d44d9b4c11/transformed/jetified-audience-network-sdk-6.16.0/AndroidManifest.xml:12:18-52
+73
+74        <intent>
+74-->[androidx.media2:media2-session:1.2.1] /Users/officepc/.gradle/caches/transforms-3/f98800267773ba00c403e9ba73c54794/transformed/jetified-media2-session-1.2.1/AndroidManifest.xml:25:9-27:18
+75            <action android:name="android.media.browse.MediaBrowserService" />
+75-->[androidx.media2:media2-session:1.2.1] /Users/officepc/.gradle/caches/transforms-3/f98800267773ba00c403e9ba73c54794/transformed/jetified-media2-session-1.2.1/AndroidManifest.xml:26:13-79
+75-->[androidx.media2:media2-session:1.2.1] /Users/officepc/.gradle/caches/transforms-3/f98800267773ba00c403e9ba73c54794/transformed/jetified-media2-session-1.2.1/AndroidManifest.xml:26:21-76
+76        </intent>
+77        <intent>
+77-->[androidx.media2:media2-session:1.2.1] /Users/officepc/.gradle/caches/transforms-3/f98800267773ba00c403e9ba73c54794/transformed/jetified-media2-session-1.2.1/AndroidManifest.xml:28:9-30:18
+78            <action android:name="androidx.media2.session.MediaSessionService" />
+78-->[androidx.media2:media2-session:1.2.1] /Users/officepc/.gradle/caches/transforms-3/f98800267773ba00c403e9ba73c54794/transformed/jetified-media2-session-1.2.1/AndroidManifest.xml:29:13-82
+78-->[androidx.media2:media2-session:1.2.1] /Users/officepc/.gradle/caches/transforms-3/f98800267773ba00c403e9ba73c54794/transformed/jetified-media2-session-1.2.1/AndroidManifest.xml:29:21-79
+79        </intent>
+80        <intent>
+80-->[androidx.media2:media2-session:1.2.1] /Users/officepc/.gradle/caches/transforms-3/f98800267773ba00c403e9ba73c54794/transformed/jetified-media2-session-1.2.1/AndroidManifest.xml:31:9-33:18
+81            <action android:name="androidx.media2.session.MediaLibraryService" />
+81-->[androidx.media2:media2-session:1.2.1] /Users/officepc/.gradle/caches/transforms-3/f98800267773ba00c403e9ba73c54794/transformed/jetified-media2-session-1.2.1/AndroidManifest.xml:32:13-82
+81-->[androidx.media2:media2-session:1.2.1] /Users/officepc/.gradle/caches/transforms-3/f98800267773ba00c403e9ba73c54794/transformed/jetified-media2-session-1.2.1/AndroidManifest.xml:32:21-79
+82        </intent>
+83    </queries>
+84
+85    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+85-->[:flutter_local_notifications] /Users/officepc/Documents/flutter-projects/flutter_theme/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:7:5-81
+85-->[:flutter_local_notifications] /Users/officepc/Documents/flutter-projects/flutter_theme/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:7:22-78
+86    <uses-permission android:name="android.permission.VIBRATE" />
+86-->[:flutter_local_notifications] /Users/officepc/Documents/flutter-projects/flutter_theme/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:8:5-66
+86-->[:flutter_local_notifications] /Users/officepc/Documents/flutter-projects/flutter_theme/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:8:22-63
+87    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+87-->[:flutter_local_notifications] /Users/officepc/Documents/flutter-projects/flutter_theme/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:9:5-81
+87-->[:flutter_local_notifications] /Users/officepc/Documents/flutter-projects/flutter_theme/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:9:22-78
+88    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+88-->[:flutter_local_notifications] /Users/officepc/Documents/flutter-projects/flutter_theme/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:10:5-79
+88-->[:flutter_local_notifications] /Users/officepc/Documents/flutter-projects/flutter_theme/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:10:22-76
+89    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" /> <!-- Required by older versions of Google Play services to create IID tokens -->
+89-->[:open_filex] /Users/officepc/Documents/flutter-projects/flutter_theme/build/open_filex/intermediates/merged_manifest/release/AndroidManifest.xml:13:5-75
+89-->[:open_filex] /Users/officepc/Documents/flutter-projects/flutter_theme/build/open_filex/intermediates/merged_manifest/release/AndroidManifest.xml:13:22-72
+90    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+90-->[com.google.firebase:firebase-messaging:23.3.1] /Users/officepc/.gradle/caches/transforms-3/e08f3a99f5928542d2ec0ea17e9a72a6/transformed/jetified-firebase-messaging-23.3.1/AndroidManifest.xml:26:5-82
+90-->[com.google.firebase:firebase-messaging:23.3.1] /Users/officepc/.gradle/caches/transforms-3/e08f3a99f5928542d2ec0ea17e9a72a6/transformed/jetified-firebase-messaging-23.3.1/AndroidManifest.xml:26:22-79
+91    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+91-->[com.google.android.gms:play-services-measurement-api:21.5.0] /Users/officepc/.gradle/caches/transforms-3/552cfab94b494a8b40db4f35f7fd9919/transformed/jetified-play-services-measurement-api-21.5.0/AndroidManifest.xml:25:5-79
+91-->[com.google.android.gms:play-services-measurement-api:21.5.0] /Users/officepc/.gradle/caches/transforms-3/552cfab94b494a8b40db4f35f7fd9919/transformed/jetified-play-services-measurement-api-21.5.0/AndroidManifest.xml:25:22-76
+92    <uses-permission android:name="android.permission.ACCESS_ADSERVICES_ATTRIBUTION" />
+92-->[com.google.android.gms:play-services-measurement-api:21.5.0] /Users/officepc/.gradle/caches/transforms-3/552cfab94b494a8b40db4f35f7fd9919/transformed/jetified-play-services-measurement-api-21.5.0/AndroidManifest.xml:26:5-88
+92-->[com.google.android.gms:play-services-measurement-api:21.5.0] /Users/officepc/.gradle/caches/transforms-3/552cfab94b494a8b40db4f35f7fd9919/transformed/jetified-play-services-measurement-api-21.5.0/AndroidManifest.xml:26:22-85
+93    <uses-permission android:name="android.permission.ACCESS_ADSERVICES_AD_ID" />
+93-->[com.google.android.gms:play-services-measurement-api:21.5.0] /Users/officepc/.gradle/caches/transforms-3/552cfab94b494a8b40db4f35f7fd9919/transformed/jetified-play-services-measurement-api-21.5.0/AndroidManifest.xml:27:5-82
+93-->[com.google.android.gms:play-services-measurement-api:21.5.0] /Users/officepc/.gradle/caches/transforms-3/552cfab94b494a8b40db4f35f7fd9919/transformed/jetified-play-services-measurement-api-21.5.0/AndroidManifest.xml:27:22-79
+94    <uses-permission android:name="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE" /> <!-- suppress DeprecatedClassUsageInspection -->
+94-->[com.google.android.gms:play-services-measurement:21.5.0] /Users/officepc/.gradle/caches/transforms-3/de1f53d0892bc4102961e7e388417a9b/transformed/jetified-play-services-measurement-21.5.0/AndroidManifest.xml:26:5-110
+94-->[com.google.android.gms:play-services-measurement:21.5.0] /Users/officepc/.gradle/caches/transforms-3/de1f53d0892bc4102961e7e388417a9b/transformed/jetified-play-services-measurement-21.5.0/AndroidManifest.xml:26:22-107
+95    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+95-->[androidx.biometric:biometric:1.1.0] /Users/officepc/.gradle/caches/transforms-3/57ccd63e20f038ef8e14a32633573b23/transformed/biometric-1.1.0/AndroidManifest.xml:27:5-74
+95-->[androidx.biometric:biometric:1.1.0] /Users/officepc/.gradle/caches/transforms-3/57ccd63e20f038ef8e14a32633573b23/transformed/biometric-1.1.0/AndroidManifest.xml:27:22-71
+96    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+96-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:28:5-77
+96-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:28:22-74
+97
+98    <permission
+98-->[androidx.core:core:1.10.1] /Users/officepc/.gradle/caches/transforms-3/604f448bb43f9dfb311b9565373cd303/transformed/core-1.10.1/AndroidManifest.xml:22:5-24:47
+99        android:name="com.fluttertheme.flutter_theme.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+99-->[androidx.core:core:1.10.1] /Users/officepc/.gradle/caches/transforms-3/604f448bb43f9dfb311b9565373cd303/transformed/core-1.10.1/AndroidManifest.xml:23:9-81
+100        android:protectionLevel="signature" />
+100-->[androidx.core:core:1.10.1] /Users/officepc/.gradle/caches/transforms-3/604f448bb43f9dfb311b9565373cd303/transformed/core-1.10.1/AndroidManifest.xml:24:9-44
+101
+102    <uses-permission android:name="com.fluttertheme.flutter_theme.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+102-->[androidx.core:core:1.10.1] /Users/officepc/.gradle/caches/transforms-3/604f448bb43f9dfb311b9565373cd303/transformed/core-1.10.1/AndroidManifest.xml:26:5-97
+102-->[androidx.core:core:1.10.1] /Users/officepc/.gradle/caches/transforms-3/604f448bb43f9dfb311b9565373cd303/transformed/core-1.10.1/AndroidManifest.xml:26:22-94
+103    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
+103-->[io.agora.rtc:full-screen-sharing:4.2.6] /Users/officepc/.gradle/caches/transforms-3/e7d9660dde551ef9a0d4d2d5ed453fde/transformed/jetified-full-screen-sharing-4.2.6/AndroidManifest.xml:8:5-94
+103-->[io.agora.rtc:full-screen-sharing:4.2.6] /Users/officepc/.gradle/caches/transforms-3/e7d9660dde551ef9a0d4d2d5ed453fde/transformed/jetified-full-screen-sharing-4.2.6/AndroidManifest.xml:8:22-91
+104
+105    <application
+106        android:name="android.app.Application"
+106-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:49:9-42
+107        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+107-->[androidx.core:core:1.10.1] /Users/officepc/.gradle/caches/transforms-3/604f448bb43f9dfb311b9565373cd303/transformed/core-1.10.1/AndroidManifest.xml:28:18-86
+108        android:extractNativeLibs="false"
+109        android:hardwareAccelerated="true"
+109-->[:facebook_audience_network] /Users/officepc/Documents/flutter-projects/flutter_theme/build/facebook_audience_network/intermediates/merged_manifest/release/AndroidManifest.xml:7:18-52
+110        android:icon="@mipmap/ic_launcher"
+110-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:50:9-43
+111        android:label="Chatify"
+111-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:53:9-32
+112        android:requestLegacyExternalStorage="true"
+112-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:52:9-52
+113        android:usesCleartextTraffic="true" >
+113-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:51:9-44
+114        <activity
+114-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:54:9-74:20
+115            android:name="com.fluttertheme.flutter_theme.MainActivity"
+115-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:55:13-41
+116            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+116-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:56:13-163
+117            android:exported="true"
+117-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:57:13-36
+118            android:hardwareAccelerated="true"
+118-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:58:13-47
+119            android:launchMode="singleTop"
+119-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:59:13-43
+120            android:theme="@style/LaunchTheme"
+120-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:60:13-47
+121            android:windowSoftInputMode="adjustResize" >
+121-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:61:13-55
+122
+123            <!--
+124                 Specifies an Android theme to apply to this Activity as soon as
+125                 the Android process has started. This theme is visible to the user
+126                 while the Flutter UI initializes. After that, this theme continues
+127                 to determine the Window background behind the Flutter UI.
+128            -->
+129            <meta-data
+129-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:66:13-68:57
+130                android:name="io.flutter.embedding.android.NormalTheme"
+130-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:67:17-72
+131                android:resource="@style/NormalTheme" />
+131-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:68:17-54
+132
+133            <intent-filter>
+133-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:69:13-72:29
+134                <action android:name="android.intent.action.MAIN" />
+134-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:70:17-69
+134-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:70:25-66
+135
+136                <category android:name="android.intent.category.LAUNCHER" />
+136-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:71:17-77
+136-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:71:27-74
+137            </intent-filter>
+138        </activity>
+139        <!--
+140             Don't delete the meta-data below.
+141             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java
+142        -->
+143        <meta-data
+143-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:77:9-79:33
+144            android:name="flutterEmbedding"
+144-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:78:13-44
+145            android:value="2" />
+145-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:79:13-30
+146
+147        <activity
+147-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:80:9-83:72
+148            android:name="com.yalantis.ucrop.UCropActivity"
+148-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:81:13-60
+149            android:screenOrientation="portrait"
+149-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:82:13-49
+150            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+150-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:83:13-69
+151
+152        <meta-data
+152-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:85:9-87:55
+153            android:name="com.facebook.sdk.ApplicationId"
+153-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:86:13-58
+154            android:value="@string/facebook_app_id" />
+154-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:87:13-52
+155
+156        <!-- A custom Android Notification Channel to deliver FCM notifications on a non-default channel -->
+157        <meta-data
+157-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:90:9-92:55
+158            android:name="com.google.firebase.messaging.default_notification_channel_id"
+158-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:91:13-89
+159            android:value="high_importance_channel" />
+159-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:92:13-52
+160        <meta-data
+160-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:94:9-96:69
+161            android:name="com.google.android.gms.ads.APPLICATION_ID"
+161-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:95:13-69
+162            android:value="ca-app-pub-3940256099942544~3347511713" />
+162-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:96:13-67
+163
+164        <activity
+164-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:98:9-101:48
+165            android:name="com.facebook.FacebookActivity"
+165-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:99:13-57
+166            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+166-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:100:13-96
+167            android:label="@string/app_name" />
+167-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:101:13-45
+168        <activity
+168-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:102:9-117:20
+169            android:name="com.facebook.CustomTabActivity"
+169-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:103:13-58
+170            android:exported="true" >
+170-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:104:13-36
+171            <intent-filter>
+171-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:105:13-112:29
+172                <action android:name="android.intent.action.VIEW" />
+172-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:39:13-65
+172-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:39:21-62
+173
+174                <category android:name="android.intent.category.DEFAULT" />
+174-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:108:17-76
+174-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:108:27-73
+175                <category android:name="android.intent.category.BROWSABLE" />
+175-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:109:17-78
+175-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:109:27-75
+176
+177                <data android:scheme="@string/fb_login_protocol_scheme" />
+177-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:40:13-42
+177-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:40:19-39
+178            </intent-filter>
+179            <intent-filter>
+179-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:113:13-116:29
+180                <action android:name="FLUTTER_NOTIFICATION_CLICK" />
+180-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:114:17-69
+180-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:114:25-66
+181
+182                <category android:name="android.intent.category.DEFAULT" />
+182-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:108:17-76
+182-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:108:27-73
+183            </intent-filter>
+184        </activity>
+185
+186        <meta-data
+186-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:85:9-87:55
+187            android:name="com.facebook.sdk.ApplicationId"
+187-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:86:13-58
+188            android:value="@string/facebook_app_id" />
+188-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:87:13-52
+189        <meta-data
+189-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:123:9-125:61
+190            android:name="com.facebook.sdk.ClientToken"
+190-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:124:13-56
+191            android:value="@string/facebook_client_token" />
+191-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:125:13-58
+192
+193        <service
+193-->[:geolocator_android] /Users/officepc/Documents/flutter-projects/flutter_theme/build/geolocator_android/intermediates/merged_manifest/release/AndroidManifest.xml:8:9-12:56
+194            android:name="com.baseflow.geolocator.GeolocatorLocationService"
+194-->[:geolocator_android] /Users/officepc/Documents/flutter-projects/flutter_theme/build/geolocator_android/intermediates/merged_manifest/release/AndroidManifest.xml:9:13-77
+195            android:enabled="true"
+195-->[:geolocator_android] /Users/officepc/Documents/flutter-projects/flutter_theme/build/geolocator_android/intermediates/merged_manifest/release/AndroidManifest.xml:10:13-35
+196            android:exported="false"
+196-->[:geolocator_android] /Users/officepc/Documents/flutter-projects/flutter_theme/build/geolocator_android/intermediates/merged_manifest/release/AndroidManifest.xml:11:13-37
+197            android:foregroundServiceType="location" />
+197-->[:geolocator_android] /Users/officepc/Documents/flutter-projects/flutter_theme/build/geolocator_android/intermediates/merged_manifest/release/AndroidManifest.xml:12:13-53
+198
+199        <receiver
+199-->[:flutter_local_notifications] /Users/officepc/Documents/flutter-projects/flutter_theme/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:14:9-16:40
+200            android:name="com.dexterous.flutterlocalnotifications.ActionBroadcastReceiver"
+200-->[:flutter_local_notifications] /Users/officepc/Documents/flutter-projects/flutter_theme/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:15:13-91
+201            android:exported="false" />
+201-->[:flutter_local_notifications] /Users/officepc/Documents/flutter-projects/flutter_theme/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:16:13-37
+202        <receiver
+202-->[:flutter_local_notifications] /Users/officepc/Documents/flutter-projects/flutter_theme/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:17:9-19:40
+203            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver"
+203-->[:flutter_local_notifications] /Users/officepc/Documents/flutter-projects/flutter_theme/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:18:13-97
+204            android:exported="false" />
+204-->[:flutter_local_notifications] /Users/officepc/Documents/flutter-projects/flutter_theme/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:19:13-37
+205        <receiver
+205-->[:flutter_local_notifications] /Users/officepc/Documents/flutter-projects/flutter_theme/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:20:9-29:20
+206            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver"
+206-->[:flutter_local_notifications] /Users/officepc/Documents/flutter-projects/flutter_theme/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:21:13-101
+207            android:exported="false" >
+207-->[:flutter_local_notifications] /Users/officepc/Documents/flutter-projects/flutter_theme/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:22:13-37
+208            <intent-filter>
+208-->[:flutter_local_notifications] /Users/officepc/Documents/flutter-projects/flutter_theme/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:23:13-28:29
+209                <action android:name="android.intent.action.BOOT_COMPLETED" />
+209-->[:flutter_local_notifications] /Users/officepc/Documents/flutter-projects/flutter_theme/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:24:17-79
+209-->[:flutter_local_notifications] /Users/officepc/Documents/flutter-projects/flutter_theme/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:24:25-76
+210                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+210-->[:flutter_local_notifications] /Users/officepc/Documents/flutter-projects/flutter_theme/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:25:17-84
+210-->[:flutter_local_notifications] /Users/officepc/Documents/flutter-projects/flutter_theme/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:25:25-81
+211                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+211-->[:flutter_local_notifications] /Users/officepc/Documents/flutter-projects/flutter_theme/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:26:17-82
+211-->[:flutter_local_notifications] /Users/officepc/Documents/flutter-projects/flutter_theme/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:26:25-79
+212                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+212-->[:flutter_local_notifications] /Users/officepc/Documents/flutter-projects/flutter_theme/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:27:17-82
+212-->[:flutter_local_notifications] /Users/officepc/Documents/flutter-projects/flutter_theme/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:27:25-79
+213            </intent-filter>
+214        </receiver>
+215
+216        <meta-data
+216-->[:google_mobile_ads] /Users/officepc/Documents/flutter-projects/flutter_theme/build/google_mobile_ads/intermediates/merged_manifest/release/AndroidManifest.xml:10:9-12:36
+217            android:name="io.flutter.embedded_views_preview"
+217-->[:google_mobile_ads] /Users/officepc/Documents/flutter-projects/flutter_theme/build/google_mobile_ads/intermediates/merged_manifest/release/AndroidManifest.xml:11:13-61
+218            android:value="true" />
+218-->[:google_mobile_ads] /Users/officepc/Documents/flutter-projects/flutter_theme/build/google_mobile_ads/intermediates/merged_manifest/release/AndroidManifest.xml:12:13-33
+219        <!--
+220           Declares a provider which allows us to store files to share in
+221           '.../caches/share_plus' and grant the receiving action access
+222        -->
+223        <provider
+223-->[:share_plus] /Users/officepc/Documents/flutter-projects/flutter_theme/build/share_plus/intermediates/merged_manifest/release/AndroidManifest.xml:13:9-21:20
+224            android:name="dev.fluttercommunity.plus.share.ShareFileProvider"
+224-->[:share_plus] /Users/officepc/Documents/flutter-projects/flutter_theme/build/share_plus/intermediates/merged_manifest/release/AndroidManifest.xml:14:13-77
+225            android:authorities="com.fluttertheme.flutter_theme.flutter.share_provider"
+225-->[:share_plus] /Users/officepc/Documents/flutter-projects/flutter_theme/build/share_plus/intermediates/merged_manifest/release/AndroidManifest.xml:15:13-74
+226            android:exported="false"
+226-->[:share_plus] /Users/officepc/Documents/flutter-projects/flutter_theme/build/share_plus/intermediates/merged_manifest/release/AndroidManifest.xml:16:13-37
+227            android:grantUriPermissions="true" >
+227-->[:share_plus] /Users/officepc/Documents/flutter-projects/flutter_theme/build/share_plus/intermediates/merged_manifest/release/AndroidManifest.xml:17:13-47
+228            <meta-data
+228-->[:share_plus] /Users/officepc/Documents/flutter-projects/flutter_theme/build/share_plus/intermediates/merged_manifest/release/AndroidManifest.xml:18:13-20:68
+229                android:name="android.support.FILE_PROVIDER_PATHS"
+229-->[:share_plus] /Users/officepc/Documents/flutter-projects/flutter_theme/build/share_plus/intermediates/merged_manifest/release/AndroidManifest.xml:19:17-67
+230                android:resource="@xml/flutter_share_file_paths" />
+230-->[:share_plus] /Users/officepc/Documents/flutter-projects/flutter_theme/build/share_plus/intermediates/merged_manifest/release/AndroidManifest.xml:20:17-65
+231        </provider>
+232        <!--
+233           This manifest declared broadcast receiver allows us to use an explicit
+234           Intent when creating a PendingItent to be informed of the user's choice
+235        -->
+236        <receiver
+236-->[:share_plus] /Users/officepc/Documents/flutter-projects/flutter_theme/build/share_plus/intermediates/merged_manifest/release/AndroidManifest.xml:26:9-32:20
+237            android:name="dev.fluttercommunity.plus.share.SharePlusPendingIntent"
+237-->[:share_plus] /Users/officepc/Documents/flutter-projects/flutter_theme/build/share_plus/intermediates/merged_manifest/release/AndroidManifest.xml:27:13-82
+238            android:exported="false" >
+238-->[:share_plus] /Users/officepc/Documents/flutter-projects/flutter_theme/build/share_plus/intermediates/merged_manifest/release/AndroidManifest.xml:28:13-37
+239            <intent-filter>
+239-->[:share_plus] /Users/officepc/Documents/flutter-projects/flutter_theme/build/share_plus/intermediates/merged_manifest/release/AndroidManifest.xml:29:13-31:29
+240                <action android:name="EXTRA_CHOSEN_COMPONENT" />
+240-->[:share_plus] /Users/officepc/Documents/flutter-projects/flutter_theme/build/share_plus/intermediates/merged_manifest/release/AndroidManifest.xml:30:17-65
+240-->[:share_plus] /Users/officepc/Documents/flutter-projects/flutter_theme/build/share_plus/intermediates/merged_manifest/release/AndroidManifest.xml:30:25-62
+241            </intent-filter>
+242        </receiver>
+243
+244        <provider
+244-->[:image_picker_android] /Users/officepc/Documents/flutter-projects/flutter_theme/build/image_picker_android/intermediates/merged_manifest/release/AndroidManifest.xml:8:9-16:20
+245            android:name="io.flutter.plugins.imagepicker.ImagePickerFileProvider"
+245-->[:image_picker_android] /Users/officepc/Documents/flutter-projects/flutter_theme/build/image_picker_android/intermediates/merged_manifest/release/AndroidManifest.xml:9:13-82
+246            android:authorities="com.fluttertheme.flutter_theme.flutter.image_provider"
+246-->[:image_picker_android] /Users/officepc/Documents/flutter-projects/flutter_theme/build/image_picker_android/intermediates/merged_manifest/release/AndroidManifest.xml:10:13-74
+247            android:exported="false"
+247-->[:image_picker_android] /Users/officepc/Documents/flutter-projects/flutter_theme/build/image_picker_android/intermediates/merged_manifest/release/AndroidManifest.xml:11:13-37
+248            android:grantUriPermissions="true" >
+248-->[:image_picker_android] /Users/officepc/Documents/flutter-projects/flutter_theme/build/image_picker_android/intermediates/merged_manifest/release/AndroidManifest.xml:12:13-47
+249            <meta-data
+249-->[:share_plus] /Users/officepc/Documents/flutter-projects/flutter_theme/build/share_plus/intermediates/merged_manifest/release/AndroidManifest.xml:18:13-20:68
+250                android:name="android.support.FILE_PROVIDER_PATHS"
+250-->[:share_plus] /Users/officepc/Documents/flutter-projects/flutter_theme/build/share_plus/intermediates/merged_manifest/release/AndroidManifest.xml:19:17-67
+251                android:resource="@xml/flutter_image_picker_file_paths" />
+251-->[:share_plus] /Users/officepc/Documents/flutter-projects/flutter_theme/build/share_plus/intermediates/merged_manifest/release/AndroidManifest.xml:20:17-65
+252        </provider>
+253
+254        <service
+254-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:14:9-17:72
+255            android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingBackgroundService"
+255-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:15:13-107
+256            android:exported="false"
+256-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:16:13-37
+257            android:permission="android.permission.BIND_JOB_SERVICE" />
+257-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:17:13-69
+258        <service
+258-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:18:9-24:19
+259            android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingService"
+259-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:19:13-97
+260            android:exported="false" >
+260-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:20:13-37
+261            <intent-filter>
+261-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:21:13-23:29
+262                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+262-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:22:17-78
+262-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:22:25-75
+263            </intent-filter>
+264        </service>
+265
+266        <receiver
+266-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:26:9-33:20
+267            android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingReceiver"
+267-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:27:13-98
+268            android:exported="true"
+268-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:28:13-36
+269            android:permission="com.google.android.c2dm.permission.SEND" >
+269-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:29:13-73
+270            <intent-filter>
+270-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:30:13-32:29
+271                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+271-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:31:17-81
+271-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:31:25-78
+272            </intent-filter>
+273        </receiver>
+274
+275        <service
+275-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:35:9-39:19
+276            android:name="com.google.firebase.components.ComponentDiscoveryService"
+276-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:35:18-89
+277            android:directBootAware="true"
+277-->[com.google.firebase:firebase-common:20.4.2] /Users/officepc/.gradle/caches/transforms-3/256b22cc70b6a1d81c7e6ec7af61856c/transformed/jetified-firebase-common-20.4.2/AndroidManifest.xml:32:13-43
+278            android:exported="false" >
+278-->[com.google.firebase:firebase-analytics-ktx:21.5.0] /Users/officepc/.gradle/caches/transforms-3/f9b1f7db32ea314f50738504aa5d8d9a/transformed/jetified-firebase-analytics-ktx-21.5.0/AndroidManifest.xml:10:13-37
+279            <meta-data
+279-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:36:13-38:85
+280                android:name="com.google.firebase.components:io.flutter.plugins.firebase.messaging.FlutterFirebaseAppRegistrar"
+280-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:37:17-128
+281                android:value="com.google.firebase.components.ComponentRegistrar" />
+281-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:38:17-82
+282            <meta-data
+282-->[:cloud_functions] /Users/officepc/Documents/flutter-projects/flutter_theme/build/cloud_functions/intermediates/merged_manifest/release/AndroidManifest.xml:9:13-11:85
+283                android:name="com.google.firebase.components:io.flutter.plugins.firebase.functions.FlutterFirebaseAppRegistrar"
+283-->[:cloud_functions] /Users/officepc/Documents/flutter-projects/flutter_theme/build/cloud_functions/intermediates/merged_manifest/release/AndroidManifest.xml:10:17-128
+284                android:value="com.google.firebase.components.ComponentRegistrar" />
+284-->[:cloud_functions] /Users/officepc/Documents/flutter-projects/flutter_theme/build/cloud_functions/intermediates/merged_manifest/release/AndroidManifest.xml:11:17-82
+285            <meta-data
+285-->[:firebase_storage] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_storage/intermediates/merged_manifest/release/AndroidManifest.xml:9:13-11:85
+286                android:name="com.google.firebase.components:io.flutter.plugins.firebase.storage.FlutterFirebaseAppRegistrar"
+286-->[:firebase_storage] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_storage/intermediates/merged_manifest/release/AndroidManifest.xml:10:17-126
+287                android:value="com.google.firebase.components.ComponentRegistrar" />
+287-->[:firebase_storage] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_storage/intermediates/merged_manifest/release/AndroidManifest.xml:11:17-82
+288            <meta-data
+288-->[:cloud_firestore] /Users/officepc/Documents/flutter-projects/flutter_theme/build/cloud_firestore/intermediates/merged_manifest/release/AndroidManifest.xml:9:13-11:85
+289                android:name="com.google.firebase.components:io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestoreRegistrar"
+289-->[:cloud_firestore] /Users/officepc/Documents/flutter-projects/flutter_theme/build/cloud_firestore/intermediates/merged_manifest/release/AndroidManifest.xml:10:17-134
+290                android:value="com.google.firebase.components.ComponentRegistrar" />
+290-->[:cloud_firestore] /Users/officepc/Documents/flutter-projects/flutter_theme/build/cloud_firestore/intermediates/merged_manifest/release/AndroidManifest.xml:11:17-82
+291            <meta-data
+291-->[:firebase_auth] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_auth/intermediates/merged_manifest/release/AndroidManifest.xml:9:13-11:85
+292                android:name="com.google.firebase.components:io.flutter.plugins.firebase.auth.FlutterFirebaseAuthRegistrar"
+292-->[:firebase_auth] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_auth/intermediates/merged_manifest/release/AndroidManifest.xml:10:17-124
+293                android:value="com.google.firebase.components.ComponentRegistrar" />
+293-->[:firebase_auth] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_auth/intermediates/merged_manifest/release/AndroidManifest.xml:11:17-82
+294            <meta-data
+294-->[:firebase_core] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_core/intermediates/merged_manifest/release/AndroidManifest.xml:9:13-11:85
+295                android:name="com.google.firebase.components:io.flutter.plugins.firebase.core.FlutterFirebaseCoreRegistrar"
+295-->[:firebase_core] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_core/intermediates/merged_manifest/release/AndroidManifest.xml:10:17-124
+296                android:value="com.google.firebase.components.ComponentRegistrar" />
+296-->[:firebase_core] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_core/intermediates/merged_manifest/release/AndroidManifest.xml:11:17-82
+297            <meta-data
+297-->[com.google.firebase:firebase-analytics-ktx:21.5.0] /Users/officepc/.gradle/caches/transforms-3/f9b1f7db32ea314f50738504aa5d8d9a/transformed/jetified-firebase-analytics-ktx-21.5.0/AndroidManifest.xml:11:13-13:85
+298                android:name="com.google.firebase.components:com.google.firebase.analytics.ktx.FirebaseAnalyticsLegacyRegistrar"
+298-->[com.google.firebase:firebase-analytics-ktx:21.5.0] /Users/officepc/.gradle/caches/transforms-3/f9b1f7db32ea314f50738504aa5d8d9a/transformed/jetified-firebase-analytics-ktx-21.5.0/AndroidManifest.xml:12:17-129
+299                android:value="com.google.firebase.components.ComponentRegistrar" />
+299-->[com.google.firebase:firebase-analytics-ktx:21.5.0] /Users/officepc/.gradle/caches/transforms-3/f9b1f7db32ea314f50738504aa5d8d9a/transformed/jetified-firebase-analytics-ktx-21.5.0/AndroidManifest.xml:13:17-82
+300            <meta-data
+300-->[com.google.firebase:firebase-firestore:24.9.1] /Users/officepc/.gradle/caches/transforms-3/51e76b2e0d76e08085f5c9cfe6b617f9/transformed/jetified-firebase-firestore-24.9.1/AndroidManifest.xml:17:13-19:85
+301                android:name="com.google.firebase.components:com.google.firebase.firestore.FirebaseFirestoreKtxRegistrar"
+301-->[com.google.firebase:firebase-firestore:24.9.1] /Users/officepc/.gradle/caches/transforms-3/51e76b2e0d76e08085f5c9cfe6b617f9/transformed/jetified-firebase-firestore-24.9.1/AndroidManifest.xml:18:17-122
+302                android:value="com.google.firebase.components.ComponentRegistrar" />
+302-->[com.google.firebase:firebase-firestore:24.9.1] /Users/officepc/.gradle/caches/transforms-3/51e76b2e0d76e08085f5c9cfe6b617f9/transformed/jetified-firebase-firestore-24.9.1/AndroidManifest.xml:19:17-82
+303            <meta-data
+303-->[com.google.firebase:firebase-firestore:24.9.1] /Users/officepc/.gradle/caches/transforms-3/51e76b2e0d76e08085f5c9cfe6b617f9/transformed/jetified-firebase-firestore-24.9.1/AndroidManifest.xml:20:13-22:85
+304                android:name="com.google.firebase.components:com.google.firebase.firestore.FirestoreRegistrar"
+304-->[com.google.firebase:firebase-firestore:24.9.1] /Users/officepc/.gradle/caches/transforms-3/51e76b2e0d76e08085f5c9cfe6b617f9/transformed/jetified-firebase-firestore-24.9.1/AndroidManifest.xml:21:17-111
+305                android:value="com.google.firebase.components.ComponentRegistrar" />
+305-->[com.google.firebase:firebase-firestore:24.9.1] /Users/officepc/.gradle/caches/transforms-3/51e76b2e0d76e08085f5c9cfe6b617f9/transformed/jetified-firebase-firestore-24.9.1/AndroidManifest.xml:22:17-82
+306            <meta-data
+306-->[com.google.firebase:firebase-messaging:23.3.1] /Users/officepc/.gradle/caches/transforms-3/e08f3a99f5928542d2ec0ea17e9a72a6/transformed/jetified-firebase-messaging-23.3.1/AndroidManifest.xml:57:13-59:85
+307                android:name="com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingKtxRegistrar"
+307-->[com.google.firebase:firebase-messaging:23.3.1] /Users/officepc/.gradle/caches/transforms-3/e08f3a99f5928542d2ec0ea17e9a72a6/transformed/jetified-firebase-messaging-23.3.1/AndroidManifest.xml:58:17-122
+308                android:value="com.google.firebase.components.ComponentRegistrar" />
+308-->[com.google.firebase:firebase-messaging:23.3.1] /Users/officepc/.gradle/caches/transforms-3/e08f3a99f5928542d2ec0ea17e9a72a6/transformed/jetified-firebase-messaging-23.3.1/AndroidManifest.xml:59:17-82
+309            <meta-data
+309-->[com.google.firebase:firebase-messaging:23.3.1] /Users/officepc/.gradle/caches/transforms-3/e08f3a99f5928542d2ec0ea17e9a72a6/transformed/jetified-firebase-messaging-23.3.1/AndroidManifest.xml:60:13-62:85
+310                android:name="com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingRegistrar"
+310-->[com.google.firebase:firebase-messaging:23.3.1] /Users/officepc/.gradle/caches/transforms-3/e08f3a99f5928542d2ec0ea17e9a72a6/transformed/jetified-firebase-messaging-23.3.1/AndroidManifest.xml:61:17-119
+311                android:value="com.google.firebase.components.ComponentRegistrar" />
+311-->[com.google.firebase:firebase-messaging:23.3.1] /Users/officepc/.gradle/caches/transforms-3/e08f3a99f5928542d2ec0ea17e9a72a6/transformed/jetified-firebase-messaging-23.3.1/AndroidManifest.xml:62:17-82
+312            <meta-data
+312-->[com.google.firebase:firebase-functions:20.4.0] /Users/officepc/.gradle/caches/transforms-3/7f20b7477daab1b1caacfcb86d28f3fb/transformed/jetified-firebase-functions-20.4.0/AndroidManifest.xml:15:13-17:85
+313                android:name="com.google.firebase.components:com.google.firebase.functions.FirebaseFunctionsKtxRegistrar"
+313-->[com.google.firebase:firebase-functions:20.4.0] /Users/officepc/.gradle/caches/transforms-3/7f20b7477daab1b1caacfcb86d28f3fb/transformed/jetified-firebase-functions-20.4.0/AndroidManifest.xml:16:17-122
+314                android:value="com.google.firebase.components.ComponentRegistrar" />
+314-->[com.google.firebase:firebase-functions:20.4.0] /Users/officepc/.gradle/caches/transforms-3/7f20b7477daab1b1caacfcb86d28f3fb/transformed/jetified-firebase-functions-20.4.0/AndroidManifest.xml:17:17-82
+315            <meta-data
+315-->[com.google.firebase:firebase-functions:20.4.0] /Users/officepc/.gradle/caches/transforms-3/7f20b7477daab1b1caacfcb86d28f3fb/transformed/jetified-firebase-functions-20.4.0/AndroidManifest.xml:18:13-20:85
+316                android:name="com.google.firebase.components:com.google.firebase.functions.FunctionsRegistrar"
+316-->[com.google.firebase:firebase-functions:20.4.0] /Users/officepc/.gradle/caches/transforms-3/7f20b7477daab1b1caacfcb86d28f3fb/transformed/jetified-firebase-functions-20.4.0/AndroidManifest.xml:19:17-111
+317                android:value="com.google.firebase.components.ComponentRegistrar" />
+317-->[com.google.firebase:firebase-functions:20.4.0] /Users/officepc/.gradle/caches/transforms-3/7f20b7477daab1b1caacfcb86d28f3fb/transformed/jetified-firebase-functions-20.4.0/AndroidManifest.xml:20:17-82
+318            <meta-data
+318-->[com.google.firebase:firebase-storage:20.3.0] /Users/officepc/.gradle/caches/transforms-3/4152edc89ecc75a1552ba8a17ed3c95c/transformed/jetified-firebase-storage-20.3.0/AndroidManifest.xml:30:13-32:85
+319                android:name="com.google.firebase.components:com.google.firebase.storage.FirebaseStorageKtxRegistrar"
+319-->[com.google.firebase:firebase-storage:20.3.0] /Users/officepc/.gradle/caches/transforms-3/4152edc89ecc75a1552ba8a17ed3c95c/transformed/jetified-firebase-storage-20.3.0/AndroidManifest.xml:31:17-118
+320                android:value="com.google.firebase.components.ComponentRegistrar" />
+320-->[com.google.firebase:firebase-storage:20.3.0] /Users/officepc/.gradle/caches/transforms-3/4152edc89ecc75a1552ba8a17ed3c95c/transformed/jetified-firebase-storage-20.3.0/AndroidManifest.xml:32:17-82
+321            <meta-data
+321-->[com.google.firebase:firebase-storage:20.3.0] /Users/officepc/.gradle/caches/transforms-3/4152edc89ecc75a1552ba8a17ed3c95c/transformed/jetified-firebase-storage-20.3.0/AndroidManifest.xml:33:13-35:85
+322                android:name="com.google.firebase.components:com.google.firebase.storage.StorageRegistrar"
+322-->[com.google.firebase:firebase-storage:20.3.0] /Users/officepc/.gradle/caches/transforms-3/4152edc89ecc75a1552ba8a17ed3c95c/transformed/jetified-firebase-storage-20.3.0/AndroidManifest.xml:34:17-107
+323                android:value="com.google.firebase.components.ComponentRegistrar" />
+323-->[com.google.firebase:firebase-storage:20.3.0] /Users/officepc/.gradle/caches/transforms-3/4152edc89ecc75a1552ba8a17ed3c95c/transformed/jetified-firebase-storage-20.3.0/AndroidManifest.xml:35:17-82
+324            <meta-data
+324-->[com.google.android.gms:play-services-measurement-api:21.5.0] /Users/officepc/.gradle/caches/transforms-3/552cfab94b494a8b40db4f35f7fd9919/transformed/jetified-play-services-measurement-api-21.5.0/AndroidManifest.xml:37:13-39:85
+325                android:name="com.google.firebase.components:com.google.firebase.analytics.connector.internal.AnalyticsConnectorRegistrar"
+325-->[com.google.android.gms:play-services-measurement-api:21.5.0] /Users/officepc/.gradle/caches/transforms-3/552cfab94b494a8b40db4f35f7fd9919/transformed/jetified-play-services-measurement-api-21.5.0/AndroidManifest.xml:38:17-139
+326                android:value="com.google.firebase.components.ComponentRegistrar" />
+326-->[com.google.android.gms:play-services-measurement-api:21.5.0] /Users/officepc/.gradle/caches/transforms-3/552cfab94b494a8b40db4f35f7fd9919/transformed/jetified-play-services-measurement-api-21.5.0/AndroidManifest.xml:39:17-82
+327            <meta-data
+327-->[com.google.firebase:firebase-iid:21.1.0] /Users/officepc/.gradle/caches/transforms-3/fd04d3a2d00cdfb9cbec9e3ed9dc3631/transformed/jetified-firebase-iid-21.1.0/AndroidManifest.xml:32:13-34:85
+328                android:name="com.google.firebase.components:com.google.firebase.iid.Registrar"
+328-->[com.google.firebase:firebase-iid:21.1.0] /Users/officepc/.gradle/caches/transforms-3/fd04d3a2d00cdfb9cbec9e3ed9dc3631/transformed/jetified-firebase-iid-21.1.0/AndroidManifest.xml:33:17-96
+329                android:value="com.google.firebase.components.ComponentRegistrar" />
+329-->[com.google.firebase:firebase-iid:21.1.0] /Users/officepc/.gradle/caches/transforms-3/fd04d3a2d00cdfb9cbec9e3ed9dc3631/transformed/jetified-firebase-iid-21.1.0/AndroidManifest.xml:34:17-82
+330            <meta-data
+330-->[com.google.firebase:firebase-installations:17.2.0] /Users/officepc/.gradle/caches/transforms-3/c10d3c121d313803885f0756c2873f58/transformed/jetified-firebase-installations-17.2.0/AndroidManifest.xml:15:13-17:85
+331                android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsKtxRegistrar"
+331-->[com.google.firebase:firebase-installations:17.2.0] /Users/officepc/.gradle/caches/transforms-3/c10d3c121d313803885f0756c2873f58/transformed/jetified-firebase-installations-17.2.0/AndroidManifest.xml:16:17-130
+332                android:value="com.google.firebase.components.ComponentRegistrar" />
+332-->[com.google.firebase:firebase-installations:17.2.0] /Users/officepc/.gradle/caches/transforms-3/c10d3c121d313803885f0756c2873f58/transformed/jetified-firebase-installations-17.2.0/AndroidManifest.xml:17:17-82
+333            <meta-data
+333-->[com.google.firebase:firebase-installations:17.2.0] /Users/officepc/.gradle/caches/transforms-3/c10d3c121d313803885f0756c2873f58/transformed/jetified-firebase-installations-17.2.0/AndroidManifest.xml:18:13-20:85
+334                android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsRegistrar"
+334-->[com.google.firebase:firebase-installations:17.2.0] /Users/officepc/.gradle/caches/transforms-3/c10d3c121d313803885f0756c2873f58/transformed/jetified-firebase-installations-17.2.0/AndroidManifest.xml:19:17-127
+335                android:value="com.google.firebase.components.ComponentRegistrar" />
+335-->[com.google.firebase:firebase-installations:17.2.0] /Users/officepc/.gradle/caches/transforms-3/c10d3c121d313803885f0756c2873f58/transformed/jetified-firebase-installations-17.2.0/AndroidManifest.xml:20:17-82
+336            <meta-data
+336-->[com.google.firebase:firebase-appcheck:17.1.1] /Users/officepc/.gradle/caches/transforms-3/42f6e4d3a2efa505e16eb418bc0b6244/transformed/jetified-firebase-appcheck-17.1.1/AndroidManifest.xml:25:13-27:85
+337                android:name="com.google.firebase.components:com.google.firebase.appcheck.FirebaseAppCheckKtxRegistrar"
+337-->[com.google.firebase:firebase-appcheck:17.1.1] /Users/officepc/.gradle/caches/transforms-3/42f6e4d3a2efa505e16eb418bc0b6244/transformed/jetified-firebase-appcheck-17.1.1/AndroidManifest.xml:26:17-120
+338                android:value="com.google.firebase.components.ComponentRegistrar" />
+338-->[com.google.firebase:firebase-appcheck:17.1.1] /Users/officepc/.gradle/caches/transforms-3/42f6e4d3a2efa505e16eb418bc0b6244/transformed/jetified-firebase-appcheck-17.1.1/AndroidManifest.xml:27:17-82
+339            <meta-data
+339-->[com.google.firebase:firebase-appcheck:17.1.1] /Users/officepc/.gradle/caches/transforms-3/42f6e4d3a2efa505e16eb418bc0b6244/transformed/jetified-firebase-appcheck-17.1.1/AndroidManifest.xml:28:13-30:85
+340                android:name="com.google.firebase.components:com.google.firebase.appcheck.FirebaseAppCheckRegistrar"
+340-->[com.google.firebase:firebase-appcheck:17.1.1] /Users/officepc/.gradle/caches/transforms-3/42f6e4d3a2efa505e16eb418bc0b6244/transformed/jetified-firebase-appcheck-17.1.1/AndroidManifest.xml:29:17-117
+341                android:value="com.google.firebase.components.ComponentRegistrar" />
+341-->[com.google.firebase:firebase-appcheck:17.1.1] /Users/officepc/.gradle/caches/transforms-3/42f6e4d3a2efa505e16eb418bc0b6244/transformed/jetified-firebase-appcheck-17.1.1/AndroidManifest.xml:30:17-82
+342            <meta-data
+342-->[com.google.firebase:firebase-common-ktx:20.4.2] /Users/officepc/.gradle/caches/transforms-3/68f4aefed285e2e96fe2adb29aab27ce/transformed/jetified-firebase-common-ktx-20.4.2/AndroidManifest.xml:12:13-14:85
+343                android:name="com.google.firebase.components:com.google.firebase.ktx.FirebaseCommonLegacyRegistrar"
+343-->[com.google.firebase:firebase-common-ktx:20.4.2] /Users/officepc/.gradle/caches/transforms-3/68f4aefed285e2e96fe2adb29aab27ce/transformed/jetified-firebase-common-ktx-20.4.2/AndroidManifest.xml:13:17-116
+344                android:value="com.google.firebase.components.ComponentRegistrar" />
+344-->[com.google.firebase:firebase-common-ktx:20.4.2] /Users/officepc/.gradle/caches/transforms-3/68f4aefed285e2e96fe2adb29aab27ce/transformed/jetified-firebase-common-ktx-20.4.2/AndroidManifest.xml:14:17-82
+345            <meta-data
+345-->[com.google.firebase:firebase-auth:22.3.0] /Users/officepc/.gradle/caches/transforms-3/ea155d3c99fef0f561b108e09c97a238/transformed/jetified-firebase-auth-22.3.0/AndroidManifest.xml:69:13-71:85
+346                android:name="com.google.firebase.components:com.google.firebase.auth.FirebaseAuthRegistrar"
+346-->[com.google.firebase:firebase-auth:22.3.0] /Users/officepc/.gradle/caches/transforms-3/ea155d3c99fef0f561b108e09c97a238/transformed/jetified-firebase-auth-22.3.0/AndroidManifest.xml:70:17-109
+347                android:value="com.google.firebase.components.ComponentRegistrar" />
+347-->[com.google.firebase:firebase-auth:22.3.0] /Users/officepc/.gradle/caches/transforms-3/ea155d3c99fef0f561b108e09c97a238/transformed/jetified-firebase-auth-22.3.0/AndroidManifest.xml:71:17-82
+348            <meta-data
+348-->[com.google.firebase:firebase-common:20.4.2] /Users/officepc/.gradle/caches/transforms-3/256b22cc70b6a1d81c7e6ec7af61856c/transformed/jetified-firebase-common-20.4.2/AndroidManifest.xml:35:13-37:85
+349                android:name="com.google.firebase.components:com.google.firebase.FirebaseCommonKtxRegistrar"
+349-->[com.google.firebase:firebase-common:20.4.2] /Users/officepc/.gradle/caches/transforms-3/256b22cc70b6a1d81c7e6ec7af61856c/transformed/jetified-firebase-common-20.4.2/AndroidManifest.xml:36:17-109
+350                android:value="com.google.firebase.components.ComponentRegistrar" />
+350-->[com.google.firebase:firebase-common:20.4.2] /Users/officepc/.gradle/caches/transforms-3/256b22cc70b6a1d81c7e6ec7af61856c/transformed/jetified-firebase-common-20.4.2/AndroidManifest.xml:37:17-82
+351            <meta-data
+351-->[com.google.firebase:firebase-datatransport:18.1.7] /Users/officepc/.gradle/caches/transforms-3/3a514beb360ae570bb689a25955d03fc/transformed/jetified-firebase-datatransport-18.1.7/AndroidManifest.xml:27:13-29:85
+352                android:name="com.google.firebase.components:com.google.firebase.datatransport.TransportRegistrar"
+352-->[com.google.firebase:firebase-datatransport:18.1.7] /Users/officepc/.gradle/caches/transforms-3/3a514beb360ae570bb689a25955d03fc/transformed/jetified-firebase-datatransport-18.1.7/AndroidManifest.xml:28:17-115
+353                android:value="com.google.firebase.components.ComponentRegistrar" />
+353-->[com.google.firebase:firebase-datatransport:18.1.7] /Users/officepc/.gradle/caches/transforms-3/3a514beb360ae570bb689a25955d03fc/transformed/jetified-firebase-datatransport-18.1.7/AndroidManifest.xml:29:17-82
+354        </service>
+355
+356        <provider
+356-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:41:9-45:38
+357            android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingInitProvider"
+357-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:42:13-102
+358            android:authorities="com.fluttertheme.flutter_theme.flutterfirebasemessaginginitprovider"
+358-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:43:13-88
+359            android:exported="false"
+359-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:44:13-37
+360            android:initOrder="99" />
+360-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:45:13-35
+361
+362        <activity
+362-->[:url_launcher_android] /Users/officepc/Documents/flutter-projects/flutter_theme/build/url_launcher_android/intermediates/merged_manifest/release/AndroidManifest.xml:8:9-11:74
+363            android:name="io.flutter.plugins.urllauncher.WebViewActivity"
+363-->[:url_launcher_android] /Users/officepc/Documents/flutter-projects/flutter_theme/build/url_launcher_android/intermediates/merged_manifest/release/AndroidManifest.xml:9:13-74
+364            android:exported="false"
+364-->[:url_launcher_android] /Users/officepc/Documents/flutter-projects/flutter_theme/build/url_launcher_android/intermediates/merged_manifest/release/AndroidManifest.xml:10:13-37
+365            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+365-->[:url_launcher_android] /Users/officepc/Documents/flutter-projects/flutter_theme/build/url_launcher_android/intermediates/merged_manifest/release/AndroidManifest.xml:11:13-71
+366
+367        <provider
+367-->[:open_filex] /Users/officepc/Documents/flutter-projects/flutter_theme/build/open_filex/intermediates/merged_manifest/release/AndroidManifest.xml:16:9-25:20
+368            android:name="com.crazecoder.openfile.FileProvider"
+368-->[:open_filex] /Users/officepc/Documents/flutter-projects/flutter_theme/build/open_filex/intermediates/merged_manifest/release/AndroidManifest.xml:17:13-64
+369            android:authorities="com.fluttertheme.flutter_theme.fileProvider.com.crazecoder.openfile"
+369-->[:open_filex] /Users/officepc/Documents/flutter-projects/flutter_theme/build/open_filex/intermediates/merged_manifest/release/AndroidManifest.xml:18:13-88
+370            android:exported="false"
+370-->[:open_filex] /Users/officepc/Documents/flutter-projects/flutter_theme/build/open_filex/intermediates/merged_manifest/release/AndroidManifest.xml:19:13-37
+371            android:grantUriPermissions="true" >
+371-->[:open_filex] /Users/officepc/Documents/flutter-projects/flutter_theme/build/open_filex/intermediates/merged_manifest/release/AndroidManifest.xml:20:13-47
+372            <meta-data
+372-->[:share_plus] /Users/officepc/Documents/flutter-projects/flutter_theme/build/share_plus/intermediates/merged_manifest/release/AndroidManifest.xml:18:13-20:68
+373                android:name="android.support.FILE_PROVIDER_PATHS"
+373-->[:share_plus] /Users/officepc/Documents/flutter-projects/flutter_theme/build/share_plus/intermediates/merged_manifest/release/AndroidManifest.xml:19:17-67
+374                android:resource="@xml/filepaths" />
+374-->[:share_plus] /Users/officepc/Documents/flutter-projects/flutter_theme/build/share_plus/intermediates/merged_manifest/release/AndroidManifest.xml:20:17-65
+375        </provider>
+376
+377        <receiver
+377-->[com.google.firebase:firebase-messaging:23.3.1] /Users/officepc/.gradle/caches/transforms-3/e08f3a99f5928542d2ec0ea17e9a72a6/transformed/jetified-firebase-messaging-23.3.1/AndroidManifest.xml:29:9-40:20
+378            android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
+378-->[com.google.firebase:firebase-messaging:23.3.1] /Users/officepc/.gradle/caches/transforms-3/e08f3a99f5928542d2ec0ea17e9a72a6/transformed/jetified-firebase-messaging-23.3.1/AndroidManifest.xml:30:13-78
+379            android:exported="true"
+379-->[com.google.firebase:firebase-messaging:23.3.1] /Users/officepc/.gradle/caches/transforms-3/e08f3a99f5928542d2ec0ea17e9a72a6/transformed/jetified-firebase-messaging-23.3.1/AndroidManifest.xml:31:13-36
+380            android:permission="com.google.android.c2dm.permission.SEND" >
+380-->[com.google.firebase:firebase-messaging:23.3.1] /Users/officepc/.gradle/caches/transforms-3/e08f3a99f5928542d2ec0ea17e9a72a6/transformed/jetified-firebase-messaging-23.3.1/AndroidManifest.xml:32:13-73
+381            <intent-filter>
+381-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:30:13-32:29
+382                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+382-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:31:17-81
+382-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:31:25-78
+383            </intent-filter>
+384
+385            <meta-data
+385-->[com.google.firebase:firebase-messaging:23.3.1] /Users/officepc/.gradle/caches/transforms-3/e08f3a99f5928542d2ec0ea17e9a72a6/transformed/jetified-firebase-messaging-23.3.1/AndroidManifest.xml:37:13-39:40
+386                android:name="com.google.android.gms.cloudmessaging.FINISHED_AFTER_HANDLED"
+386-->[com.google.firebase:firebase-messaging:23.3.1] /Users/officepc/.gradle/caches/transforms-3/e08f3a99f5928542d2ec0ea17e9a72a6/transformed/jetified-firebase-messaging-23.3.1/AndroidManifest.xml:38:17-92
+387                android:value="true" />
+387-->[com.google.firebase:firebase-messaging:23.3.1] /Users/officepc/.gradle/caches/transforms-3/e08f3a99f5928542d2ec0ea17e9a72a6/transformed/jetified-firebase-messaging-23.3.1/AndroidManifest.xml:39:17-37
+388        </receiver>
+389        <!--
+390             FirebaseMessagingService performs security checks at runtime,
+391             but set to not exported to explicitly avoid allowing another app to call it.
+392        -->
+393        <service
+393-->[com.google.firebase:firebase-messaging:23.3.1] /Users/officepc/.gradle/caches/transforms-3/e08f3a99f5928542d2ec0ea17e9a72a6/transformed/jetified-firebase-messaging-23.3.1/AndroidManifest.xml:46:9-53:19
+394            android:name="com.google.firebase.messaging.FirebaseMessagingService"
+394-->[com.google.firebase:firebase-messaging:23.3.1] /Users/officepc/.gradle/caches/transforms-3/e08f3a99f5928542d2ec0ea17e9a72a6/transformed/jetified-firebase-messaging-23.3.1/AndroidManifest.xml:47:13-82
+395            android:directBootAware="true"
+395-->[com.google.firebase:firebase-messaging:23.3.1] /Users/officepc/.gradle/caches/transforms-3/e08f3a99f5928542d2ec0ea17e9a72a6/transformed/jetified-firebase-messaging-23.3.1/AndroidManifest.xml:48:13-43
+396            android:exported="false" >
+396-->[com.google.firebase:firebase-messaging:23.3.1] /Users/officepc/.gradle/caches/transforms-3/e08f3a99f5928542d2ec0ea17e9a72a6/transformed/jetified-firebase-messaging-23.3.1/AndroidManifest.xml:49:13-37
+397            <intent-filter android:priority="-500" >
+397-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:21:13-23:29
+398                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+398-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:22:17-78
+398-->[:firebase_messaging] /Users/officepc/Documents/flutter-projects/flutter_theme/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:22:25-75
+399            </intent-filter>
+400        </service>
+401
+402        <property
+402-->[com.google.android.gms:play-services-measurement-api:21.5.0] /Users/officepc/.gradle/caches/transforms-3/552cfab94b494a8b40db4f35f7fd9919/transformed/jetified-play-services-measurement-api-21.5.0/AndroidManifest.xml:30:9-32:61
+403            android:name="android.adservices.AD_SERVICES_CONFIG"
+403-->[com.google.android.gms:play-services-measurement-api:21.5.0] /Users/officepc/.gradle/caches/transforms-3/552cfab94b494a8b40db4f35f7fd9919/transformed/jetified-play-services-measurement-api-21.5.0/AndroidManifest.xml:31:13-65
+404            android:resource="@xml/ga_ad_services_config" />
+404-->[com.google.android.gms:play-services-measurement-api:21.5.0] /Users/officepc/.gradle/caches/transforms-3/552cfab94b494a8b40db4f35f7fd9919/transformed/jetified-play-services-measurement-api-21.5.0/AndroidManifest.xml:32:13-58
+405
+406        <receiver
+406-->[com.google.android.gms:play-services-measurement:21.5.0] /Users/officepc/.gradle/caches/transforms-3/de1f53d0892bc4102961e7e388417a9b/transformed/jetified-play-services-measurement-21.5.0/AndroidManifest.xml:29:9-33:20
+407            android:name="com.google.android.gms.measurement.AppMeasurementReceiver"
+407-->[com.google.android.gms:play-services-measurement:21.5.0] /Users/officepc/.gradle/caches/transforms-3/de1f53d0892bc4102961e7e388417a9b/transformed/jetified-play-services-measurement-21.5.0/AndroidManifest.xml:30:13-85
+408            android:enabled="true"
+408-->[com.google.android.gms:play-services-measurement:21.5.0] /Users/officepc/.gradle/caches/transforms-3/de1f53d0892bc4102961e7e388417a9b/transformed/jetified-play-services-measurement-21.5.0/AndroidManifest.xml:31:13-35
+409            android:exported="false" >
+409-->[com.google.android.gms:play-services-measurement:21.5.0] /Users/officepc/.gradle/caches/transforms-3/de1f53d0892bc4102961e7e388417a9b/transformed/jetified-play-services-measurement-21.5.0/AndroidManifest.xml:32:13-37
+410        </receiver>
+411
+412        <service
+412-->[com.google.android.gms:play-services-measurement:21.5.0] /Users/officepc/.gradle/caches/transforms-3/de1f53d0892bc4102961e7e388417a9b/transformed/jetified-play-services-measurement-21.5.0/AndroidManifest.xml:35:9-38:40
+413            android:name="com.google.android.gms.measurement.AppMeasurementService"
+413-->[com.google.android.gms:play-services-measurement:21.5.0] /Users/officepc/.gradle/caches/transforms-3/de1f53d0892bc4102961e7e388417a9b/transformed/jetified-play-services-measurement-21.5.0/AndroidManifest.xml:36:13-84
+414            android:enabled="true"
+414-->[com.google.android.gms:play-services-measurement:21.5.0] /Users/officepc/.gradle/caches/transforms-3/de1f53d0892bc4102961e7e388417a9b/transformed/jetified-play-services-measurement-21.5.0/AndroidManifest.xml:37:13-35
+415            android:exported="false" />
+415-->[com.google.android.gms:play-services-measurement:21.5.0] /Users/officepc/.gradle/caches/transforms-3/de1f53d0892bc4102961e7e388417a9b/transformed/jetified-play-services-measurement-21.5.0/AndroidManifest.xml:38:13-37
+416        <service
+416-->[com.google.android.gms:play-services-measurement:21.5.0] /Users/officepc/.gradle/caches/transforms-3/de1f53d0892bc4102961e7e388417a9b/transformed/jetified-play-services-measurement-21.5.0/AndroidManifest.xml:39:9-43:72
+417            android:name="com.google.android.gms.measurement.AppMeasurementJobService"
+417-->[com.google.android.gms:play-services-measurement:21.5.0] /Users/officepc/.gradle/caches/transforms-3/de1f53d0892bc4102961e7e388417a9b/transformed/jetified-play-services-measurement-21.5.0/AndroidManifest.xml:40:13-87
+418            android:enabled="true"
+418-->[com.google.android.gms:play-services-measurement:21.5.0] /Users/officepc/.gradle/caches/transforms-3/de1f53d0892bc4102961e7e388417a9b/transformed/jetified-play-services-measurement-21.5.0/AndroidManifest.xml:41:13-35
+419            android:exported="false"
+419-->[com.google.android.gms:play-services-measurement:21.5.0] /Users/officepc/.gradle/caches/transforms-3/de1f53d0892bc4102961e7e388417a9b/transformed/jetified-play-services-measurement-21.5.0/AndroidManifest.xml:42:13-37
+420            android:permission="android.permission.BIND_JOB_SERVICE" />
+420-->[com.google.android.gms:play-services-measurement:21.5.0] /Users/officepc/.gradle/caches/transforms-3/de1f53d0892bc4102961e7e388417a9b/transformed/jetified-play-services-measurement-21.5.0/AndroidManifest.xml:43:13-69
+421
+422        <uses-library
+422-->[androidx.privacysandbox.ads:ads-adservices:1.0.0-beta05] /Users/officepc/.gradle/caches/transforms-3/3724631f6ec183a80c2252f0723a3fc2/transformed/jetified-ads-adservices-1.0.0-beta05/AndroidManifest.xml:23:9-25:40
+423            android:name="android.ext.adservices"
+423-->[androidx.privacysandbox.ads:ads-adservices:1.0.0-beta05] /Users/officepc/.gradle/caches/transforms-3/3724631f6ec183a80c2252f0723a3fc2/transformed/jetified-ads-adservices-1.0.0-beta05/AndroidManifest.xml:24:13-50
+424            android:required="false" />
+424-->[androidx.privacysandbox.ads:ads-adservices:1.0.0-beta05] /Users/officepc/.gradle/caches/transforms-3/3724631f6ec183a80c2252f0723a3fc2/transformed/jetified-ads-adservices-1.0.0-beta05/AndroidManifest.xml:25:13-37
+425
+426        <activity
+426-->[com.google.firebase:firebase-auth:22.3.0] /Users/officepc/.gradle/caches/transforms-3/ea155d3c99fef0f561b108e09c97a238/transformed/jetified-firebase-auth-22.3.0/AndroidManifest.xml:29:9-46:20
+427            android:name="com.google.firebase.auth.internal.GenericIdpActivity"
+427-->[com.google.firebase:firebase-auth:22.3.0] /Users/officepc/.gradle/caches/transforms-3/ea155d3c99fef0f561b108e09c97a238/transformed/jetified-firebase-auth-22.3.0/AndroidManifest.xml:30:13-80
+428            android:excludeFromRecents="true"
+428-->[com.google.firebase:firebase-auth:22.3.0] /Users/officepc/.gradle/caches/transforms-3/ea155d3c99fef0f561b108e09c97a238/transformed/jetified-firebase-auth-22.3.0/AndroidManifest.xml:31:13-46
+429            android:exported="true"
+429-->[com.google.firebase:firebase-auth:22.3.0] /Users/officepc/.gradle/caches/transforms-3/ea155d3c99fef0f561b108e09c97a238/transformed/jetified-firebase-auth-22.3.0/AndroidManifest.xml:32:13-36
+430            android:launchMode="singleTask"
+430-->[com.google.firebase:firebase-auth:22.3.0] /Users/officepc/.gradle/caches/transforms-3/ea155d3c99fef0f561b108e09c97a238/transformed/jetified-firebase-auth-22.3.0/AndroidManifest.xml:33:13-44
+431            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+431-->[com.google.firebase:firebase-auth:22.3.0] /Users/officepc/.gradle/caches/transforms-3/ea155d3c99fef0f561b108e09c97a238/transformed/jetified-firebase-auth-22.3.0/AndroidManifest.xml:34:13-72
+432            <intent-filter>
+432-->[com.google.firebase:firebase-auth:22.3.0] /Users/officepc/.gradle/caches/transforms-3/ea155d3c99fef0f561b108e09c97a238/transformed/jetified-firebase-auth-22.3.0/AndroidManifest.xml:35:13-45:29
+433                <action android:name="android.intent.action.VIEW" />
+433-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:39:13-65
+433-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:39:21-62
+434
+435                <category android:name="android.intent.category.DEFAULT" />
+435-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:108:17-76
+435-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:108:27-73
+436                <category android:name="android.intent.category.BROWSABLE" />
+436-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:109:17-78
+436-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:109:27-75
+437
+438                <data
+438-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:40:13-42
+439                    android:host="firebase.auth"
+440                    android:path="/"
+441                    android:scheme="genericidp" />
+441-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:40:19-39
+442            </intent-filter>
+443        </activity>
+444        <activity
+444-->[com.google.firebase:firebase-auth:22.3.0] /Users/officepc/.gradle/caches/transforms-3/ea155d3c99fef0f561b108e09c97a238/transformed/jetified-firebase-auth-22.3.0/AndroidManifest.xml:47:9-64:20
+445            android:name="com.google.firebase.auth.internal.RecaptchaActivity"
+445-->[com.google.firebase:firebase-auth:22.3.0] /Users/officepc/.gradle/caches/transforms-3/ea155d3c99fef0f561b108e09c97a238/transformed/jetified-firebase-auth-22.3.0/AndroidManifest.xml:48:13-79
+446            android:excludeFromRecents="true"
+446-->[com.google.firebase:firebase-auth:22.3.0] /Users/officepc/.gradle/caches/transforms-3/ea155d3c99fef0f561b108e09c97a238/transformed/jetified-firebase-auth-22.3.0/AndroidManifest.xml:49:13-46
+447            android:exported="true"
+447-->[com.google.firebase:firebase-auth:22.3.0] /Users/officepc/.gradle/caches/transforms-3/ea155d3c99fef0f561b108e09c97a238/transformed/jetified-firebase-auth-22.3.0/AndroidManifest.xml:50:13-36
+448            android:launchMode="singleTask"
+448-->[com.google.firebase:firebase-auth:22.3.0] /Users/officepc/.gradle/caches/transforms-3/ea155d3c99fef0f561b108e09c97a238/transformed/jetified-firebase-auth-22.3.0/AndroidManifest.xml:51:13-44
+449            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+449-->[com.google.firebase:firebase-auth:22.3.0] /Users/officepc/.gradle/caches/transforms-3/ea155d3c99fef0f561b108e09c97a238/transformed/jetified-firebase-auth-22.3.0/AndroidManifest.xml:52:13-72
+450            <intent-filter>
+450-->[com.google.firebase:firebase-auth:22.3.0] /Users/officepc/.gradle/caches/transforms-3/ea155d3c99fef0f561b108e09c97a238/transformed/jetified-firebase-auth-22.3.0/AndroidManifest.xml:53:13-63:29
+451                <action android:name="android.intent.action.VIEW" />
+451-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:39:13-65
+451-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:39:21-62
+452
+453                <category android:name="android.intent.category.DEFAULT" />
+453-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:108:17-76
+453-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:108:27-73
+454                <category android:name="android.intent.category.BROWSABLE" />
+454-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:109:17-78
+454-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:109:27-75
+455
+456                <data
+456-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:40:13-42
+457                    android:host="firebase.auth"
+458                    android:path="/"
+459                    android:scheme="recaptcha" />
+459-->/Users/officepc/Documents/flutter-projects/flutter_theme/android/app/src/main/AndroidManifest.xml:40:19-39
+460            </intent-filter>
+461        </activity>
+462        <activity
+462-->[com.google.android.gms:play-services-auth:20.7.0] /Users/officepc/.gradle/caches/transforms-3/954b9dc9cd4d52a3fcfa46f4636a2955/transformed/jetified-play-services-auth-20.7.0/AndroidManifest.xml:23:9-27:75
+463            android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"
+463-->[com.google.android.gms:play-services-auth:20.7.0] /Users/officepc/.gradle/caches/transforms-3/954b9dc9cd4d52a3fcfa46f4636a2955/transformed/jetified-play-services-auth-20.7.0/AndroidManifest.xml:24:13-93
+464            android:excludeFromRecents="true"
+464-->[com.google.android.gms:play-services-auth:20.7.0] /Users/officepc/.gradle/caches/transforms-3/954b9dc9cd4d52a3fcfa46f4636a2955/transformed/jetified-play-services-auth-20.7.0/AndroidManifest.xml:25:13-46
+465            android:exported="false"
+465-->[com.google.android.gms:play-services-auth:20.7.0] /Users/officepc/.gradle/caches/transforms-3/954b9dc9cd4d52a3fcfa46f4636a2955/transformed/jetified-play-services-auth-20.7.0/AndroidManifest.xml:26:13-37
+466            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+466-->[com.google.android.gms:play-services-auth:20.7.0] /Users/officepc/.gradle/caches/transforms-3/954b9dc9cd4d52a3fcfa46f4636a2955/transformed/jetified-play-services-auth-20.7.0/AndroidManifest.xml:27:13-72
+467        <!--
+468            Service handling Google Sign-In user revocation. For apps that do not integrate with
+469            Google Sign-In, this service will never be started.
+470        -->
+471        <service
+471-->[com.google.android.gms:play-services-auth:20.7.0] /Users/officepc/.gradle/caches/transforms-3/954b9dc9cd4d52a3fcfa46f4636a2955/transformed/jetified-play-services-auth-20.7.0/AndroidManifest.xml:33:9-37:51
+472            android:name="com.google.android.gms.auth.api.signin.RevocationBoundService"
+472-->[com.google.android.gms:play-services-auth:20.7.0] /Users/officepc/.gradle/caches/transforms-3/954b9dc9cd4d52a3fcfa46f4636a2955/transformed/jetified-play-services-auth-20.7.0/AndroidManifest.xml:34:13-89
+473            android:exported="true"
+473-->[com.google.android.gms:play-services-auth:20.7.0] /Users/officepc/.gradle/caches/transforms-3/954b9dc9cd4d52a3fcfa46f4636a2955/transformed/jetified-play-services-auth-20.7.0/AndroidManifest.xml:35:13-36
+474            android:permission="com.google.android.gms.auth.api.signin.permission.REVOCATION_NOTIFICATION"
+474-->[com.google.android.gms:play-services-auth:20.7.0] /Users/officepc/.gradle/caches/transforms-3/954b9dc9cd4d52a3fcfa46f4636a2955/transformed/jetified-play-services-auth-20.7.0/AndroidManifest.xml:36:13-107
+475            android:visibleToInstantApps="true" />
+475-->[com.google.android.gms:play-services-auth:20.7.0] /Users/officepc/.gradle/caches/transforms-3/954b9dc9cd4d52a3fcfa46f4636a2955/transformed/jetified-play-services-auth-20.7.0/AndroidManifest.xml:37:13-48
+476
+477        <activity
+477-->[com.google.android.gms:play-services-base:18.1.0] /Users/officepc/.gradle/caches/transforms-3/02f70eb5b536b9dd951f2f2d7b1aafcd/transformed/jetified-play-services-base-18.1.0/AndroidManifest.xml:20:9-22:45
+478            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+478-->[com.google.android.gms:play-services-base:18.1.0] /Users/officepc/.gradle/caches/transforms-3/02f70eb5b536b9dd951f2f2d7b1aafcd/transformed/jetified-play-services-base-18.1.0/AndroidManifest.xml:20:19-85
+479            android:exported="false"
+479-->[com.google.android.gms:play-services-base:18.1.0] /Users/officepc/.gradle/caches/transforms-3/02f70eb5b536b9dd951f2f2d7b1aafcd/transformed/jetified-play-services-base-18.1.0/AndroidManifest.xml:22:19-43
+480            android:theme="@android:style/Theme.Translucent.NoTitleBar" /> <!-- Include the AdActivity and InAppPurchaseActivity configChanges and themes. -->
+480-->[com.google.android.gms:play-services-base:18.1.0] /Users/officepc/.gradle/caches/transforms-3/02f70eb5b536b9dd951f2f2d7b1aafcd/transformed/jetified-play-services-base-18.1.0/AndroidManifest.xml:21:19-78
+481        <activity
+481-->[com.google.android.gms:play-services-ads-lite:22.0.0] /Users/officepc/.gradle/caches/transforms-3/86c9297c067f441c6f71078db3ae2a57/transformed/jetified-play-services-ads-lite-22.0.0/AndroidManifest.xml:53:9-58:43
+482            android:name="com.google.android.gms.ads.AdActivity"
+482-->[com.google.android.gms:play-services-ads-lite:22.0.0] /Users/officepc/.gradle/caches/transforms-3/86c9297c067f441c6f71078db3ae2a57/transformed/jetified-play-services-ads-lite-22.0.0/AndroidManifest.xml:54:13-65
+483            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+483-->[com.google.android.gms:play-services-ads-lite:22.0.0] /Users/officepc/.gradle/caches/transforms-3/86c9297c067f441c6f71078db3ae2a57/transformed/jetified-play-services-ads-lite-22.0.0/AndroidManifest.xml:55:13-122
+484            android:exported="false"
+484-->[com.google.android.gms:play-services-ads-lite:22.0.0] /Users/officepc/.gradle/caches/transforms-3/86c9297c067f441c6f71078db3ae2a57/transformed/jetified-play-services-ads-lite-22.0.0/AndroidManifest.xml:56:13-37
+485            android:theme="@android:style/Theme.Translucent" />
+485-->[com.google.android.gms:play-services-ads-lite:22.0.0] /Users/officepc/.gradle/caches/transforms-3/86c9297c067f441c6f71078db3ae2a57/transformed/jetified-play-services-ads-lite-22.0.0/AndroidManifest.xml:57:13-61
+486
+487        <provider
+487-->[com.google.android.gms:play-services-ads-lite:22.0.0] /Users/officepc/.gradle/caches/transforms-3/86c9297c067f441c6f71078db3ae2a57/transformed/jetified-play-services-ads-lite-22.0.0/AndroidManifest.xml:60:9-65:43
+488            android:name="com.google.android.gms.ads.MobileAdsInitProvider"
+488-->[com.google.android.gms:play-services-ads-lite:22.0.0] /Users/officepc/.gradle/caches/transforms-3/86c9297c067f441c6f71078db3ae2a57/transformed/jetified-play-services-ads-lite-22.0.0/AndroidManifest.xml:61:13-76
+489            android:authorities="com.fluttertheme.flutter_theme.mobileadsinitprovider"
+489-->[com.google.android.gms:play-services-ads-lite:22.0.0] /Users/officepc/.gradle/caches/transforms-3/86c9297c067f441c6f71078db3ae2a57/transformed/jetified-play-services-ads-lite-22.0.0/AndroidManifest.xml:62:13-73
+490            android:exported="false"
+490-->[com.google.android.gms:play-services-ads-lite:22.0.0] /Users/officepc/.gradle/caches/transforms-3/86c9297c067f441c6f71078db3ae2a57/transformed/jetified-play-services-ads-lite-22.0.0/AndroidManifest.xml:63:13-37
+491            android:initOrder="100" />
+491-->[com.google.android.gms:play-services-ads-lite:22.0.0] /Users/officepc/.gradle/caches/transforms-3/86c9297c067f441c6f71078db3ae2a57/transformed/jetified-play-services-ads-lite-22.0.0/AndroidManifest.xml:64:13-36
+492
+493        <service
+493-->[com.google.android.gms:play-services-ads-lite:22.0.0] /Users/officepc/.gradle/caches/transforms-3/86c9297c067f441c6f71078db3ae2a57/transformed/jetified-play-services-ads-lite-22.0.0/AndroidManifest.xml:67:9-71:43
+494            android:name="com.google.android.gms.ads.AdService"
+494-->[com.google.android.gms:play-services-ads-lite:22.0.0] /Users/officepc/.gradle/caches/transforms-3/86c9297c067f441c6f71078db3ae2a57/transformed/jetified-play-services-ads-lite-22.0.0/AndroidManifest.xml:68:13-64
+495            android:enabled="true"
+495-->[com.google.android.gms:play-services-ads-lite:22.0.0] /Users/officepc/.gradle/caches/transforms-3/86c9297c067f441c6f71078db3ae2a57/transformed/jetified-play-services-ads-lite-22.0.0/AndroidManifest.xml:69:13-35
+496            android:exported="false" />
+496-->[com.google.android.gms:play-services-ads-lite:22.0.0] /Users/officepc/.gradle/caches/transforms-3/86c9297c067f441c6f71078db3ae2a57/transformed/jetified-play-services-ads-lite-22.0.0/AndroidManifest.xml:70:13-37
+497
+498        <activity
+498-->[com.google.android.gms:play-services-ads-lite:22.0.0] /Users/officepc/.gradle/caches/transforms-3/86c9297c067f441c6f71078db3ae2a57/transformed/jetified-play-services-ads-lite-22.0.0/AndroidManifest.xml:73:9-77:43
+499            android:name="com.google.android.gms.ads.OutOfContextTestingActivity"
+499-->[com.google.android.gms:play-services-ads-lite:22.0.0] /Users/officepc/.gradle/caches/transforms-3/86c9297c067f441c6f71078db3ae2a57/transformed/jetified-play-services-ads-lite-22.0.0/AndroidManifest.xml:74:13-82
+500            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+500-->[com.google.android.gms:play-services-ads-lite:22.0.0] /Users/officepc/.gradle/caches/transforms-3/86c9297c067f441c6f71078db3ae2a57/transformed/jetified-play-services-ads-lite-22.0.0/AndroidManifest.xml:75:13-122
+501            android:exported="false" />
+501-->[com.google.android.gms:play-services-ads-lite:22.0.0] /Users/officepc/.gradle/caches/transforms-3/86c9297c067f441c6f71078db3ae2a57/transformed/jetified-play-services-ads-lite-22.0.0/AndroidManifest.xml:76:13-37
+502
+503        <provider
+503-->[com.google.firebase:firebase-common:20.4.2] /Users/officepc/.gradle/caches/transforms-3/256b22cc70b6a1d81c7e6ec7af61856c/transformed/jetified-firebase-common-20.4.2/AndroidManifest.xml:23:9-28:39
+504            android:name="com.google.firebase.provider.FirebaseInitProvider"
+504-->[com.google.firebase:firebase-common:20.4.2] /Users/officepc/.gradle/caches/transforms-3/256b22cc70b6a1d81c7e6ec7af61856c/transformed/jetified-firebase-common-20.4.2/AndroidManifest.xml:24:13-77
+505            android:authorities="com.fluttertheme.flutter_theme.firebaseinitprovider"
+505-->[com.google.firebase:firebase-common:20.4.2] /Users/officepc/.gradle/caches/transforms-3/256b22cc70b6a1d81c7e6ec7af61856c/transformed/jetified-firebase-common-20.4.2/AndroidManifest.xml:25:13-72
+506            android:directBootAware="true"
+506-->[com.google.firebase:firebase-common:20.4.2] /Users/officepc/.gradle/caches/transforms-3/256b22cc70b6a1d81c7e6ec7af61856c/transformed/jetified-firebase-common-20.4.2/AndroidManifest.xml:26:13-43
+507            android:exported="false"
+507-->[com.google.firebase:firebase-common:20.4.2] /Users/officepc/.gradle/caches/transforms-3/256b22cc70b6a1d81c7e6ec7af61856c/transformed/jetified-firebase-common-20.4.2/AndroidManifest.xml:27:13-37
+508            android:initOrder="100" />
+508-->[com.google.firebase:firebase-common:20.4.2] /Users/officepc/.gradle/caches/transforms-3/256b22cc70b6a1d81c7e6ec7af61856c/transformed/jetified-firebase-common-20.4.2/AndroidManifest.xml:28:13-36
+509
+510        <activity
+510-->[com.facebook.android:audience-network-sdk:6.16.0] /Users/officepc/.gradle/caches/transforms-3/215ca824946d1319c07097d44d9b4c11/transformed/jetified-audience-network-sdk-6.16.0/AndroidManifest.xml:20:9-24:75
+511            android:name="com.facebook.ads.AudienceNetworkActivity"
+511-->[com.facebook.android:audience-network-sdk:6.16.0] /Users/officepc/.gradle/caches/transforms-3/215ca824946d1319c07097d44d9b4c11/transformed/jetified-audience-network-sdk-6.16.0/AndroidManifest.xml:21:13-68
+512            android:configChanges="keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout"
+512-->[com.facebook.android:audience-network-sdk:6.16.0] /Users/officepc/.gradle/caches/transforms-3/215ca824946d1319c07097d44d9b4c11/transformed/jetified-audience-network-sdk-6.16.0/AndroidManifest.xml:22:13-106
+513            android:exported="false"
+513-->[com.facebook.android:audience-network-sdk:6.16.0] /Users/officepc/.gradle/caches/transforms-3/215ca824946d1319c07097d44d9b4c11/transformed/jetified-audience-network-sdk-6.16.0/AndroidManifest.xml:23:13-37
+514            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+514-->[com.facebook.android:audience-network-sdk:6.16.0] /Users/officepc/.gradle/caches/transforms-3/215ca824946d1319c07097d44d9b4c11/transformed/jetified-audience-network-sdk-6.16.0/AndroidManifest.xml:24:13-72
+515
+516        <provider
+516-->[com.facebook.android:audience-network-sdk:6.16.0] /Users/officepc/.gradle/caches/transforms-3/215ca824946d1319c07097d44d9b4c11/transformed/jetified-audience-network-sdk-6.16.0/AndroidManifest.xml:26:9-29:40
+517            android:name="com.facebook.ads.AudienceNetworkContentProvider"
+517-->[com.facebook.android:audience-network-sdk:6.16.0] /Users/officepc/.gradle/caches/transforms-3/215ca824946d1319c07097d44d9b4c11/transformed/jetified-audience-network-sdk-6.16.0/AndroidManifest.xml:27:13-75
+518            android:authorities="com.fluttertheme.flutter_theme.AudienceNetworkContentProvider"
+518-->[com.facebook.android:audience-network-sdk:6.16.0] /Users/officepc/.gradle/caches/transforms-3/215ca824946d1319c07097d44d9b4c11/transformed/jetified-audience-network-sdk-6.16.0/AndroidManifest.xml:28:13-82
+519            android:exported="false" />
+519-->[com.facebook.android:audience-network-sdk:6.16.0] /Users/officepc/.gradle/caches/transforms-3/215ca824946d1319c07097d44d9b4c11/transformed/jetified-audience-network-sdk-6.16.0/AndroidManifest.xml:29:13-37
+520
+521        <meta-data
+521-->[com.google.android.gms:play-services-basement:18.2.0] /Users/officepc/.gradle/caches/transforms-3/927e7db57613f8424899357fc403b81d/transformed/jetified-play-services-basement-18.2.0/AndroidManifest.xml:21:9-23:69
+522            android:name="com.google.android.gms.version"
+522-->[com.google.android.gms:play-services-basement:18.2.0] /Users/officepc/.gradle/caches/transforms-3/927e7db57613f8424899357fc403b81d/transformed/jetified-play-services-basement-18.2.0/AndroidManifest.xml:22:13-58
+523            android:value="@integer/google_play_services_version" />
+523-->[com.google.android.gms:play-services-basement:18.2.0] /Users/officepc/.gradle/caches/transforms-3/927e7db57613f8424899357fc403b81d/transformed/jetified-play-services-basement-18.2.0/AndroidManifest.xml:23:13-66
+524
+525        <uses-library
+525-->[androidx.window:window:1.0.0-beta04] /Users/officepc/.gradle/caches/transforms-3/0067779ebdeec67ab7442c60fcb91c20/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:25:9-27:40
+526            android:name="androidx.window.extensions"
+526-->[androidx.window:window:1.0.0-beta04] /Users/officepc/.gradle/caches/transforms-3/0067779ebdeec67ab7442c60fcb91c20/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:26:13-54
+527            android:required="false" />
+527-->[androidx.window:window:1.0.0-beta04] /Users/officepc/.gradle/caches/transforms-3/0067779ebdeec67ab7442c60fcb91c20/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:27:13-37
+528        <uses-library
+528-->[androidx.window:window:1.0.0-beta04] /Users/officepc/.gradle/caches/transforms-3/0067779ebdeec67ab7442c60fcb91c20/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:28:9-30:40
+529            android:name="androidx.window.sidecar"
+529-->[androidx.window:window:1.0.0-beta04] /Users/officepc/.gradle/caches/transforms-3/0067779ebdeec67ab7442c60fcb91c20/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:29:13-51
+530            android:required="false" />
+530-->[androidx.window:window:1.0.0-beta04] /Users/officepc/.gradle/caches/transforms-3/0067779ebdeec67ab7442c60fcb91c20/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:30:13-37
+531
+532        <provider
+532-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:31:9-39:20
+533            android:name="androidx.startup.InitializationProvider"
+533-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:32:13-67
+534            android:authorities="com.fluttertheme.flutter_theme.androidx-startup"
+534-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:33:13-68
+535            android:exported="false" >
+535-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:34:13-37
+536            <meta-data
+536-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:36:13-38:52
+537                android:name="androidx.work.WorkManagerInitializer"
+537-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:37:17-68
+538                android:value="androidx.startup" />
+538-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:38:17-49
+539            <meta-data
+539-->[androidx.lifecycle:lifecycle-process:2.6.1] /Users/officepc/.gradle/caches/transforms-3/21abcb8a0b9939c8280dad7ec98350b5/transformed/jetified-lifecycle-process-2.6.1/AndroidManifest.xml:29:13-31:52
+540                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+540-->[androidx.lifecycle:lifecycle-process:2.6.1] /Users/officepc/.gradle/caches/transforms-3/21abcb8a0b9939c8280dad7ec98350b5/transformed/jetified-lifecycle-process-2.6.1/AndroidManifest.xml:30:17-78
+541                android:value="androidx.startup" />
+541-->[androidx.lifecycle:lifecycle-process:2.6.1] /Users/officepc/.gradle/caches/transforms-3/21abcb8a0b9939c8280dad7ec98350b5/transformed/jetified-lifecycle-process-2.6.1/AndroidManifest.xml:31:17-49
+542            <meta-data
+542-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/officepc/.gradle/caches/transforms-3/5fcf98c97ffa9abfd466b302dba359a2/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:29:13-31:52
+543                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+543-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/officepc/.gradle/caches/transforms-3/5fcf98c97ffa9abfd466b302dba359a2/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:30:17-85
+544                android:value="androidx.startup" />
+544-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/officepc/.gradle/caches/transforms-3/5fcf98c97ffa9abfd466b302dba359a2/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:31:17-49
+545        </provider>
+546
+547        <service
+547-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:41:9-46:35
+548            android:name="androidx.work.impl.background.systemalarm.SystemAlarmService"
+548-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:42:13-88
+549            android:directBootAware="false"
+549-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:43:13-44
+550            android:enabled="@bool/enable_system_alarm_service_default"
+550-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:44:13-72
+551            android:exported="false" />
+551-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:45:13-37
+552        <service
+552-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:47:9-53:35
+553            android:name="androidx.work.impl.background.systemjob.SystemJobService"
+553-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:48:13-84
+554            android:directBootAware="false"
+554-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:49:13-44
+555            android:enabled="@bool/enable_system_job_service_default"
+555-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:50:13-70
+556            android:exported="true"
+556-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:51:13-36
+557            android:permission="android.permission.BIND_JOB_SERVICE" />
+557-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:52:13-69
+558        <service
+558-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:54:9-59:35
+559            android:name="androidx.work.impl.foreground.SystemForegroundService"
+559-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:55:13-81
+560            android:directBootAware="false"
+560-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:56:13-44
+561            android:enabled="@bool/enable_system_foreground_service_default"
+561-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:57:13-77
+562            android:exported="false" />
+562-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:58:13-37
+563
+564        <receiver
+564-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:61:9-66:35
+565            android:name="androidx.work.impl.utils.ForceStopRunnable$BroadcastReceiver"
+565-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:62:13-88
+566            android:directBootAware="false"
+566-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:63:13-44
+567            android:enabled="true"
+567-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:64:13-35
+568            android:exported="false" />
+568-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:65:13-37
+569        <receiver
+569-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:67:9-77:20
+570            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$BatteryChargingProxy"
+570-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:68:13-106
+571            android:directBootAware="false"
+571-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:69:13-44
+572            android:enabled="false"
+572-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:70:13-36
+573            android:exported="false" >
+573-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:71:13-37
+574            <intent-filter>
+574-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:73:13-76:29
+575                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+575-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:74:17-87
+575-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:74:25-84
+576                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+576-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:75:17-90
+576-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:75:25-87
+577            </intent-filter>
+578        </receiver>
+579        <receiver
+579-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:78:9-88:20
+580            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$BatteryNotLowProxy"
+580-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:79:13-104
+581            android:directBootAware="false"
+581-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:80:13-44
+582            android:enabled="false"
+582-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:81:13-36
+583            android:exported="false" >
+583-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:82:13-37
+584            <intent-filter>
+584-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:84:13-87:29
+585                <action android:name="android.intent.action.BATTERY_OKAY" />
+585-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:85:17-77
+585-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:85:25-74
+586                <action android:name="android.intent.action.BATTERY_LOW" />
+586-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:86:17-76
+586-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:86:25-73
+587            </intent-filter>
+588        </receiver>
+589        <receiver
+589-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:89:9-99:20
+590            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$StorageNotLowProxy"
+590-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:90:13-104
+591            android:directBootAware="false"
+591-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:91:13-44
+592            android:enabled="false"
+592-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:92:13-36
+593            android:exported="false" >
+593-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:93:13-37
+594            <intent-filter>
+594-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:95:13-98:29
+595                <action android:name="android.intent.action.DEVICE_STORAGE_LOW" />
+595-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:96:17-83
+595-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:96:25-80
+596                <action android:name="android.intent.action.DEVICE_STORAGE_OK" />
+596-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:97:17-82
+596-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:97:25-79
+597            </intent-filter>
+598        </receiver>
+599        <receiver
+599-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:100:9-109:20
+600            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$NetworkStateProxy"
+600-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:101:13-103
+601            android:directBootAware="false"
+601-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:102:13-44
+602            android:enabled="false"
+602-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:103:13-36
+603            android:exported="false" >
+603-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:104:13-37
+604            <intent-filter>
+604-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:106:13-108:29
+605                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+605-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:107:17-79
+605-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:107:25-76
+606            </intent-filter>
+607        </receiver>
+608        <receiver
+608-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:110:9-121:20
+609            android:name="androidx.work.impl.background.systemalarm.RescheduleReceiver"
+609-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:111:13-88
+610            android:directBootAware="false"
+610-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:112:13-44
+611            android:enabled="false"
+611-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:113:13-36
+612            android:exported="false" >
+612-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:114:13-37
+613            <intent-filter>
+613-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:116:13-120:29
+614                <action android:name="android.intent.action.BOOT_COMPLETED" />
+614-->[:flutter_local_notifications] /Users/officepc/Documents/flutter-projects/flutter_theme/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:24:17-79
+614-->[:flutter_local_notifications] /Users/officepc/Documents/flutter-projects/flutter_theme/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:24:25-76
+615                <action android:name="android.intent.action.TIME_SET" />
+615-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:118:17-73
+615-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:118:25-70
+616                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+616-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:119:17-81
+616-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:119:25-78
+617            </intent-filter>
+618        </receiver>
+619        <receiver
+619-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:122:9-131:20
+620            android:name="androidx.work.impl.background.systemalarm.ConstraintProxyUpdateReceiver"
+620-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:123:13-99
+621            android:directBootAware="false"
+621-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:124:13-44
+622            android:enabled="@bool/enable_system_alarm_service_default"
+622-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:125:13-72
+623            android:exported="false" >
+623-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:126:13-37
+624            <intent-filter>
+624-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:128:13-130:29
+625                <action android:name="androidx.work.impl.background.systemalarm.UpdateProxies" />
+625-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:129:17-98
+625-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:129:25-95
+626            </intent-filter>
+627        </receiver>
+628        <receiver
+628-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:132:9-142:20
+629            android:name="androidx.work.impl.diagnostics.DiagnosticsReceiver"
+629-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:133:13-78
+630            android:directBootAware="false"
+630-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:134:13-44
+631            android:enabled="true"
+631-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:135:13-35
+632            android:exported="true"
+632-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:136:13-36
+633            android:permission="android.permission.DUMP" >
+633-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:137:13-57
+634            <intent-filter>
+634-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:139:13-141:29
+635                <action android:name="androidx.work.diagnostics.REQUEST_DIAGNOSTICS" />
+635-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:140:17-88
+635-->[androidx.work:work-runtime:2.7.0] /Users/officepc/.gradle/caches/transforms-3/1c4d55bff29d6c122d08db31078360f1/transformed/work-runtime-2.7.0/AndroidManifest.xml:140:25-85
+636            </intent-filter>
+637        </receiver>
+638
+639        <service
+639-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/officepc/.gradle/caches/transforms-3/054c26e96971ec57d2708176e3a79aed/transformed/jetified-transport-backend-cct-3.1.8/AndroidManifest.xml:28:9-34:19
+640            android:name="com.google.android.datatransport.runtime.backends.TransportBackendDiscovery"
+640-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/officepc/.gradle/caches/transforms-3/054c26e96971ec57d2708176e3a79aed/transformed/jetified-transport-backend-cct-3.1.8/AndroidManifest.xml:29:13-103
+641            android:exported="false" >
+641-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/officepc/.gradle/caches/transforms-3/054c26e96971ec57d2708176e3a79aed/transformed/jetified-transport-backend-cct-3.1.8/AndroidManifest.xml:30:13-37
+642            <meta-data
+642-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/officepc/.gradle/caches/transforms-3/054c26e96971ec57d2708176e3a79aed/transformed/jetified-transport-backend-cct-3.1.8/AndroidManifest.xml:31:13-33:39
+643                android:name="backend:com.google.android.datatransport.cct.CctBackendFactory"
+643-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/officepc/.gradle/caches/transforms-3/054c26e96971ec57d2708176e3a79aed/transformed/jetified-transport-backend-cct-3.1.8/AndroidManifest.xml:32:17-94
+644                android:value="cct" />
+644-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/officepc/.gradle/caches/transforms-3/054c26e96971ec57d2708176e3a79aed/transformed/jetified-transport-backend-cct-3.1.8/AndroidManifest.xml:33:17-36
+645        </service>
+646        <service
+646-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/officepc/.gradle/caches/transforms-3/8b5465002a2c04e54cb04ba4f9da6fcf/transformed/jetified-transport-runtime-3.1.8/AndroidManifest.xml:26:9-30:19
+647            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService"
+647-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/officepc/.gradle/caches/transforms-3/8b5465002a2c04e54cb04ba4f9da6fcf/transformed/jetified-transport-runtime-3.1.8/AndroidManifest.xml:27:13-117
+648            android:exported="false"
+648-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/officepc/.gradle/caches/transforms-3/8b5465002a2c04e54cb04ba4f9da6fcf/transformed/jetified-transport-runtime-3.1.8/AndroidManifest.xml:28:13-37
+649            android:permission="android.permission.BIND_JOB_SERVICE" >
+649-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/officepc/.gradle/caches/transforms-3/8b5465002a2c04e54cb04ba4f9da6fcf/transformed/jetified-transport-runtime-3.1.8/AndroidManifest.xml:29:13-69
+650        </service>
+651
+652        <receiver
+652-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/officepc/.gradle/caches/transforms-3/8b5465002a2c04e54cb04ba4f9da6fcf/transformed/jetified-transport-runtime-3.1.8/AndroidManifest.xml:32:9-34:40
+653            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver"
+653-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/officepc/.gradle/caches/transforms-3/8b5465002a2c04e54cb04ba4f9da6fcf/transformed/jetified-transport-runtime-3.1.8/AndroidManifest.xml:33:13-132
+654            android:exported="false" />
+654-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/officepc/.gradle/caches/transforms-3/8b5465002a2c04e54cb04ba4f9da6fcf/transformed/jetified-transport-runtime-3.1.8/AndroidManifest.xml:34:13-37
+655
+656        <activity
+656-->[io.agora.rtc:full-screen-sharing:4.2.6] /Users/officepc/.gradle/caches/transforms-3/e7d9660dde551ef9a0d4d2d5ed453fde/transformed/jetified-full-screen-sharing-4.2.6/AndroidManifest.xml:11:9-14:63
+657            android:name="io.agora.rtc2.extensions.MediaProjectionMgr$LocalScreenCaptureAssistantActivity"
+657-->[io.agora.rtc:full-screen-sharing:4.2.6] /Users/officepc/.gradle/caches/transforms-3/e7d9660dde551ef9a0d4d2d5ed453fde/transformed/jetified-full-screen-sharing-4.2.6/AndroidManifest.xml:11:19-89
+658            android:configChanges="screenSize|orientation"
+658-->[io.agora.rtc:full-screen-sharing:4.2.6] /Users/officepc/.gradle/caches/transforms-3/e7d9660dde551ef9a0d4d2d5ed453fde/transformed/jetified-full-screen-sharing-4.2.6/AndroidManifest.xml:12:13-59
+659            android:screenOrientation="fullUser"
+659-->[io.agora.rtc:full-screen-sharing:4.2.6] /Users/officepc/.gradle/caches/transforms-3/e7d9660dde551ef9a0d4d2d5ed453fde/transformed/jetified-full-screen-sharing-4.2.6/AndroidManifest.xml:13:13-49
+660            android:theme="@android:style/Theme.Translucent" />
+660-->[io.agora.rtc:full-screen-sharing:4.2.6] /Users/officepc/.gradle/caches/transforms-3/e7d9660dde551ef9a0d4d2d5ed453fde/transformed/jetified-full-screen-sharing-4.2.6/AndroidManifest.xml:14:13-61
+661
+662        <service
+662-->[io.agora.rtc:full-screen-sharing:4.2.6] /Users/officepc/.gradle/caches/transforms-3/e7d9660dde551ef9a0d4d2d5ed453fde/transformed/jetified-full-screen-sharing-4.2.6/AndroidManifest.xml:16:9-19:19
+663            android:name="io.agora.rtc2.extensions.MediaProjectionMgr$LocalScreenSharingService"
+663-->[io.agora.rtc:full-screen-sharing:4.2.6] /Users/officepc/.gradle/caches/transforms-3/e7d9660dde551ef9a0d4d2d5ed453fde/transformed/jetified-full-screen-sharing-4.2.6/AndroidManifest.xml:17:13-73
+664            android:foregroundServiceType="mediaProjection" >
+664-->[io.agora.rtc:full-screen-sharing:4.2.6] /Users/officepc/.gradle/caches/transforms-3/e7d9660dde551ef9a0d4d2d5ed453fde/transformed/jetified-full-screen-sharing-4.2.6/AndroidManifest.xml:18:13-60
+665        </service>
+666
+667        <receiver
+667-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/officepc/.gradle/caches/transforms-3/5fcf98c97ffa9abfd466b302dba359a2/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:34:9-52:20
+668            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+668-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/officepc/.gradle/caches/transforms-3/5fcf98c97ffa9abfd466b302dba359a2/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:35:13-76
+669            android:directBootAware="false"
+669-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/officepc/.gradle/caches/transforms-3/5fcf98c97ffa9abfd466b302dba359a2/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:36:13-44
+670            android:enabled="true"
+670-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/officepc/.gradle/caches/transforms-3/5fcf98c97ffa9abfd466b302dba359a2/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:37:13-35
+671            android:exported="true"
+671-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/officepc/.gradle/caches/transforms-3/5fcf98c97ffa9abfd466b302dba359a2/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:38:13-36
+672            android:permission="android.permission.DUMP" >
+672-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/officepc/.gradle/caches/transforms-3/5fcf98c97ffa9abfd466b302dba359a2/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:39:13-57
+673            <intent-filter>
+673-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/officepc/.gradle/caches/transforms-3/5fcf98c97ffa9abfd466b302dba359a2/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:40:13-42:29
+674                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+674-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/officepc/.gradle/caches/transforms-3/5fcf98c97ffa9abfd466b302dba359a2/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:41:17-91
+674-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/officepc/.gradle/caches/transforms-3/5fcf98c97ffa9abfd466b302dba359a2/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:41:25-88
+675            </intent-filter>
+676            <intent-filter>
+676-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/officepc/.gradle/caches/transforms-3/5fcf98c97ffa9abfd466b302dba359a2/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:43:13-45:29
+677                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+677-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/officepc/.gradle/caches/transforms-3/5fcf98c97ffa9abfd466b302dba359a2/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:44:17-85
+677-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/officepc/.gradle/caches/transforms-3/5fcf98c97ffa9abfd466b302dba359a2/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:44:25-82
+678            </intent-filter>
+679            <intent-filter>
+679-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/officepc/.gradle/caches/transforms-3/5fcf98c97ffa9abfd466b302dba359a2/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:46:13-48:29
+680                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+680-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/officepc/.gradle/caches/transforms-3/5fcf98c97ffa9abfd466b302dba359a2/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:47:17-88
+680-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/officepc/.gradle/caches/transforms-3/5fcf98c97ffa9abfd466b302dba359a2/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:47:25-85
+681            </intent-filter>
+682            <intent-filter>
+682-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/officepc/.gradle/caches/transforms-3/5fcf98c97ffa9abfd466b302dba359a2/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:49:13-51:29
+683                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+683-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/officepc/.gradle/caches/transforms-3/5fcf98c97ffa9abfd466b302dba359a2/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:50:17-95
+683-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/officepc/.gradle/caches/transforms-3/5fcf98c97ffa9abfd466b302dba359a2/transformed/jetified-profileinstaller-1.3.0/AndroidManifest.xml:50:25-92
+684            </intent-filter>
+685        </receiver>
+686
+687        <service
+687-->[androidx.room:room-runtime:2.2.5] /Users/officepc/.gradle/caches/transforms-3/21603a33fa55e8c97f934e399d63ba32/transformed/room-runtime-2.2.5/AndroidManifest.xml:25:9-28:40
+688            android:name="androidx.room.MultiInstanceInvalidationService"
+688-->[androidx.room:room-runtime:2.2.5] /Users/officepc/.gradle/caches/transforms-3/21603a33fa55e8c97f934e399d63ba32/transformed/room-runtime-2.2.5/AndroidManifest.xml:26:13-74
+689            android:directBootAware="true"
+689-->[androidx.room:room-runtime:2.2.5] /Users/officepc/.gradle/caches/transforms-3/21603a33fa55e8c97f934e399d63ba32/transformed/room-runtime-2.2.5/AndroidManifest.xml:27:13-43
+690            android:exported="false" />
+690-->[androidx.room:room-runtime:2.2.5] /Users/officepc/.gradle/caches/transforms-3/21603a33fa55e8c97f934e399d63ba32/transformed/room-runtime-2.2.5/AndroidManifest.xml:28:13-37
+691    </application>
+692
+693</manifest>

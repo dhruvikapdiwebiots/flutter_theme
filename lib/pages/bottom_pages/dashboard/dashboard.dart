@@ -7,6 +7,9 @@ import 'package:flutter_theme/controllers/fetch_contact_controller.dart';
 import 'package:flutter_theme/controllers/recent_chat_controller.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
+import 'package:scoped_model/scoped_model.dart';
+
+import '../../../models/data_model.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -55,141 +58,152 @@ class _DashboardState extends State<Dashboard>
 
     firebaseCtrl.statusDeleteAfter24Hours();
     firebaseCtrl.deleteForAllUsers();
-
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<RecentChatController>(
-        builder: (context, recentChat, child) {
-      return GetBuilder<DashboardController>(builder: (_) {
-        return Consumer<FetchContactController>(
-            builder: (context1, contactCtrl, child) {
-          return OverlaySupport.global(
-              child: AgoraToken(
-            scaffold: PickupLayout(
-              scaffold: StreamBuilder(
-                  stream: Connectivity().onConnectivityChanged,
-                  builder:
-                      (context, AsyncSnapshot<ConnectivityResult> snapshot) {
-                    return appCtrl.user != null
-                        ? StreamBuilder(
-                            stream: FirebaseFirestore.instance
-                                .collection(collectionName.users)
-                                .doc(appCtrl.user["id"])
-                                .snapshots(),
-                            builder: (context, snapShot) {
-                              if (snapShot.hasData) {
-                                if (snapShot.data!.exists) {
-                                  bool isWebLogin =
-                                      snapShot.data!.data()!["isWebLogin"] ??
-                                          false;
-                                  if (isWebLogin == true) {
-                                    log("appCtrl.isCallStream : ${appCtrl.isCallStream}");
-                                    if (appCtrl.isCallStream == false) {
-                                      appCtrl.isCallStream = true;
+    return ScopedModel<ContactModel>(
+        model: appCtrl.getModel()!,
+        child: ScopedModelDescendant<ContactModel>(
+            builder: (context, child, model) {
+          appCtrl.cachedModel = model;
+          return Consumer<RecentChatController>(
+              builder: (context, recentChat, child) {
+            return GetBuilder<DashboardController>(builder: (_) {
+              return Consumer<FetchContactController>(
+                  builder: (context1, contactCtrl, child) {
+                return OverlaySupport.global(
+                    child: AgoraToken(
+                  scaffold: PickupLayout(
+                    scaffold: StreamBuilder(
+                        stream: Connectivity().onConnectivityChanged,
+                        builder: (context,
+                            AsyncSnapshot<ConnectivityResult> snapshot) {
+                          return appCtrl.user != null
+                              ? StreamBuilder(
+                                  stream: FirebaseFirestore.instance
+                                      .collection(collectionName.users)
+                                      .doc(appCtrl.user["id"])
+                                      .snapshots(),
+                                  builder: (context, snapShot) {
+                                    if (snapShot.hasData) {
+                                      if (snapShot.data!.exists) {
+                                        bool isWebLogin = snapShot.data!
+                                                .data()!["isWebLogin"] ??
+                                            false;
+                                        if (isWebLogin == true) {
+                                          log("appCtrl.isCallStream : ${appCtrl.isCallStream}");
+                                          if (appCtrl.isCallStream == false) {
+                                            appCtrl.isCallStream = true;
 
-                                      FirebaseFirestore.instance
-                                          .collection(collectionName.users)
-                                          .doc(appCtrl.user["id"])
-                                          .collection(
-                                              collectionName.userContact)
-                                          .get()
-                                          .then((value) {
-                                        log("value.docs : ${value.docs.length}");
-                                        if (value.docs.isEmpty) {
-                                          FirebaseFirestore.instance
-                                              .collection(collectionName.users)
-                                              .doc(FirebaseAuth.instance
-                                                          .currentUser !=
-                                                      null
-                                                  ? FirebaseAuth
-                                                      .instance.currentUser!.uid
-                                                  : appCtrl.user["id"])
-                                              .collection(
-                                                  collectionName.userContact)
-                                              .add({
-                                            'contacts':
-                                                RegisterContactDetail.encode(
-                                                    contactCtrl
-                                                        .registerContactUser)
-                                          });
-                                          FirebaseFirestore.instance
-                                              .collection(collectionName.users)
-                                              .doc(FirebaseAuth.instance
-                                                          .currentUser !=
-                                                      null
-                                                  ? FirebaseAuth
-                                                      .instance.currentUser!.uid
-                                                  : appCtrl.user["id"])
-                                              .update({'isWebLogin': false});
-                                          appCtrl.isCallStream = false;
-                                        } else {
-                                          log("UPPPP");
-                                          FirebaseFirestore.instance
-                                              .collection(collectionName.users)
-                                              .doc(FirebaseAuth.instance
-                                                          .currentUser !=
-                                                      null
-                                                  ? FirebaseAuth
-                                                      .instance.currentUser!.uid
-                                                  : appCtrl.user["id"])
-                                              .collection(
-                                                  collectionName.userContact)
-                                              .doc(value.docs[0].id)
-                                              .update({
-                                            'contacts':
-                                                RegisterContactDetail.encode(
-                                                    contactCtrl
-                                                        .registerContactUser)
-                                          });
-                                          FirebaseFirestore.instance
-                                              .collection(collectionName.users)
-                                              .doc(FirebaseAuth.instance
-                                                          .currentUser !=
-                                                      null
-                                                  ? FirebaseAuth
-                                                      .instance.currentUser!.uid
-                                                  : appCtrl.user["id"])
-                                              .update({'isWebLogin': false});
+                                            FirebaseFirestore.instance
+                                                .collection(
+                                                    collectionName.users)
+                                                .doc(appCtrl.user["id"])
+                                                .collection(
+                                                    collectionName.userContact)
+                                                .get()
+                                                .then((value) {
+                                              log("value.docs : ${value.docs.length}");
+                                              if (value.docs.isEmpty) {
+                                                FirebaseFirestore.instance
+                                                    .collection(
+                                                        collectionName.users)
+                                                    .doc(FirebaseAuth.instance
+                                                                .currentUser !=
+                                                            null
+                                                        ? FirebaseAuth.instance
+                                                            .currentUser!.uid
+                                                        : appCtrl.user["id"])
+                                                    .collection(collectionName
+                                                        .userContact)
+                                                    .add({
+                                                  'contacts': RegisterContactDetail
+                                                      .encode(contactCtrl
+                                                          .registerContactUser)
+                                                });
+                                                FirebaseFirestore.instance
+                                                    .collection(
+                                                        collectionName.users)
+                                                    .doc(FirebaseAuth.instance
+                                                                .currentUser !=
+                                                            null
+                                                        ? FirebaseAuth.instance
+                                                            .currentUser!.uid
+                                                        : appCtrl.user["id"])
+                                                    .update(
+                                                        {'isWebLogin': false});
+                                                appCtrl.isCallStream = false;
+                                              } else {
+                                                log("UPPPP");
+                                                FirebaseFirestore.instance
+                                                    .collection(
+                                                        collectionName.users)
+                                                    .doc(FirebaseAuth.instance
+                                                                .currentUser !=
+                                                            null
+                                                        ? FirebaseAuth.instance
+                                                            .currentUser!.uid
+                                                        : appCtrl.user["id"])
+                                                    .collection(collectionName
+                                                        .userContact)
+                                                    .doc(value.docs[0].id)
+                                                    .update({
+                                                  'contacts': RegisterContactDetail
+                                                      .encode(contactCtrl
+                                                          .registerContactUser)
+                                                });
+                                                FirebaseFirestore.instance
+                                                    .collection(
+                                                        collectionName.users)
+                                                    .doc(FirebaseAuth.instance
+                                                                .currentUser !=
+                                                            null
+                                                        ? FirebaseAuth.instance
+                                                            .currentUser!.uid
+                                                        : appCtrl.user["id"])
+                                                    .update(
+                                                        {'isWebLogin': false});
+                                              }
+                                            });
+                                          }
                                         }
-                                      });
+                                      }
                                     }
-                                  }
-                                }
-                              }
-                              return WillPopScope(
-                                onWillPop: () async {
-                                  if (dashboardCtrl.selectedIndex != 0) {
-                                    dashboardCtrl.onChange(0);
-                                    dashboardCtrl.controller!.index = 0;
-                                    dashboardCtrl.update();
-                                    return false;
-                                  } else if (dashboardCtrl.isSearch == true) {
-                                    dashboardCtrl.isSearch = false;
-                                    dashboardCtrl.userText.text = "";
+                                    return WillPopScope(
+                                      onWillPop: () async {
+                                        if (dashboardCtrl.selectedIndex != 0) {
+                                          dashboardCtrl.onChange(0);
+                                          dashboardCtrl.controller!.index = 0;
+                                          dashboardCtrl.update();
+                                          return false;
+                                        } else if (dashboardCtrl.isSearch ==
+                                            true) {
+                                          dashboardCtrl.isSearch = false;
+                                          dashboardCtrl.userText.text = "";
 
-                                    dashboardCtrl.update();
-                                    return false;
-                                  } else {
-                                    SystemNavigator.pop();
-                                    return true;
-                                  }
-                                },
-                                child: dashboardCtrl.bottomList.isNotEmpty
-                                    ? DashboardBody(
-                                        snapshot: snapshot,
-                                        pref: dashboardCtrl.pref,
-                                      )
-                                    : Container(),
-                              );
-                            })
-                        : Container();
-                  }),
-            ),
-          ));
-        });
-      });
-    });
+                                          dashboardCtrl.update();
+                                          return false;
+                                        } else {
+                                          SystemNavigator.pop();
+                                          return true;
+                                        }
+                                      },
+                                      child: dashboardCtrl.bottomList.isNotEmpty
+                                          ? DashboardBody(
+                                              snapshot: snapshot,
+                                              pref: dashboardCtrl.pref,
+                                            )
+                                          : Container(),
+                                    );
+                                  })
+                              : Container();
+                        }),
+                  ),
+                ));
+              });
+            });
+          });
+        }));
   }
 }
