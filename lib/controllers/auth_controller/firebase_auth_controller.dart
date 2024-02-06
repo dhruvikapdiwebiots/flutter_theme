@@ -1,46 +1,15 @@
 import 'dart:developer';
 
 import 'package:flutter_theme/config.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+
 
 class FirebaseAuthController extends GetxController {
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+
   var firebaseAuth = FirebaseAuth.instance;
   bool isLoading = false;
 
   var auth = FirebaseAuth.instance;
 
-  //sign in
-  Future<int> handleSignIn(String type) async {
-    switch (type) {
-      case "G":
-        try {
-          GoogleSignInAccount? googleSignInAccount =
-              await _googleSignIn.signIn();
-          GoogleSignInAuthentication googleAuth =
-              await googleSignInAccount!.authentication;
-          final googleAuthCred = GoogleAuthProvider.credential(
-              idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
-          User? user =
-              (await firebaseAuth.signInWithCredential(googleAuthCred)).user;
-          await userRegister(user!);
-          isLoading = false;
-          dynamic resultData = await getUserData(user);
-          if (resultData["phone"] == "") {
-            Get.toNamed(routeName.editProfile,
-                arguments: {"resultData": resultData, "isPhoneLogin": false});
-          } else {
-            homeNavigation(resultData);
-          }
-
-          return 1;
-        } catch (error) {
-          isLoading = false;
-          return 0;
-        }
-    }
-    return 0;
-  }
 
   // SIGN IN WITH ANONYMOUS
   Future<void> signInAnonymously() async {

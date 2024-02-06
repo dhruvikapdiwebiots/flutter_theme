@@ -108,7 +108,7 @@ class _MyMessageViewerState extends State<MyMessageViewer> {
           const VSpace(Sizes.s10),
           Column(children: [
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Text("Read by",
+              Text(fonts.readBy.tr,
                   style: AppCss.poppinsMedium14
                       .textColor(appCtrl.appTheme.primary)),
               Icon(Icons.done_all, color: appCtrl.appTheme.primary)

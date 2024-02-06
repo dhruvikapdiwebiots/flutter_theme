@@ -236,4 +236,12 @@ final dynamic ar = {
   "termsCondition": "البنود و الظروف",
   "termsConditions":
   "بالنقر فوق 'طلب كلمة مرور لمرة واحدة' للتحقق، فإنك توافق على",
+  "youContactSync": "لديك جهات اتصال @len للمزامنة",
+  "tap": "انقر لإضافة تحديث الحالة",
+  "sponsorStatus": "حالة الراعي",
+  "tomorrow": "غداً",
+  "removeWallpaper": "إزالة ورق الحائط",
+  "setDefaultBackground": "تعيين الخلفية الافتراضية",
+  "personalInfo": "معلومات شخصية",
+  "readBy": "اقرأ بواسطة",
 };

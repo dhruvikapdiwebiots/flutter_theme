@@ -236,4 +236,12 @@ final dynamic chinese = {
   "termsCondition": "条款及条件",
   "termsConditions":
       "单击“请求 OTP”进行验证，即表示您同意",
+  "youContactSync": "You have @len contacts for sync",
+  "tap": "您有 @len 联系人用于同步",
+  "sponsorStatus": "点击添加状态更新",
+  "tomorrow": "赞助商状态",
+  "removeWallpaper": "明天",
+  "setDefaultBackground": "删除壁纸",
+  "personalInfo": "设置默认背景",
+  "readBy": "个人信息",
 };

@@ -37,12 +37,7 @@ class EmojiPickerWidget extends StatelessWidget {
             child: EmojiPicker(
               textEditingController: textEditingController,
               onEmojiSelected: (category, emoji) => onSelected(emoji.emoji),
-              config: Config(
-                columns: 7,
-                emojiSizeMax: 32 * ((!kIsWeb && Platform.isIOS) ? 1.30 : 1.0),
-                bgColor: Colors.white,
-                recentsLimit: 28,
-              ),
+
             ),
           ),
         ],

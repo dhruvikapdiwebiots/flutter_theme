@@ -236,4 +236,12 @@ final dynamic en = {
   "termsCondition": "Terms & Conditions",
   "termsConditions":
       "By click on 'Request OTP' for verification you agree with the",
+  "youContactSync": "You have @len contacts for sync",
+  "tap": "Tap to add status update",
+  "sponsorStatus": "Sponsor Status",
+  "tomorrow": "Tomorrow",
+  "removeWallpaper": "Remove wallpaper",
+  "setDefaultBackground": "Set Default Background",
+  "personalInfo": "Personal Info",
+  "readBy": "Read by",
 };

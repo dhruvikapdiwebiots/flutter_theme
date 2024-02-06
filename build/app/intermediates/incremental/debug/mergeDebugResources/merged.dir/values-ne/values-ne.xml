@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
-    <string msgid="5976598919945601918" name="abc_action_bar_home_description">"गृह पृष्ठमा जानुहोस्"</string>
+    <string msgid="5976598919945601918" name="abc_action_bar_home_description">"होम पेजमा जानुहोस्"</string>
     <string msgid="8388173803310557296" name="abc_action_bar_up_description">"माथि नेभिगेट गर्नुहोस्"</string>
     <string msgid="3937310113216875497" name="abc_action_menu_overflow_description">"थप विकल्पहरू"</string>
     <string msgid="4692188335987374352" name="abc_action_mode_done">"सम्पन्न भयो"</string>
@@ -81,6 +81,9 @@
     <string name="native_body">मुख्य भाग</string>
     <string name="native_headline">शीर्षक</string>
     <string name="native_media_view">मिडिया दृश्य</string>
+    <string name="notifications_permission_confirm">अनुमति दिनुहोस्</string>
+    <string name="notifications_permission_decline">अनुमति नदिनुहोस्</string>
+    <string name="notifications_permission_title">यो एपलाई तपाईंलाई सूचनाहरू पठाउने अनुमति दिने हो?</string>
     <string name="offline_notification_text">विज्ञापन खोल्न ट्याप गर्नुहोस्</string>
     <string name="offline_notification_title">आफूले अफलाइन हुँदा सुरक्षित गरेको विज्ञापन हेर्नुहोस्</string>
     <string name="offline_opt_in_confirm">ठिक छ</string>

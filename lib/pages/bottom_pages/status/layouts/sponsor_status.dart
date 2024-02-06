@@ -31,7 +31,7 @@ class SponsorStatus extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            Text("Sponsor Status",
+                            Text(fonts.sponsorStatus.tr,
                                 style: AppCss
                                     .poppinsblack16
                                     .textColor(appCtrl

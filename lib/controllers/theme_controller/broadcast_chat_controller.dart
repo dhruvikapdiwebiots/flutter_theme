@@ -12,7 +12,7 @@ import 'package:flutter_theme/pages/theme_pages/broadcast_chat/layouts/broad_cas
 import 'package:flutter_theme/pages/theme_pages/broadcast_chat/layouts/broadcast_file_list.dart';
 import 'package:flutter_theme/widgets/reaction_pop_up/emoji_picker_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+
 
 import '../../pages/theme_pages/broadcast_chat/layouts/broad_cast_clear_dialog.dart';
 
@@ -30,7 +30,7 @@ class BroadcastChatController extends GetxController {
       blockBy;
   dynamic message, userData, broadData;
   List<File> selectedImages = [];
-  final GlobalKey<SfPdfViewerState> pdfViewerKey = GlobalKey();
+
   List pData = [];
   List selectedIndexId = [];
   List newpData = [], userList = [], searchUserList = [];

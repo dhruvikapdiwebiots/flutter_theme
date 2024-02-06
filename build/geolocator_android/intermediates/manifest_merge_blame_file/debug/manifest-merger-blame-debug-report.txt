@@ -3,20 +3,20 @@
 3    package="com.baseflow.geolocator" >
 4
 5    <uses-sdk android:minSdkVersion="16" />
-5-->/Users/officepc/.pub-cache/hosted/pub.dev/geolocator_android-4.3.1/android/src/main/AndroidManifest.xml
+5-->/Users/dhruvi/.pub-cache/hosted/pub.dev/geolocator_android-4.3.1/android/src/main/AndroidManifest.xml
 6
 7    <application>
-7-->/Users/officepc/.pub-cache/hosted/pub.dev/geolocator_android-4.3.1/android/src/main/AndroidManifest.xml:4:5-10:19
+7-->/Users/dhruvi/.pub-cache/hosted/pub.dev/geolocator_android-4.3.1/android/src/main/AndroidManifest.xml:4:5-10:19
 8        <service
-8-->/Users/officepc/.pub-cache/hosted/pub.dev/geolocator_android-4.3.1/android/src/main/AndroidManifest.xml:5:9-9:60
+8-->/Users/dhruvi/.pub-cache/hosted/pub.dev/geolocator_android-4.3.1/android/src/main/AndroidManifest.xml:5:9-9:60
 9            android:name="com.baseflow.geolocator.GeolocatorLocationService"
-9-->/Users/officepc/.pub-cache/hosted/pub.dev/geolocator_android-4.3.1/android/src/main/AndroidManifest.xml:9:17-58
+9-->/Users/dhruvi/.pub-cache/hosted/pub.dev/geolocator_android-4.3.1/android/src/main/AndroidManifest.xml:9:17-58
 10            android:enabled="true"
-10-->/Users/officepc/.pub-cache/hosted/pub.dev/geolocator_android-4.3.1/android/src/main/AndroidManifest.xml:6:17-39
+10-->/Users/dhruvi/.pub-cache/hosted/pub.dev/geolocator_android-4.3.1/android/src/main/AndroidManifest.xml:6:17-39
 11            android:exported="false"
-11-->/Users/officepc/.pub-cache/hosted/pub.dev/geolocator_android-4.3.1/android/src/main/AndroidManifest.xml:7:17-41
+11-->/Users/dhruvi/.pub-cache/hosted/pub.dev/geolocator_android-4.3.1/android/src/main/AndroidManifest.xml:7:17-41
 12            android:foregroundServiceType="location" />
-12-->/Users/officepc/.pub-cache/hosted/pub.dev/geolocator_android-4.3.1/android/src/main/AndroidManifest.xml:8:17-57
+12-->/Users/dhruvi/.pub-cache/hosted/pub.dev/geolocator_android-4.3.1/android/src/main/AndroidManifest.xml:8:17-57
 13    </application>
 14
 15</manifest>

@@ -27,7 +27,7 @@ class CurrentUserEmptyStatus extends StatelessWidget {
                   onTap: onTap,
                   horizontalTitleGap: 10,
                   title: Text((snapshot.data!)["name"],style: AppCss.poppinsBold14.textColor(appCtrl.appTheme.blackColor),),
-                  subtitle: Text("Tap to add status update",style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.txtColor)),
+                  subtitle: Text(fonts.tap.tr,style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.txtColor)),
                   contentPadding:
                   const EdgeInsets.symmetric(horizontal: Insets.i12),
 

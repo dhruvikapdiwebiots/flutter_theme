@@ -42,7 +42,7 @@ class _BackgroundListState extends State<BackgroundList> {
               children: [
                 SvgPicture.asset(svgAssets.gallery),
                 const HSpace(Sizes.s10),
-                Text("Set Default Background",
+                Text(fonts.setDefaultBackground.tr,
                         style: AppCss.poppinsSemiBold16
                             .textColor(appCtrl.appTheme.blackColor))
                     .inkWell(onTap: () async {
@@ -94,7 +94,7 @@ class _BackgroundListState extends State<BackgroundList> {
               children: [
                 Icon(Icons.delete_forever,color: appCtrl.appTheme.redColor,),
                 const HSpace(Sizes.s10),
-                Text("Remove wallpaper",
+                Text(fonts.removeWallpaper.tr,
                     style: AppCss.poppinsSemiBold16
                         .textColor(appCtrl.appTheme.redColor))
                     .inkWell(onTap: () async {

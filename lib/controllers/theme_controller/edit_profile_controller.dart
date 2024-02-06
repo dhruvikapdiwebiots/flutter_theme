@@ -202,7 +202,7 @@ class EditProfileController extends GetxController {
             .then((value) {
           if (value.docs.isNotEmpty) {
             ScaffoldMessenger.of(Get.context!).showSnackBar(
-                const SnackBar(content: Text("Email Already Exist")));
+                 SnackBar(content: Text(fonts.emailAlreadyExist.tr)));
 
             isLoading = false;
             update();

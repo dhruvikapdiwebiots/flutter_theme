@@ -21,7 +21,7 @@
     <string msgid="7208076849092622260" name="abc_search_hint">"ಹುಡುಕಿ…"</string>
     <string msgid="3741173234950517107" name="abc_searchview_description_clear">"ಪ್ರಶ್ನೆಯನ್ನು ತೆರವುಗೊಳಿಸಿ"</string>
     <string msgid="693312494995508443" name="abc_searchview_description_query">"ಪ್ರಶ್ನೆಯನ್ನು ಹುಡುಕಿ"</string>
-    <string msgid="3417662926640357176" name="abc_searchview_description_search">"Search"</string>
+    <string msgid="3417662926640357176" name="abc_searchview_description_search">"ಹುಡುಕಿ"</string>
     <string msgid="1486535517437947103" name="abc_searchview_description_submit">"ಪ್ರಶ್ನೆಯನ್ನು ಸಲ್ಲಿಸಿ"</string>
     <string msgid="2293578557972875415" name="abc_searchview_description_voice">"ಧ್ವನಿ ಹುಡುಕಾಟ"</string>
     <string msgid="8875138169939072951" name="abc_shareactionprovider_share_with">"ಇವರೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಿ"</string>
@@ -81,6 +81,9 @@
     <string name="native_body">ಮುಖ್ಯ ಭಾಗ</string>
     <string name="native_headline">ಶೀರ್ಷಿಕೆ</string>
     <string name="native_media_view">ಮಾಧ್ಯಮ ವೀಕ್ಷಣೆ</string>
+    <string name="notifications_permission_confirm">ಅನುಮತಿಸಿ</string>
+    <string name="notifications_permission_decline">ಅನುಮತಿಸಬೇಡಿ</string>
+    <string name="notifications_permission_title">ನಿಮಗೆ ಅಧಿಸೂಚನೆಗಳನ್ನು ಕಳುಹಿಸಲು ಆ್ಯಪ್‌ಗೆ ಅನುಮತಿಸುವುದೇ?</string>
     <string name="offline_notification_text">ಜಾಹೀರಾತನ್ನು ತೆರೆಯಲು ಟ್ಯಾಪ್ ಮಾಡಿ</string>
     <string name="offline_notification_title">ನೀವು ಆಫ್‌ಲೈನ್‌ನಲ್ಲಿದ್ದಾಗ ನೀವು ಉಳಿಸಿದ ಜಾಹೀರಾತನ್ನು ವೀಕ್ಷಿಸಿ</string>
     <string name="offline_opt_in_confirm">ಸರಿ</string>
@@ -97,7 +100,7 @@
     <string name="s5">ಕ್ಯಾಲೆಂಡರ್ ಈವೆಂಟ್ ರಚಿಸಿ</string>
     <string name="s6">ಕ್ಯಾಲೆಂಡರ್ ಈವೆಂಟ್ ರಚಿಸಲು ಜಾಹೀರಾತಿಗೆ ಅನುಮತಿಸುವುದೇ?</string>
     <string name="s7">ಪರೀಕ್ಷಾ ಜಾಹೀರಾತು</string>
-    <string msgid="6264217191555673260" name="search_menu_title">"Search"</string>
+    <string msgid="6264217191555673260" name="search_menu_title">"ಹುಡುಕಿ"</string>
     <string msgid="6034072145387511457" name="skip_to_next_item_button_content_description">"ಮುಂದಿನ ಐಟಂಗೆ ಸ್ಕಿಪ್ ಮಾಡಿ"</string>
     <string msgid="4352480799561670760" name="skip_to_previous_item_button_content_description">"ಹಿಂದಿನ ಐಟಂಗೆ ಸ್ಕಿಪ್ ಮಾಡಿ"</string>
     <string msgid="6277540029070332960" name="status_bar_notification_info_overflow">"999+"</string>

@@ -3,7 +3,11 @@ import 'dart:developer';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:audioplayers/audioplayers.dart' as audio_players;
 import 'package:audioplayers/audioplayers.dart';
-import 'package:wakelock/wakelock.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
+
 import '../../config.dart';
 
 class VideoCallController extends GetxController {
@@ -204,7 +208,7 @@ class VideoCallController extends GetxController {
               }, SetOptions(merge: true));
             }
           }
-          Wakelock.enable();
+          WakelockPlus.enable();
           //flutterLocalNotificationsPlugin!.cancelAll();
           update();
           Get.forceAppUpdate();
@@ -283,7 +287,7 @@ class VideoCallController extends GetxController {
               }, SetOptions(merge: true));
             }
           }
-          Wakelock.enable();
+          WakelockPlus.enable();
           update();
           Get.forceAppUpdate();
         },
@@ -393,7 +397,7 @@ class VideoCallController extends GetxController {
               }, SetOptions(merge: true));
             }
           }
-          Wakelock.disable();
+          WakelockPlus.disable();
           Get.back();
           update();
         },
@@ -601,7 +605,7 @@ class VideoCallController extends GetxController {
     _dispose();
 
     log("endCall");
-    Wakelock.disable();
+    WakelockPlus.disable();
     Get.back();
   }
 }

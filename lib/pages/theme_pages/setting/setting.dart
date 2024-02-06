@@ -46,7 +46,7 @@ class Setting extends StatelessWidget {
                                                 .appTheme
                                                 .blackColor)),
                                         const VSpace(Sizes.s3),
-                                        Text("Personal Info",
+                                        Text(fonts.personalInfo.tr,
                                             style: AppCss.poppinsLight14
                                                 .textColor(appCtrl
                                                 .appTheme.txtColor))

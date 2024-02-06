@@ -81,12 +81,15 @@
     <string name="native_body">內文</string>
     <string name="native_headline">標題</string>
     <string name="native_media_view">媒體檢視</string>
+    <string name="notifications_permission_confirm">允許</string>
+    <string name="notifications_permission_decline">不允許</string>
+    <string name="notifications_permission_title">允許應用程式傳送通知給你嗎？</string>
     <string name="offline_notification_text">輕觸即可開啟廣告</string>
     <string name="offline_notification_title">查看你在離線時儲存的廣告</string>
     <string name="offline_opt_in_confirm">確定</string>
     <string name="offline_opt_in_confirmation">你會在重新連上網路後收到含有該連結的通知。</string>
     <string name="offline_opt_in_decline">不用了，謝謝</string>
-    <string name="offline_opt_in_message">我們會傳送含有廣告客戶網站連結的通知給你。</string>
+    <string name="offline_opt_in_message">我們會傳送含有廣告主網站連結的通知給你。</string>
     <string name="offline_opt_in_title">系統會在重新連上網路後開啟廣告。</string>
     <string msgid="3510124037191104584" name="pause_button_content_description">"暫停"</string>
     <string msgid="963503759453979404" name="play_button_content_description">"播放"</string>

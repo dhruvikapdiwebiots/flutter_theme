@@ -2,7 +2,7 @@
 2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
 3    package="dev.fluttercommunity.plus.device_info" >
 4
-5    <uses-sdk android:minSdkVersion="16" />
-5-->/Users/officepc/.pub-cache/hosted/pub.dev/device_info_plus-8.2.2/android/src/main/AndroidManifest.xml
+5    <uses-sdk android:minSdkVersion="19" />
+5-->/Users/dhruvi/.pub-cache/hosted/pub.dev/device_info_plus-9.1.2/android/src/main/AndroidManifest.xml
 6
 7</manifest>

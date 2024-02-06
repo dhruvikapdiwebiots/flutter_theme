@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:flutter_theme/controllers/fetch_contact_controller.dart';
 import 'package:flutter_theme/controllers/theme_controller/add_fingerprint_controller.dart';
-import 'package:launch_review/launch_review.dart';
+
 import 'package:localstorage/localstorage.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -94,9 +94,9 @@ class SettingController extends GetxController {
       }
       Get.forceAppUpdate();
     } else if (index == 6) {
-      LaunchReview.launch(
+    /*  LaunchReview.launch(
           androidAppId: appCtrl.userAppSettingsVal!.rateApp,
-          iOSAppId: " ${appCtrl.userAppSettingsVal!.rateAppIos}");
+          iOSAppId: " ${appCtrl.userAppSettingsVal!.rateAppIos}");*/
     } else if (index == 7) {
       await deleteAppDir();
       await deleteCacheDir();
@@ -249,7 +249,7 @@ class SettingController extends GetxController {
                   children: [
 
                     const VSpace(Sizes.s20),
-                    Text("You have $len contacts for sync",
+                    Text(fonts.youContactSync(len),
                         style: AppCss.poppinsSemiBold16
                             .textColor(appCtrl.appTheme.txt)),
                     const VSpace(Sizes.s15),

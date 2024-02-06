@@ -236,4 +236,12 @@ final dynamic bengali = {
   "termsCondition": "শর্তাবলী",
   "termsConditions":
       "যাচাইকরণের জন্য 'অনুরোধ OTP'-এ ক্লিক করে আপনি এর সাথে সম্মত হন",
+  "youContactSync": "সিঙ্ক করার জন্য আপনার কাছে @len পরিচিতি আছে",
+  "tap": "স্ট্যাটাস আপডেট যোগ করতে আলতো চাপুন",
+  "sponsorStatus": "স্পন্সর স্ট্যাটাস",
+  "tomorrow": "কাল",
+  "removeWallpaper": "ওয়ালপেপার সরান",
+  "setDefaultBackground": "ডিফল্ট ব্যাকগ্রাউন্ড সেট করুন",
+  "personalInfo": "ব্যাক্তিগত তথ্য",
+  "readBy": "দ্বারা পড়া",
 };

@@ -40,7 +40,7 @@ class CallIcon extends StatelessWidget {
               DateTime.fromMillisecondsSinceEpoch(int.parse(snapshot!
                   .data!.docs[index!]
                   .data()["timestamp"]
-                  .toString()))) ?  Text("Today, ${DateFormat('HH:mm a').format(
+                  .toString()))) ?  Text("${fonts.today.tr}, ${DateFormat('HH:mm a').format(
               DateTime.fromMillisecondsSinceEpoch(int.parse(snapshot!
                   .data!.docs[index!]
                   .data()["timestamp"]
@@ -50,7 +50,7 @@ class CallIcon extends StatelessWidget {
           calculateDifference(DateTime.fromMillisecondsSinceEpoch(int.parse(snapshot!
               .data!.docs[index!]
               .data()["timestamp"]
-              .toString())))  == -1 ? Text("Yesterday, ${DateFormat('HH:mm a').format(
+              .toString())))  == -1 ? Text("${fonts.yesterday.tr}, ${DateFormat('HH:mm a').format(
               DateTime.fromMillisecondsSinceEpoch(int.parse(snapshot!
                   .data!.docs[index!]
                   .data()["timestamp"]

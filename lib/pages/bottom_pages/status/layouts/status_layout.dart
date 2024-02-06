@@ -76,7 +76,7 @@ class _StatusLayoutState extends State<StatusLayout> {
           .inkWell(onTap: () => Get.toNamed(routeName.myStatus)),
       title: Text((widget.snapshot!.data!).docs[0]['username'],
           style: AppCss.poppinsBold14.textColor(appCtrl.appTheme.blackColor)),
-      subtitle: Text("Tap to add status update",
+      subtitle: Text(fonts.tap.tr,
           style: AppCss.poppinsMedium12.textColor(appCtrl.appTheme.txtColor)),
       leading: DottedBorder(
         color: appCtrl.appTheme.primary,

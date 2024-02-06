@@ -4,7 +4,11 @@ import 'dart:developer';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:audioplayers/audioplayers.dart' as audio_players;
 import 'package:audioplayers/audioplayers.dart';
-import 'package:wakelock/wakelock.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
+
 import '../../config.dart';
 
 class AudioCallController extends GetxController {
@@ -169,7 +173,7 @@ class AudioCallController extends GetxController {
               'callerName': call!.callerName,
             }, SetOptions(merge: true));
           }
-          Wakelock.enable();
+          WakelockPlus.enable();
           //flutterLocalNotificationsPlugin!.cancelAll();
           update();
           Get.forceAppUpdate();
@@ -213,7 +217,7 @@ class AudioCallController extends GetxController {
               "audioCallReceived": FieldValue.increment(1),
             }, SetOptions(merge: true));
           }
-          Wakelock.enable();
+          WakelockPlus.enable();
           update();
           Get.forceAppUpdate();
         },
@@ -278,7 +282,7 @@ class AudioCallController extends GetxController {
               'ended': DateTime.now(),
             }, SetOptions(merge: true));
           }
-          Wakelock.disable();
+          WakelockPlus.disable();
           Get.back();
           update();
         },
@@ -443,7 +447,7 @@ class AudioCallController extends GetxController {
     }
     update();
     log("endCall");
-    Wakelock.disable();
+    WakelockPlus.disable();
     Get.back();
   }
 

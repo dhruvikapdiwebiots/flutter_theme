@@ -249,10 +249,10 @@ class _StatusScreenViewState extends State<StatusScreenView> {
                                           int.parse(status!
                                               .photoUrl![lastPosition].timestamp
                                               .toString())))
-                              ? Text("Today ${DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(int.parse(status!.photoUrl![lastPosition].timestamp.toString())))}",
+                              ? Text("${fonts.today.tr}, ${DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(int.parse(status!.photoUrl![lastPosition].timestamp.toString())))}",
                                   style: AppCss.poppinsMedium12.textColor(
                                       const Color.fromRGBO(255, 255, 255, 0.65)))
-                              : Text("Tomorrow ${DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(int.parse(status!.photoUrl![lastPosition].timestamp.toString())))}",
+                              : Text("${fonts.tomorrow.tr} ${DateFormat('HH:mm a').format(DateTime.fromMillisecondsSinceEpoch(int.parse(status!.photoUrl![lastPosition].timestamp.toString())))}",
                                   style: AppCss.poppinsMedium12
                                       .textColor(const Color.fromRGBO(255, 255, 255, 0.65))),
                         ],

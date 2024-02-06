@@ -6,7 +6,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
-import 'package:flutter_native_image/flutter_native_image.dart';
+
 import 'package:flutter_theme/config.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -314,15 +314,15 @@ class StatusController extends GetxController {
           ],
         );
         if (croppedFile != null) {
-          File compressedFile = await FlutterNativeImage.compressImage(
+          /*File compressedFile = await FlutterNativeImage.compressImage(
               croppedFile.path,
                percentage: 20
               );
-          update();
+          update();*/
 
-          log("image : ${compressedFile.lengthSync()}");
+          log("image : ${croppedFile.path}");
 
-          image = File(compressedFile.path);
+          image = File(croppedFile.path);
           if (image!.lengthSync() / 1000000 >
               appCtrl.usageControlsVal!.maxFileSize!) {
             image = null;
@@ -387,15 +387,15 @@ class StatusController extends GetxController {
           appCtrl.update();
           Get.forceAppUpdate();
           if (croppedFile != null) {
-            File compressedFile = await FlutterNativeImage.compressImage(
+          /*  File compressedFile = await FlutterNativeImage.compressImage(
               croppedFile.path,
                percentage: 20
             );
             update();
+*/
+  //          log("image : ${compressedFile.lengthSync()}");
 
-            log("image : ${compressedFile.lengthSync()}");
-
-            image = File(compressedFile.path);
+            image = File(croppedFile.path);
             if (image!.lengthSync() / 1000000 >
                 appCtrl.usageControlsVal!.maxFileSize!) {
               image = null;

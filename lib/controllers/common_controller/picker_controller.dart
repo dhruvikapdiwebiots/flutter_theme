@@ -2,7 +2,8 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dartx/dartx_io.dart';
-import 'package:flutter_native_image/flutter_native_image.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+
 import 'package:flutter_theme/config.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:light_compressor/light_compressor.dart' as light;
@@ -39,16 +40,15 @@ class PickerController extends GetxController {
         ],
       );
       if (croppedFile != null) {
-        File compressedFile = await FlutterNativeImage.compressImage(
-            croppedFile.path,
-             percentage: 20
-            );
-        update();
+        var result = await FlutterImageCompress.compressWithFile(
+          croppedFile.path,
+          quality: 94,
+        );
 
-        log("image : ${compressedFile.lengthSync()}");
+        log("image : ${result}");
 
-        image = File(compressedFile.path);
-        if (image!.lengthSync() / 1000000 >
+        image = File(croppedFile.path);
+        if (result!.length / 1000000 >
             appCtrl.usageControlsVal!.maxFileSize!) {
           image = null;
           snackBar(
@@ -212,14 +212,8 @@ class PickerController extends GetxController {
                           video = File(response.destinationPath);
                         }
                       } else {
-                        File compressedFile =
-                        await FlutterNativeImage.compressImage(videoFile.path,
-                             percentage: 20);
-
-                        log("image : ${compressedFile.lengthSync()}");
-
-                        video = File(compressedFile.path);
-                        if (video.lengthSync() / 1000000 > appCtrl.usageControlsVal!.maxFileSize!) {
+                        image = File(videoFile.path);
+                        if (image!.lengthSync() / 1000000 > appCtrl.usageControlsVal!.maxFileSize!) {
                           video = null;
                           snackBar(
                               "Image Should be less than ${video!.lengthSync() /
@@ -241,17 +235,8 @@ class PickerController extends GetxController {
                       File? videoFile =  element.value;
                       singleChatCtrl.isLoading = true;
                       singleChatCtrl.update();
-                      File compressedFile =
-                      await FlutterNativeImage.compressImage(
-                          videoFile.path,
-                           percentage: 20
-                          );
-
-                      log("image : ${compressedFile.lengthSync()}");
-                      log("MAX SIZE IMAGE ${appCtrl.usageControlsVal!.maxFileSize!}");
-
-                      video = File(compressedFile.path);
-                      if (video!.lengthSync() / 1000000 >
+                      video = File(videoFile.path);
+                      if (image!.lengthSync() / 1000000 >
                           appCtrl.usageControlsVal!.maxFileSize!) {
                         video = null;
                         singleChatCtrl.isLoading = false;
@@ -296,25 +281,24 @@ class PickerController extends GetxController {
                           video = File(response.destinationPath);
                         }
                       } else {
-                        File compressedFile =
-                        await FlutterNativeImage.compressImage(videoFile!.path,
-                             percentage: 20
-                            );
 
-                        log("image : ${compressedFile.lengthSync()}");
-
-                        video = File(compressedFile.path);
-                        if (video.lengthSync() / 1000000 > appCtrl.usageControlsVal!.maxFileSize!) {
+                        image = File(videoFile.path);
+                        if (image!.lengthSync() / 1000000 > appCtrl.usageControlsVal!.maxFileSize!) {
                           video = null;
                           snackBar(
-                              "Image Should be less than ${video!.lengthSync() /
+                              "Image Should be less than ${image!.lengthSync() /
                                   1000000 > appCtrl.usageControlsVal!.maxFileSize!}");
+                          broadcastCtrl.uploadMultipleFile(image!,element.value.name.contains("mp4") ? MessageType.video : MessageType.image);
+                          selectedImages = [];
+                          update();
+                        }else{
+
+                          selectedImages = [];
+                          update();
                         }
                       }
 
-                      broadcastCtrl.uploadMultipleFile(video,element.value.name.contains("mp4") ? MessageType.video : MessageType.image);
-                      selectedImages = [];
-                      update();
+
                     });
                   }
                 }

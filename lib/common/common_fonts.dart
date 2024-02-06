@@ -171,5 +171,13 @@ class Fonts{
   final select = "select";
   final termsCondition = "termsCondition";
   final termsConditions = "termsConditions";
+  final tap = "tap";
+  final sponsorStatus = "sponsorStatus";
+  final tomorrow = "tomorrow";
+  final removeWallpaper = "removeWallpaper";
+  final setDefaultBackground = "setDefaultBackground";
+  final personalInfo = "personalInfo";
+  final readBy = "readBy";
   String unblockUser(val) => "unblockUser".trParams({'pName':val});
+  String youContactSync(val) => "youContactSync".trParams({'len':val});
 }

@@ -236,4 +236,12 @@ final dynamic brazil = {
   "termsCondition": "Termos e Condições",
   "termsConditions":
       "Ao clicar em 'Solicitar OTP' para verificação, você concorda com o",
+  "youContactSync": "You have @len contacts for sync",
+  "tap": "Toque para adicionar atualização de status",
+  "sponsorStatus": "Status de Patrocinador",
+  "tomorrow": "Amanhã",
+  "removeWallpaper": "Remover papel de parede",
+  "setDefaultBackground": "Definir Fundo Padrão",
+  "personalInfo": "Informações Pessoais",
+  "readBy": "Lido por",
 };
