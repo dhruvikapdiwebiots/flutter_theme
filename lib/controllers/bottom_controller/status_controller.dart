@@ -213,7 +213,7 @@ class StatusController extends GetxController {
       if (croppedFile != null) {
         File compressedFile = await FlutterNativeImage.compressImage(
           croppedFile.path,
-          quality: 30,
+           percentage: 20
         );
         update();
 
@@ -316,7 +316,7 @@ class StatusController extends GetxController {
         if (croppedFile != null) {
           File compressedFile = await FlutterNativeImage.compressImage(
               croppedFile.path,
-              quality: 30,
+               percentage: 20
               );
           update();
 
@@ -389,7 +389,7 @@ class StatusController extends GetxController {
           if (croppedFile != null) {
             File compressedFile = await FlutterNativeImage.compressImage(
               croppedFile.path,
-              quality: 30,
+               percentage: 20
             );
             update();
 

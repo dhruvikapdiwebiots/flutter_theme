@@ -41,7 +41,7 @@ class PickerController extends GetxController {
       if (croppedFile != null) {
         File compressedFile = await FlutterNativeImage.compressImage(
             croppedFile.path,
-            quality: 30,
+             percentage: 20
             );
         update();
 
@@ -214,7 +214,7 @@ class PickerController extends GetxController {
                       } else {
                         File compressedFile =
                         await FlutterNativeImage.compressImage(videoFile.path,
-                            quality: 30,);
+                             percentage: 20);
 
                         log("image : ${compressedFile.lengthSync()}");
 
@@ -244,7 +244,7 @@ class PickerController extends GetxController {
                       File compressedFile =
                       await FlutterNativeImage.compressImage(
                           videoFile.path,
-                          quality: 30,
+                           percentage: 20
                           );
 
                       log("image : ${compressedFile.lengthSync()}");
@@ -298,7 +298,7 @@ class PickerController extends GetxController {
                       } else {
                         File compressedFile =
                         await FlutterNativeImage.compressImage(videoFile!.path,
-                            quality: 30,
+                             percentage: 20
                             );
 
                         log("image : ${compressedFile.lengthSync()}");

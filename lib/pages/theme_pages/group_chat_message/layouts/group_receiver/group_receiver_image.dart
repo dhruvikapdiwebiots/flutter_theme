@@ -56,7 +56,7 @@ class GroupReceiverImage extends StatelessWidget {
                             child: CachedNetworkImage(
                                 placeholder: (context, url) => Container(
                                     width: Sizes.s160,
-                                    height: Sizes.s150,
+
                                     decoration: BoxDecoration(
                                       color: appCtrl.appTheme.accent,
                                       borderRadius:
@@ -65,7 +65,6 @@ class GroupReceiverImage extends StatelessWidget {
                                     child: Container()),
                                 imageUrl: decryptMessage(document!.content),
                                 width: Sizes.s160,
-                                height: Sizes.s150,
                                 fit: BoxFit.cover))
                         .paddingSymmetric(horizontal: Insets.i10)
                         .paddingOnly(bottom: Insets.i12))

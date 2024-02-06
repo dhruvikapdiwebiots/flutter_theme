@@ -46,7 +46,7 @@ class GroupSenderImage extends StatelessWidget {
                                 child: CachedNetworkImage(
                                     placeholder: (context, url) => Container(
                                         width: Sizes.s160,
-                                        height: Sizes.s150,
+
                                         decoration: ShapeDecoration(
                                             color: appCtrl.appTheme.accent,
                                             shape: SmoothRectangleBorder(
@@ -58,7 +58,7 @@ class GroupSenderImage extends StatelessWidget {
                                     imageUrl:
                                         decryptMessage(document!.content),
                                     width: Sizes.s160,
-                                    height: Sizes.s150,
+
                                     fit: BoxFit.cover))
                             .paddingAll(Insets.i10))),
                 if (document!.emoji !=null)
