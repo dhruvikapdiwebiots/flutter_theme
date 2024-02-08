@@ -246,4 +246,10 @@ final dynamic italian = {
   "setDefaultBackground": "Imposta lo sfondo predefinito",
   "personalInfo": "Informazioni personali",
   "readBy": "Leggi di",
+
+  "enterYourName": "Inserisci il tuo nome",
+  "enterYourEmail": "Inserisci il tuo indirizzo email",
+  "phoneNumber": "Numero di telefono",
+  "alreadyInContact": "Questa persona è già nei tuoi contatti.",
+  "userNotInChatify": "Questo utente non è su Chatify",
 };

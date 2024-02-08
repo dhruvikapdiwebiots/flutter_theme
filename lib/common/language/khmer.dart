@@ -244,4 +244,10 @@ final dynamic khmer = {
   "setDefaultBackground": "កំណត់ផ្ទៃខាងក្រោយលំនាំដើម",
   "personalInfo": "ព័ត៌មានផ្ទាល់ខ្លួន",
   "readBy": "អានដោយ",
+
+  "enterYourName": "បញ្ចូល្មោះរបស់អ្នក",
+  "enterYourEmail": "បញ្ចូលអ៊ីមែលរបស់អ្នក។",
+  "phoneNumber": "លេខទូរសព្ទ",
+  "alreadyInContact": "បុគ្គលនេះមាននៅក្នុងទំនាក់ទំនងរបស់អ្នករួចហើយ។",
+  "userNotInChatify": "អ្នកប្រើប្រាស់នេះមិននៅលើ Chatify ទេ។",
 };

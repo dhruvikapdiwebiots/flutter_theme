@@ -244,4 +244,11 @@ final dynamic kannada = {
   "setDefaultBackground": "ಡೀಫಾಲ್ಟ್ ಹಿನ್ನೆಲೆ ಹೊಂದಿಸಿ",
   "personalInfo": "ವೈಯುಕ್ತಿಕ ಮಾಹಿತಿ",
   "readBy": "ಮೂಲಕ ಓದಿ",
+
+
+  "enterYourName": "ನಿಮ್ಮ ಹೆಸರನ್ನು ನಮೂದಿಸಿ",
+  "enterYourEmail": "ನಿಮ್ಮ ಇಮೇಲ್ ನಮೂದಿಸಿ",
+  "phoneNumber": "ದೂರವಾಣಿ ಸಂಖ್ಯೆ",
+  "alreadyInContact": "ಈ ವ್ಯಕ್ತಿ ಈಗಾಗಲೇ ನಿಮ್ಮ ಸಂಪರ್ಕಗಳಲ್ಲಿದ್ದಾರೆ.",
+  "userNotInChatify": "ಈ ಬಳಕೆದಾರರು Chatify ನಲ್ಲಿಲ್ಲ",
 };

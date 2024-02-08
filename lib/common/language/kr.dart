@@ -244,4 +244,11 @@ final dynamic kr = {
   "setDefaultBackground": "기본 배경 설정",
   "personalInfo": "개인적인 정보",
   "readBy": "읽는 사람",
+
+
+  "enterYourName": "당신의 이름을 입력",
+  "enterYourEmail": "이메일을 입력하세요",
+  "phoneNumber": "전화 번호",
+  "alreadyInContact": "이 사람은 이미 연락처에 있습니다.",
+  "userNotInChatify": "이 사용자는 Chatify를 사용하고 있지 않습니다.",
 };

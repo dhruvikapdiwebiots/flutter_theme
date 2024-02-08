@@ -244,4 +244,10 @@ final dynamic polish = {
   "setDefaultBackground": "Ustaw domyślne tło",
   "personalInfo": "Dane osobiste",
   "readBy": "Przeczytaj przez",
+
+  "enterYourName": "Wpisz swoje imię",
+  "enterYourEmail": "Wprowadź swój email",
+  "phoneNumber": "Numer telefonu",
+  "alreadyInContact": "Ta osoba jest już w Twoich kontaktach.",
+  "userNotInChatify": "Ten użytkownik nie korzysta z Chatify",
 };

@@ -244,4 +244,10 @@ final dynamic en = {
   "setDefaultBackground": "Set Default Background",
   "personalInfo": "Personal Info",
   "readBy": "Read by",
+
+  "enterYourName": "Enter your name",
+  "enterYourEmail": "Enter your email",
+  "phoneNumber": "Phone Number",
+  "alreadyInContact": "This person is Already in your contacts.",
+  "userNotInChatify": "This user is not on Chatify",
 };

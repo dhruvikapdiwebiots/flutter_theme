@@ -37,7 +37,7 @@ class PickupBody extends StatelessWidget {
               //caller image
               CallerImage(imageUrl: imageUrl),
               const VSpace(Sizes.s10),
-              Text(call!.callerName!,
+              Text(appCtrl.user["id"] == call!.callerId ?call!.receiverName!:call!.callerName!,
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
                   style: AppCss.poppinsblack20

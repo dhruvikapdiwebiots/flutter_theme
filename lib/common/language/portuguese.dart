@@ -244,4 +244,10 @@ final dynamic portuguese = {
   "setDefaultBackground": "Definir plano de fundo padrão",
   "personalInfo": "Informação pessoal",
   "readBy": "Leia por",
+
+  "enterYourName": "Digite seu nome",
+  "enterYourEmail": "Digite seu e-mail",
+  "phoneNumber": "Número de telefone",
+  "alreadyInContact": "Esta pessoa já está nos seus contatos.",
+  "userNotInChatify": "Este usuário não está no Chatify",
 };

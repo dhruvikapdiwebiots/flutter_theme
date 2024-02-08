@@ -244,4 +244,10 @@ final dynamic hi = {
   "setDefaultBackground": "डिफ़ॉल्ट पृष्ठभूमि सेट करें",
   "personalInfo": "व्यक्तिगत जानकारी",
   "readBy": "द्वारा पढ़ें",
+
+  "enterYourName": "अपना नाम दर्ज करें",
+  "enterYourEmail": "अपना ईमेल दर्ज करें",
+  "phoneNumber": "फ़ोन नंबर",
+  "alreadyInContact": "यह व्यक्ति पहले से ही आपके संपर्कों में है.",
+  "userNotInChatify": "यह उपयोगकर्ता Chatify पर नहीं है",
 };

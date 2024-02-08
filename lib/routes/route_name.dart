@@ -31,4 +31,5 @@ class RouteName {
   final String callContactList = '/callContactList';
   final String webView = '/webView';
   final String language = '/language';
+  final String addContact = '/addContact';
 }

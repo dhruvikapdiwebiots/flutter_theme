@@ -244,4 +244,10 @@ final dynamic thai = {
   "setDefaultBackground": "ตั้งค่าพื้นหลังเริ่มต้น",
   "personalInfo": "ข้อมูลส่วนตัว",
   "readBy": "อ่านโดย",
+
+  "enterYourName": "ใส่ชื่อของคุณ",
+  "enterYourEmail": "กรอกอีเมล์ของคุณ",
+  "phoneNumber": "หมายเลขโทรศัพท์",
+  "alreadyInContact": "บุคคลนี้อยู่ในรายชื่อติดต่อของคุณแล้ว",
+  "userNotInChatify": "ผู้ใช้รายนี้ไม่ได้อยู่ใน Chatify",
 };

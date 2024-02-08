@@ -244,4 +244,10 @@ final dynamic serbian = {
   "setDefaultBackground": "Подесите подразумевану позадину",
   "personalInfo": "Лични подаци",
   "readBy": "Реад би",
+
+  "enterYourName": "Унесите своје име",
+  "enterYourEmail": "Унесите емаил",
+  "phoneNumber": "Број телефона",
+  "alreadyInContact": "Ова особа је већ у вашим контактима.",
+  "userNotInChatify": "Овај корисник није на Цхатифи-у",
 };

@@ -244,4 +244,10 @@ final dynamic russian = {
   "setDefaultBackground": "Установить фон по умолчанию",
   "personalInfo": "Личная информация",
   "readBy": "Читать",
+
+  "enterYourName": "Введите ваше имя",
+  "enterYourEmail": "Введите адрес электронной почты",
+  "phoneNumber": "Номер телефона",
+  "alreadyInContact": "Этот человек уже в ваших контактах.",
+  "userNotInChatify": "Этого пользователя нет в Chatify",
 };

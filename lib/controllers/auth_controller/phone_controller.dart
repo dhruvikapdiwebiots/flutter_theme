@@ -277,7 +277,7 @@ contactPermissions(user);
     await Future.delayed(DurationClass.ms150);
     final String systemLocales =
     WidgetsBinding.instance.platformDispatcher.locale.countryCode!;
-    List country = _countryList;
+    List country = countryList;
     int index =
     country.indexWhere((element) => element['alpha_2_code'] == systemLocales);
     dialCode = country[index]['dial_code'];
@@ -293,7 +293,7 @@ contactPermissions(user);
     super.onReady();
   }
 }
- List<Map<String, dynamic>> _countryList = [
+ List<Map<String, dynamic>> countryList = [
   {
     "num_code": "4",
     "alpha_2_code": "AF",

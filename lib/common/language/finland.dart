@@ -245,4 +245,11 @@ final dynamic finland = {
   "setDefaultBackground": "Aseta oletustausta",
   "personalInfo": "Henkilökohtaiset tiedot",
   "readBy": "Lue",
+
+
+  "enterYourName": "Kirjoita nimesi",
+  "enterYourEmail": "Syötä sähköpostiosoitteesi",
+  "phoneNumber": "Puhelinnumero",
+  "alreadyInContact": "Tämä henkilö on jo yhteystiedoissasi.",
+  "userNotInChatify": "Tämä käyttäjä ei ole Chatifyssa",
 };

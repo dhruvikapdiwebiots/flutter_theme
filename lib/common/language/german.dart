@@ -244,4 +244,11 @@ final dynamic german = {
   "setDefaultBackground": "Legen Sie den Standardhintergrund fest",
   "personalInfo": "Persönliche Informationen",
   "readBy": "Gelesen von",
+
+
+  "enterYourName": "Gib deinen Namen ein",
+  "enterYourEmail": "Geben sie ihre E-Mail Adresse ein",
+  "phoneNumber": "Telefonnummer",
+  "alreadyInContact": "Diese Person befindet sich bereits in Ihren Kontakten.",
+  "userNotInChatify": "Dieser Benutzer ist nicht bei Chatify",
 };

@@ -244,4 +244,11 @@ final dynamic dutch = {
   "setDefaultBackground": "Stel standaardachtergrond in",
   "personalInfo": "Persoonlijke informatie",
   "readBy": "Lees door",
+
+
+  "enterYourName": "Vul uw naam in",
+  "enterYourEmail": "Voer uw e-mailadres in",
+  "phoneNumber": "Telefoonnummer",
+  "alreadyInContact": "Deze persoon staat al in uw contacten.",
+  "userNotInChatify": "Deze gebruiker is niet op Chatify",
 };

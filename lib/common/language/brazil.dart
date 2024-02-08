@@ -244,4 +244,11 @@ final dynamic brazil = {
   "setDefaultBackground": "Definir Fundo Padrão",
   "personalInfo": "Informações Pessoais",
   "readBy": "Lido por",
+
+
+  "enterYourName": "Digite seu nome",
+  "enterYourEmail": "Digite seu e-mail",
+  "phoneNumber": "Número de telefone",
+  "alreadyInContact": "Esta pessoa já está em seus contatos.",
+  "userNotInChatify": "Este usuário não está no Chatify.",
 };

@@ -244,4 +244,11 @@ final dynamic chinese = {
   "setDefaultBackground": "删除壁纸",
   "personalInfo": "设置默认背景",
   "readBy": "个人信息",
+
+
+  "enterYourName": "输入你的名字",
+  "enterYourEmail": "输入你的电子邮箱",
+  "phoneNumber": "电话号码",
+  "alreadyInContact": "此人已在您的联系人中。",
+  "userNotInChatify": "该用户不在 Chatify 上",
 };

@@ -246,4 +246,10 @@ final dynamic poland = {
   "setDefaultBackground": "Ustaw domyślne tło",
   "personalInfo": "Informacje osobiste",
   "readBy": "Przeczytane przez",
+
+  "enterYourName": "Wpisz swoje imię",
+  "enterYourEmail": "Wpisz swój adres e-mail",
+  "phoneNumber": "Numer telefonu",
+  "alreadyInContact": "Ta osoba jest już w Twoich kontaktach.",
+  "userNotInChatify": "Ten użytkownik nie jest w Chatify.",
 };

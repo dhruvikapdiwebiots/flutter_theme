@@ -244,4 +244,10 @@ final dynamic ja = {
   "setDefaultBackground": "Imposta lo sfondo predefinito",
   "personalInfo": "Informazioni personali",
   "readBy": "Leggi da",
+
+  "enterYourName": "あなたの名前を入力してください",
+  "enterYourEmail": "メールアドレスを入力",
+  "phoneNumber": "電話番号",
+  "alreadyInContact": "この人はすでにあなたの連絡先に含まれています。",
+  "userNotInChatify": "このユーザーは Chatify に参加していません",
 };

@@ -244,4 +244,10 @@ final dynamic turkish = {
   "setDefaultBackground": "Varsayılan Arka Planı Ayarla",
   "personalInfo": "Kişisel bilgi",
   "readBy": "Okuyan",
+
+  "enterYourName": "Adınızı giriniz",
+  "enterYourEmail": "E-postanızı giriniz",
+  "phoneNumber": "Telefon numarası",
+  "alreadyInContact": "Bu kişi zaten kişileriniz arasında.",
+  "userNotInChatify": "Bu kullanıcı Chatify'da değil",
 };

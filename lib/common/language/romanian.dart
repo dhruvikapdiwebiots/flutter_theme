@@ -244,4 +244,10 @@ final dynamic romanian = {
   "setDefaultBackground": "Setați fundalul implicit",
   "personalInfo": "Informatie personala",
   "readBy": "Citit de",
+
+  "enterYourName": "Introdu numele tau",
+  "enterYourEmail": "Introduceți adresa dvs. de email",
+  "phoneNumber": "Număr de telefon",
+  "alreadyInContact": "Această persoană este deja în contactele tale.",
+  "userNotInChatify": "Acest utilizator nu este pe Chatify",
 };

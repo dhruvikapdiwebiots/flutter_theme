@@ -244,4 +244,10 @@ final dynamic bengali = {
   "setDefaultBackground": "ডিফল্ট ব্যাকগ্রাউন্ড সেট করুন",
   "personalInfo": "ব্যাক্তিগত তথ্য",
   "readBy": "দ্বারা পড়া",
+
+  "enterYourName": "আপনার নাম লিখুন",
+  "enterYourEmail": "আপনার ইমেল লিখুন",
+  "phoneNumber": "ফোন নম্বর",
+  "alreadyInContact": "এই ব্যক্তি ইতিমধ্যে আপনার যোগাযোগের তালিকায় রয়েছে।",
+  "userNotInChatify": "এই ব্যবহারকারী Chatify এ নেই।",
 };

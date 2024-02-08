@@ -59,6 +59,17 @@
 
             <data android:mimeType="*/*" />
         </intent>
+        <intent>
+            <action android:name="android.accounts.AccountAuthenticator" />
+        </intent> <!-- Allows the app to load an icon corresponding to the custom MIME type. -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+
+            <data
+                android:host="com.android.contacts"
+                android:mimeType="vnd.android.cursor.item/*"
+                android:scheme="content" />
+        </intent>
 
         <package android:name="com.facebook.katana" /> <!-- For browser content -->
         <intent>

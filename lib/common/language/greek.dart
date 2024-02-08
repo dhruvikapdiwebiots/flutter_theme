@@ -244,4 +244,11 @@ final dynamic greek = {
   "setDefaultBackground": "Ορισμός προεπιλεγμένου φόντου",
   "personalInfo": "Προσωπικές πληροφορίες",
   "readBy": "Διαβάστηκε από",
+
+
+  "enterYourName": "Εισάγετε το όνομά σας",
+  "enterYourEmail": "Συμπληρώστε το email σας",
+  "phoneNumber": "Τηλεφωνικό νούμερο",
+  "alreadyInContact": "Αυτό το άτομο βρίσκεται ήδη στις επαφές σας.",
+  "userNotInChatify": "Αυτός ο χρήστης δεν είναι στο Chatify",
 };

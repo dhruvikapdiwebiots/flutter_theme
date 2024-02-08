@@ -24,7 +24,7 @@ class PhoneWrap extends StatelessWidget {
                 ChangeNotifierProvider(create: (_) => FetchContactController()),
                 ChangeNotifierProvider(create: (_) => RecentChatController()),
               ],
-              child: Phone(preferences: snapData.data,)
+              child: PhoneLogin(preferences: snapData.data,)
             );
           } else {
             return MultiProvider(

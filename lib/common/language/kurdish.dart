@@ -247,4 +247,10 @@ final dynamic kurdish = {
   "setDefaultBackground": "Pêşniyara Pêşniyarê Set",
   "personalInfo": "Personal Info",
   "readBy": "Bixwîne",
+
+  "enterYourName": "Navê xwe binivîse",
+  "enterYourEmail": "E-nameya xwe binivîse",
+  "phoneNumber": "Jimare telefon",
+  "alreadyInContact": "Ev kes Jixwe di têkiliyên we de ye.",
+  "userNotInChatify": "Ev bikarhêner ne li ser Chatify ye",
 };

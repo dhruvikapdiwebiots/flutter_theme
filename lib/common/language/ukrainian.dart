@@ -244,4 +244,10 @@ final dynamic ukarian = {
   "setDefaultBackground": "Установити фон за умовчанням",
   "personalInfo": "Особиста інформація",
   "readBy": "Прочитано",
+
+  "enterYourName": "Введіть ім'я",
+  "enterYourEmail": "Введіть адресу електронної пошти",
+  "phoneNumber": "Номер телефону",
+  "alreadyInContact": "Ця особа вже є у ваших контактах.",
+  "userNotInChatify": "Цей користувач не в Chatify",
 };

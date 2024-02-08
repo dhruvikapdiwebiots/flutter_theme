@@ -244,4 +244,11 @@ final dynamic gujarati = {
   "setDefaultBackground": "ડિફૉલ્ટ પૃષ્ઠભૂમિ સેટ કરો",
   "personalInfo": "વ્યક્તિગત માહિતી",
   "readBy": "દ્વારા વાંચો",
+
+
+  "enterYourName": "તમારું નામ દાખલ કરો",
+  "enterYourEmail": "તમારું ઈમેલ એડ્રેસ લખો",
+  "phoneNumber": "ફોન નંબર",
+  "alreadyInContact": "આ વ્યક્તિ પહેલેથી જ તમારા સંપર્કોમાં છે.",
+  "userNotInChatify": "આ વપરાશકર્તા Chatify પર નથી",
 };

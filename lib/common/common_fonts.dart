@@ -178,6 +178,11 @@ class Fonts{
   final setDefaultBackground = "setDefaultBackground";
   final personalInfo = "personalInfo";
   final readBy = "readBy";
+  final enterYourName = "enterYourName";
+  final enterYourEmail = "enterYourEmail";
+  final phoneNumber = "phoneNumber";
+  final alreadyInContact = "alreadyInContact";
+  final userNotInChatify = "userNotInChatify";
   String unblockUser(val) => "unblockUser".trParams({'pName':val});
   String youContactSync(val) => "youContactSync".trParams({'len':val});
 }

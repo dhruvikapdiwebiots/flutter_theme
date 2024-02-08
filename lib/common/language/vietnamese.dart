@@ -244,4 +244,10 @@ final dynamic vietnamese = {
   "setDefaultBackground": "Đặt nền mặc định",
   "personalInfo": "Thông tin cá nhân",
   "readBy": "Đọc bởi",
+
+  "enterYourName": "Nhập tên của bạn",
+  "enterYourEmail": "Nhập email của bạn",
+  "phoneNumber": "Số điện thoại",
+  "alreadyInContact": "Người này đã có trong danh bạ của bạn.",
+  "userNotInChatify": "Người dùng này không có trên Chatify",
 };

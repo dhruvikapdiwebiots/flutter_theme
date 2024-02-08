@@ -244,4 +244,10 @@ final dynamic persian = {
   "setDefaultBackground": "تنظیم پس‌زمینه پیش‌فرض",
   "personalInfo": "اطلاعات شخصی",
   "readBy": "توسط",
+
+  "enterYourName": "اسمت را وارد کن",
+  "enterYourEmail": "ایمیل خود را وارد کنید",
+  "phoneNumber": "شماره تلفن",
+  "alreadyInContact": "این شخص از قبل در مخاطبین شما است.",
+  "userNotInChatify": "این کاربر در Chatify نیست",
 };

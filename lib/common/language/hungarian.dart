@@ -244,4 +244,11 @@ final dynamic hungarian = {
   "setDefaultBackground": "Állítsa be az alapértelmezett hátteret",
   "personalInfo": "Személyes adatok",
   "readBy": "Olvasta",
+
+
+  "enterYourName": "Adja meg nevét",
+  "enterYourEmail": "Írd be az email címed",
+  "phoneNumber": "Telefonszám",
+  "alreadyInContact": "Ez a személy már szerepel a névjegyei között.",
+  "userNotInChatify": "Ez a felhasználó nem használja a Chatify-t",
 };

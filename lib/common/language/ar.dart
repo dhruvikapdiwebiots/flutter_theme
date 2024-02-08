@@ -244,4 +244,10 @@ final dynamic ar = {
   "setDefaultBackground": "تعيين الخلفية الافتراضية",
   "personalInfo": "معلومات شخصية",
   "readBy": "اقرأ بواسطة",
+
+  "enterYourName": "أدخل أسمك",
+  "enterYourEmail": "أدخل بريدك الإلكتروني",
+  "phoneNumber": "رقم التليفون",
+  "alreadyInContact": "هذا الشخص موجود بالفعل في جهات الاتصال الخاصة بك.",
+  "userNotInChatify": "هذا المستخدم غير موجود في Chatify",
 };

@@ -244,4 +244,10 @@ final dynamic swedish = {
   "setDefaultBackground": "Ställ in som standardbakgrund",
   "personalInfo": "Personlig information",
   "readBy": "Läs av",
+
+  "enterYourName": "Ange ditt namn",
+  "enterYourEmail": "Ange din e-postadress",
+  "phoneNumber": "Telefonnummer",
+  "alreadyInContact": "Den här personen finns redan i dina kontakter.",
+  "userNotInChatify": "Den här användaren är inte på Chatify",
 };

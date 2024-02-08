@@ -244,4 +244,10 @@ final dynamic marathi = {
   "setDefaultBackground": "Pêşniyara Pêşniyarê Set",
   "personalInfo": "Personal Info",
   "readBy": "Bixwîne",
+
+  "enterYourName": "आपले नांव लिहा",
+  "enterYourEmail": "तुमचा ईमेल टाका",
+  "phoneNumber": "फोन नंबर",
+  "alreadyInContact": "ही व्यक्ती आधीच तुमच्या संपर्कांमध्ये आहे.",
+  "userNotInChatify": "हा वापरकर्ता Chatify वर नाही",
 };

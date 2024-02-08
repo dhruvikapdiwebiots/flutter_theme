@@ -244,4 +244,11 @@ final dynamic indonesian = {
   "setDefaultBackground": "Tetapkan Latar Belakang Default",
   "personalInfo": "Informasi pribadi",
   "readBy": "Baca oleh",
+
+
+  "enterYourName": "Masukkan nama Anda",
+  "enterYourEmail": "Masukkan email Anda",
+  "phoneNumber": "Nomor telepon",
+  "alreadyInContact": "Orang ini sudah ada di kontak Anda.",
+  "userNotInChatify": "Pengguna ini tidak ada di Chatify",
 };

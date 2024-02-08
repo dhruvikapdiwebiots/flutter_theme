@@ -244,4 +244,11 @@ final dynamic fr = {
   "setDefaultBackground": "Définir l'arrière-plan par défaut",
   "personalInfo": "Informations personnelles",
   "readBy": "Lu par",
+
+
+  "enterYourName": "Entrez votre nom",
+  "enterYourEmail": "Entrer votre Email",
+  "phoneNumber": "Numéro de téléphone",
+  "alreadyInContact": "Cette personne est déjà dans vos contacts.",
+  "userNotInChatify": "Cet utilisateur n'est pas sur Chatify",
 };

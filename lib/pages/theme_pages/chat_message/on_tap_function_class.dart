@@ -71,7 +71,7 @@ class OnTapFunctionCall {
       }
       chatCtrl.update();
     } else {
-      launchUrl(Uri.parse(decryptMessage(decryptMessage(document.content))));
+      launchUrl(Uri.parse(decryptMessage(document.content)));
     }
   }
 

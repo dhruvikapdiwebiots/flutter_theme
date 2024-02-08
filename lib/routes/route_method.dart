@@ -10,6 +10,7 @@ import 'package:flutter_theme/pages/theme_pages/fingerprint_and_lock_security/fi
 import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_profile/group_profile.dart';
 import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/group_profile/search_user.dart';
 import 'package:flutter_theme/pages/theme_pages/group_chat_message/layouts/my_message_viewer.dart';
+import 'package:flutter_theme/pages/theme_pages/new_contact/new_contact.dart';
 import 'package:flutter_theme/pages/theme_pages/video_call/video_call.dart';
 import 'package:flutter_theme/widgets/background_list.dart';
 import '../pages/bottom_pages/dashboard/dashboard.dart';
@@ -25,7 +26,7 @@ RouteName _routeName = RouteName();
 class AppRoute {
   final List<GetPage> getPages = [
     GetPage(name: _routeName.intro, page: () => const Intro()),
-    GetPage(name: _routeName.phone, page: () => Phone()),
+    GetPage(name: _routeName.phone, page: () => PhoneLogin()),
     GetPage(name: _routeName.phoneWrap, page: () =>const PhoneWrap()),
     GetPage(name: _routeName.otp, page: () => Otp()),
     GetPage(name: _routeName.dashboard, page: () =>const Dashboard()),
@@ -54,6 +55,7 @@ class AppRoute {
     GetPage(name: _routeName.audioCall, page: () => const AudioCall()),
     GetPage(name: _routeName.webView, page: () => const CheckoutWebView()),
     GetPage(name: _routeName.language, page: () =>  LanguageScreen()),
+    GetPage(name: _routeName.addContact, page: () =>  NewContact()),
 
   ];
 }

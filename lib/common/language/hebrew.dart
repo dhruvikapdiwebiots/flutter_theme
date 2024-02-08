@@ -244,4 +244,10 @@ final dynamic hebrew = {
   "setDefaultBackground": "הגדר רקע ברירת מחדל",
   "personalInfo": "מידע אישי",
   "readBy": "קרא על ידי",
+
+  "enterYourName": "הזן את שמך",
+  "enterYourEmail": "הכנס את האימייל שלך",
+  "phoneNumber": "מספר טלפון",
+  "alreadyInContact": "אדם זה כבר נמצא באנשי הקשר שלך.",
+  "userNotInChatify": "משתמש זה אינו ב-Chatify",
 };

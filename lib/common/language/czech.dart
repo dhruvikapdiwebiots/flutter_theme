@@ -244,6 +244,13 @@ final dynamic czech = {
   "setDefaultBackground": "Nastavit výchozí pozadí",
   "personalInfo": "Osobní informace",
   "readBy": "Přečteno",
+
+
+  "enterYourName": "Zadejte své jméno",
+  "enterYourEmail": "Vložte svůj e-mail",
+  "phoneNumber": "Telefonní číslo",
+  "alreadyInContact": "Tato osoba je již ve vašich kontaktech.",
+  "userNotInChatify": "Tento uživatel není na Chatify",
 };
 
 

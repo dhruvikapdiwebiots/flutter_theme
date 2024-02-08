@@ -5,9 +5,6 @@ import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:audioplayers/audioplayers.dart' as audio_players;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
-import 'package:wakelock_plus/wakelock_plus.dart';
-import 'package:wakelock_plus/wakelock_plus.dart';
-import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../config.dart';
 
@@ -472,7 +469,7 @@ class AudioCallController extends GetxController {
                 children: [
                   // SizedBox(height: h / 35),
                   const VSpace(Sizes.s50),
-                  call!.receiverPic != null
+                  call!.callerId == userData["id"] ?   call!.receiverPic != null
                       ? SizedBox(
                     height: Sizes.s100,
                     child: CachedNetworkImage(
@@ -483,6 +480,41 @@ class AudioCallController extends GetxController {
                               radius: Sizes.s50,
                               backgroundImage:
                               NetworkImage(call!.receiverPic!),
+                            ),
+                        placeholder: (context, url) => Image.asset(
+                            imageAssets.user,
+                            color: appCtrl.appTheme.contactBgGray)
+                            .paddingAll(Insets.i15)
+                            .decorated(
+                            color:
+                            appCtrl.appTheme.grey.withOpacity(.4),
+                            shape: BoxShape.circle),
+                        errorWidget: (context, url, error) => Image.asset(
+                          imageAssets.user,
+                          color: appCtrl.appTheme.whiteColor,
+                        ).paddingAll(Insets.i15).decorated(
+                            color:
+                            appCtrl.appTheme.grey.withOpacity(.4),
+                            shape: BoxShape.circle)),
+                  )
+                      : SizedBox(
+                    height: Sizes.s100,
+                    child: Image.asset(
+                      imageAssets.user,
+                      color: appCtrl.appTheme.whiteColor,
+                    ).paddingAll(Insets.i15).decorated(
+                        color: appCtrl.appTheme.grey.withOpacity(.4),
+                        shape: BoxShape.circle),
+                  ):call!.callerPic != null ? SizedBox(
+                    height: Sizes.s100,
+                    child: CachedNetworkImage(
+                        imageUrl: call!.callerPic!,
+                        imageBuilder: (context, imageProvider) =>
+                            CircleAvatar(
+                              backgroundColor: appCtrl.appTheme.contactBgGray,
+                              radius: Sizes.s50,
+                              backgroundImage:
+                              NetworkImage(call!.callerPic!),
                             ),
                         placeholder: (context, url) => Image.asset(
                             imageAssets.user,

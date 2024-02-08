@@ -132,6 +132,33 @@ class _FetchContactState extends State<FetchContact> {
                           padding: const EdgeInsets.only(bottom: 15, top: 0),
                           physics: const BouncingScrollPhysics(),
                           children: [
+
+                            Row(
+                              children: [
+                                Container(
+                                  height: Sizes.s40,
+                                  width: Sizes.s40,
+                                  decoration: BoxDecoration(
+                                    color: appCtrl.appTheme.borderGray.withOpacity(.6),
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      image: AssetImage(imageAssets.user)
+                                    )
+                                  ),
+                                ),
+                                const HSpace(Sizes.s20),
+                                Text(fonts.addContact.tr,style: AppCss.poppinsMedium16.textColor(appCtrl.appTheme.txt),),
+                              ],
+                            ).marginSymmetric(horizontal: Insets.i20).inkWell(onTap: (){
+                              Get.toNamed(routeName.addContact)!.then((value) {
+                                Fluttertoast.showToast(msg: "Contact Sync..");
+                                return registerAvailableContact.fetchContacts(context,
+                                    appCtrl.user["phone"], widget.prefs!, true);
+                              });
+                            }),
+                            const VSpace(Sizes.s10),
+                            Divider(indent: 20,endIndent: 20,color: appCtrl.appTheme.lightGray,),
+                            const VSpace(Sizes.s10),
                             registerAvailableContact.registerContactUser.isEmpty
                                 ? const SizedBox(
                                     height: 0,

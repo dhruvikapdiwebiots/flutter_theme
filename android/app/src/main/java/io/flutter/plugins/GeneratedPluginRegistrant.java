@@ -56,6 +56,11 @@ public final class GeneratedPluginRegistrant {
       Log.e(TAG, "Error registering plugin connectivity_plus, dev.fluttercommunity.plus.connectivity.ConnectivityPlugin", e);
     }
     try {
+      flutterEngine.getPlugins().add(new flutter.plugins.contactsservice.contactsservice.ContactsServicePlugin());
+    } catch (Exception e) {
+      Log.e(TAG, "Error registering plugin contacts_service, flutter.plugins.contactsservice.contactsservice.ContactsServicePlugin", e);
+    }
+    try {
       flutterEngine.getPlugins().add(new com.miguelruivo.flutter.plugin.countrycodes.country_codes.CountryCodesPlugin());
     } catch (Exception e) {
       Log.e(TAG, "Error registering plugin country_codes, com.miguelruivo.flutter.plugin.countrycodes.country_codes.CountryCodesPlugin", e);
