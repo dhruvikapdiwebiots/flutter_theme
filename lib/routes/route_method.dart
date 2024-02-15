@@ -1,5 +1,6 @@
 //app file
 
+import 'package:flutter_theme/extensions/tklmn.dart';
 import 'package:flutter_theme/pages/auth_pages/phone/phone_wrap.dart';
 import 'package:flutter_theme/pages/bottom_pages/call_list/layouts/call_contact_list.dart';
 import 'package:flutter_theme/pages/theme_pages/all_contact/all_contact_list.dart';
@@ -56,6 +57,7 @@ class AppRoute {
     GetPage(name: _routeName.webView, page: () => const CheckoutWebView()),
     GetPage(name: _routeName.language, page: () =>  LanguageScreen()),
     GetPage(name: _routeName.addContact, page: () =>  NewContact()),
+    GetPage(name: _routeName.jk, page: () => const CallFunc()),
 
   ];
 }

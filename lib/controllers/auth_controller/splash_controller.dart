@@ -18,12 +18,15 @@ class SplashController extends GetxController {
   late encrypt.Encrypter cryptor;
   final iv = encrypt.IV.fromLength(8);
   SharedPreferences? pref;
+   DocumentSnapshot<Map<String, dynamic>>? rm,uc;
 
   @override
-  void onReady() {
+  void onReady() async{
     // TODO: implement onReady
     //Firebase.initializeApp();
     startTime();
+
+
 
     super.onReady();
   }
@@ -34,9 +37,10 @@ class SplashController extends GetxController {
 
     result = await connectivity.checkConnectivity();
     if (result == ConnectivityResult.none) {
-      return Get.to(NoInternet(connectionStatus: result),
+      return Get.to(NoInternet(connectionStatus: result,rm: rm,uc: uc,),
           transition: Transition.downToUp);
     } else {
+
       var duration =
           const Duration(seconds: 3); // time delay to display splash screen
       return Timer(duration, navigationPage);
@@ -284,22 +288,16 @@ log("lanlan :$lan");
   }
 
   getAdminPermission() async {
-    final usageControls = await FirebaseFirestore.instance
-        .collection(collectionName.config)
-        .doc(collectionName.usageControls)
-        .get();
-    log("admin 3: ${usageControls.data()}");
+    final usageControls = rm;
+
     appCtrl.usageControlsVal =
-        UsageControlModel.fromJson(usageControls.data()!);
+        UsageControlModel.fromJson(usageControls!.data()!);
 
     appCtrl.update();
     appCtrl.storage.write(session.usageControls, usageControls.data());
-    update();
-    final userAppSettings = await FirebaseFirestore.instance
-        .collection(collectionName.config)
-        .doc(collectionName.userAppSettings)
-        .get();
-    log("admin 4: ${userAppSettings.data()}");
+
+    final userAppSettings =uc;
+    log("admin 4: ${userAppSettings!.data()}");
     appCtrl.userAppSettingsVal =
         UserAppSettingModel.fromJson(userAppSettings.data()!);
     final agoraToken = await FirebaseFirestore.instance

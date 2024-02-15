@@ -31,6 +31,8 @@ export 'pages/index.dart';
 export 'widgets/common_text_box.dart';
 export 'pages/plugin_route.dart';
 
+
+
 final appCtrl = Get.isRegistered<AppController>()
     ? Get.find<AppController>()
     : Get.put(AppController());

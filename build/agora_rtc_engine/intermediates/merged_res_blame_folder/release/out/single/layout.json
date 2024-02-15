@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "io.agora.agora_rtc_ng.agora_rtc_engine-merged_res-12:/layout/notification_action_tombstone.xml",
+        "source": "io.agora.agora_rtc_ng.agora_rtc_engine-core-1.6.0-2:/layout/notification_action_tombstone.xml"
+    },
+    {
+        "merged": "io.agora.agora_rtc_ng.agora_rtc_engine-merged_res-12:/layout/notification_template_icon_group.xml",
+        "source": "io.agora.agora_rtc_ng.agora_rtc_engine-core-1.6.0-2:/layout/notification_template_icon_group.xml"
+    },
+    {
+        "merged": "io.agora.agora_rtc_ng.agora_rtc_engine-merged_res-12:/layout/notification_template_part_time.xml",
+        "source": "io.agora.agora_rtc_ng.agora_rtc_engine-core-1.6.0-2:/layout/notification_template_part_time.xml"
+    },
+    {
+        "merged": "io.agora.agora_rtc_ng.agora_rtc_engine-merged_res-12:/layout/notification_action.xml",
+        "source": "io.agora.agora_rtc_ng.agora_rtc_engine-core-1.6.0-2:/layout/notification_action.xml"
+    },
+    {
+        "merged": "io.agora.agora_rtc_ng.agora_rtc_engine-merged_res-12:/layout/custom_dialog.xml",
+        "source": "io.agora.agora_rtc_ng.agora_rtc_engine-core-1.6.0-2:/layout/custom_dialog.xml"
+    },
+    {
+        "merged": "io.agora.agora_rtc_ng.agora_rtc_engine-merged_res-12:/layout/notification_template_part_chronometer.xml",
+        "source": "io.agora.agora_rtc_ng.agora_rtc_engine-core-1.6.0-2:/layout/notification_template_part_chronometer.xml"
+    }
+]

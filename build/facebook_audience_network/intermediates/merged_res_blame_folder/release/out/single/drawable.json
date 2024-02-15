@@ -1,0 +1,22 @@
+[
+    {
+        "merged": "com.dsi.facebook_audience_network-merged_res-13:/drawable/notification_bg.xml",
+        "source": "com.dsi.facebook_audience_network-core-1.6.0-3:/drawable/notification_bg.xml"
+    },
+    {
+        "merged": "com.dsi.facebook_audience_network-merged_res-13:/drawable/ic_profile_cover.xml",
+        "source": "com.dsi.facebook_audience_network-main-7:/drawable/ic_profile_cover.xml"
+    },
+    {
+        "merged": "com.dsi.facebook_audience_network-merged_res-13:/drawable/notification_bg_low.xml",
+        "source": "com.dsi.facebook_audience_network-core-1.6.0-3:/drawable/notification_bg_low.xml"
+    },
+    {
+        "merged": "com.dsi.facebook_audience_network-merged_res-13:/drawable/notification_icon_background.xml",
+        "source": "com.dsi.facebook_audience_network-core-1.6.0-3:/drawable/notification_icon_background.xml"
+    },
+    {
+        "merged": "com.dsi.facebook_audience_network-merged_res-13:/drawable/notification_tile_bg.xml",
+        "source": "com.dsi.facebook_audience_network-core-1.6.0-3:/drawable/notification_tile_bg.xml"
+    }
+]

@@ -250,4 +250,9 @@ final dynamic en = {
   "phoneNumber": "Phone Number",
   "alreadyInContact": "This person is Already in your contacts.",
   "userNotInChatify": "This user is not on Chatify",
+
+  "checkLicense": "Check License",
+  "linkApp": "“Link your existing project to license welcome to chatify”",
+  "pastePurchaseCode": "Paste Purchase Code",
+  "purchaseCode": "Purchase Code",
 };

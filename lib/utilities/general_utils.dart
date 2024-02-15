@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:encrypt/encrypt.dart';
 import 'package:encrypt/encrypt.dart' as encrypted;
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +13,7 @@ import '../controllers/fetch_contact_controller.dart';
 import '../main.dart';
 
 var loadingCtrl = Get.find<AppController>();
+bool klu = true;
 
 String trans(String val) {
   if (val.isNotEmpty) {
@@ -271,7 +273,7 @@ String decrypt(encryptedData) {
   return encrypter.decrypt(Encrypted.fromBase64(encryptedData), iv: initVector);
 }
 
-Encrypted encryptFun(String plainText) {
+Encrypted encryptFun( plainText) {
   final key = encrypted.Key.fromUtf8(encryptedKey);
   final encrypter = Encrypter(AES(key, mode: AESMode.cbc));
   final initVector = IV.fromUtf8(encryptedKey.substring(0, 16));
@@ -285,6 +287,12 @@ int calculateDifference(DateTime date) {
   return DateTime(date.year, date.month, date.day)
       .difference(DateTime(now.year, now.month, now.day))
       .inDays;
+}
+
+
+isDRP(){
+  klu = kDebugMode ? true : false;
+  return klu;
 }
 
 getDate(date) {

@@ -84,7 +84,7 @@ class _ReceiverMessageState extends State<ReceiverMessage> {
                               .contentTap(chatCtrl, widget.docId)),
 
                     // MESSAGE BOX FOR IMAGE
-                    if (widget.document!.type! == MessageType.image.name)
+                    if (widget.document!.type! == MessageType.image.name || widget.document!.type! == MessageType.imageArray.name )
                       ReceiverImage(
                           onTap: () => OnTapFunctionCall().imageTap(
                               chatCtrl, widget.docId, widget.document!),

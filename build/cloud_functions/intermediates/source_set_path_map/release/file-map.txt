@@ -1,0 +1,16 @@
+io.flutter.plugins.firebase.functions.cloud_functions-jetified-window-1.0.0-beta04-0 /Users/dhruvi/.gradle/caches/transforms-3/0067779ebdeec67ab7442c60fcb91c20/transformed/jetified-window-1.0.0-beta04/res
+io.flutter.plugins.firebase.functions.cloud_functions-jetified-play-services-base-18.1.0-1 /Users/dhruvi/.gradle/caches/transforms-3/02f70eb5b536b9dd951f2f2d7b1aafcd/transformed/jetified-play-services-base-18.1.0/res
+io.flutter.plugins.firebase.functions.cloud_functions-jetified-firebase-common-20.4.2-2 /Users/dhruvi/.gradle/caches/transforms-3/256b22cc70b6a1d81c7e6ec7af61856c/transformed/jetified-firebase-common-20.4.2/res
+io.flutter.plugins.firebase.functions.cloud_functions-jetified-play-services-basement-18.1.0-3 /Users/dhruvi/.gradle/caches/transforms-3/54ca0437dea3334a44bdacb9b7facc0d/transformed/jetified-play-services-basement-18.1.0/res
+io.flutter.plugins.firebase.functions.cloud_functions-core-1.6.0-4 /Users/dhruvi/.gradle/caches/transforms-3/5b6894da90aea00611c4ed2f90b92aa2/transformed/core-1.6.0/res
+io.flutter.plugins.firebase.functions.cloud_functions-jetified-window-java-1.0.0-beta04-5 /Users/dhruvi/.gradle/caches/transforms-3/6c60e44e4fedec2bea7649cb18927e56/transformed/jetified-window-java-1.0.0-beta04/res
+io.flutter.plugins.firebase.functions.cloud_functions-jetified-annotation-experimental-1.1.0-6 /Users/dhruvi/.gradle/caches/transforms-3/8479745c8af8cc3e0bbe90ee19a1f2e1/transformed/jetified-annotation-experimental-1.1.0/res
+io.flutter.plugins.firebase.functions.cloud_functions-main-7 /Users/dhruvi/.pub-cache/hosted/pub.dev/cloud_functions-4.6.5/android/src/main/res
+io.flutter.plugins.firebase.functions.cloud_functions-release-8 /Users/dhruvi/.pub-cache/hosted/pub.dev/cloud_functions-4.6.5/android/src/release/res
+io.flutter.plugins.firebase.functions.cloud_functions-pngs-9 /Users/dhruvi/Code/flutter_theme/build/cloud_functions/generated/res/pngs/release
+io.flutter.plugins.firebase.functions.cloud_functions-resValues-10 /Users/dhruvi/Code/flutter_theme/build/cloud_functions/generated/res/resValues/release
+io.flutter.plugins.firebase.functions.cloud_functions-rs-11 /Users/dhruvi/Code/flutter_theme/build/cloud_functions/generated/res/rs/release
+io.flutter.plugins.firebase.functions.cloud_functions-mergeReleaseResources-12 /Users/dhruvi/Code/flutter_theme/build/cloud_functions/intermediates/incremental/release/mergeReleaseResources/merged.dir
+io.flutter.plugins.firebase.functions.cloud_functions-mergeReleaseResources-13 /Users/dhruvi/Code/flutter_theme/build/cloud_functions/intermediates/incremental/release/mergeReleaseResources/stripped.dir
+io.flutter.plugins.firebase.functions.cloud_functions-merged_res-14 /Users/dhruvi/Code/flutter_theme/build/cloud_functions/intermediates/merged_res/release
+io.flutter.plugins.firebase.functions.cloud_functions-packaged_res-15 /Users/dhruvi/Code/flutter_theme/build/firebase_core/intermediates/packaged_res/release

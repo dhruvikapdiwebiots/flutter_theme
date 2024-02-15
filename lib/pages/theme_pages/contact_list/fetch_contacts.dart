@@ -108,7 +108,7 @@ class _FetchContactState extends State<FetchContact> {
                 leading: const BackIcon()),
             body: registerAvailableContact.searchContact == true
                 ? loading()
-                : registerAvailableContact.registerContactUser.isNotEmpty &&
+                : registerAvailableContact.registerContactUser.isNotEmpty ||
                         registerAvailableContact.contactList!.isNotEmpty
                     ? RefreshIndicator(
                         onRefresh: () async {

@@ -1,0 +1,34 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.aravi.video_compress.video_compress_plus-mergeReleaseResources-8:/values-eu/values-eu.xml",
+            "map": [
+                {
+                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/5b6894da90aea00611c4ed2f90b92aa2/transformed/core-1.6.0/res/values-eu/values-eu.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    }
+                }
+            ]
+        },
+        {
+            "outputFile": "com.aravi.video_compress.video_compress_plus-merged_res-10:/values-eu/values-eu.xml",
+            "map": [
+                {
+                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/5b6894da90aea00611c4ed2f90b92aa2/transformed/core-1.6.0/res/values-eu/values-eu.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    }
+                }
+            ]
+        }
+    ]
+}

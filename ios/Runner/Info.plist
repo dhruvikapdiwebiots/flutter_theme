@@ -29,7 +29,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.432304404919-m2ockjganap7slauecakmqoj6nprccbu</string>
+				<string>com.googleusercontent.apps.746529411345-ps1f2ecji4a3ama74lggrb82t0e34o7d</string>
 			</array>
 		</dict>
 	</array>
@@ -105,5 +105,7 @@
     <string>ca-app-pub-1426383974713305~2668032264</string>
     <key>SERVER_CLIENT_ID</key>
     <string>432304404919-m2ockjganap7slauecakmqoj6nprccbu.apps.googleusercontent.com</string>
+    <key>REVERSED_CLIENT_ID</key>
+    <string>com.googleusercontent.apps.746529411345-ps1f2ecji4a3ama74lggrb82t0e34o7d</string>
 </dict>
 </plist>

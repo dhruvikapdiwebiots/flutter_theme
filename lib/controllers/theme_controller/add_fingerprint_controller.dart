@@ -17,7 +17,9 @@ class AddFingerprintController extends GetxController {
     try {
       authenticated = await auth.authenticate(
           localizedReason: "Scan your finger to authenticate",
+
           options: const AuthenticationOptions(
+            biometricOnly: true,
               useErrorDialogs: true, stickyAuth: true));
 
       log("authenticated : $authenticated");

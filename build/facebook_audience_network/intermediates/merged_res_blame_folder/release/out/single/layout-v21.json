@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "com.dsi.facebook_audience_network-merged_res-13:/layout-v21/notification_action.xml",
+        "source": "com.dsi.facebook_audience_network-core-1.6.0-3:/layout-v21/notification_action.xml"
+    },
+    {
+        "merged": "com.dsi.facebook_audience_network-merged_res-13:/layout-v21/notification_template_icon_group.xml",
+        "source": "com.dsi.facebook_audience_network-core-1.6.0-3:/layout-v21/notification_template_icon_group.xml"
+    },
+    {
+        "merged": "com.dsi.facebook_audience_network-merged_res-13:/layout-v21/notification_template_custom_big.xml",
+        "source": "com.dsi.facebook_audience_network-core-1.6.0-3:/layout-v21/notification_template_custom_big.xml"
+    },
+    {
+        "merged": "com.dsi.facebook_audience_network-merged_res-13:/layout-v21/notification_action_tombstone.xml",
+        "source": "com.dsi.facebook_audience_network-core-1.6.0-3:/layout-v21/notification_action_tombstone.xml"
+    }
+]

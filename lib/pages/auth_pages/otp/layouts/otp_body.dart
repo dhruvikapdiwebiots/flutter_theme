@@ -29,7 +29,7 @@ class OtpBody extends StatelessWidget {
                   .textColor(appCtrl.appTheme.blackColor.withOpacity(.5)),
             ).marginSymmetric(horizontal: Insets.i40),
             const VSpace(Sizes.s30),
-            const OtpInput(),
+           // const OtpInput(),
             const VSpace(Sizes.s30),
 
             //done button

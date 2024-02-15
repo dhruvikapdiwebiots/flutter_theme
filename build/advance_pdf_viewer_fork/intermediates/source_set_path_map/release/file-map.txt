@@ -1,0 +1,12 @@
+pt.tribeiro.flutter_plugin_pdf_viewer.advance_pdf_viewer_fork-jetified-window-1.0.0-beta04-0 /Users/dhruvi/.gradle/caches/transforms-3/0067779ebdeec67ab7442c60fcb91c20/transformed/jetified-window-1.0.0-beta04/res
+pt.tribeiro.flutter_plugin_pdf_viewer.advance_pdf_viewer_fork-core-1.6.0-1 /Users/dhruvi/.gradle/caches/transforms-3/5b6894da90aea00611c4ed2f90b92aa2/transformed/core-1.6.0/res
+pt.tribeiro.flutter_plugin_pdf_viewer.advance_pdf_viewer_fork-jetified-window-java-1.0.0-beta04-2 /Users/dhruvi/.gradle/caches/transforms-3/6c60e44e4fedec2bea7649cb18927e56/transformed/jetified-window-java-1.0.0-beta04/res
+pt.tribeiro.flutter_plugin_pdf_viewer.advance_pdf_viewer_fork-jetified-annotation-experimental-1.1.0-3 /Users/dhruvi/.gradle/caches/transforms-3/8479745c8af8cc3e0bbe90ee19a1f2e1/transformed/jetified-annotation-experimental-1.1.0/res
+pt.tribeiro.flutter_plugin_pdf_viewer.advance_pdf_viewer_fork-main-4 /Users/dhruvi/.pub-cache/hosted/pub.dev/advance_pdf_viewer_fork-2.0.0/android/src/main/res
+pt.tribeiro.flutter_plugin_pdf_viewer.advance_pdf_viewer_fork-release-5 /Users/dhruvi/.pub-cache/hosted/pub.dev/advance_pdf_viewer_fork-2.0.0/android/src/release/res
+pt.tribeiro.flutter_plugin_pdf_viewer.advance_pdf_viewer_fork-pngs-6 /Users/dhruvi/Code/flutter_theme/build/advance_pdf_viewer_fork/generated/res/pngs/release
+pt.tribeiro.flutter_plugin_pdf_viewer.advance_pdf_viewer_fork-resValues-7 /Users/dhruvi/Code/flutter_theme/build/advance_pdf_viewer_fork/generated/res/resValues/release
+pt.tribeiro.flutter_plugin_pdf_viewer.advance_pdf_viewer_fork-rs-8 /Users/dhruvi/Code/flutter_theme/build/advance_pdf_viewer_fork/generated/res/rs/release
+pt.tribeiro.flutter_plugin_pdf_viewer.advance_pdf_viewer_fork-mergeReleaseResources-9 /Users/dhruvi/Code/flutter_theme/build/advance_pdf_viewer_fork/intermediates/incremental/release/mergeReleaseResources/merged.dir
+pt.tribeiro.flutter_plugin_pdf_viewer.advance_pdf_viewer_fork-mergeReleaseResources-10 /Users/dhruvi/Code/flutter_theme/build/advance_pdf_viewer_fork/intermediates/incremental/release/mergeReleaseResources/stripped.dir
+pt.tribeiro.flutter_plugin_pdf_viewer.advance_pdf_viewer_fork-merged_res-11 /Users/dhruvi/Code/flutter_theme/build/advance_pdf_viewer_fork/intermediates/merged_res/release

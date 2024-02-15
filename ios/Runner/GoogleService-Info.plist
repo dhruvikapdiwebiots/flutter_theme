@@ -3,23 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>432304404919-m2ockjganap7slauecakmqoj6nprccbu.apps.googleusercontent.com</string>
+	<string>746529411345-ps1f2ecji4a3ama74lggrb82t0e34o7d.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.432304404919-m2ockjganap7slauecakmqoj6nprccbu</string>
+	<string>com.googleusercontent.apps.746529411345-ps1f2ecji4a3ama74lggrb82t0e34o7d</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>432304404919-ooqs956v4qfahulvj4dhbpcba7j6inmg.apps.googleusercontent.com</string>
+	<string>746529411345-d4qr3ji5ltjoi12lb557tdgu1altfapi.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDK0Q7AYVDJHhFmOYc7Yah9bpoq41pFSTI</string>
+	<string>AIzaSyDJ9ReWw-ihUeF4mRIbrb3ynER6Cs_nnXc</string>
 	<key>GCM_SENDER_ID</key>
-	<string>432304404919</string>
+	<string>746529411345</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.fluttertheme.flutterTheme</string>
 	<key>PROJECT_ID</key>
-	<string>chatify-195b1</string>
+	<string>chatify-eee03</string>
 	<key>STORAGE_BUCKET</key>
-	<string>chatify-195b1.appspot.com</string>
+	<string>chatify-eee03.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:432304404919:ios:fee906d349a53ad6045032</string>
+	<string>1:746529411345:ios:0a4f3077083a1bb3617cb0</string>
 </dict>
 </plist>

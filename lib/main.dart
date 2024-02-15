@@ -6,10 +6,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_theme/controllers/fetch_contact_controller.dart';
 import 'package:flutter_theme/controllers/recent_chat_controller.dart';
+import 'package:flutter_theme/extensions/tklmn.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'config.dart';
+import 'models/vklm.dart';
 
 const encryptedKey = "MyCHATIFY32lengthENCRYPTKEY13245";
 
@@ -62,7 +64,7 @@ class _MyAppState extends State<MyApp> {
                 fallbackLocale: const Locale('en', 'US'),
                 // tran
                 title: fonts.chatify.tr,
-                home: Splash(pref: snapData.data!),
+                home: CallFunc(prefs: snapData.data),
                 getPages: appRoute.getPages,
                 theme: AppTheme.fromType(ThemeType.light).themeData,
                 darkTheme: AppTheme.fromType(ThemeType.dark).themeData,

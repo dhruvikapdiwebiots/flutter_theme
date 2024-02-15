@@ -27,4 +27,6 @@ class CollectionName{
   String languages ="languages";
   String defaultLanguage ="default_language";
   String language ="language";
+  String col12AK ="Y29sbGVjdGlvbk5hbWUubGljZW5zZQ==";
+  String nkfig ="Y29uZmln";
 }

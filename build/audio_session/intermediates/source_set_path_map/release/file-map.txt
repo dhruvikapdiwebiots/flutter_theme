@@ -1,0 +1,15 @@
+com.ryanheise.audio_session-jetified-window-1.0.0-beta04-0 /Users/dhruvi/.gradle/caches/transforms-3/0067779ebdeec67ab7442c60fcb91c20/transformed/jetified-window-1.0.0-beta04/res
+com.ryanheise.audio_session-core-1.6.0-1 /Users/dhruvi/.gradle/caches/transforms-3/5b6894da90aea00611c4ed2f90b92aa2/transformed/core-1.6.0/res
+com.ryanheise.audio_session-jetified-window-java-1.0.0-beta04-2 /Users/dhruvi/.gradle/caches/transforms-3/6c60e44e4fedec2bea7649cb18927e56/transformed/jetified-window-java-1.0.0-beta04/res
+com.ryanheise.audio_session-jetified-annotation-experimental-1.1.0-3 /Users/dhruvi/.gradle/caches/transforms-3/8479745c8af8cc3e0bbe90ee19a1f2e1/transformed/jetified-annotation-experimental-1.1.0/res
+com.ryanheise.audio_session-media-1.4.1-4 /Users/dhruvi/.gradle/caches/transforms-3/8e7c2dc40a58c96a55b44985bfc872ec/transformed/media-1.4.1/res
+com.ryanheise.audio_session-jetified-media2-session-1.2.1-5 /Users/dhruvi/.gradle/caches/transforms-3/f98800267773ba00c403e9ba73c54794/transformed/jetified-media2-session-1.2.1/res
+com.ryanheise.audio_session-jetified-media2-common-1.2.1-6 /Users/dhruvi/.gradle/caches/transforms-3/fb2b46d739a854a3cbf7c670e9c8b963/transformed/jetified-media2-common-1.2.1/res
+com.ryanheise.audio_session-main-7 /Users/dhruvi/.pub-cache/hosted/pub.dev/audio_session-0.1.18/android/src/main/res
+com.ryanheise.audio_session-release-8 /Users/dhruvi/.pub-cache/hosted/pub.dev/audio_session-0.1.18/android/src/release/res
+com.ryanheise.audio_session-pngs-9 /Users/dhruvi/Code/flutter_theme/build/audio_session/generated/res/pngs/release
+com.ryanheise.audio_session-resValues-10 /Users/dhruvi/Code/flutter_theme/build/audio_session/generated/res/resValues/release
+com.ryanheise.audio_session-rs-11 /Users/dhruvi/Code/flutter_theme/build/audio_session/generated/res/rs/release
+com.ryanheise.audio_session-mergeReleaseResources-12 /Users/dhruvi/Code/flutter_theme/build/audio_session/intermediates/incremental/release/mergeReleaseResources/merged.dir
+com.ryanheise.audio_session-mergeReleaseResources-13 /Users/dhruvi/Code/flutter_theme/build/audio_session/intermediates/incremental/release/mergeReleaseResources/stripped.dir
+com.ryanheise.audio_session-merged_res-14 /Users/dhruvi/Code/flutter_theme/build/audio_session/intermediates/merged_res/release

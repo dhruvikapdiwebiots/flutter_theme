@@ -26,7 +26,7 @@ class NewContactController extends GetxController {
   void onReady() {
     final String systemLocales =
         WidgetsBinding.instance.platformDispatcher.locale.countryCode!;
-    List country = countryList;
+    List country =  appArray.countryList;
     int index =
         country.indexWhere((element) => element['alpha_2_code'] == systemLocales);
     dialCode = country[index]['dial_code'];

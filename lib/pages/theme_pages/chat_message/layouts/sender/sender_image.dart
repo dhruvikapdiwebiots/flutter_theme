@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter_theme/models/message_model.dart';
 import 'package:intl/intl.dart';
@@ -10,64 +12,133 @@ class SenderImage extends StatelessWidget {
   final bool isBroadcast;
   final String? userId;
 
-  const SenderImage({Key? key, this.document, this.onPressed, this.onLongPress,this.isBroadcast =false,this.userId})
+  const SenderImage(
+      {Key? key,
+      this.document,
+      this.onPressed,
+      this.onLongPress,
+      this.isBroadcast = false,
+      this.userId})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    List image = [];
+
+    if (document!.type == MessageType.imageArray.name) {
+      var a = decrypt(document!.content);
+
+      var ab = json.decode(a).cast<String>().toList();
+
+      image = ab;
+    }
     return InkWell(
         onLongPress: onLongPress,
-        onTap:onPressed,
+        onTap: onPressed,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: Insets.i10,),
-                  decoration: ShapeDecoration(
-                    color: appCtrl.appTheme.primary,
-                    shape:  SmoothRectangleBorder(
-                        borderRadius:SmoothBorderRadius(cornerRadius: 20,cornerSmoothing: 1)),
-                  ),
-                  child: ClipSmoothRect(
-                    clipBehavior: Clip.hardEdge,
-                    radius: SmoothBorderRadius(
-                      cornerRadius: 20,
-                      cornerSmoothing: 1,
-                    ),
-                    child: Material(
-                      borderRadius: SmoothBorderRadius(cornerRadius: 15,cornerSmoothing: 1),
-                      clipBehavior: Clip.hardEdge,
-                      child: CachedNetworkImage(
-                        placeholder: (context, url) => Container(
-                            width: Sizes.s160,
-
-                            decoration: ShapeDecoration(
-                              color: appCtrl.appTheme.accent,
-                              shape:  SmoothRectangleBorder(
-                                  borderRadius:SmoothBorderRadius(cornerRadius: 10,cornerSmoothing: 1)),
+            document!.type == MessageType.image.name
+                ? Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: Insets.i10,
+                        ),
+                        decoration: ShapeDecoration(
+                          color: appCtrl.appTheme.primary,
+                          shape: SmoothRectangleBorder(
+                              borderRadius: SmoothBorderRadius(
+                                  cornerRadius: 20, cornerSmoothing: 1)),
+                        ),
+                        child: ClipSmoothRect(
+                          clipBehavior: Clip.hardEdge,
+                          radius: SmoothBorderRadius(
+                            cornerRadius: 20,
+                            cornerSmoothing: 1,
+                          ),
+                          child: Material(
+                            borderRadius: SmoothBorderRadius(
+                                cornerRadius: 15, cornerSmoothing: 1),
+                            clipBehavior: Clip.hardEdge,
+                            child: CachedNetworkImage(
+                              placeholder: (context, url) => Container(
+                                  width: Sizes.s160,
+                                  decoration: ShapeDecoration(
+                                    color: appCtrl.appTheme.accent,
+                                    shape: SmoothRectangleBorder(
+                                        borderRadius: SmoothBorderRadius(
+                                            cornerRadius: 10,
+                                            cornerSmoothing: 1)),
+                                  ),
+                                  child: Container()),
+                              imageUrl: decryptMessage(document!.content),
+                              width: Sizes.s160,
+                              fit: BoxFit.cover,
                             ),
-                            child: Container()),
-                        imageUrl: decryptMessage(document!.content),
-                        width: Sizes.s160,
-
-                        fit: BoxFit.cover,
+                          ).paddingAll(Insets.i10),
+                        ),
                       ),
-                    ).paddingAll(Insets.i10),
+                      if (document!.emoji != null)
+                        EmojiLayout(emoji: document!.emoji)
+                    ],
+                  )
+                : Container(
+                    decoration: ShapeDecoration(
+                      color: appCtrl.appTheme.primary,
+                      shape: SmoothRectangleBorder(
+                          borderRadius: SmoothBorderRadius(
+                              cornerRadius: 10, cornerSmoothing: 1)),
+                    ),
+                    height: Sizes.s220,
+                    width: Sizes.s200,
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.all(Insets.i12),
+                      itemCount: 4,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisSpacing: 0,
+                              mainAxisExtent: 95,
+                              mainAxisSpacing: 0.0,
+                              crossAxisCount: 2),
+                      itemBuilder: (context, index) {
+                        return ClipRRect(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(index == 0 ? 15 : 0),
+                              bottomLeft: Radius.circular(index == 2 ? 15 : 0),
+                              bottomRight: Radius.circular(index == 3 ? 15 : 0),
+                              topRight: Radius.circular(index == 1 ? 15 : 0)),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                border: Border(
+                                    right: BorderSide(
+                                        color: index == 0 || index == 2
+                                            ? appCtrl.appTheme.primary
+                                            : appCtrl.appTheme.transparentColor,
+                                        width: 2),bottom:    BorderSide(
+                                color: index == 0 || index == 1
+                                ? appCtrl.appTheme.primary
+                                    : appCtrl.appTheme.transparentColor,
+                                    width: 2))),
+                            child: Image.network(
+                              image[index],
+                              height: Sizes.s120,
+                              width: MediaQuery.of(context).size.width,
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                ),
-                if (document!.emoji != null)
-                  EmojiLayout(emoji: document!.emoji)
-              ],
-            ),
             Row(
               children: [
                 if (document!.isFavourite != null)
-                  if(appCtrl.user["id"]  != document!.sender)
-                  Icon(Icons.star,
-                      color: appCtrl.appTheme.txtColor, size: Sizes.s10),
+                  if (appCtrl.user["id"] != document!.sender)
+                    Icon(Icons.star,
+                        color: appCtrl.appTheme.txtColor, size: Sizes.s10),
                 const HSpace(Sizes.s3),
                 if (!isBroadcast)
                   Icon(Icons.done_all_outlined,

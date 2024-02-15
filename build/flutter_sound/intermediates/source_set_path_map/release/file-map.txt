@@ -1,0 +1,16 @@
+com.dooboolab.fluttersound.flutter_sound-jetified-window-1.0.0-beta04-0 /Users/dhruvi/.gradle/caches/transforms-3/0067779ebdeec67ab7442c60fcb91c20/transformed/jetified-window-1.0.0-beta04/res
+com.dooboolab.fluttersound.flutter_sound-jetified-flutter_sound_core-9.2.13-1 /Users/dhruvi/.gradle/caches/transforms-3/2f9e6204ae327948bb6b5535c3ecba93/transformed/jetified-flutter_sound_core-9.2.13/res
+com.dooboolab.fluttersound.flutter_sound-core-1.6.0-2 /Users/dhruvi/.gradle/caches/transforms-3/5b6894da90aea00611c4ed2f90b92aa2/transformed/core-1.6.0/res
+com.dooboolab.fluttersound.flutter_sound-jetified-window-java-1.0.0-beta04-3 /Users/dhruvi/.gradle/caches/transforms-3/6c60e44e4fedec2bea7649cb18927e56/transformed/jetified-window-java-1.0.0-beta04/res
+com.dooboolab.fluttersound.flutter_sound-jetified-annotation-experimental-1.1.0-4 /Users/dhruvi/.gradle/caches/transforms-3/8479745c8af8cc3e0bbe90ee19a1f2e1/transformed/jetified-annotation-experimental-1.1.0/res
+com.dooboolab.fluttersound.flutter_sound-media-1.4.1-5 /Users/dhruvi/.gradle/caches/transforms-3/8e7c2dc40a58c96a55b44985bfc872ec/transformed/media-1.4.1/res
+com.dooboolab.fluttersound.flutter_sound-jetified-appcompat-resources-1.2.0-6 /Users/dhruvi/.gradle/caches/transforms-3/a51cbce2019b61f8a48ed821d232e619/transformed/jetified-appcompat-resources-1.2.0/res
+com.dooboolab.fluttersound.flutter_sound-appcompat-1.2.0-7 /Users/dhruvi/.gradle/caches/transforms-3/e77ba2c006f6df1f94407cdf3ffabadc/transformed/appcompat-1.2.0/res
+com.dooboolab.fluttersound.flutter_sound-main-8 /Users/dhruvi/.pub-cache/hosted/pub.dev/flutter_sound-9.2.13/android/src/main/res
+com.dooboolab.fluttersound.flutter_sound-release-9 /Users/dhruvi/.pub-cache/hosted/pub.dev/flutter_sound-9.2.13/android/src/release/res
+com.dooboolab.fluttersound.flutter_sound-pngs-10 /Users/dhruvi/Code/flutter_theme/build/flutter_sound/generated/res/pngs/release
+com.dooboolab.fluttersound.flutter_sound-resValues-11 /Users/dhruvi/Code/flutter_theme/build/flutter_sound/generated/res/resValues/release
+com.dooboolab.fluttersound.flutter_sound-rs-12 /Users/dhruvi/Code/flutter_theme/build/flutter_sound/generated/res/rs/release
+com.dooboolab.fluttersound.flutter_sound-mergeReleaseResources-13 /Users/dhruvi/Code/flutter_theme/build/flutter_sound/intermediates/incremental/release/mergeReleaseResources/merged.dir
+com.dooboolab.fluttersound.flutter_sound-mergeReleaseResources-14 /Users/dhruvi/Code/flutter_theme/build/flutter_sound/intermediates/incremental/release/mergeReleaseResources/stripped.dir
+com.dooboolab.fluttersound.flutter_sound-merged_res-15 /Users/dhruvi/Code/flutter_theme/build/flutter_sound/intermediates/merged_res/release

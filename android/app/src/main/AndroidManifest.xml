@@ -50,6 +50,7 @@
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true"
+        android:enableOnBackInvokedCallback="true"
         android:label="Chatify">
         <activity
             android:name=".MainActivity"
@@ -115,7 +116,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
+        <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver"
+            android:exported="true">
+        </receiver>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

@@ -47,7 +47,7 @@ class _SenderMessageState extends State<SenderMessage> {
                             onLongPress: () =>
                                 chatCtrl.onLongPressFunction(widget.docId),
                             document: widget.document),
-                      if (widget.document!.type! == MessageType.image.name)
+                      if (widget.document!.type! == MessageType.image.name || widget.document!.type! == MessageType.imageArray.name )
                         SenderImage(
                             onPressed: () =>
                                 OnTapFunctionCall().imageTap(

@@ -5,15 +5,15 @@ import 'package:flutter_theme/config.dart';
 
 class NoInternet extends StatelessWidget {
   final ConnectivityResult? connectionStatus;
-
-  const NoInternet({Key? key, this.connectionStatus}) : super(key: key);
+  final DocumentSnapshot<Map<String, dynamic>>? rm,uc;
+  const NoInternet({Key? key, this.connectionStatus, this.rm, this.uc}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
         stream: Connectivity().onConnectivityChanged,
         builder: (context, AsyncSnapshot<ConnectivityResult> snapshot) {
-          log("snapshot.data : ${snapshot.data == ConnectivityResult.none || snapshot.data == null}");
+
           if (snapshot.data != ConnectivityResult.none ||
               snapshot.data != null) {
             final splashCtrl = Get.find<SplashController>();
@@ -44,7 +44,7 @@ class NoInternet extends StatelessWidget {
                     ],
                   ).marginSymmetric(horizontal: Insets.i30)),
                 )
-              : Splash();
+              : Splash(rm: rm,uc: uc,);
         });
   }
 }

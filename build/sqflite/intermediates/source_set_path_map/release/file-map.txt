@@ -1,0 +1,12 @@
+com.tekartik.sqflite-jetified-window-1.0.0-beta04-0 /Users/dhruvi/.gradle/caches/transforms-3/0067779ebdeec67ab7442c60fcb91c20/transformed/jetified-window-1.0.0-beta04/res
+com.tekartik.sqflite-core-1.6.0-1 /Users/dhruvi/.gradle/caches/transforms-3/5b6894da90aea00611c4ed2f90b92aa2/transformed/core-1.6.0/res
+com.tekartik.sqflite-jetified-window-java-1.0.0-beta04-2 /Users/dhruvi/.gradle/caches/transforms-3/6c60e44e4fedec2bea7649cb18927e56/transformed/jetified-window-java-1.0.0-beta04/res
+com.tekartik.sqflite-jetified-annotation-experimental-1.1.0-3 /Users/dhruvi/.gradle/caches/transforms-3/8479745c8af8cc3e0bbe90ee19a1f2e1/transformed/jetified-annotation-experimental-1.1.0/res
+com.tekartik.sqflite-main-4 /Users/dhruvi/.pub-cache/hosted/pub.dev/sqflite-2.3.0/android/src/main/res
+com.tekartik.sqflite-release-5 /Users/dhruvi/.pub-cache/hosted/pub.dev/sqflite-2.3.0/android/src/release/res
+com.tekartik.sqflite-pngs-6 /Users/dhruvi/Code/flutter_theme/build/sqflite/generated/res/pngs/release
+com.tekartik.sqflite-resValues-7 /Users/dhruvi/Code/flutter_theme/build/sqflite/generated/res/resValues/release
+com.tekartik.sqflite-rs-8 /Users/dhruvi/Code/flutter_theme/build/sqflite/generated/res/rs/release
+com.tekartik.sqflite-mergeReleaseResources-9 /Users/dhruvi/Code/flutter_theme/build/sqflite/intermediates/incremental/release/mergeReleaseResources/merged.dir
+com.tekartik.sqflite-mergeReleaseResources-10 /Users/dhruvi/Code/flutter_theme/build/sqflite/intermediates/incremental/release/mergeReleaseResources/stripped.dir
+com.tekartik.sqflite-merged_res-11 /Users/dhruvi/Code/flutter_theme/build/sqflite/intermediates/merged_res/release

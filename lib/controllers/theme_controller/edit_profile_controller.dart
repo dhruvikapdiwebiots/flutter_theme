@@ -254,7 +254,7 @@ class EditProfileController extends GetxController {
 
               isLoading = false;
               update();
-              Get.toNamed(routeName.dashboard, arguments: pref);
+            homeNavigation(appCtrl.user['id']);
             }).catchError((onError) {
               debugPrint("onError :: $onError");
             });

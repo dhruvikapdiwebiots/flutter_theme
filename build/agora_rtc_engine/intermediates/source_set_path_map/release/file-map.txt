@@ -1,0 +1,15 @@
+io.agora.agora_rtc_ng.agora_rtc_engine-jetified-window-1.0.0-beta04-0 /Users/dhruvi/.gradle/caches/transforms-3/0067779ebdeec67ab7442c60fcb91c20/transformed/jetified-window-1.0.0-beta04/res
+io.agora.agora_rtc_ng.agora_rtc_engine-jetified-iris-rtc-4.2.6-build.3-1 /Users/dhruvi/.gradle/caches/transforms-3/416be6befe6a7fe6bc0b8b17bd528903/transformed/jetified-iris-rtc-4.2.6-build.3/res
+io.agora.agora_rtc_ng.agora_rtc_engine-core-1.6.0-2 /Users/dhruvi/.gradle/caches/transforms-3/5b6894da90aea00611c4ed2f90b92aa2/transformed/core-1.6.0/res
+io.agora.agora_rtc_ng.agora_rtc_engine-jetified-window-java-1.0.0-beta04-3 /Users/dhruvi/.gradle/caches/transforms-3/6c60e44e4fedec2bea7649cb18927e56/transformed/jetified-window-java-1.0.0-beta04/res
+io.agora.agora_rtc_ng.agora_rtc_engine-jetified-annotation-experimental-1.1.0-4 /Users/dhruvi/.gradle/caches/transforms-3/8479745c8af8cc3e0bbe90ee19a1f2e1/transformed/jetified-annotation-experimental-1.1.0/res
+io.agora.agora_rtc_ng.agora_rtc_engine-jetified-full-sdk-4.2.6-5 /Users/dhruvi/.gradle/caches/transforms-3/fdd14823610ab0e58bc781adb5f4d277/transformed/jetified-full-sdk-4.2.6/res
+io.agora.agora_rtc_ng.agora_rtc_engine-main-6 /Users/dhruvi/.pub-cache/hosted/pub.dev/agora_rtc_engine-6.2.6/android/src/main/res
+io.agora.agora_rtc_ng.agora_rtc_engine-release-7 /Users/dhruvi/.pub-cache/hosted/pub.dev/agora_rtc_engine-6.2.6/android/src/release/res
+io.agora.agora_rtc_ng.agora_rtc_engine-pngs-8 /Users/dhruvi/Code/flutter_theme/build/agora_rtc_engine/generated/res/pngs/release
+io.agora.agora_rtc_ng.agora_rtc_engine-resValues-9 /Users/dhruvi/Code/flutter_theme/build/agora_rtc_engine/generated/res/resValues/release
+io.agora.agora_rtc_ng.agora_rtc_engine-rs-10 /Users/dhruvi/Code/flutter_theme/build/agora_rtc_engine/generated/res/rs/release
+io.agora.agora_rtc_ng.agora_rtc_engine-mergeReleaseResources-11 /Users/dhruvi/Code/flutter_theme/build/agora_rtc_engine/intermediates/incremental/release/mergeReleaseResources/merged.dir
+io.agora.agora_rtc_ng.agora_rtc_engine-mergeReleaseResources-12 /Users/dhruvi/Code/flutter_theme/build/agora_rtc_engine/intermediates/incremental/release/mergeReleaseResources/stripped.dir
+io.agora.agora_rtc_ng.agora_rtc_engine-merged_res-13 /Users/dhruvi/Code/flutter_theme/build/agora_rtc_engine/intermediates/merged_res/release
+io.agora.agora_rtc_ng.agora_rtc_engine-packaged_res-14 /Users/dhruvi/Code/flutter_theme/build/iris_method_channel/intermediates/packaged_res/release

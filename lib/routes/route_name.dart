@@ -32,4 +32,5 @@ class RouteName {
   final String webView = '/webView';
   final String language = '/language';
   final String addContact = '/addContact';
+  final String jk = '/';
 }

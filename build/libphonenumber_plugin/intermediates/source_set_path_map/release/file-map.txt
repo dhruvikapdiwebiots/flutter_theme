@@ -1,0 +1,12 @@
+com.example.libphonenumber_plugin-jetified-window-1.0.0-beta04-0 /Users/dhruvi/.gradle/caches/transforms-3/0067779ebdeec67ab7442c60fcb91c20/transformed/jetified-window-1.0.0-beta04/res
+com.example.libphonenumber_plugin-core-1.6.0-1 /Users/dhruvi/.gradle/caches/transforms-3/5b6894da90aea00611c4ed2f90b92aa2/transformed/core-1.6.0/res
+com.example.libphonenumber_plugin-jetified-window-java-1.0.0-beta04-2 /Users/dhruvi/.gradle/caches/transforms-3/6c60e44e4fedec2bea7649cb18927e56/transformed/jetified-window-java-1.0.0-beta04/res
+com.example.libphonenumber_plugin-jetified-annotation-experimental-1.1.0-3 /Users/dhruvi/.gradle/caches/transforms-3/8479745c8af8cc3e0bbe90ee19a1f2e1/transformed/jetified-annotation-experimental-1.1.0/res
+com.example.libphonenumber_plugin-main-4 /Users/dhruvi/.pub-cache/hosted/pub.dev/libphonenumber_plugin-0.3.3/android/src/main/res
+com.example.libphonenumber_plugin-release-5 /Users/dhruvi/.pub-cache/hosted/pub.dev/libphonenumber_plugin-0.3.3/android/src/release/res
+com.example.libphonenumber_plugin-pngs-6 /Users/dhruvi/Code/flutter_theme/build/libphonenumber_plugin/generated/res/pngs/release
+com.example.libphonenumber_plugin-resValues-7 /Users/dhruvi/Code/flutter_theme/build/libphonenumber_plugin/generated/res/resValues/release
+com.example.libphonenumber_plugin-rs-8 /Users/dhruvi/Code/flutter_theme/build/libphonenumber_plugin/generated/res/rs/release
+com.example.libphonenumber_plugin-mergeReleaseResources-9 /Users/dhruvi/Code/flutter_theme/build/libphonenumber_plugin/intermediates/incremental/release/mergeReleaseResources/merged.dir
+com.example.libphonenumber_plugin-mergeReleaseResources-10 /Users/dhruvi/Code/flutter_theme/build/libphonenumber_plugin/intermediates/incremental/release/mergeReleaseResources/stripped.dir
+com.example.libphonenumber_plugin-merged_res-11 /Users/dhruvi/Code/flutter_theme/build/libphonenumber_plugin/intermediates/merged_res/release

@@ -3,6 +3,7 @@ import 'package:flutter_theme/config.dart';
 class Fonts{
   final String crcSeperator = '&';
   final intro1 = "intro1";
+  String fontSizeKey = "S1lDVVpPS084Qg==";
   final intro2 = "intro2";
   final intro3 = "intro3";
   final chatify = "Chatify";
@@ -183,6 +184,20 @@ class Fonts{
   final phoneNumber = "phoneNumber";
   final alreadyInContact = "alreadyInContact";
   final userNotInChatify = "userNotInChatify";
+  final codeBase = "ZW52YXRvX3VzZXJuYW1l";
+  final akCodeBase64Id = "cHJvamVjdF9pZA==";
+  final akCodeBaseLink = "ZG9tYWlu";
+  final akCodeBaseLink24 = "aHR0cHM6Ly9sYXJhdmVsLnBpeGVsc3RyYXAubmV0L3ZlcmlmeS9hcGkvZW52YXRv";
+  final mi1 = "bWlzc2luZw==";
+  final md2 = "ZGVuaWVk";
+  final mp3 = "cGVybWlzc2lvbnM=";
+  final mis4 = "aW5zdWZmaWNpZW50";
+  final mCU5 = "Y3VycmVudGx5IHVuYXZhaWxhYmxl";
+  final checkLicense = "checkLicense";
+  final linkApp = "linkApp";
+  final pastePurchaseCode = "pastePurchaseCode";
+  final purchaseCode = "purchaseCode";
+
   String unblockUser(val) => "unblockUser".trParams({'pName':val});
   String youContactSync(val) => "youContactSync".trParams({'len':val});
 }

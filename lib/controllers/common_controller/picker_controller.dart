@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -228,29 +229,60 @@ class PickerController extends GetxController {
                   } else if (isSingleChat) {
                     final singleChatCtrl = Get.find<ChatController>();
                     singleChatCtrl.selectedImages = value;
-                    singleChatCtrl.selectedImages
-                        .asMap()
-                        .entries
-                        .forEach((element) async {
-                      File? videoFile =  element.value;
-                      singleChatCtrl.isLoading = true;
-                      singleChatCtrl.update();
-                      video = File(videoFile.path);
-                      if (image!.lengthSync() / 1000000 >
-                          appCtrl.usageControlsVal!.maxFileSize!) {
-                        video = null;
-                        singleChatCtrl.isLoading = false;
-                        singleChatCtrl.update();
-                        snackBar(
-                            "Image Should be less than ${video!.lengthSync() / 1000000 > appCtrl.usageControlsVal!.maxFileSize!}");
-                      }
 
-                      singleChatCtrl.uploadMultipleFile(
-                          video!,
-                          element.value.name.contains("mp4")
-                              ? MessageType.video
-                              : MessageType.image);
-                    });
+                    if(singleChatCtrl.selectedImages.length >=4){
+                      log("HHH");
+                      singleChatCtrl.selectedImages
+                          .asMap()
+                          .entries
+                          .forEach((element) async {
+                        File? videoFile = element.value;
+                        singleChatCtrl.isLoading = true;
+                        singleChatCtrl.update();
+                        video = File(videoFile.path);
+                        if (video!.lengthSync() / 1000000 >
+                            appCtrl.usageControlsVal!.maxFileSize!) {
+                          video = null;
+                          singleChatCtrl.isLoading = false;
+                          singleChatCtrl.update();
+                          snackBar(
+                              "Image Should be less than ${video!.lengthSync() /
+                                  1000000 >
+                                  appCtrl.usageControlsVal!.maxFileSize!}");
+                        }
+
+                        singleChatCtrl.uploadMultipleImage(
+                            video!);
+                      });
+log("INNG :${singleChatCtrl.imageList}");
+                      singleChatCtrl.onSendMessage(jsonEncode(singleChatCtrl.imageList), MessageType.imageArray);
+                    }else {
+                      singleChatCtrl.selectedImages
+                          .asMap()
+                          .entries
+                          .forEach((element) async {
+                        File? videoFile = element.value;
+                        singleChatCtrl.isLoading = true;
+                        singleChatCtrl.update();
+                        video = File(videoFile.path);
+                        if (video!.lengthSync() / 1000000 >
+                            appCtrl.usageControlsVal!.maxFileSize!) {
+                          video = null;
+                          singleChatCtrl.isLoading = false;
+                          singleChatCtrl.update();
+                          snackBar(
+                              "Image Should be less than ${video!.lengthSync() /
+                                  1000000 >
+                                  appCtrl.usageControlsVal!.maxFileSize!}");
+                        }
+
+                        singleChatCtrl.uploadMultipleFile(
+                            video!,
+                            element.value.name.contains("mp4")
+                                ? MessageType.video
+                                : MessageType.image);
+                      });
+                    }
                     selectedImages = [];
                     update();
                   } else {

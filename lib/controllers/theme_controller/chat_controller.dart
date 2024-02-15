@@ -37,6 +37,7 @@ class ChatController extends GetxController {
   String? audioFile, wallPaperType;
   String selectedImage = "";
   final picker = ImagePicker();
+  List imageList=[];
   File? selectedFile;
   File? image;
   File? video;
@@ -461,6 +462,30 @@ class ChatController extends GetxController {
     });
   }
 
+  // UPLOAD SELECTED IMAGE TO FIREBASE
+  Future uploadMultipleImage(File imageFile) async {
+    imageFile = imageFile;
+    update();
+
+    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    Reference reference = FirebaseStorage.instance.ref().child(fileName);
+    var file = File(imageFile.path);
+    UploadTask uploadTask = reference.putFile(file);
+    uploadTask.then((res) {
+      res.ref.getDownloadURL().then((downloadUrl) async {
+        imageUrl = downloadUrl;
+
+        imageList.add(imageUrl);
+        log("hhh :$imageList");
+        update();
+      }, onError: (err) {
+        isLoading = false;
+        update();
+        Fluttertoast.showToast(msg: 'Image is Not Valid');
+      });
+    });
+  }
+
   //send video after recording or pick from media
   videoSend() async {
     update();
@@ -547,7 +572,7 @@ class ChatController extends GetxController {
   }
 
   // SEND MESSAGE CLICK
-  void onSendMessage(String content, MessageType type) async {
+  void onSendMessage( content, MessageType type) async {
     // isLoading = true;
     update();
     Get.forceAppUpdate();

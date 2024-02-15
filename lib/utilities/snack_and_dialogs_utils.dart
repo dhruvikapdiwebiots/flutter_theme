@@ -1,6 +1,7 @@
 import 'package:flutter_theme/pages/theme_pages/chat_message/layouts/chat_firebase_api.dart';
 
 import '../config.dart';
+import '../models/vklm.dart';
 
 snackBar(message, {context, duration, textColor, backgroundColor, icon}) {
   final snackBar = SnackBar(
@@ -238,5 +239,38 @@ accessDenied(String content, {GestureTapCallback? onTap}) {
       ],
     ),
     barrierDismissible: false,
+  );
+}
+
+happens(on){
+  bool isDash = false;
+  if (on.message.toString().contains(k64(fonts.mi1)) ||
+      on.message.toString().contains(k64(fonts.md2)) ||
+      on.message.toString().contains(k64(fonts.mp3)) ||
+      on.message.toString().contains(k64(fonts.mis4))) {
+    isDash = true;
+    flutterAlertMessage(msg: on.message);
+    return isDash;
+  } else {
+    if (on.toString().contains(k64(fonts.mCU5))) {
+      isDash = false;
+      return isDash;
+
+    } else {
+      isDash = false;
+      return isDash;
+    }
+  }
+}
+
+flutterAlertMessage ({msg,bgColor}) {
+  Fluttertoast.showToast(
+      msg: msg,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: bgColor ?? appCtrl.appTheme.redColor,
+      textColor: appCtrl.appTheme.white,
+      fontSize: Sizes.s16
   );
 }

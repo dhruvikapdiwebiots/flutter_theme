@@ -54,6 +54,7 @@ class CommonTextBox extends StatelessWidget {
     return GetBuilder<AppController>(builder: (appCtrl) {
       return TextFormField(
           controller: controller,
+
           onChanged: onChanged,
           validator: validator,
           focusNode: focusNode,
@@ -65,15 +66,17 @@ class CommonTextBox extends StatelessWidget {
           readOnly: readOnly,
           maxLength: maxLength,
           decoration: InputDecoration(
-              filled: filled,
-              fillColor: fillColor,
-              hintText: trans(hinText),
+              fillColor: fillColor ?? appCtrl.appTheme.gray.withOpacity(0.05),
+              filled: true,
+              isDense: true,
+              hintText: hinText.tr,
+
               labelText: trans(labelText),
               errorText: errorText,
               hintStyle:
-                  AppCss.poppinsMedium14.textColor(appCtrl.appTheme.blackColor),
-              labelStyle:
-                  AppCss.poppinsMedium14.textColor(appCtrl.appTheme.blackColor),
+                  AppCss.poppinsMedium14.textColor(appCtrl.appTheme.redColor),
+              labelStyle: AppCss.poppinsMedium14.textColor(appCtrl.appTheme.gray),
+
               border: border ?? inputBorder,
               focusedBorder: border ?? inputBorder,
               disabledBorder: border ?? inputBorder,
