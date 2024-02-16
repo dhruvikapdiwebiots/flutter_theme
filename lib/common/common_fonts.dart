@@ -197,7 +197,9 @@ class Fonts{
   final linkApp = "linkApp";
   final pastePurchaseCode = "pastePurchaseCode";
   final purchaseCode = "purchaseCode";
+  final image = "image";
 
   String unblockUser(val) => "unblockUser".trParams({'pName':val});
   String youContactSync(val) => "youContactSync".trParams({'len':val});
+  String areYouSureReport(val) => "youContactSync".trParams({'name':val});
 }

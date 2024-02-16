@@ -27,5 +27,10 @@
   },
   "pod_target_xcconfig": {
     "DEFINES_MODULE": "YES"
+  },
+  "resource_bundles": {
+    "local_auth_ios_privacy": [
+      "Resources/PrivacyInfo.xcprivacy"
+    ]
   }
 }

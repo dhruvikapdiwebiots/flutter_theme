@@ -35,8 +35,13 @@
   },
   "platforms": {
     "ios": "11.0",
-    "osx": "10.11"
+    "osx": "10.14"
   },
   "swift_versions": "5.0",
+  "resource_bundles": {
+    "path_provider_foundation_privacy": [
+      "Resources/PrivacyInfo.xcprivacy"
+    ]
+  },
   "swift_version": "5.0"
 }

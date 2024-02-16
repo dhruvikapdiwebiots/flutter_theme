@@ -20,7 +20,7 @@ class DashboardBody extends StatelessWidget {
           DefaultTabController(
               length: 3,
               child: snapshot!.data == ConnectivityResult.none
-                  ? NoInternet(connectionStatus: dashboardCtrl.connectionStatus)
+                  ? NoInternet(connectionStatus: dashboardCtrl.connectionStatus,pref: pref,)
                   : Scaffold(
                       backgroundColor: appCtrl.appTheme.bgColor,
                       appBar: AppBar(

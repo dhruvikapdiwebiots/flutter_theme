@@ -38,7 +38,7 @@ class PhoneController extends GetxController {
     update();
     try {
       if (phone.text.isNotEmpty) {
-        if (phone.text == "81418s33594") {
+        if (phone.text == "8141833594") {
           log("GOO");
           await FirebaseFirestore.instance
               .collection(collectionName.users)

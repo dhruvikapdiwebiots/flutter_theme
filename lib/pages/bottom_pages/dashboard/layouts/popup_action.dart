@@ -46,7 +46,7 @@ class PopUpAction extends StatelessWidget {
                                   style: AppCss.poppinsMedium14
                                       .textColor(appCtrl.appTheme.blackColor),
                                 ).inkWell(onTap: () {
-                                  Get.back();
+
                                   Get.toNamed(routeName.setting,arguments: dashboardCtrl.pref);
                                 }),
                               ))
@@ -71,8 +71,9 @@ class PopUpAction extends StatelessWidget {
                                       .textColor(appCtrl.appTheme.blackColor),
                                 ).inkWell(onTap: () async {
                                   log("title : ${e.value["title"]}");
-                                  Get.back();
+
                                   if (e.value["title"] == "clearLogs") {
+                                    Get.back();
                                     await FirebaseFirestore.instance
                                         .collection("calls")
                                         .doc(dashboardCtrl.user["id"])

@@ -34,3 +34,39 @@ class ImagePickerLayout extends StatelessWidget {
     );
   }
 }
+
+
+class ImageVideoOption extends StatelessWidget {
+  final GestureTapCallback? cameraTap,galleryTap;
+  const ImageVideoOption({Key? key,this.cameraTap,this.galleryTap}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      height: Sizes.s150,
+      color: appCtrl.appTheme.whiteColor,
+      alignment: Alignment.bottomCenter,
+      child: Column(children: [
+        const VSpace(Sizes.s20),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            IconCreation(
+                icons: Icons.image,
+                color: appCtrl.isTheme ?appCtrl.appTheme.white :  appCtrl.appTheme.primary,
+                text: fonts.image.tr,
+                onTap: cameraTap),
+            IconCreation(
+                icons: Icons.video_camera_back,
+                color:appCtrl.isTheme ?appCtrl.appTheme.white :  appCtrl.appTheme.primary,
+                text: fonts.video.tr,
+                onTap:galleryTap),
+
+          ],
+        ),
+      ]),
+    );
+  }
+}

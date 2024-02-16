@@ -3,6 +3,6 @@
 3    package="xyz.luan.audioplayers" >
 4
 5    <uses-sdk android:minSdkVersion="16" />
-5-->/Users/dhruvi/.pub-cache/hosted/pub.dev/audioplayers_android-4.0.3/android/src/main/AndroidManifest.xml
+5-->/Users/officepc/.pub-cache/hosted/pub.dev/audioplayers_android-4.0.3/android/src/main/AndroidManifest.xml
 6
 7</manifest>

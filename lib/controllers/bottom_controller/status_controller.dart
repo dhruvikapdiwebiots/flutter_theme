@@ -35,6 +35,7 @@ class StatusController extends GetxController {
   List<Status> statusData = [];
   BannerAd? bannerAd;
   bool bannerAdIsLoaded = false;
+  StatusType? statusType;
   Widget currentAd = const SizedBox(
     width: 0.0,
     height: 0.0,
@@ -234,7 +235,7 @@ class StatusController extends GetxController {
     }
   }*/
 
-  imagePickerOption(
+  imageVideoOption(
     BuildContext context,
   ) {
     showModalBottomSheet(
@@ -245,22 +246,57 @@ class StatusController extends GetxController {
         ),
         builder: (BuildContext context) {
           // return your layout
-          return ImagePickerLayout(cameraTap: () async {
+          return ImageVideoOption(cameraTap: () async {
             dismissKeyboard();
-            await getImage(source: ImageSource.camera).then((value) async {
+            await getImage(source: ImageSource.camera,type: "image").then((value) async {
               log("VALUE : $value");
               String fileName =
-                  DateTime.now().millisecondsSinceEpoch.toString();
-
+              DateTime.now().millisecondsSinceEpoch.toString();
+              statusType = StatusType.image;
               reference = FirebaseStorage.instance.ref().child(fileName);
               update();
               try {
-                await addStatus(image!, StatusType.image);
+                await addStatus(image!, statusType!);
               } catch (e) {
                 appCtrl.isLoading = false;
                 appCtrl.update();
               }
             });
+          }, galleryTap: () async {
+            await getImage(source: ImageSource.camera,type: "video").then((value) async {
+              log("VALUE : $value");
+              String fileName =
+              DateTime.now().millisecondsSinceEpoch.toString();
+              statusType = StatusType.image;
+              reference = FirebaseStorage.instance.ref().child(fileName);
+              update();
+              try {
+                await addStatus(image!, statusType!);
+              } catch (e) {
+                appCtrl.isLoading = false;
+                appCtrl.update();
+              }
+            });
+          });
+        });
+  }
+
+
+  imagePickerOption(
+      BuildContext context,
+      ) {
+    showModalBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+          borderRadius:
+          BorderRadius.vertical(top: Radius.circular(AppRadius.r25)),
+        ),
+        builder: (BuildContext context) {
+          // return your layout
+          return ImagePickerLayout(cameraTap: () async {
+            dismissKeyboard();
+           Get.back();
+           imageVideoOption(context);
           }, galleryTap: () async {
             Get.back();
             pickAssets();
@@ -279,7 +315,7 @@ class StatusController extends GetxController {
         reference = FirebaseStorage.instance.ref().child(fileName);
         update();
         try {
-          await addStatus(image!, StatusType.image);
+          await addStatus(image!, statusType!);
         } catch (e) {
           appCtrl.isLoading = false;
           appCtrl.update();
@@ -293,10 +329,10 @@ class StatusController extends GetxController {
   }
 
 
-  Future getImage({source}) async {
+  Future getImage({source,type}) async {
     if (source != null) {
       final ImagePicker picker = ImagePicker();
-      imageFiles = (await picker.pickImage(source: source, imageQuality: 30))!;
+      imageFiles =  type == "image" ? (await picker.pickImage(source: source, imageQuality: 30)) :(await picker.pickVideo(source: source,));
       if (imageFiles != null) {
         final croppedFile = await ImageCropper().cropImage(
           sourcePath: imageFiles!.path,
@@ -329,6 +365,7 @@ class StatusController extends GetxController {
             snackBar(
                 "Image Should be less than ${image!.lengthSync() / 1000000 > appCtrl.usageControlsVal!.maxFileSize!}");
           }
+          statusType = StatusType.image;
         }
         log("image1 : $image");
         log("image1 : ${image!.lengthSync() / 1000000 > 60}");
@@ -364,6 +401,7 @@ class StatusController extends GetxController {
           snackBar(
               "Image Should be less than ${image!.lengthSync() / 1000000 > appCtrl.usageControlsVal!.maxFileSize!}");
         }
+        statusType = StatusType.video;
         return image;
       } else {
         if (imageFile != null) {
@@ -402,6 +440,7 @@ class StatusController extends GetxController {
               snackBar(
                   "Image Should be less than ${image!.lengthSync() / 1000000 > appCtrl.usageControlsVal!.maxFileSize!}");
             }
+            statusType = StatusType.image;
           }
           log("image1 : $image");
           Get.forceAppUpdate();

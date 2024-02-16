@@ -34,10 +34,10 @@ class _StatusLayoutState extends State<StatusLayout> {
             : (widget.snapshot!.data!).docs[0]["photoUrl"].length - 1]
         ["statusType"] ==
             StatusType.video.name) {
-          videoController = VideoPlayerController.network(
-            (widget.snapshot!.data!).docs[0]["photoUrl"]
-            [(widget.snapshot!.data!).docs[0]["photoUrl"].length - 1]
-            ["image"],
+          videoController = VideoPlayerController.networkUrl(
+          Uri.parse(  (widget.snapshot!.data!).docs[0]["photoUrl"]
+          [(widget.snapshot!.data!).docs[0]["photoUrl"].length - 1]
+          ["image"]),
           )
             ..initialize().then((_) {
               // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.

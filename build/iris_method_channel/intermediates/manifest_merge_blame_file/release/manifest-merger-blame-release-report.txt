@@ -3,6 +3,6 @@
 3    package="com.agora.iris_method_channel" >
 4
 5    <uses-sdk android:minSdkVersion="16" />
-5-->/Users/dhruvi/.pub-cache/hosted/pub.dev/iris_method_channel-2.0.0-dev.4/android/src/main/AndroidManifest.xml
+5-->/Users/officepc/.pub-cache/hosted/pub.dev/iris_method_channel-2.0.0-dev.4/android/src/main/AndroidManifest.xml
 6
 7</manifest>

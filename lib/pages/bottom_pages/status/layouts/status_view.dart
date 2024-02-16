@@ -35,6 +35,7 @@ class _StatusScreenViewState extends State<StatusScreenView> {
 
   void initStoryPageItems() {
     for (int i = 0; i < status!.photoUrl!.length; i++) {
+      log("STTTT :${status!.photoUrl![i].statusType}");
       if (status!.photoUrl![i].statusType == StatusType.text.name) {
         int value = int.parse(status!.photoUrl![i].statusBgColor!, radix: 16);
         Color finalColor = Color(value);

@@ -436,7 +436,7 @@ class GroupProfileBody extends StatelessWidget {
                           name: fonts.reportGroup.tr,
                           onTap: () async {
                             accessDenied(
-                                "Are you sure you want to report ${chatCtrl.pName} group?. Once you report this group you will be remove from this group without notify anyone",
+                                fonts.areYouSureReport(chatCtrl.pName),
                                 onTap: () async {
                               await FirebaseFirestore.instance
                                   .collection(collectionName.groups)
@@ -476,7 +476,7 @@ class GroupProfileBody extends StatelessWidget {
                               await FirebaseFirestore.instance
                                   .collection(collectionName.report)
                                   .add({
-                                "reportFrom": chatCtrl.user["id"],
+                                "reportFrom": appCtrl.user["id"],
                                 "reportTo": chatCtrl.pId,
                                 "isSingleChat": false,
                                 "timestamp":

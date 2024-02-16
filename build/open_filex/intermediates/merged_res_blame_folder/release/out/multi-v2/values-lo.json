@@ -4,7 +4,7 @@
             "outputFile": "com.crazecoder.openfile.open_filex-merged_res-24:/values-lo/values-lo.xml",
             "map": [
                 {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/0a39d6c66753514f8540dcc99f146b02/transformed/appcompat-1.6.1/res/values-lo/values-lo.xml",
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/4802a7be405be3ac342cc4b8e596bdcb/transformed/appcompat-1.6.1/res/values-lo/values-lo.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -14,7 +14,7 @@
                     }
                 },
                 {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/e802191c1ad99e9bd0e90be275ecce39/transformed/core-1.9.0/res/values-lo/values-lo.xml",
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/b4085dc1f086bb02771ffc61c007b474/transformed/core-1.9.0/res/values-lo/values-lo.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -36,7 +36,7 @@
             "outputFile": "com.crazecoder.openfile.open_filex-mergeReleaseResources-22:/values-lo/values-lo.xml",
             "map": [
                 {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/0a39d6c66753514f8540dcc99f146b02/transformed/appcompat-1.6.1/res/values-lo/values-lo.xml",
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/4802a7be405be3ac342cc4b8e596bdcb/transformed/appcompat-1.6.1/res/values-lo/values-lo.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -46,7 +46,7 @@
                     }
                 },
                 {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/e802191c1ad99e9bd0e90be275ecce39/transformed/core-1.9.0/res/values-lo/values-lo.xml",
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/b4085dc1f086bb02771ffc61c007b474/transformed/core-1.9.0/res/values-lo/values-lo.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

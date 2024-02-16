@@ -255,4 +255,7 @@ final dynamic en = {
   "linkApp": "“Link your existing project to license welcome to chatify”",
   "pastePurchaseCode": "Paste Purchase Code",
   "purchaseCode": "Purchase Code",
+
+  "areYouSureReport": "Are you sure you want to report @name group?. Once you report this group you will be remove from this group without notify anyone",
+  "image": "Image",
 };

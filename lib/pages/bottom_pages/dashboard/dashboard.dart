@@ -170,23 +170,26 @@ class _DashboardState extends State<Dashboard>
                                         }
                                       }
                                     }
-                                    return WillPopScope(
-                                      onWillPop: () async {
+                                    return PopScope(
+                                      canPop: false,
+                                      onPopInvoked: (did) async {
+                                        log("did :$did");
+                                     if(did) return;
                                         if (dashboardCtrl.selectedIndex != 0) {
                                           dashboardCtrl.onChange(0);
                                           dashboardCtrl.controller!.index = 0;
                                           dashboardCtrl.update();
-                                          return false;
+
                                         } else if (dashboardCtrl.isSearch ==
                                             true) {
                                           dashboardCtrl.isSearch = false;
                                           dashboardCtrl.userText.text = "";
 
                                           dashboardCtrl.update();
-                                          return false;
+
                                         } else {
                                           SystemNavigator.pop();
-                                          return true;
+
                                         }
                                       },
                                       child: dashboardCtrl.bottomList.isNotEmpty
@@ -194,10 +197,22 @@ class _DashboardState extends State<Dashboard>
                                               snapshot: snapshot,
                                               pref: dashboardCtrl.pref,
                                             )
-                                          : Container(),
+                                          :Scaffold(
+                                          backgroundColor: appCtrl.appTheme.primary,
+                                          body: Center(
+                                              child: Image.asset(
+                                                imageAssets.splashIcon, // replace your Splashscreen icon
+                                                width: Sizes.s210,
+                                              )))
                                     );
                                   })
-                              : Container();
+                              :Scaffold(
+                              backgroundColor: appCtrl.appTheme.primary,
+                              body: Center(
+                                  child: Image.asset(
+                                    imageAssets.splashIcon, // replace your Splashscreen icon
+                                    width: Sizes.s210,
+                                  )));
                         }),
                   ),
                 ));

@@ -135,6 +135,7 @@ class FirebaseCommonController extends GetxController {
     int hour =
     int.parse(appCtrl.usageControlsVal!.statusDeleteTime!.split(" hrs")[0]);
     // Check if the time difference is greater than 24 hours
+    log("timeDifference :$timeDifference //$hour //${timeDifference.inHours > hour}");
     return timeDifference.inHours > hour;
   }
 

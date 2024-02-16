@@ -2,7 +2,7 @@
   "name": "light_compressor",
   "version": "1.0.0",
   "summary": "Light Compressor Library",
-  "description": "A new Flutter plugin.",
+  "description": "Light Video Compressor Library.",
   "homepage": "https://github.com/AbedElazizShe",
   "license": {
     "file": "../LICENSE"
@@ -20,7 +20,7 @@
     ]
   },
   "platforms": {
-    "ios": "14.0"
+    "ios": "11.0"
   },
   "pod_target_xcconfig": {
     "DEFINES_MODULE": "YES",

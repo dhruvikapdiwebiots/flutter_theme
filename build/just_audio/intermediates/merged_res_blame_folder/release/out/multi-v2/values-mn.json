@@ -4,24 +4,7 @@
             "outputFile": "com.ryanheise.just_audio-merged_res-16:/values-mn/values-mn.xml",
             "map": [
                 {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/f98800267773ba00c403e9ba73c54794/transformed/jetified-media2-session-1.2.1/res/values-mn/values-mn.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6",
-                        "startColumns": "4,4,4,4,4",
-                        "startOffsets": "55,167,270,369,499",
-                        "endColumns": "111,102,98,129,129",
-                        "endOffsets": "162,265,364,494,624"
-                    },
-                    "to": {
-                        "startLines": "2,12,13,14,15",
-                        "startColumns": "4,4,4,4,4",
-                        "startOffsets": "55,828,931,1030,1160",
-                        "endColumns": "111,102,98,129,129",
-                        "endOffsets": "162,926,1025,1155,1285"
-                    }
-                },
-                {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/dcf5cda7af3030ee6510cfd802539922/transformed/jetified-exoplayer-core-2.18.7/res/values-mn/values-mn.xml",
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/1398cfdb4b7af21a22832e9da6224078/transformed/jetified-exoplayer-core-2.18.7/res/values-mn/values-mn.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10",
                         "startColumns": "4,4,4,4,4,4,4,4,4",
@@ -38,7 +21,24 @@
                     }
                 },
                 {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/76bbc005e450fe63ba60642d88ea5bff/transformed/core-1.7.0/res/values-mn/values-mn.xml",
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/4f2336f8069993939c8a262b40ee32aa/transformed/jetified-media2-session-1.2.1/res/values-mn/values-mn.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6",
+                        "startColumns": "4,4,4,4,4",
+                        "startOffsets": "55,167,270,369,499",
+                        "endColumns": "111,102,98,129,129",
+                        "endOffsets": "162,265,364,494,624"
+                    },
+                    "to": {
+                        "startLines": "2,12,13,14,15",
+                        "startColumns": "4,4,4,4,4",
+                        "startOffsets": "55,828,931,1030,1160",
+                        "endColumns": "111,102,98,129,129",
+                        "endOffsets": "162,926,1025,1155,1285"
+                    }
+                },
+                {
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/5025f2a762d83cffeb449a15c5043c00/transformed/core-1.7.0/res/values-mn/values-mn.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -60,24 +60,7 @@
             "outputFile": "com.ryanheise.just_audio-mergeReleaseResources-14:/values-mn/values-mn.xml",
             "map": [
                 {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/f98800267773ba00c403e9ba73c54794/transformed/jetified-media2-session-1.2.1/res/values-mn/values-mn.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6",
-                        "startColumns": "4,4,4,4,4",
-                        "startOffsets": "55,167,270,369,499",
-                        "endColumns": "111,102,98,129,129",
-                        "endOffsets": "162,265,364,494,624"
-                    },
-                    "to": {
-                        "startLines": "2,12,13,14,15",
-                        "startColumns": "4,4,4,4,4",
-                        "startOffsets": "55,828,931,1030,1160",
-                        "endColumns": "111,102,98,129,129",
-                        "endOffsets": "162,926,1025,1155,1285"
-                    }
-                },
-                {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/dcf5cda7af3030ee6510cfd802539922/transformed/jetified-exoplayer-core-2.18.7/res/values-mn/values-mn.xml",
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/1398cfdb4b7af21a22832e9da6224078/transformed/jetified-exoplayer-core-2.18.7/res/values-mn/values-mn.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10",
                         "startColumns": "4,4,4,4,4,4,4,4,4",
@@ -94,7 +77,24 @@
                     }
                 },
                 {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/76bbc005e450fe63ba60642d88ea5bff/transformed/core-1.7.0/res/values-mn/values-mn.xml",
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/4f2336f8069993939c8a262b40ee32aa/transformed/jetified-media2-session-1.2.1/res/values-mn/values-mn.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6",
+                        "startColumns": "4,4,4,4,4",
+                        "startOffsets": "55,167,270,369,499",
+                        "endColumns": "111,102,98,129,129",
+                        "endOffsets": "162,265,364,494,624"
+                    },
+                    "to": {
+                        "startLines": "2,12,13,14,15",
+                        "startColumns": "4,4,4,4,4",
+                        "startOffsets": "55,828,931,1030,1160",
+                        "endColumns": "111,102,98,129,129",
+                        "endOffsets": "162,926,1025,1155,1285"
+                    }
+                },
+                {
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/5025f2a762d83cffeb449a15c5043c00/transformed/core-1.7.0/res/values-mn/values-mn.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

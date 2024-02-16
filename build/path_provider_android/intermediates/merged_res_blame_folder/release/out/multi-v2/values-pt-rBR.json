@@ -4,7 +4,7 @@
             "outputFile": "io.flutter.plugins.pathprovider.path_provider_android-merged_res-10:/values-pt-rBR/values-pt-rBR.xml",
             "map": [
                 {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/5b6894da90aea00611c4ed2f90b92aa2/transformed/core-1.6.0/res/values-pt-rBR/values-pt-rBR.xml",
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/f61bb9e6f2804f6a115c9155cbc3267f/transformed/core-1.6.0/res/values-pt-rBR/values-pt-rBR.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -19,7 +19,7 @@
             "outputFile": "io.flutter.plugins.pathprovider.path_provider_android-mergeReleaseResources-8:/values-pt-rBR/values-pt-rBR.xml",
             "map": [
                 {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/5b6894da90aea00611c4ed2f90b92aa2/transformed/core-1.6.0/res/values-pt-rBR/values-pt-rBR.xml",
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/f61bb9e6f2804f6a115c9155cbc3267f/transformed/core-1.6.0/res/values-pt-rBR/values-pt-rBR.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

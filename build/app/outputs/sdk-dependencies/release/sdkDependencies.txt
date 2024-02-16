@@ -120,10 +120,10 @@ library {
   maven_library {
     groupId: "org.jetbrains.kotlin"
     artifactId: "kotlin-stdlib-jdk8"
-    version: "1.9.10"
+    version: "1.8.22"
   }
   digests {
-    sha256: "\244\307M\224\326L\341\253\3457`\376\003\211\335\224\037o\305X\320\332\263^G\300\205\241\036\310\017("
+    sha256: "A\230\260\352\360\220\244\362[o~ZYX\037C\024\272\214\237l\321\321>\351\323H\346^\330\367\a"
   }
   repo_index {
     value: 1
@@ -2193,7 +2193,7 @@ library {
 }
 library {
   digests {
-    sha256: "*\345\261>-\240\334\024\003\236v\310\221\252C$\"\324\356\260\201\037\365+;\037\344qK\206\266\236"
+    sha256: "5\302\274\341\026\335\245\227\225\374ID\333\303\273\357%r\275\242\256\315\0238\231+\246\226~$g\344"
   }
 }
 library_dependencies {
@@ -3394,7 +3394,7 @@ module_dependencies {
   dependency_index: 118
   dependency_index: 85
   dependency_index: 17
-  dependency_index: 10
+  dependency_index: 6
   dependency_index: 74
   dependency_index: 122
   dependency_index: 123
@@ -3402,7 +3402,6 @@ module_dependencies {
   dependency_index: 130
   dependency_index: 131
   dependency_index: 132
-  dependency_index: 6
   dependency_index: 142
   dependency_index: 144
   dependency_index: 34
@@ -3418,6 +3417,7 @@ module_dependencies {
   dependency_index: 22
   dependency_index: 21
   dependency_index: 162
+  dependency_index: 10
   dependency_index: 145
   dependency_index: 165
   dependency_index: 29

@@ -4,7 +4,7 @@
             "outputFile": "vn.hunghd.flutter.plugins.imagecropper.image_cropper-mergeReleaseResources-16:/values-zh/values-zh.xml",
             "map": [
                 {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/936b1fa223dfd9bfccc704ba1f2213c7/transformed/jetified-ucrop-2.2.8/res/values-zh/values-zh.xml",
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/8ffb701a00c400647888bb5cbd04d36a/transformed/jetified-ucrop-2.2.8/res/values-zh/values-zh.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7",
                         "startColumns": "4,4,4,4,4,4",
@@ -19,7 +19,7 @@
             "outputFile": "vn.hunghd.flutter.plugins.imagecropper.image_cropper-merged_res-18:/values-zh/values-zh.xml",
             "map": [
                 {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/936b1fa223dfd9bfccc704ba1f2213c7/transformed/jetified-ucrop-2.2.8/res/values-zh/values-zh.xml",
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/8ffb701a00c400647888bb5cbd04d36a/transformed/jetified-ucrop-2.2.8/res/values-zh/values-zh.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7",
                         "startColumns": "4,4,4,4,4,4",

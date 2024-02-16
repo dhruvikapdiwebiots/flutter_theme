@@ -1,12 +1,12 @@
 <lint-module
     format="1"
-    dir="/Users/dhruvi/Code/flutter_theme/android/app"
+    dir="/Users/officepc/Documents/flutter-projects/flutter_theme/android/app"
     name=":app"
     type="APP"
     maven="android:app:"
     gradle="7.4.2"
-    buildFolder="/Users/dhruvi/Code/flutter_theme/build/app"
-    bootClassPath="/Users/dhruvi/Library/Android/sdk/platforms/android-34/android.jar:/Users/dhruvi/Library/Android/sdk/build-tools/30.0.3/core-lambda-stubs.jar"
+    buildFolder="/Users/officepc/Documents/flutter-projects/flutter_theme/build/app"
+    bootClassPath="/Users/officepc/Library/Android/sdk/platforms/android-34/android.jar:/Users/officepc/Library/Android/sdk/build-tools/30.0.3/core-lambda-stubs.jar"
     javaSourceLevel="1.8"
     compileTarget="android-34"
     neverShrinking="true">

@@ -1,12 +1,16 @@
-import 'dart:developer';
+
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_theme/config.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../extensions/tklmn.dart';
 
 class NoInternet extends StatelessWidget {
   final ConnectivityResult? connectionStatus;
+  final SharedPreferences? pref;
   final DocumentSnapshot<Map<String, dynamic>>? rm,uc;
-  const NoInternet({Key? key, this.connectionStatus, this.rm, this.uc}) : super(key: key);
+  const NoInternet({Key? key, this.connectionStatus, this.rm, this.uc, this.pref}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +48,7 @@ class NoInternet extends StatelessWidget {
                     ],
                   ).marginSymmetric(horizontal: Insets.i30)),
                 )
-              : Splash(rm: rm,uc: uc,);
+              : CallFunc(prefs: pref!);
         });
   }
 }

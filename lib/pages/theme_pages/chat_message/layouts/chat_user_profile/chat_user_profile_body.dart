@@ -90,7 +90,7 @@ class ChatUserProfileBody extends StatelessWidget {
                   await FirebaseFirestore.instance
                       .collection(collectionName.report)
                       .add({
-                    "reportFrom": chatCtrl.userData["id"],
+                    "reportFrom": appCtrl.user["id"],
                     "reportTo": chatCtrl.pId,
                     "isSingleChat": true,
                     "timestamp": DateTime.now().millisecondsSinceEpoch

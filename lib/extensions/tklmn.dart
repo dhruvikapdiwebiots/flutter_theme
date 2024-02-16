@@ -20,7 +20,7 @@ class CallFunc extends StatefulWidget {
 }
 
 class CallFuncState extends State<CallFunc> {
-  bool isLoading = false;
+  bool isLoading = true;
   SharedPreferences? prefs;
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
@@ -35,15 +35,11 @@ class CallFuncState extends State<CallFunc> {
   bool isA1 = false, isA2 = false, isA3 = false, isA4 = false;
 
   initialise() async {
+    isLoading = true;
     prefs = widget.prefs;
-    doc = await rm;
-    uc = await uct;
-log("R< :${k64(collectionName.nkfig)}");setState(() {});
-await Future.delayed(DurationClass.s1);
-isDocHave =true;
-setState(() {
 
-});
+log("R< :${k64(collectionName.nkfig)}");setState(() {});
+
     if (isDRP()) {
       await a25.then((mn) async {
         if (mn.exists) {
@@ -118,6 +114,15 @@ await Future.delayed(DurationClass.s2);
           setState(() {});
         }
       });
+    }else{
+      debugPrint("dsfdsjkhf");
+      doc = await rm;
+      uc = await uct;
+      setState(() {
+
+      });
+      isDocHave =true;
+      isLoading =false;
     }
 
     setState(() {});
@@ -212,7 +217,7 @@ await Future.delayed(DurationClass.s2);
   @override
   Widget build(BuildContext context) {
     var h = MediaQuery.of(this.context).size.height;
-    return /*!isDocHave
+    return !isDocHave
         ? isLoading
             ? Center(
                 child: CircularProgressIndicator(),
@@ -269,7 +274,7 @@ await Future.delayed(DurationClass.s2);
                                   style: AppCss.poppinsBold16
                                       .textColor(appCtrl.appTheme.primary)),
                               const VSpace(Sizes.s20),
-                              *//* const Text(
+                               const Text(
                                 'Paste Purchase Code',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
@@ -342,7 +347,7 @@ await Future.delayed(DurationClass.s2);
                               ),
                               const SizedBox(
                                 height: 20,
-                              ),*//*
+                              ),
                               Text(
                                 fonts.userName.tr,
                                 style: AppCss.poppinsMedium15
@@ -442,11 +447,25 @@ await Future.delayed(DurationClass.s2);
                   ),
                 ),
               )
-        : */isDocHave?  Splash(
+        : isLoading
+        ? Scaffold(
+        backgroundColor: appCtrl.appTheme.primary,
+        body: Center(
+            child: Image.asset(
+              imageAssets.splashIcon, // replace your Splashscreen icon
+              width: Sizes.s210,
+            )))
+        :isDocHave?  Splash(
             pref: prefs!,
             rm: doc,
             uc: uc,
-          ):Container();
+          ):Scaffold(
+        backgroundColor: appCtrl.appTheme.primary,
+        body: Center(
+            child: Image.asset(
+              imageAssets.splashIcon, // replace your Splashscreen icon
+              width: Sizes.s210,
+            )));
   }
 
   String reverse(String string) {

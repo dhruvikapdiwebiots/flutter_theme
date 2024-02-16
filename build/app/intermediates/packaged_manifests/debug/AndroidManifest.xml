@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.fluttertheme.flutter_theme"
-    android:versionCode="27"
+    android:versionCode="28"
     android:versionName="1.1.0" >
 
     <uses-sdk
@@ -121,7 +121,6 @@
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="Chatify"
-        android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true" >
         <activity
             android:name="com.fluttertheme.flutter_theme.MainActivity"

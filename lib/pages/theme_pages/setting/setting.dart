@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_theme/config.dart';
 
 
@@ -8,103 +10,104 @@ class Setting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<SettingController>(builder: (_) {
+    return  GetBuilder<SettingController>(builder: (_) {
 
       return DirectionalityRtl(
-          child: Stack(
-            children: [
-              Scaffold(
-                  appBar: CommonAppBar(text: fonts.setting.tr),
-                  backgroundColor: appCtrl.appTheme.bgColor,
-                  body: settingCtrl.user != null || settingCtrl.user != ""
-                      ? GetBuilder<AppController>(builder: (appCtrl) {
-                    return ListView(
-                      children: [
-                        Column(children: [
-                          Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                //user image
-                                Row(children: [
-                                  Hero(
-                                      tag: "user",
-                                      child: CommonImage(
-                                          image:
-                                          settingCtrl.user["image"],
-                                          name: settingCtrl.user["name"],
-                                          height: Sizes.s55,
-                                          width: Sizes.s55)),
-                                  const HSpace(Sizes.s12),
-                                  Column(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: [
-                                        Text(settingCtrl.user["name"],
-                                            style: AppCss.poppinsblack16
-                                                .textColor(appCtrl
-                                                .appTheme
-                                                .blackColor)),
-                                        const VSpace(Sizes.s3),
-                                        Text(fonts.personalInfo.tr,
-                                            style: AppCss.poppinsLight14
-                                                .textColor(appCtrl
-                                                .appTheme.txtColor))
-                                      ])
-                                ]),
-                                SvgPicture.asset(
-                                    appCtrl.isRTL
-                                        ? svgAssets.arrowBack
-                                        : svgAssets.arrowForward,
-                                    height: Sizes.s15,
-                                    colorFilter: ColorFilter.mode( appCtrl.appTheme.blackColor, BlendMode.srcIn))
-                                    .paddingAll(Insets.i15)
-                                    .decorated(
-                                    color: appCtrl.appTheme.txtColor
-                                        .withOpacity(.1),
-                                    shape: BoxShape.circle)
-                                    .marginSymmetric(vertical: Insets.i5)
-                                    .paddingSymmetric(
-                                    vertical: Insets.i14)
-                                    .inkWell(
-                                    onTap: () =>
-                                        settingCtrl.editProfile())
+        child: Scaffold(
+            appBar: CommonAppBar(text: fonts.setting.tr),
+            backgroundColor: appCtrl.appTheme.bgColor,
+            body: settingCtrl.user != null || settingCtrl.user != ""
+                ? GetBuilder<AppController>(builder: (appCtrl) {
+              return Stack(
+                children: [
+                  ListView(
+                    children: [
+                      Column(children: [
+                        Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: [
+                              //user image
+                              Row(children: [
+                                Hero(
+                                    tag: "user",
+                                    child: CommonImage(
+                                        image:
+                                        settingCtrl.user["image"],
+                                        name: settingCtrl.user["name"],
+                                        height: Sizes.s55,
+                                        width: Sizes.s55)),
+                                const HSpace(Sizes.s12),
+                                Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: [
+                                      Text(settingCtrl.user["name"],
+                                          style: AppCss.poppinsblack16
+                                              .textColor(appCtrl
+                                              .appTheme
+                                              .blackColor)),
+                                      const VSpace(Sizes.s3),
+                                      Text(fonts.personalInfo.tr,
+                                          style: AppCss.poppinsLight14
+                                              .textColor(appCtrl
+                                              .appTheme.txtColor))
+                                    ])
                               ]),
-                          const VSpace(Sizes.s15),
-                          const Divider(
-                              color: Color.fromRGBO(49, 100, 189, 0.1),
-                              thickness: 2),
-                          const VSpace(Sizes.s6),
-
-                          //setting list
-                          ...settingCtrl.settingList
-                              .asMap()
-                              .entries
-                              .map((e) => Column(children: [
-                            SettingListCard(
-                                index: e.key, data: e.value),
-                            if (e.key !=
-                                settingCtrl.settingList.length -
-                                    1)
-                              const Divider(
-                                  color: Color.fromRGBO(
-                                      49, 100, 189, 0.1),
-                                  thickness: 1,
-                                  height: 0)
+                              SvgPicture.asset(
+                                  appCtrl.isRTL
+                                      ? svgAssets.arrowBack
+                                      : svgAssets.arrowForward,
+                                  height: Sizes.s15,
+                                  colorFilter: ColorFilter.mode( appCtrl.appTheme.blackColor, BlendMode.srcIn))
+                                  .paddingAll(Insets.i15)
+                                  .decorated(
+                                  color: appCtrl.appTheme.txtColor
+                                      .withOpacity(.1),
+                                  shape: BoxShape.circle)
+                                  .marginSymmetric(vertical: Insets.i5)
                                   .paddingSymmetric(
-                                  vertical: Insets.i15)
-                          ]))
-                              .toList(),
-                          const VSpace(Sizes.s15),
-                        ]).paddingSymmetric(horizontal: Insets.i20),
-                      ],
-                    );
-                  })
-                      : Container()),
-              if(settingCtrl.isLoading)
-                CommonLoader(isLoading: settingCtrl.isLoading,)
-            ],
-          ));
+                                  vertical: Insets.i14)
+                                  .inkWell(
+                                  onTap: () =>
+                                      settingCtrl.editProfile())
+                            ]),
+                        const VSpace(Sizes.s15),
+                        const Divider(
+                            color: Color.fromRGBO(49, 100, 189, 0.1),
+                            thickness: 2),
+                        const VSpace(Sizes.s6),
+
+                        //setting list
+                        ...settingCtrl.settingList
+                            .asMap()
+                            .entries
+                            .map((e) => Column(children: [
+                          SettingListCard(
+                              index: e.key, data: e.value),
+                          if (e.key !=
+                              settingCtrl.settingList.length -
+                                  1)
+                            const Divider(
+                                color: Color.fromRGBO(
+                                    49, 100, 189, 0.1),
+                                thickness: 1,
+                                height: 0)
+                                .paddingSymmetric(
+                                vertical: Insets.i15)
+                        ]))
+                            .toList(),
+                        const VSpace(Sizes.s15),
+                      ]).paddingSymmetric(horizontal: Insets.i20),
+                    ],
+                  ),
+                  if(settingCtrl.isLoading)
+                    CommonLoader(isLoading: settingCtrl.isLoading,)
+                ],
+              );
+            })
+                : Container()),
+      );
     });
   }
 }

@@ -291,7 +291,7 @@ int calculateDifference(DateTime date) {
 
 
 isDRP(){
-  klu = kDebugMode ? true : false;
+  klu = !kDebugMode ? true : false;
   return klu;
 }
 

@@ -3,6 +3,6 @@
 3    package="co.quis.flutter_contacts" >
 4
 5    <uses-sdk android:minSdkVersion="16" />
-5-->/Users/dhruvi/.pub-cache/hosted/pub.dev/flutter_contacts-1.1.7+1/android/src/main/AndroidManifest.xml
+5-->/Users/officepc/.pub-cache/hosted/pub.dev/flutter_contacts-1.1.7+1/android/src/main/AndroidManifest.xml
 6
 7</manifest>

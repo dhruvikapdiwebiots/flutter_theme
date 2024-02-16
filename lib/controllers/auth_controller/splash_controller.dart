@@ -36,8 +36,9 @@ class SplashController extends GetxController {
     late ConnectivityResult result;
 
     result = await connectivity.checkConnectivity();
+    log("result ;$result");
     if (result == ConnectivityResult.none) {
-      return Get.to(NoInternet(connectionStatus: result,rm: rm,uc: uc,),
+      return Get.to(NoInternet(connectionStatus: result,rm: rm,uc: uc,pref: pref,),
           transition: Transition.downToUp);
     } else {
 
