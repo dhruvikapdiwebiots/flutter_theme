@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../config.dart';
 import '../../models/usage_control_model.dart';
+import '../../utilities/helper.dart';
 
 class AppController extends GetxController {
   AppTheme _appTheme = AppTheme.fromType(ThemeType.light);
@@ -30,7 +31,7 @@ Locale? locale;
   Map<String?, String?>? allContacts =  <String, String>{};
   List<JoinedUserModel> availableContact = [];
 
-
+  DocumentSnapshot<Map<String, dynamic>>? np, am;
   bool isTheme = false,isTyping =false,contactPermission = false;
   bool isBiometric = false;
   bool isRTL = false,isLoading =false,isSearch =false;
@@ -64,6 +65,7 @@ Locale? locale;
   @override
   void onReady() {
     // TODO: implement onReady
+    jks();
     getData();
 
     initPlatformState();

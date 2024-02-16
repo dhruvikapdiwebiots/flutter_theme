@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/usage_control_model.dart';
 import '../../models/user_setting_model.dart';
+import '../../models/vklm.dart';
 
 class SplashController extends GetxController {
   final storage = GetStorage();
@@ -18,7 +19,7 @@ class SplashController extends GetxController {
   late encrypt.Encrypter cryptor;
   final iv = encrypt.IV.fromLength(8);
   SharedPreferences? pref;
-   DocumentSnapshot<Map<String, dynamic>>? rm,uc;
+   DocumentSnapshot<Map<String, dynamic>>? rmk,uck;
 
   @override
   void onReady() async{
@@ -38,7 +39,7 @@ class SplashController extends GetxController {
     result = await connectivity.checkConnectivity();
     log("result ;$result");
     if (result == ConnectivityResult.none) {
-      return Get.to(NoInternet(connectionStatus: result,rm: rm,uc: uc,pref: pref,),
+      return Get.to(NoInternet(connectionStatus: result,rm: rmk,uc: uck,pref: pref,),
           transition: Transition.downToUp);
     } else {
 
@@ -68,6 +69,12 @@ class SplashController extends GetxController {
 
   //check whether user login or not
   void navigationPage() async {
+    debugPrint("sfjdfj");
+    if(rmk == null){
+      rmk = await rm;
+      uck =await uct;
+      update();
+    }
     await getAdminPermission();
 
    /* //language
@@ -289,15 +296,16 @@ log("lanlan :$lan");
   }
 
   getAdminPermission() async {
-    final usageControls = rm;
 
+    final usageControls = rmk;
+    debugPrint("dfddddddd${usageControls!.data()}");
     appCtrl.usageControlsVal =
         UsageControlModel.fromJson(usageControls!.data()!);
 
     appCtrl.update();
     appCtrl.storage.write(session.usageControls, usageControls.data());
 
-    final userAppSettings =uc;
+    final userAppSettings =uck;
     log("admin 4: ${userAppSettings!.data()}");
     appCtrl.userAppSettingsVal =
         UserAppSettingModel.fromJson(userAppSettings.data()!);

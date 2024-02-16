@@ -1,18 +1,18 @@
 [
     {
         "merged": "com.aravi.video_compress.video_compress_plus-merged_res-10:/layout-v21/notification_template_custom_big.xml",
-        "source": "com.aravi.video_compress.video_compress_plus-core-1.6.0-3:/layout-v21/notification_template_custom_big.xml"
+        "source": "com.aravi.video_compress.video_compress_plus-core-1.6.0-2:/layout-v21/notification_template_custom_big.xml"
     },
     {
         "merged": "com.aravi.video_compress.video_compress_plus-merged_res-10:/layout-v21/notification_template_icon_group.xml",
-        "source": "com.aravi.video_compress.video_compress_plus-core-1.6.0-3:/layout-v21/notification_template_icon_group.xml"
+        "source": "com.aravi.video_compress.video_compress_plus-core-1.6.0-2:/layout-v21/notification_template_icon_group.xml"
     },
     {
         "merged": "com.aravi.video_compress.video_compress_plus-merged_res-10:/layout-v21/notification_action_tombstone.xml",
-        "source": "com.aravi.video_compress.video_compress_plus-core-1.6.0-3:/layout-v21/notification_action_tombstone.xml"
+        "source": "com.aravi.video_compress.video_compress_plus-core-1.6.0-2:/layout-v21/notification_action_tombstone.xml"
     },
     {
         "merged": "com.aravi.video_compress.video_compress_plus-merged_res-10:/layout-v21/notification_action.xml",
-        "source": "com.aravi.video_compress.video_compress_plus-core-1.6.0-3:/layout-v21/notification_action.xml"
+        "source": "com.aravi.video_compress.video_compress_plus-core-1.6.0-2:/layout-v21/notification_action.xml"
     }
 ]

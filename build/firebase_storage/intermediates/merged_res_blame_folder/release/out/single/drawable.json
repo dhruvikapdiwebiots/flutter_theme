@@ -13,7 +13,7 @@
     },
     {
         "merged": "io.flutter.plugins.firebase.storage.firebase_storage-merged_res-14:/drawable/notification_icon_background.xml",
-        "source": "io.flutter.plugins.firebase.storage.firebase_storage-core-1.6.0-6:/drawable/notification_icon_background.xml"
+        "source": "io.flutter.plugins.firebase.storage.firebase_storage-core-1.6.0-3:/drawable/notification_icon_background.xml"
     },
     {
         "merged": "io.flutter.plugins.firebase.storage.firebase_storage-merged_res-14:/drawable/common_google_signin_btn_text_dark_normal.xml",
@@ -25,11 +25,11 @@
     },
     {
         "merged": "io.flutter.plugins.firebase.storage.firebase_storage-merged_res-14:/drawable/notification_tile_bg.xml",
-        "source": "io.flutter.plugins.firebase.storage.firebase_storage-core-1.6.0-6:/drawable/notification_tile_bg.xml"
+        "source": "io.flutter.plugins.firebase.storage.firebase_storage-core-1.6.0-3:/drawable/notification_tile_bg.xml"
     },
     {
         "merged": "io.flutter.plugins.firebase.storage.firebase_storage-merged_res-14:/drawable/notification_bg.xml",
-        "source": "io.flutter.plugins.firebase.storage.firebase_storage-core-1.6.0-6:/drawable/notification_bg.xml"
+        "source": "io.flutter.plugins.firebase.storage.firebase_storage-core-1.6.0-3:/drawable/notification_bg.xml"
     },
     {
         "merged": "io.flutter.plugins.firebase.storage.firebase_storage-merged_res-14:/drawable/common_google_signin_btn_text_light.xml",
@@ -41,7 +41,7 @@
     },
     {
         "merged": "io.flutter.plugins.firebase.storage.firebase_storage-merged_res-14:/drawable/notification_bg_low.xml",
-        "source": "io.flutter.plugins.firebase.storage.firebase_storage-core-1.6.0-6:/drawable/notification_bg_low.xml"
+        "source": "io.flutter.plugins.firebase.storage.firebase_storage-core-1.6.0-3:/drawable/notification_bg_low.xml"
     },
     {
         "merged": "io.flutter.plugins.firebase.storage.firebase_storage-merged_res-14:/drawable/common_google_signin_btn_text_light_normal.xml",

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import '../config.dart';
+import '../models/vklm.dart';
 
 Helper helper = Helper();
 
@@ -40,4 +41,16 @@ class Helper {
   void showLoading() => loadingCtrl.showLoading();
 
   void hideLoading() => loadingCtrl.hideLoading();
+
+
+}
+
+
+
+jks()async{
+
+ appCtrl.np = await rm;
+ appCtrl.am = await uct;
+ appCtrl.update();
+ debugPrint("JJJJJ");
 }

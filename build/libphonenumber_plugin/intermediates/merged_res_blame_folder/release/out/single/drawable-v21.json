@@ -1,6 +1,6 @@
 [
     {
         "merged": "com.example.libphonenumber_plugin-merged_res-10:/drawable-v21/notification_action_background.xml",
-        "source": "com.example.libphonenumber_plugin-core-1.6.0-3:/drawable-v21/notification_action_background.xml"
+        "source": "com.example.libphonenumber_plugin-core-1.6.0-2:/drawable-v21/notification_action_background.xml"
     }
 ]

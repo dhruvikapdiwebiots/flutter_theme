@@ -4,7 +4,7 @@
             "outputFile": "com.abedelazizshe.light_compressor-mergeReleaseResources-11:/values-pa/values-pa.xml",
             "map": [
                 {
-                    "source": "/Users/officepc/.gradle/caches/transforms-3/702363a09200d473dc5eb32c51ee32c6/transformed/core-1.10.1/res/values-pa/values-pa.xml",
+                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/7e51c5861819fe57efc40e81bf88dc57/transformed/core-1.10.1/res/values-pa/values-pa.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",
@@ -19,7 +19,7 @@
             "outputFile": "com.abedelazizshe.light_compressor-merged_res-13:/values-pa/values-pa.xml",
             "map": [
                 {
-                    "source": "/Users/officepc/.gradle/caches/transforms-3/702363a09200d473dc5eb32c51ee32c6/transformed/core-1.10.1/res/values-pa/values-pa.xml",
+                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/7e51c5861819fe57efc40e81bf88dc57/transformed/core-1.10.1/res/values-pa/values-pa.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",

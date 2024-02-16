@@ -3,31 +3,31 @@
 3    package="flutter.plugins.contactsservice.contactsservice" >
 4
 5    <uses-sdk android:minSdkVersion="16" />
-5-->/Users/officepc/.pub-cache/hosted/pub.dev/contacts_service-0.6.3/android/src/main/AndroidManifest.xml
+5-->/Users/dhruvi/.pub-cache/hosted/pub.dev/contacts_service-0.6.3/android/src/main/AndroidManifest.xml
 6
 7    <queries>
-7-->/Users/officepc/.pub-cache/hosted/pub.dev/contacts_service-0.6.3/android/src/main/AndroidManifest.xml:3:5-13:15
+7-->/Users/dhruvi/.pub-cache/hosted/pub.dev/contacts_service-0.6.3/android/src/main/AndroidManifest.xml:3:5-13:15
 8        <intent>
-8-->/Users/officepc/.pub-cache/hosted/pub.dev/contacts_service-0.6.3/android/src/main/AndroidManifest.xml:4:9-6:18
+8-->/Users/dhruvi/.pub-cache/hosted/pub.dev/contacts_service-0.6.3/android/src/main/AndroidManifest.xml:4:9-6:18
 9            <action android:name="android.accounts.AccountAuthenticator" />
-9-->/Users/officepc/.pub-cache/hosted/pub.dev/contacts_service-0.6.3/android/src/main/AndroidManifest.xml:5:13-76
-9-->/Users/officepc/.pub-cache/hosted/pub.dev/contacts_service-0.6.3/android/src/main/AndroidManifest.xml:5:21-73
+9-->/Users/dhruvi/.pub-cache/hosted/pub.dev/contacts_service-0.6.3/android/src/main/AndroidManifest.xml:5:13-76
+9-->/Users/dhruvi/.pub-cache/hosted/pub.dev/contacts_service-0.6.3/android/src/main/AndroidManifest.xml:5:21-73
 10        </intent>
 11        <!-- Allows the app to load an icon corresponding to the custom MIME type. -->
 12        <intent>
-12-->/Users/officepc/.pub-cache/hosted/pub.dev/contacts_service-0.6.3/android/src/main/AndroidManifest.xml:8:9-12:18
+12-->/Users/dhruvi/.pub-cache/hosted/pub.dev/contacts_service-0.6.3/android/src/main/AndroidManifest.xml:8:9-12:18
 13            <action android:name="android.intent.action.VIEW" />
-13-->/Users/officepc/.pub-cache/hosted/pub.dev/contacts_service-0.6.3/android/src/main/AndroidManifest.xml:9:13-65
-13-->/Users/officepc/.pub-cache/hosted/pub.dev/contacts_service-0.6.3/android/src/main/AndroidManifest.xml:9:21-62
+13-->/Users/dhruvi/.pub-cache/hosted/pub.dev/contacts_service-0.6.3/android/src/main/AndroidManifest.xml:9:13-65
+13-->/Users/dhruvi/.pub-cache/hosted/pub.dev/contacts_service-0.6.3/android/src/main/AndroidManifest.xml:9:21-62
 14
 15            <data
-15-->/Users/officepc/.pub-cache/hosted/pub.dev/contacts_service-0.6.3/android/src/main/AndroidManifest.xml:10:13-11:64
+15-->/Users/dhruvi/.pub-cache/hosted/pub.dev/contacts_service-0.6.3/android/src/main/AndroidManifest.xml:10:13-11:64
 16                android:host="com.android.contacts"
-16-->/Users/officepc/.pub-cache/hosted/pub.dev/contacts_service-0.6.3/android/src/main/AndroidManifest.xml:10:44-79
+16-->/Users/dhruvi/.pub-cache/hosted/pub.dev/contacts_service-0.6.3/android/src/main/AndroidManifest.xml:10:44-79
 17                android:mimeType="vnd.android.cursor.item/*"
-17-->/Users/officepc/.pub-cache/hosted/pub.dev/contacts_service-0.6.3/android/src/main/AndroidManifest.xml:11:17-61
+17-->/Users/dhruvi/.pub-cache/hosted/pub.dev/contacts_service-0.6.3/android/src/main/AndroidManifest.xml:11:17-61
 18                android:scheme="content" />
-18-->/Users/officepc/.pub-cache/hosted/pub.dev/contacts_service-0.6.3/android/src/main/AndroidManifest.xml:10:19-43
+18-->/Users/dhruvi/.pub-cache/hosted/pub.dev/contacts_service-0.6.3/android/src/main/AndroidManifest.xml:10:19-43
 19        </intent>
 20    </queries>
 21

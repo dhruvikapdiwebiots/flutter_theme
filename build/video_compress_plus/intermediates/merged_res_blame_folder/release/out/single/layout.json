@@ -1,14 +1,14 @@
 [
     {
         "merged": "com.aravi.video_compress.video_compress_plus-merged_res-10:/layout/notification_template_part_time.xml",
-        "source": "com.aravi.video_compress.video_compress_plus-core-1.6.0-3:/layout/notification_template_part_time.xml"
+        "source": "com.aravi.video_compress.video_compress_plus-core-1.6.0-2:/layout/notification_template_part_time.xml"
     },
     {
         "merged": "com.aravi.video_compress.video_compress_plus-merged_res-10:/layout/custom_dialog.xml",
-        "source": "com.aravi.video_compress.video_compress_plus-core-1.6.0-3:/layout/custom_dialog.xml"
+        "source": "com.aravi.video_compress.video_compress_plus-core-1.6.0-2:/layout/custom_dialog.xml"
     },
     {
         "merged": "com.aravi.video_compress.video_compress_plus-merged_res-10:/layout/notification_template_part_chronometer.xml",
-        "source": "com.aravi.video_compress.video_compress_plus-core-1.6.0-3:/layout/notification_template_part_chronometer.xml"
+        "source": "com.aravi.video_compress.video_compress_plus-core-1.6.0-2:/layout/notification_template_part_chronometer.xml"
     }
 ]

@@ -1,4 +1,4 @@
-import 'package:camera/camera.dart';
+  import 'package:camera/camera.dart';
 
 
 import 'config.dart';

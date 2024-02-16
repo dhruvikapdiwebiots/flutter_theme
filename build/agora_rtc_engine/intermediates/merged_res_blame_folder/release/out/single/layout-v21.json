@@ -1,18 +1,18 @@
 [
     {
         "merged": "io.agora.agora_rtc_ng.agora_rtc_engine-merged_res-12:/layout-v21/notification_action_tombstone.xml",
-        "source": "io.agora.agora_rtc_ng.agora_rtc_engine-core-1.6.0-5:/layout-v21/notification_action_tombstone.xml"
+        "source": "io.agora.agora_rtc_ng.agora_rtc_engine-core-1.6.0-2:/layout-v21/notification_action_tombstone.xml"
     },
     {
         "merged": "io.agora.agora_rtc_ng.agora_rtc_engine-merged_res-12:/layout-v21/notification_action.xml",
-        "source": "io.agora.agora_rtc_ng.agora_rtc_engine-core-1.6.0-5:/layout-v21/notification_action.xml"
+        "source": "io.agora.agora_rtc_ng.agora_rtc_engine-core-1.6.0-2:/layout-v21/notification_action.xml"
     },
     {
         "merged": "io.agora.agora_rtc_ng.agora_rtc_engine-merged_res-12:/layout-v21/notification_template_icon_group.xml",
-        "source": "io.agora.agora_rtc_ng.agora_rtc_engine-core-1.6.0-5:/layout-v21/notification_template_icon_group.xml"
+        "source": "io.agora.agora_rtc_ng.agora_rtc_engine-core-1.6.0-2:/layout-v21/notification_template_icon_group.xml"
     },
     {
         "merged": "io.agora.agora_rtc_ng.agora_rtc_engine-merged_res-12:/layout-v21/notification_template_custom_big.xml",
-        "source": "io.agora.agora_rtc_ng.agora_rtc_engine-core-1.6.0-5:/layout-v21/notification_template_custom_big.xml"
+        "source": "io.agora.agora_rtc_ng.agora_rtc_engine-core-1.6.0-2:/layout-v21/notification_template_custom_big.xml"
     }
 ]

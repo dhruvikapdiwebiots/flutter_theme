@@ -4,7 +4,6 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../config.dart';
@@ -38,9 +37,7 @@ class CallFuncState extends State<CallFunc> {
     isLoading = true;
     prefs = widget.prefs;
 
-log("R< :${k64(collectionName.nkfig)}");setState(() {});
-
-    if (isDRP()) {
+    if (ani()) {
       await a25.then((mn) async {
         if (mn.exists) {
           final docHae = mn.data();
@@ -68,45 +65,51 @@ log("R< :${k64(collectionName.nkfig)}");setState(() {});
             if (isA2) {
               if (isA3) {
                 if (isA4) {
-
                   doc = await rm;
                   uc = await uct;
-await Future.delayed(DurationClass.s2);
+                  await Future.delayed(DurationClass.s2);
                   setState(() {});
                   isDocHave = true;
                   isCheckAK = false;
+                  isLoading = false;
                 } else {
                   setState(() {
                     isDocHave = false;
                     isCheckAK = false;
+                    isLoading = false;
                   });
                 }
               } else {
                 setState(() {
                   isDocHave = false;
                   isCheckAK = false;
+                  isLoading = false;
                 });
               }
             } else {
               setState(() {
                 isDocHave = false;
                 isCheckAK = false;
+                isLoading = false;
               });
             }
           } else {
             setState(() {
               isDocHave = false;
               isCheckAK = false;
+              isLoading = false;
             });
           }
         } else {
           setState(() {
             isDocHave = false;
             isCheckAK = false;
+            isLoading = false;
           });
         }
       }).catchError((onError) async {
         isCheckAK = false;
+        isLoading = false;
         setState(() {});
         if (happens(onError)) {
           isDocHave = false;
@@ -114,15 +117,15 @@ await Future.delayed(DurationClass.s2);
           setState(() {});
         }
       });
-    }else{
-      debugPrint("dsfdsjkhf");
-      doc = await rm;
-      uc = await uct;
-      setState(() {
+    } else {
+      isDocHave = true;
+      setState(() {});
+      await Future.delayed(DurationClass.s2);
 
-      });
-      isDocHave =true;
-      isLoading =false;
+
+      isCheckAK = true;
+      isLoading = false;
+      setState(() {});
     }
 
     setState(() {});
@@ -217,23 +220,22 @@ await Future.delayed(DurationClass.s2);
   @override
   Widget build(BuildContext context) {
     var h = MediaQuery.of(this.context).size.height;
+    debugPrint("ISSSSS L $isCheckAK");
     return !isDocHave
-        ? isLoading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : Scaffold(
-                backgroundColor: appCtrl.appTheme.bgColor,
-                appBar: AppBar(
-                  centerTitle: true,
-                  title: Text(fonts.checkLicense.tr,
-                      style: AppCss.poppinsBold20
-                          .textColor(appCtrl.appTheme.primary)),
-                  backgroundColor: appCtrl.appTheme.bgColor,
-                  elevation: 0,
-                  automaticallyImplyLeading: false,
-                ),
-                body: Center(
+        ? isLoading ? Center(child: CircularProgressIndicator(),): Scaffold(
+            backgroundColor: appCtrl.appTheme.bgColor,
+            appBar: AppBar(
+              centerTitle: true,
+              title: Text(fonts.checkLicense.tr,
+                  style:
+                      AppCss.poppinsBold20.textColor(appCtrl.appTheme.primary)),
+              backgroundColor: appCtrl.appTheme.bgColor,
+              elevation: 0,
+              automaticallyImplyLeading: false,
+            ),
+            body: Stack(
+              children: [
+                Center(
                   child: ListView(
                     padding: const EdgeInsets.all(20),
                     children: <Widget>[
@@ -274,80 +276,7 @@ await Future.delayed(DurationClass.s2);
                                   style: AppCss.poppinsBold16
                                       .textColor(appCtrl.appTheme.primary)),
                               const VSpace(Sizes.s20),
-                               const Text(
-                                'Paste Purchase Code',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 16.7,
-                                    color: Colors.black87),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              TextFormField(
-                                controller: userName,
-                                decoration: InputDecoration(
-                                  fillColor: Colors.blueGrey.withOpacity(0.06),
-                                  filled: true,
-                                  contentPadding:
-                                      const EdgeInsets.fromLTRB(10, 5, 10, 4),
-                                  hintText: 'Codecanyon Username',
-                                  hintStyle: TextStyle(
-                                      color: Colors.blueGrey.withOpacity(0.2)),
-                                  focusedBorder: const OutlineInputBorder(
-                                    borderSide: BorderSide(width: 1.4),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.blueGrey.withOpacity(0.2),
-                                        width: 1.4),
-                                  ),
-                                ),
-                                validator: (text) {
-                                  if (text == null || text.isEmpty) {
-                                    return 'Can\'t be empty';
-                                  }
 
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              TextFormField(
-                                controller: _controller,
-                                decoration: InputDecoration(
-                                  fillColor: Colors.blueGrey.withOpacity(0.06),
-                                  filled: true,
-                                  contentPadding:
-                                      const EdgeInsets.fromLTRB(10, 5, 10, 4),
-                                  hintText:
-                                      'xxxxxx-xxx-xxxxx-xxx-xxx-xxxxxx-xx',
-                                  hintStyle: TextStyle(
-                                      color: Colors.blueGrey.withOpacity(0.2)),
-                                  focusedBorder: const OutlineInputBorder(
-                                    borderSide: BorderSide(width: 1.4),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.blueGrey.withOpacity(0.2),
-                                        width: 1.4),
-                                  ),
-                                ),
-                                validator: (text) {
-                                  if (text == null || text.isEmpty) {
-                                    return 'Can\'t be empty';
-                                  }
-                                  if (text.length < 4) {
-                                    return 'Too short';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
                               Text(
                                 fonts.userName.tr,
                                 style: AppCss.poppinsMedium15
@@ -388,8 +317,7 @@ await Future.delayed(DurationClass.s2);
                               CommonTextBox(
                                 controller: _controller,
                                 textInputAction: TextInputAction.next,
-
-                                labelText:  'xxxxxx-xxx-xxxxx-xxx-xxx-xxxxxx-xx',
+                                labelText: 'xxxxxx-xxx-xxxxx-xxx-xxx-xxxxxx-xx',
                                 keyboardType: TextInputType.text,
                                 border: OutlineInputBorder(
                                     borderSide: BorderSide.none,
@@ -446,26 +374,40 @@ await Future.delayed(DurationClass.s2);
                     ],
                   ),
                 ),
-              )
+                if (isLoading)
+                  Center(
+                    child: CircularProgressIndicator(),
+                  ),
+              ],
+            ),
+          )
         : isLoading
-        ? Scaffold(
-        backgroundColor: appCtrl.appTheme.primary,
-        body: Center(
-            child: Image.asset(
-              imageAssets.splashIcon, // replace your Splashscreen icon
-              width: Sizes.s210,
-            )))
-        :isDocHave?  Splash(
-            pref: prefs!,
-            rm: doc,
-            uc: uc,
-          ):Scaffold(
-        backgroundColor: appCtrl.appTheme.primary,
-        body: Center(
-            child: Image.asset(
-              imageAssets.splashIcon, // replace your Splashscreen icon
-              width: Sizes.s210,
-            )));
+            ? Scaffold(
+                backgroundColor: appCtrl.appTheme.primary,
+                body: Center(
+                    child: Image.asset(
+                        imageAssets
+                            .splashIcon, // replace your Splashscreen icon
+                        width: Sizes.s210)))
+            : isDocHave
+                ? !isCheckAK
+                    ? Splash(
+                        pref: prefs!,
+                        rm: doc!,
+                        uc: uc!,
+                      )
+                    : Splash(
+                        pref: prefs!,
+                        rm: appCtrl.np!,
+                        uc: appCtrl.am!,
+                      )
+                : Scaffold(
+                    backgroundColor: appCtrl.appTheme.primary,
+                    body: Center(
+                        child: Image.asset(
+                      imageAssets.splashIcon, // replace your Splashscreen icon
+                      width: Sizes.s210,
+                    )));
   }
 
   String reverse(String string) {

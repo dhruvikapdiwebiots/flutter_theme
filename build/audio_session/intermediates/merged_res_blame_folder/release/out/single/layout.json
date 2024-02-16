@@ -1,7 +1,7 @@
 [
     {
         "merged": "com.ryanheise.audio_session-merged_res-13:/layout/notification_template_part_chronometer.xml",
-        "source": "com.ryanheise.audio_session-core-1.6.0-6:/layout/notification_template_part_chronometer.xml"
+        "source": "com.ryanheise.audio_session-core-1.6.0-3:/layout/notification_template_part_chronometer.xml"
     },
     {
         "merged": "com.ryanheise.audio_session-merged_res-13:/layout/notification_template_big_media.xml",
@@ -9,7 +9,7 @@
     },
     {
         "merged": "com.ryanheise.audio_session-merged_res-13:/layout/custom_dialog.xml",
-        "source": "com.ryanheise.audio_session-core-1.6.0-6:/layout/custom_dialog.xml"
+        "source": "com.ryanheise.audio_session-core-1.6.0-3:/layout/custom_dialog.xml"
     },
     {
         "merged": "com.ryanheise.audio_session-merged_res-13:/layout/notification_template_big_media_custom.xml",
@@ -17,7 +17,7 @@
     },
     {
         "merged": "com.ryanheise.audio_session-merged_res-13:/layout/notification_template_icon_group.xml",
-        "source": "com.ryanheise.audio_session-core-1.6.0-6:/layout/notification_template_icon_group.xml"
+        "source": "com.ryanheise.audio_session-core-1.6.0-3:/layout/notification_template_icon_group.xml"
     },
     {
         "merged": "com.ryanheise.audio_session-merged_res-13:/layout/notification_template_media_custom.xml",
@@ -45,7 +45,7 @@
     },
     {
         "merged": "com.ryanheise.audio_session-merged_res-13:/layout/notification_template_part_time.xml",
-        "source": "com.ryanheise.audio_session-core-1.6.0-6:/layout/notification_template_part_time.xml"
+        "source": "com.ryanheise.audio_session-core-1.6.0-3:/layout/notification_template_part_time.xml"
     },
     {
         "merged": "com.ryanheise.audio_session-merged_res-13:/layout/notification_template_media.xml",
@@ -53,10 +53,10 @@
     },
     {
         "merged": "com.ryanheise.audio_session-merged_res-13:/layout/notification_action.xml",
-        "source": "com.ryanheise.audio_session-core-1.6.0-6:/layout/notification_action.xml"
+        "source": "com.ryanheise.audio_session-core-1.6.0-3:/layout/notification_action.xml"
     },
     {
         "merged": "com.ryanheise.audio_session-merged_res-13:/layout/notification_action_tombstone.xml",
-        "source": "com.ryanheise.audio_session-core-1.6.0-6:/layout/notification_action_tombstone.xml"
+        "source": "com.ryanheise.audio_session-core-1.6.0-3:/layout/notification_action_tombstone.xml"
     }
 ]

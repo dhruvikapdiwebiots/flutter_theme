@@ -96,16 +96,6 @@ library {
 library {
   maven_library {
     groupId: "org.jetbrains.kotlin"
-    artifactId: "kotlin-stdlib-common"
-    version: "1.9.22"
-  }
-  repo_index {
-    value: 1
-  }
-}
-library {
-  maven_library {
-    groupId: "org.jetbrains.kotlin"
     artifactId: "kotlin-stdlib-jdk7"
     version: "1.9.22"
   }
@@ -124,6 +114,16 @@ library {
   }
   digests {
     sha256: "A\230\260\352\360\220\244\362[o~ZYX\037C\024\272\214\237l\321\321>\351\323H\346^\330\367\a"
+  }
+  repo_index {
+    value: 1
+  }
+}
+library {
+  maven_library {
+    groupId: "org.jetbrains.kotlin"
+    artifactId: "kotlin-stdlib-common"
+    version: "1.9.22"
   }
   repo_index {
     value: 1
@@ -2193,7 +2193,7 @@ library {
 }
 library {
   digests {
-    sha256: "5\302\274\341\026\335\245\227\225\374ID\333\303\273\357%r\275\242\256\315\0238\231+\246\226~$g\344"
+    sha256: "A?7\237\003\r+\033\217\3547\372+\377\266cgXM\'\353\0230\345u\356?\a\260\366<\377"
   }
 }
 library_dependencies {
@@ -2252,11 +2252,11 @@ library_dependencies {
 library_dependencies {
   library_index: 9
   library_dep_index: 6
+  library_dep_index: 8
 }
 library_dependencies {
   library_index: 10
   library_dep_index: 6
-  library_dep_index: 9
 }
 library_dependencies {
   library_index: 11
@@ -2335,7 +2335,7 @@ library_dependencies {
   library_index: 21
   library_dep_index: 22
   library_dep_index: 24
-  library_dep_index: 10
+  library_dep_index: 9
 }
 library_dependencies {
   library_index: 22
@@ -2345,8 +2345,8 @@ library_dependencies {
   library_index: 23
   library_dep_index: 7
   library_dep_index: 24
-  library_dep_index: 8
   library_dep_index: 10
+  library_dep_index: 9
 }
 library_dependencies {
   library_index: 24
@@ -2360,7 +2360,7 @@ library_dependencies {
   library_dep_index: 22
   library_dep_index: 24
   library_dep_index: 26
-  library_dep_index: 10
+  library_dep_index: 9
 }
 library_dependencies {
   library_index: 26
@@ -2637,7 +2637,7 @@ library_dependencies {
   library_dep_index: 69
   library_dep_index: 70
   library_dep_index: 54
-  library_dep_index: 9
+  library_dep_index: 8
 }
 library_dependencies {
   library_index: 62
@@ -2668,7 +2668,7 @@ library_dependencies {
 library_dependencies {
   library_index: 67
   library_dep_index: 63
-  library_dep_index: 10
+  library_dep_index: 9
   library_dep_index: 64
   library_dep_index: 65
 }
@@ -2773,7 +2773,7 @@ library_dependencies {
   library_dep_index: 63
   library_dep_index: 67
   library_dep_index: 64
-  library_dep_index: 9
+  library_dep_index: 8
 }
 library_dependencies {
   library_index: 81
@@ -3023,13 +3023,13 @@ library_dependencies {
   library_index: 116
   library_dep_index: 117
   library_dep_index: 4
-  library_dep_index: 10
+  library_dep_index: 9
 }
 library_dependencies {
   library_index: 117
-  library_dep_index: 8
-  library_dep_index: 4
   library_dep_index: 10
+  library_dep_index: 4
+  library_dep_index: 9
 }
 library_dependencies {
   library_index: 118
@@ -3315,9 +3315,9 @@ library_dependencies {
 library_dependencies {
   library_index: 166
   library_dep_index: 6
+  library_dep_index: 8
   library_dep_index: 9
   library_dep_index: 10
-  library_dep_index: 8
 }
 library_dependencies {
   library_index: 167
@@ -3349,7 +3349,7 @@ library_dependencies {
 library_dependencies {
   library_index: 172
   library_dep_index: 6
-  library_dep_index: 8
+  library_dep_index: 10
   library_dep_index: 173
 }
 library_dependencies {
@@ -3359,7 +3359,7 @@ library_dependencies {
 library_dependencies {
   library_index: 174
   library_dep_index: 6
-  library_dep_index: 8
+  library_dep_index: 10
 }
 library_dependencies {
   library_index: 176
@@ -3372,7 +3372,7 @@ library_dependencies {
 }
 module_dependencies {
   module_name: "base"
-  dependency_index: 9
+  dependency_index: 8
   dependency_index: 175
   dependency_index: 80
   dependency_index: 0
@@ -3417,7 +3417,7 @@ module_dependencies {
   dependency_index: 22
   dependency_index: 21
   dependency_index: 162
-  dependency_index: 10
+  dependency_index: 9
   dependency_index: 145
   dependency_index: 165
   dependency_index: 29

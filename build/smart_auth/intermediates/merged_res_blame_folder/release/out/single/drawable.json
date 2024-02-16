@@ -1,7 +1,7 @@
 [
     {
         "merged": "fman.ge.smart_auth-merged_res-13:/drawable/notification_bg_low.xml",
-        "source": "fman.ge.smart_auth-core-1.6.0-6:/drawable/notification_bg_low.xml"
+        "source": "fman.ge.smart_auth-core-1.6.0-3:/drawable/notification_bg_low.xml"
     },
     {
         "merged": "fman.ge.smart_auth-merged_res-13:/drawable/common_google_signin_btn_text_dark.xml",
@@ -21,7 +21,7 @@
     },
     {
         "merged": "fman.ge.smart_auth-merged_res-13:/drawable/notification_tile_bg.xml",
-        "source": "fman.ge.smart_auth-core-1.6.0-6:/drawable/notification_tile_bg.xml"
+        "source": "fman.ge.smart_auth-core-1.6.0-3:/drawable/notification_tile_bg.xml"
     },
     {
         "merged": "fman.ge.smart_auth-merged_res-13:/drawable/common_google_signin_btn_icon_light_normal.xml",
@@ -49,7 +49,7 @@
     },
     {
         "merged": "fman.ge.smart_auth-merged_res-13:/drawable/notification_bg.xml",
-        "source": "fman.ge.smart_auth-core-1.6.0-6:/drawable/notification_bg.xml"
+        "source": "fman.ge.smart_auth-core-1.6.0-3:/drawable/notification_bg.xml"
     },
     {
         "merged": "fman.ge.smart_auth-merged_res-13:/drawable/common_google_signin_btn_icon_dark_normal.xml",
@@ -61,7 +61,7 @@
     },
     {
         "merged": "fman.ge.smart_auth-merged_res-13:/drawable/notification_icon_background.xml",
-        "source": "fman.ge.smart_auth-core-1.6.0-6:/drawable/notification_icon_background.xml"
+        "source": "fman.ge.smart_auth-core-1.6.0-3:/drawable/notification_icon_background.xml"
     },
     {
         "merged": "fman.ge.smart_auth-merged_res-13:/drawable/common_google_signin_btn_icon_light_focused.xml",

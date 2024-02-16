@@ -290,8 +290,8 @@ int calculateDifference(DateTime date) {
 }
 
 
-isDRP(){
-  klu = !kDebugMode ? true : false;
+ani(){
+  klu = kDebugMode ? true : false;
   return klu;
 }
 
