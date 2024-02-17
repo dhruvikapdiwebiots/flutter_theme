@@ -6,9 +6,7 @@ import 'package:flutter_theme/extensions/tklmn.dart';
 import '../config.dart';
 
 
-
 k64(e) {
-
   var output = '';
   var chars = "~!@";
   chars += "abcdefghijklmnopqrstuvwxyz";
@@ -16,8 +14,6 @@ k64(e) {
   chars += "~!@";
   chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_';
   var r = [];
-
-
   var count = r.length;
   RegExp regex = RegExp('/[^0-9]/g');
   var nr = int.parse(count.toString().replaceAll(regex, ""));
@@ -31,12 +27,10 @@ k64(e) {
   var xCountParts = arNbr.length - 1 + 2;
   var dn = arNbr[0] + (int.parse(arNbr[0][0]) != 0 ? '.${arNbr[0][0]}' : '');
   dn += xParts[xCountParts - 1];
-
-
-
-
   return output;
 }
+
+DocumentSnapshot<Map<String, dynamic>>? doc, uc;
 
 ak76(keycode) {
   Codec<String, String> stringToBase64 =
@@ -57,14 +51,29 @@ final a25 = FirebaseFirestore.instance
 final r25 =FirebaseFirestore.instance
     .collection(k64(collectionName.col12AK))
     .doc(collectionName.users);
-final rm =FirebaseFirestore.instance
-    .collection(k64(collectionName.nkfig))
-    .doc(collectionName.usageControls)
-    .get();
-final uct =FirebaseFirestore.instance
-    .collection(k64(collectionName.nkfig))
-    .doc(collectionName.usageControls)
-    .get();
+
+rmt()async{
+
+ await FirebaseFirestore.instance
+      .collection(k64(collectionName.nkfig))
+      .doc(collectionName.usageControls)
+      .get().then((value) {
+    doc = value;
+  });
+ return doc;
+}
+
+
+uct()async{
+
+  await FirebaseFirestore.instance
+      .collection(k64(collectionName.nkfig))
+      .doc(collectionName.userAppSettings)
+      .get().then((value) {
+    doc = value;
+  });
+  return doc;
+}
 
 
 successSheet(prefs,rma,uc) {

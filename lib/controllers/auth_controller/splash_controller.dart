@@ -43,9 +43,7 @@ class SplashController extends GetxController {
           transition: Transition.downToUp);
     } else {
 
-      var duration =
-          const Duration(seconds: 3); // time delay to display splash screen
-      return Timer(duration, navigationPage);
+      navigationPage();
     }
   }
 
@@ -69,12 +67,7 @@ class SplashController extends GetxController {
 
   //check whether user login or not
   void navigationPage() async {
-    debugPrint("sfjdfj");
-    if(rmk == null){
-      rmk = await rm;
-      uck =await uct;
-      update();
-    }
+
     await getAdminPermission();
 
    /* //language

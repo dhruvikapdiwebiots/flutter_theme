@@ -4,7 +4,7 @@
             "outputFile": "io.flutter.plugins.videoplayer.video_player_android-merged_res-12:/values-ms/values-ms.xml",
             "map": [
                 {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/37d19d7d21be875df1a7af7ce87d4070/transformed/core-1.7.0/res/values-ms/values-ms.xml",
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/37d19d7d21be875df1a7af7ce87d4070/transformed/core-1.7.0/res/values-ms/values-ms.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -21,7 +21,7 @@
                     }
                 },
                 {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/7f5f1b202a9ecbd7293505ae948e4d63/transformed/jetified-exoplayer-core-2.18.7/res/values-ms/values-ms.xml",
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/7f5f1b202a9ecbd7293505ae948e4d63/transformed/jetified-exoplayer-core-2.18.7/res/values-ms/values-ms.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10",
                         "startColumns": "4,4,4,4,4,4,4,4,4",
@@ -36,7 +36,7 @@
             "outputFile": "io.flutter.plugins.videoplayer.video_player_android-mergeReleaseResources-10:/values-ms/values-ms.xml",
             "map": [
                 {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/37d19d7d21be875df1a7af7ce87d4070/transformed/core-1.7.0/res/values-ms/values-ms.xml",
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/37d19d7d21be875df1a7af7ce87d4070/transformed/core-1.7.0/res/values-ms/values-ms.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -53,7 +53,7 @@
                     }
                 },
                 {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/7f5f1b202a9ecbd7293505ae948e4d63/transformed/jetified-exoplayer-core-2.18.7/res/values-ms/values-ms.xml",
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/7f5f1b202a9ecbd7293505ae948e4d63/transformed/jetified-exoplayer-core-2.18.7/res/values-ms/values-ms.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10",
                         "startColumns": "4,4,4,4,4,4,4,4,4",

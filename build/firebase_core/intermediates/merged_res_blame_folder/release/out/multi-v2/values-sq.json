@@ -4,7 +4,7 @@
             "outputFile": "io.flutter.plugins.firebase.core.firebase_core-mergeReleaseResources-10:/values-sq/values-sq.xml",
             "map": [
                 {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/ecfa6942e0bf312d878cb452ea4574ca/transformed/jetified-play-services-basement-18.1.0/res/values-sq/values.xml",
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/ecfa6942e0bf312d878cb452ea4574ca/transformed/jetified-play-services-basement-18.1.0/res/values-sq/values.xml",
                     "from": {
                         "startLines": "4",
                         "startColumns": "0",
@@ -21,7 +21,7 @@
                     }
                 },
                 {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/88d42a6dd56b0e458be0f52d61827e2c/transformed/core-1.6.0/res/values-sq/values-sq.xml",
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/88d42a6dd56b0e458be0f52d61827e2c/transformed/core-1.6.0/res/values-sq/values-sq.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -43,7 +43,7 @@
             "outputFile": "io.flutter.plugins.firebase.core.firebase_core-merged_res-12:/values-sq/values-sq.xml",
             "map": [
                 {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/ecfa6942e0bf312d878cb452ea4574ca/transformed/jetified-play-services-basement-18.1.0/res/values-sq/values.xml",
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/ecfa6942e0bf312d878cb452ea4574ca/transformed/jetified-play-services-basement-18.1.0/res/values-sq/values.xml",
                     "from": {
                         "startLines": "4",
                         "startColumns": "0",
@@ -60,7 +60,7 @@
                     }
                 },
                 {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/88d42a6dd56b0e458be0f52d61827e2c/transformed/core-1.6.0/res/values-sq/values-sq.xml",
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/88d42a6dd56b0e458be0f52d61827e2c/transformed/core-1.6.0/res/values-sq/values-sq.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

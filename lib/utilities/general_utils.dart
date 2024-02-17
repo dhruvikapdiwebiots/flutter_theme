@@ -5,6 +5,7 @@ import 'package:encrypt/encrypt.dart';
 import 'package:encrypt/encrypt.dart' as encrypted;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_theme/models/vklm.dart';
 
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +14,7 @@ import '../controllers/fetch_contact_controller.dart';
 import '../main.dart';
 
 var loadingCtrl = Get.find<AppController>();
-bool klu = true;
+String klu = "dHJ1ZQ==";
 
 String trans(String val) {
   if (val.isNotEmpty) {
@@ -290,8 +291,8 @@ int calculateDifference(DateTime date) {
 }
 
 
-ani(){
-  klu = kDebugMode ? true : false;
+anikanisani(){
+  klu = kDebugMode ? "dHJ1ZQ==" : "ZmFsc2U=";
   return klu;
 }
 

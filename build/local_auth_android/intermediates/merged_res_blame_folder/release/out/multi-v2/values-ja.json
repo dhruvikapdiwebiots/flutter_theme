@@ -4,24 +4,7 @@
             "outputFile": "io.flutter.plugins.localauth.local_auth_android-merged_res-26:/values-ja/values-ja.xml",
             "map": [
                 {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/7e51c5861819fe57efc40e81bf88dc57/transformed/core-1.10.1/res/values-ja/values-ja.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8,9",
-                        "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "55,147,247,341,437,530,623,724",
-                        "endColumns": "91,99,93,95,92,92,100,100",
-                        "endOffsets": "142,242,336,432,525,618,719,820"
-                    },
-                    "to": {
-                        "startLines": "29,30,31,32,33,34,35,49",
-                        "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "2691,2783,2883,2977,3073,3166,3259,4739",
-                        "endColumns": "91,99,93,95,92,92,100,100",
-                        "endOffsets": "2778,2878,2972,3068,3161,3254,3355,4835"
-                    }
-                },
-                {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/b16221092c9e9b37c45187a56c8c650b/transformed/appcompat-1.2.0/res/values-ja/values-ja.xml",
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/b16221092c9e9b37c45187a56c8c650b/transformed/appcompat-1.2.0/res/values-ja/values-ja.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -38,7 +21,7 @@
                     }
                 },
                 {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/3fd9ea0645a6c424f871bb9ddbb6638a/transformed/biometric-1.1.0/res/values-ja/values-ja.xml",
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/3fd9ea0645a6c424f871bb9ddbb6638a/transformed/biometric-1.1.0/res/values-ja/values-ja.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4",
@@ -52,6 +35,23 @@
                         "startOffsets": "3360,3462,3547,3650,3763,3877,3996,4102,4218,4314,4433,4552",
                         "endColumns": "101,84,102,112,113,118,105,115,95,118,118,107",
                         "endOffsets": "3457,3542,3645,3758,3872,3991,4097,4213,4309,4428,4547,4655"
+                    }
+                },
+                {
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/7e51c5861819fe57efc40e81bf88dc57/transformed/core-1.10.1/res/values-ja/values-ja.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,147,247,341,437,530,623,724",
+                        "endColumns": "91,99,93,95,92,92,100,100",
+                        "endOffsets": "142,242,336,432,525,618,719,820"
+                    },
+                    "to": {
+                        "startLines": "29,30,31,32,33,34,35,49",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "2691,2783,2883,2977,3073,3166,3259,4739",
+                        "endColumns": "91,99,93,95,92,92,100,100",
+                        "endOffsets": "2778,2878,2972,3068,3161,3254,3355,4835"
                     }
                 }
             ]
@@ -60,24 +60,7 @@
             "outputFile": "io.flutter.plugins.localauth.local_auth_android-mergeReleaseResources-24:/values-ja/values-ja.xml",
             "map": [
                 {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/7e51c5861819fe57efc40e81bf88dc57/transformed/core-1.10.1/res/values-ja/values-ja.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8,9",
-                        "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "55,147,247,341,437,530,623,724",
-                        "endColumns": "91,99,93,95,92,92,100,100",
-                        "endOffsets": "142,242,336,432,525,618,719,820"
-                    },
-                    "to": {
-                        "startLines": "29,30,31,32,33,34,35,49",
-                        "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "2691,2783,2883,2977,3073,3166,3259,4739",
-                        "endColumns": "91,99,93,95,92,92,100,100",
-                        "endOffsets": "2778,2878,2972,3068,3161,3254,3355,4835"
-                    }
-                },
-                {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/b16221092c9e9b37c45187a56c8c650b/transformed/appcompat-1.2.0/res/values-ja/values-ja.xml",
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/b16221092c9e9b37c45187a56c8c650b/transformed/appcompat-1.2.0/res/values-ja/values-ja.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -94,7 +77,7 @@
                     }
                 },
                 {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/3fd9ea0645a6c424f871bb9ddbb6638a/transformed/biometric-1.1.0/res/values-ja/values-ja.xml",
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/3fd9ea0645a6c424f871bb9ddbb6638a/transformed/biometric-1.1.0/res/values-ja/values-ja.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4",
@@ -108,6 +91,23 @@
                         "startOffsets": "3360,3462,3547,3650,3763,3877,3996,4102,4218,4314,4433,4552",
                         "endColumns": "101,84,102,112,113,118,105,115,95,118,118,107",
                         "endOffsets": "3457,3542,3645,3758,3872,3991,4097,4213,4309,4428,4547,4655"
+                    }
+                },
+                {
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/7e51c5861819fe57efc40e81bf88dc57/transformed/core-1.10.1/res/values-ja/values-ja.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,147,247,341,437,530,623,724",
+                        "endColumns": "91,99,93,95,92,92,100,100",
+                        "endOffsets": "142,242,336,432,525,618,719,820"
+                    },
+                    "to": {
+                        "startLines": "29,30,31,32,33,34,35,49",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "2691,2783,2883,2977,3073,3166,3259,4739",
+                        "endColumns": "91,99,93,95,92,92,100,100",
+                        "endOffsets": "2778,2878,2972,3068,3161,3254,3355,4835"
                     }
                 }
             ]

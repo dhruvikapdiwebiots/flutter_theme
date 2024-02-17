@@ -4,7 +4,7 @@
             "outputFile": "com.example.libphonenumber_plugin-merged_res-10:/values-lv/values-lv.xml",
             "map": [
                 {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/88d42a6dd56b0e458be0f52d61827e2c/transformed/core-1.6.0/res/values-lv/values-lv.xml",
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/88d42a6dd56b0e458be0f52d61827e2c/transformed/core-1.6.0/res/values-lv/values-lv.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -19,7 +19,7 @@
             "outputFile": "com.example.libphonenumber_plugin-mergeReleaseResources-8:/values-lv/values-lv.xml",
             "map": [
                 {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/88d42a6dd56b0e458be0f52d61827e2c/transformed/core-1.6.0/res/values-lv/values-lv.xml",
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/88d42a6dd56b0e458be0f52d61827e2c/transformed/core-1.6.0/res/values-lv/values-lv.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

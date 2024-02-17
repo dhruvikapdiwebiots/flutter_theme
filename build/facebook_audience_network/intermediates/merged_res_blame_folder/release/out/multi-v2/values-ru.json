@@ -4,24 +4,7 @@
             "outputFile": "com.dsi.facebook_audience_network-mergeReleaseResources-11:/values-ru/values-ru.xml",
             "map": [
                 {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/88d42a6dd56b0e458be0f52d61827e2c/transformed/core-1.6.0/res/values-ru/values-ru.xml",
-                    "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "55",
-                        "endColumns": "100",
-                        "endOffsets": "151"
-                    },
-                    "to": {
-                        "startLines": "3",
-                        "startColumns": "4",
-                        "startOffsets": "321",
-                        "endColumns": "100",
-                        "endOffsets": "417"
-                    }
-                },
-                {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/42991ce0489061870bdb9d9279119686/transformed/jetified-play-services-basement-11.0.4/res/values-ru/values.xml",
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/42991ce0489061870bdb9d9279119686/transformed/jetified-play-services-basement-11.0.4/res/values-ru/values.xml",
                     "from": {
                         "startLines": "4",
                         "startColumns": "0",
@@ -35,6 +18,23 @@
                         "startOffsets": "105",
                         "endColumns": "215",
                         "endOffsets": "316"
+                    }
+                },
+                {
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/88d42a6dd56b0e458be0f52d61827e2c/transformed/core-1.6.0/res/values-ru/values-ru.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    },
+                    "to": {
+                        "startLines": "3",
+                        "startColumns": "4",
+                        "startOffsets": "321",
+                        "endColumns": "100",
+                        "endOffsets": "417"
                     }
                 }
             ]
@@ -43,24 +43,7 @@
             "outputFile": "com.dsi.facebook_audience_network-merged_res-13:/values-ru/values-ru.xml",
             "map": [
                 {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/88d42a6dd56b0e458be0f52d61827e2c/transformed/core-1.6.0/res/values-ru/values-ru.xml",
-                    "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "55",
-                        "endColumns": "100",
-                        "endOffsets": "151"
-                    },
-                    "to": {
-                        "startLines": "3",
-                        "startColumns": "4",
-                        "startOffsets": "321",
-                        "endColumns": "100",
-                        "endOffsets": "417"
-                    }
-                },
-                {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/42991ce0489061870bdb9d9279119686/transformed/jetified-play-services-basement-11.0.4/res/values-ru/values.xml",
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/42991ce0489061870bdb9d9279119686/transformed/jetified-play-services-basement-11.0.4/res/values-ru/values.xml",
                     "from": {
                         "startLines": "4",
                         "startColumns": "0",
@@ -74,6 +57,23 @@
                         "startOffsets": "105",
                         "endColumns": "215",
                         "endOffsets": "316"
+                    }
+                },
+                {
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/88d42a6dd56b0e458be0f52d61827e2c/transformed/core-1.6.0/res/values-ru/values-ru.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    },
+                    "to": {
+                        "startLines": "3",
+                        "startColumns": "4",
+                        "startOffsets": "321",
+                        "endColumns": "100",
+                        "endOffsets": "417"
                     }
                 }
             ]

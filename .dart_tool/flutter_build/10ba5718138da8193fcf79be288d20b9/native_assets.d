@@ -1,0 +1,1 @@
+ /Users/officepc/Documents/flutter-projects/flutter_theme/.dart_tool/flutter_build/10ba5718138da8193fcf79be288d20b9/native_assets.yaml: 

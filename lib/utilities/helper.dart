@@ -47,10 +47,3 @@ class Helper {
 
 
 
-jks()async{
-
- appCtrl.np = await rm;
- appCtrl.am = await uct;
- appCtrl.update();
- debugPrint("JJJJJ");
-}

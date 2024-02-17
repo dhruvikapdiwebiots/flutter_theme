@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">746529411345-45lt2uha48oi4u9tdnrnbb4f78146iag.apps.googleusercontent.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">746529411345</string>
+    <string name="google_api_key" translatable="false">AIzaSyAUAIKV1J18MkkM3mTO7npDdQPIpB4vfBg</string>
+    <string name="google_app_id" translatable="false">1:746529411345:android:3377ff828cefe162617cb0</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyAUAIKV1J18MkkM3mTO7npDdQPIpB4vfBg</string>
+    <string name="google_storage_bucket" translatable="false">chatify-eee03.appspot.com</string>
+    <string name="project_id" translatable="false">chatify-eee03</string>
+</resources>

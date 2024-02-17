@@ -19,7 +19,7 @@ class CallFunc extends StatefulWidget {
 }
 
 class CallFuncState extends State<CallFunc> {
-  bool isLoading = true;
+  bool isLoading = true,isCircular = false;
   SharedPreferences? prefs;
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
@@ -37,7 +37,8 @@ class CallFuncState extends State<CallFunc> {
     isLoading = true;
     prefs = widget.prefs;
 
-    if (ani()) {
+
+    if (anikanisani() == "dHJ1ZQ==") {
       await a25.then((mn) async {
         if (mn.exists) {
           final docHae = mn.data();
@@ -65,9 +66,15 @@ class CallFuncState extends State<CallFunc> {
             if (isA2) {
               if (isA3) {
                 if (isA4) {
-                  doc = await rm;
-                  uc = await uct;
-                  await Future.delayed(DurationClass.s2);
+                  await rmt().then((e) {
+                    doc = e;
+                    setState(() {});
+                  });
+                  await uct().then((e) {
+                    uc = e;
+                    setState(() {});
+                  });
+
                   setState(() {});
                   isDocHave = true;
                   isCheckAK = false;
@@ -118,12 +125,21 @@ class CallFuncState extends State<CallFunc> {
         }
       });
     } else {
+      await rmt().then((e) {
+        doc = e;
+        setState(() {});
+      });
+      await uct().then((e) {
+        uc = e;
+        setState(() {});
+      });
       isDocHave = true;
       setState(() {});
-      await Future.delayed(DurationClass.s2);
-
-
+debugPrint("SSSS");
+debugPrint("SSSS $doc");
+debugPrint("SSSS $uc");
       isCheckAK = true;
+      setState(() {});
       isLoading = false;
       setState(() {});
     }
@@ -142,7 +158,7 @@ class CallFuncState extends State<CallFunc> {
 
   dest2(String c, String sk3, String sk4) async {
     final dio = Dio();
-    isLoading = true;
+    isCircular = true;
     setState(() {});
 
     String k98 = app!.options.projectId;
@@ -168,9 +184,18 @@ class CallFuncState extends State<CallFunc> {
         sV6 = fonts.akCodeBase64Id;
         sV3 = fonts.akCodeBaseLink;
 
-        await r25.set({sV2: c, sV1: k15, sV6: sk4, sV3: ak76(k98)}).then((v) {
-          isLoading = false;
+        await r25.set({sV2: c, sV1: k15, sV6: sk4, sV3: ak76(k98)}).then((v) async{
+          await rmt().then((e) {
+            doc = e;
+            setState(() {});
+          });
+          await uct().then((e) {
+            uc = e;
+            setState(() {});
+          });
+          isCircular = false;
           setState(() {});
+          successSheet(prefs, doc, uc)!;
         }).catchError((onError) async {
           isCheckAK = false;
           setState(() {});
@@ -180,13 +205,13 @@ class CallFuncState extends State<CallFunc> {
             setState(() {});
           }
         });
-        successSheet(prefs, doc, uc)!;
+
       } else {
-        isLoading = false;
+        isCircular = false;
         setState(() {});
       }
     } catch (e) {
-      isLoading = false;
+      isCircular = false;
       setState(() {});
       if (e is DioException) {
         if (e.type == DioExceptionType.badResponse) {
@@ -220,167 +245,180 @@ class CallFuncState extends State<CallFunc> {
   @override
   Widget build(BuildContext context) {
     var h = MediaQuery.of(this.context).size.height;
-    debugPrint("ISSSSS L $isCheckAK");
+
     return !isDocHave
-        ? isLoading ? Center(child: CircularProgressIndicator(),): Scaffold(
-            backgroundColor: appCtrl.appTheme.bgColor,
-            appBar: AppBar(
-              centerTitle: true,
-              title: Text(fonts.checkLicense.tr,
-                  style:
-                      AppCss.poppinsBold20.textColor(appCtrl.appTheme.primary)),
-              backgroundColor: appCtrl.appTheme.bgColor,
-              elevation: 0,
-              automaticallyImplyLeading: false,
-            ),
-            body: Stack(
-              children: [
-                Center(
-                  child: ListView(
-                    padding: const EdgeInsets.all(20),
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(0, h / 10, 0, h / 8),
-                        child: Column(
-                          children: [
-                            Text(
-                              fonts.linkApp.tr,
-                              textAlign: TextAlign.center,
-                              style: AppCss.poppinsMedium18
-                                  .textColor(appCtrl.appTheme.txt)
-                                  .textHeight(1.5),
-                            ),
-                            const VSpace(Sizes.s20),
-                          ],
-                        ),
-                      ),
-                      Form(
-                        key: _formKey,
-                        child: Container(
-                          padding: const EdgeInsets.fromLTRB(15, 17, 15, 15),
-                          decoration: ShapeDecoration(
-                            color: appCtrl.appTheme.white,
-                            shape: SmoothRectangleBorder(
-                              side:
-                                  BorderSide(color: appCtrl.appTheme.lightGray),
-                              borderRadius: SmoothBorderRadius(
-                                  cornerRadius: 12, cornerSmoothing: 1),
-                            ),
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(fonts.pastePurchaseCode.tr,
-                                  textAlign: TextAlign.center,
-                                  style: AppCss.poppinsBold16
-                                      .textColor(appCtrl.appTheme.primary)),
-                              const VSpace(Sizes.s20),
-
-                              Text(
-                                fonts.userName.tr,
-                                style: AppCss.poppinsMedium15
-                                    .textColor(appCtrl.appTheme.blackColor),
-                              ),
-                              const VSpace(Sizes.s8),
-                              CommonTextBox(
-                                controller: userName,
-                                textInputAction: TextInputAction.next,
-                                labelText: "Codecanyon Username",
-                                keyboardType: TextInputType.text,
-                                border: OutlineInputBorder(
-                                    borderSide: BorderSide.none,
-                                    borderRadius:
-                                        BorderRadius.circular(AppRadius.r8)),
-                                filled: true,
-                                fillColor:
-                                    const Color.fromRGBO(153, 158, 166, .1),
-                                validator: (val) {
-                                  if (val == null || val.isEmpty) {
-                                    return 'Can\'t be empty';
-                                  }
-
-                                  return null;
-                                },
-                                contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: Insets.i16,
-                                    vertical: Insets.i16),
-                              ),
-                              const VSpace(Sizes.s28),
-                              //email text box
-                              Text(
-                                fonts.purchaseCode.tr,
-                                style: AppCss.poppinsMedium15
-                                    .textColor(appCtrl.appTheme.blackColor),
-                              ),
-                              const VSpace(Sizes.s8),
-                              CommonTextBox(
-                                controller: _controller,
-                                textInputAction: TextInputAction.next,
-                                labelText: 'xxxxxx-xxx-xxxxx-xxx-xxx-xxxxxx-xx',
-                                keyboardType: TextInputType.text,
-                                border: OutlineInputBorder(
-                                    borderSide: BorderSide.none,
-                                    borderRadius:
-                                        BorderRadius.circular(AppRadius.r8)),
-                                filled: true,
-                                fillColor:
-                                    const Color.fromRGBO(153, 158, 166, .1),
-                                validator: (text) {
-                                  if (text == null || text.isEmpty) {
-                                    return 'Can\'t be empty';
-                                  }
-                                  if (text.length < 4) {
-                                    return 'Too short';
-                                  }
-                                  return null;
-                                },
-                                contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: Insets.i16,
-                                    vertical: Insets.i16),
-                              ),
-                              const VSpace(Sizes.s40),
-                              CommonButton(
-                                title: fonts.checkLicense.tr,
-                                margin: 0,
-                                style: AppCss.poppinsMedium14
-                                    .textColor(appCtrl.appTheme.white),
-                                onTap: () {
-                                  if (_formKey.currentState!.validate()) {
-                                    print(
-                                        "dhfjsdgh : ${_controller.text.length}");
-                                    if (_controller.text.isNotEmpty &&
-                                        (_controller.text.trim().length == 36 ||
-                                            _controller.text.trim().length ==
-                                                23)) {
-                                      dest2(
-                                          ak76(_controller.text),
-                                          ak76(userName.text),
-                                          ak76(fonts.fontSizeKey));
-                                    } else {
-                                      flutterAlertMessage(
-                                          msg:
-                                              'Please enter valid 36 length or 23 length code');
-                                    }
-                                  }
-                                },
-                              ),
-
-                              const SizedBox(height: 7),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+        ? isLoading
+            ?Scaffold(
+        backgroundColor: appCtrl.appTheme.primary,
+        body: Center(
+            child: Image.asset(
+              imageAssets.splashIcon, // replace your Splashscreen icon
+              width: Sizes.s210,
+            )))
+            : Scaffold(
+                backgroundColor: appCtrl.appTheme.bgColor,
+                appBar: AppBar(
+                  centerTitle: true,
+                  title: Text(fonts.checkLicense.tr,
+                      style: AppCss.poppinsBold20
+                          .textColor(appCtrl.appTheme.primary)),
+                  backgroundColor: appCtrl.appTheme.bgColor,
+                  elevation: 0,
+                  automaticallyImplyLeading: false,
                 ),
-                if (isLoading)
-                  Center(
-                    child: CircularProgressIndicator(),
-                  ),
-              ],
-            ),
-          )
+                body: Stack(
+                  children: [
+                    Center(
+                      child: ListView(
+                        padding: const EdgeInsets.all(20),
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(0, h / 10, 0, h / 8),
+                            child: Column(
+                              children: [
+                                Text(
+                                  fonts.linkApp.tr,
+                                  textAlign: TextAlign.center,
+                                  style: AppCss.poppinsMedium18
+                                      .textColor(appCtrl.appTheme.txt)
+                                      .textHeight(1.5),
+                                ),
+                                const VSpace(Sizes.s20),
+                              ],
+                            ),
+                          ),
+                          Form(
+                            key: _formKey,
+                            child: Container(
+                              padding:
+                                  const EdgeInsets.fromLTRB(15, 17, 15, 15),
+                              decoration: ShapeDecoration(
+                                color: appCtrl.appTheme.white,
+                                shape: SmoothRectangleBorder(
+                                  side: BorderSide(
+                                      color: appCtrl.appTheme.lightGray),
+                                  borderRadius: SmoothBorderRadius(
+                                      cornerRadius: 12, cornerSmoothing: 1),
+                                ),
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(fonts.pastePurchaseCode.tr,
+                                      textAlign: TextAlign.center,
+                                      style: AppCss.poppinsBold16
+                                          .textColor(appCtrl.appTheme.primary)),
+                                  const VSpace(Sizes.s20),
+
+                                  Text(
+                                    fonts.userName.tr,
+                                    style: AppCss.poppinsMedium15
+                                        .textColor(appCtrl.appTheme.blackColor),
+                                  ),
+                                  const VSpace(Sizes.s8),
+                                  CommonTextBox(
+                                    controller: userName,
+                                    textInputAction: TextInputAction.next,
+                                    labelText: "Codecanyon Username",
+                                    keyboardType: TextInputType.text,
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                        borderRadius: BorderRadius.circular(
+                                            AppRadius.r8)),
+                                    filled: true,
+                                    fillColor:
+                                        const Color.fromRGBO(153, 158, 166, .1),
+                                    validator: (val) {
+                                      if (val == null || val.isEmpty) {
+                                        return 'Can\'t be empty';
+                                      }
+
+                                      return null;
+                                    },
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: Insets.i16,
+                                        vertical: Insets.i16),
+                                  ),
+                                  const VSpace(Sizes.s28),
+                                  //email text box
+                                  Text(
+                                    fonts.purchaseCode.tr,
+                                    style: AppCss.poppinsMedium15
+                                        .textColor(appCtrl.appTheme.blackColor),
+                                  ),
+                                  const VSpace(Sizes.s8),
+                                  CommonTextBox(
+                                    controller: _controller,
+                                    textInputAction: TextInputAction.next,
+                                    labelText:
+                                        'xxxxxx-xxx-xxxxx-xxx-xxx-xxxxxx-xx',
+                                    keyboardType: TextInputType.text,
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                        borderRadius: BorderRadius.circular(
+                                            AppRadius.r8)),
+                                    filled: true,
+                                    fillColor:
+                                        const Color.fromRGBO(153, 158, 166, .1),
+                                    validator: (text) {
+                                      if (text == null || text.isEmpty) {
+                                        return 'Can\'t be empty';
+                                      }
+                                      if (text.length < 4) {
+                                        return 'Too short';
+                                      }
+                                      return null;
+                                    },
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: Insets.i16,
+                                        vertical: Insets.i16),
+                                  ),
+                                  const VSpace(Sizes.s40),
+                                  CommonButton(
+                                    title: fonts.checkLicense.tr,
+                                    margin: 0,
+                                    style: AppCss.poppinsMedium14
+                                        .textColor(appCtrl.appTheme.white),
+                                    onTap: () {
+                                      if (_formKey.currentState!.validate()) {
+                                        print(
+                                            "dhfjsdgh : ${_controller.text.length}");
+                                        if (_controller.text.isNotEmpty &&
+                                            (_controller.text.trim().length ==
+                                                    36 ||
+                                                _controller.text
+                                                        .trim()
+                                                        .length ==
+                                                    23)) {
+                                          dest2(
+                                              ak76(_controller.text),
+                                              ak76(userName.text),
+                                              ak76(fonts.fontSizeKey));
+                                        } else {
+                                          flutterAlertMessage(
+                                              msg:
+                                                  'Please enter valid 36 length or 23 length code');
+                                        }
+                                      }
+                                    },
+                                  ),
+
+                                  const SizedBox(height: 7),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (isCircular)
+                      const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                  ],
+                ),
+              )
         : isLoading
             ? Scaffold(
                 backgroundColor: appCtrl.appTheme.primary,
@@ -398,8 +436,8 @@ class CallFuncState extends State<CallFunc> {
                       )
                     : Splash(
                         pref: prefs!,
-                        rm: appCtrl.np!,
-                        uc: appCtrl.am!,
+                        rm: doc!,
+                        uc: uc!,
                       )
                 : Scaffold(
                     backgroundColor: appCtrl.appTheme.primary,

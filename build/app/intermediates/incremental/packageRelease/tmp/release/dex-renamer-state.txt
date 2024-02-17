@@ -1,8 +1,8 @@
-#Fri Feb 16 23:09:13 IST 2024
-base.0=/Users/dhruvi/Code/flutter_theme/build/app/intermediates/dex/release/mergeDexRelease/classes.dex
-base.1=/Users/dhruvi/Code/flutter_theme/build/app/intermediates/dex/release/mergeDexRelease/classes2.dex
-base.2=/Users/dhruvi/Code/flutter_theme/build/app/intermediates/dex/release/mergeDexRelease/classes3.dex
-base.3=/Users/dhruvi/Code/flutter_theme/build/app/intermediates/dex/release/mergeDexRelease/classes4.dex
+#Sat Feb 17 13:04:18 IST 2024
+base.0=/Users/officepc/Documents/flutter-projects/flutter_theme/build/app/intermediates/dex/release/mergeDexRelease/classes.dex
+base.1=/Users/officepc/Documents/flutter-projects/flutter_theme/build/app/intermediates/dex/release/mergeDexRelease/classes2.dex
+base.2=/Users/officepc/Documents/flutter-projects/flutter_theme/build/app/intermediates/dex/release/mergeDexRelease/classes3.dex
+base.3=/Users/officepc/Documents/flutter-projects/flutter_theme/build/app/intermediates/dex/release/mergeDexRelease/classes4.dex
 path.0=classes.dex
 path.1=classes2.dex
 path.2=classes3.dex

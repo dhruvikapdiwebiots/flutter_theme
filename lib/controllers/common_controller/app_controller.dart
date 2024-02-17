@@ -65,7 +65,7 @@ Locale? locale;
   @override
   void onReady() {
     // TODO: implement onReady
-    jks();
+
     getData();
 
     initPlatformState();

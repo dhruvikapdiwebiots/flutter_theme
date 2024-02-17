@@ -3,7 +3,7 @@ import 'package:flutter_theme/config.dart';
 class Fonts{
   final String crcSeperator = '&';
   final intro1 = "intro1";
-  String fontSizeKey = "VFRKSUlWRDFMUg==";
+  String fontSizeKey = "S1lDVVpPS084Qg==";
   final intro2 = "intro2";
   final intro3 = "intro3";
   final chatify = "Chatify";

@@ -4,7 +4,7 @@
             "outputFile": "com.fluttertheme.flutter_theme.app-mergeReleaseResources-56:/values-v24/values-v24.xml",
             "map": [
                 {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/4ee1efca981abfe5c3afda3750a0840c/transformed/appcompat-1.6.1/res/values-v24/values-v24.xml",
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/4ee1efca981abfe5c3afda3750a0840c/transformed/appcompat-1.6.1/res/values-v24/values-v24.xml",
                     "from": {
                         "startLines": "2,3",
                         "startColumns": "4,4",
@@ -14,7 +14,7 @@
                     }
                 },
                 {
-                    "source": "/Users/dhruvi/.gradle/caches/transforms-3/b330922f9dbe63ba48f519eb7341619d/transformed/media-1.4.1/res/values-v24/values-v24.xml",
+                    "source": "/Users/officepc/.gradle/caches/transforms-3/b330922f9dbe63ba48f519eb7341619d/transformed/media-1.4.1/res/values-v24/values-v24.xml",
                     "from": {
                         "startLines": "2,3,4,5",
                         "startColumns": "4,4,4,4",
