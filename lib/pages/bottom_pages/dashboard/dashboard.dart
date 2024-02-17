@@ -199,12 +199,20 @@ class _DashboardState extends State<Dashboard>
                                             )
                                           :Scaffold(
                                           backgroundColor: appCtrl.appTheme.primary,
-                                          )
+                                          body: Center(
+                                              child: Image.asset(
+                                                imageAssets.splashIcon, // replace your Splashscreen icon
+                                                width: Sizes.s210,
+                                              )))
                                     );
                                   })
                               :Scaffold(
                               backgroundColor: appCtrl.appTheme.primary,
-                              );
+                              body: Center(
+                                  child: Image.asset(
+                                    imageAssets.splashIcon, // replace your Splashscreen icon
+                                    width: Sizes.s210,
+                                  )));
                         }),
                   ),
                 ));

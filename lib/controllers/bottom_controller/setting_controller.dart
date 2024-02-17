@@ -249,7 +249,7 @@ class SettingController extends GetxController {
                   children: [
 
                     const VSpace(Sizes.s20),
-                    Text(fonts.youContactSync(len),
+                    Text(fonts.youContactSync(len.toString()),
                         style: AppCss.poppinsSemiBold16
                             .textColor(appCtrl.appTheme.txt)),
                     const VSpace(Sizes.s15),
