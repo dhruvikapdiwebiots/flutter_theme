@@ -26,8 +26,8 @@ class GroupVideoDocState extends State<GroupVideoDoc> {
     // TODO: implement initState
 
     if (widget.document!.type == MessageType.video.name) {
-      videoController = VideoPlayerController.network(
-        widget.document!.content!.contains("-BREAK-") ? widget.document!.content!.split("-BREAK-")[1] :widget.document!.content!,
+      videoController = VideoPlayerController.networkUrl(
+        Uri.parse(widget.document!.content!.contains("-BREAK-") ? widget.document!.content!.split("-BREAK-")[1] :widget.document!.content!),
       );
       initializeVideoPlayerFuture = videoController!.initialize();
     }
@@ -67,8 +67,11 @@ class GroupVideoDocState extends State<GroupVideoDoc> {
                           AspectRatio(
                             aspectRatio: videoController!.value.aspectRatio,
                             // Use the VideoPlayer widget to display the video.
-                            child: VideoPlayer(videoController!)
-                          ).height(Sizes.s250),
+                            child: VideoPlayer(videoController!),
+                          )
+
+                              .width(Sizes.s250)
+                              .clipRRect(all: AppRadius.r8),
                           const VSpace(Sizes.s5),
                           IntrinsicHeight(
                               child: Row(

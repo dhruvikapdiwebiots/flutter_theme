@@ -32,10 +32,10 @@ class _VideoDocState extends State<VideoDoc> {
   void initState() {
     // TODO: implement initState
     if (widget.document!.type == MessageType.video.name) {
-      videoController = VideoPlayerController.network(
-        decryptMessage(widget.document!.content).contains("-BREAK-")
+      videoController = VideoPlayerController.networkUrl(
+        Uri.parse(decryptMessage(widget.document!.content).contains("-BREAK-")
             ? decryptMessage(widget.document!.content).split("-BREAK-")[1]
-            : decryptMessage(widget.document!.content),
+            : decryptMessage(widget.document!.content))
       );
       initializeVideoPlayerFuture = videoController!.initialize();
     }
@@ -70,7 +70,7 @@ class _VideoDocState extends State<VideoDoc> {
                             // Use the VideoPlayer widget to display the video.
                             child: VideoPlayer(videoController!),
                           )
-                              .height(Sizes.s250)
+
                               .width(Sizes.s250)
                               .clipRRect(all: AppRadius.r8),
                           IconButton(

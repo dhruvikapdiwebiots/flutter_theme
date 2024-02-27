@@ -443,7 +443,7 @@ class ChatController extends GetxController {
   Future uploadMultipleFile(File imageFile, MessageType messageType) async {
     imageFile = imageFile;
     update();
-
+    imageUrl = null;
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     Reference reference = FirebaseStorage.instance.ref().child(fileName);
     var file = File(imageFile.path);
@@ -451,8 +451,9 @@ class ChatController extends GetxController {
     uploadTask.then((res) {
       res.ref.getDownloadURL().then((downloadUrl) async {
         imageUrl = downloadUrl;
-        isLoading = false;
+
         onSendMessage(imageUrl!, messageType);
+
         update();
       }, onError: (err) {
         isLoading = false;

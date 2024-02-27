@@ -127,7 +127,7 @@ class RecentChatController with ChangeNotifier {
             };
 
             if(name != null) {
-              log("CHECKKKK : ${data["name"].toString().toLowerCase().contains(name)}");
+
               if(data["name"].toString().toLowerCase().contains(name)){
                 if (element.value.data()["isGroup"] == false &&
                     element.value.data()["isBroadcast"] == false) {

@@ -10,13 +10,13 @@ class SubTitleLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        if(document!["senderId"] != appCtrl.user['id'])
+        if(document!["senderId"] == appCtrl.user['id'])
         Icon(Icons.done_all,
             color:  document!["isSeen"]
                 ? appCtrl.isTheme ?appCtrl.appTheme.white : appCtrl.appTheme.primary
                 : appCtrl.appTheme.grey,
             size: Sizes.s16),
-        if(document!["senderId"] != appCtrl.user['id'])
+        if(document!["senderId"] == appCtrl.user['id'])
         const HSpace(Sizes.s10),
         data["senderMessage"].contains("gif") ?const Icon(Icons.gif_box) :
         SizedBox(

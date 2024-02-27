@@ -1789,14 +1789,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
-  video_compress_plus:
-    dependency: "direct main"
-    description:
-      name: video_compress_plus
-      sha256: "75f75e4b51d239982d4a25083f1298087af55a61776fb6ac30f2e53d0fe07e2d"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   video_player:
     dependency: "direct main"
     description:

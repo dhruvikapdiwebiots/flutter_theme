@@ -92,7 +92,7 @@ dependencies:
   audio_video_progress_bar: ^2.0.1
   open_filex: ^4.4.0
   flutter_contacts: ^1.1.7+1
-  video_compress_plus: ^1.0.0
+
   dotted_border: ^2.1.0
   light_compressor: ^2.2.0
   emoji_picker_flutter: ^2.0.0

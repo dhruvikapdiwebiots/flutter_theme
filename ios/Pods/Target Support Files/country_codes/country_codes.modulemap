@@ -1,0 +1,6 @@
+framework module country_codes {
+  umbrella header "country_codes-umbrella.h"
+
+  export *
+  module * { export * }
+}

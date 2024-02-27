@@ -14,6 +14,7 @@ class ReceiverMessageCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<MessageController>(builder: (msgCtrl) {
+
       return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

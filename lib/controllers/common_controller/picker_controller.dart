@@ -8,7 +8,6 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_theme/config.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:light_compressor/light_compressor.dart' as light;
-import 'package:video_compress_plus/video_compress_plus.dart';
 
 class PickerController extends GetxController {
   XFile? imageFile;
@@ -18,7 +17,6 @@ class PickerController extends GetxController {
   String? imageUrl;
   String? audioUrl;
   List<File> selectedImages = [];
-
 
 // GET IMAGE FROM GALLERY
   Future getImage(source) async {
@@ -49,8 +47,7 @@ class PickerController extends GetxController {
         log("image : ${result}");
 
         image = File(croppedFile.path);
-        if (result!.length / 1000000 >
-            appCtrl.usageControlsVal!.maxFileSize!) {
+        if (result!.length / 1000000 > appCtrl.usageControlsVal!.maxFileSize!) {
           image = null;
           snackBar(
               "Image Should be less than ${image!.lengthSync() / 1000000 > appCtrl.usageControlsVal!.maxFileSize!}");
@@ -68,7 +65,11 @@ class PickerController extends GetxController {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowMultiple: true,
-      allowedExtensions: ['jpg', 'png', 'jpeg',],
+      allowedExtensions: [
+        'jpg',
+        'png',
+        'jpeg',
+      ],
     );
 
     log("resultresult: $result");
@@ -189,40 +190,47 @@ class PickerController extends GetxController {
                     chatCtrl.selectedImages = value;
                     chatCtrl.isLoading = true;
                     chatCtrl.update();
-                    chatCtrl.selectedImages.asMap().entries.forEach((element) async {
-                      File? videoFile =  element.value;
+                    chatCtrl.selectedImages
+                        .asMap()
+                        .entries
+                        .forEach((element) async {
+                      File? videoFile = element.value;
                       File? video;
                       if (element.value.name.contains("mp4")) {
                         final light.LightCompressor lightCompressor =
-                        light.LightCompressor();
+                            light.LightCompressor();
                         final dynamic response =
-                        await lightCompressor.compressVideo(
+                            await lightCompressor.compressVideo(
                           path: videoFile.path,
                           videoQuality: light.VideoQuality.very_low,
                           isMinBitrateCheckEnabled: false,
                           video: light.Video(videoName: element.value.name),
                           android: light.AndroidConfig(
-                              isSharedStorage: true, saveAt: light.SaveAt.Movies),
+                              isSharedStorage: true,
+                              saveAt: light.SaveAt.Movies),
                           ios: light.IOSConfig(saveInGallery: false),
                         );
 
                         video = File(videoFile.path);
                         if (response is light.OnSuccess) {
-                          log("videoFile!.path 1: ${getVideoSize(
-                              file: File(response.destinationPath))}}");
+                          log("videoFile!.path 1: ${getVideoSize(file: File(response.destinationPath))}}");
                           video = File(response.destinationPath);
                         }
                       } else {
                         image = File(videoFile.path);
-                        if (image!.lengthSync() / 1000000 > appCtrl.usageControlsVal!.maxFileSize!) {
+                        if (image!.lengthSync() / 1000000 >
+                            appCtrl.usageControlsVal!.maxFileSize!) {
                           video = null;
                           snackBar(
-                              "Image Should be less than ${video!.lengthSync() /
-                                  1000000 > appCtrl.usageControlsVal!.maxFileSize!}");
+                              "Image Should be less than ${video!.lengthSync() / 1000000 > appCtrl.usageControlsVal!.maxFileSize!}");
                         }
                       }
 
-                      chatCtrl.uploadMultipleFile(videoFile,element.value.name.contains("mp4") ? MessageType.video : MessageType.image);
+                      chatCtrl.uploadMultipleFile(
+                          videoFile,
+                          element.value.name.contains("mp4")
+                              ? MessageType.video
+                              : MessageType.image);
                       selectedImages = [];
                       update();
                     });
@@ -230,107 +238,82 @@ class PickerController extends GetxController {
                     final singleChatCtrl = Get.find<ChatController>();
                     singleChatCtrl.selectedImages = value;
 
-                    if(singleChatCtrl.selectedImages.length >=4){
-                      log("HHH");
-                      singleChatCtrl.selectedImages
-                          .asMap()
-                          .entries
-                          .forEach((element) async {
-                        File? videoFile = element.value;
-                        singleChatCtrl.isLoading = true;
-                        singleChatCtrl.update();
-                        video = File(videoFile.path);
-                        if (video!.lengthSync() / 1000000 >
-                            appCtrl.usageControlsVal!.maxFileSize!) {
-                          video = null;
-                          singleChatCtrl.isLoading = false;
-                          singleChatCtrl.update();
-                          snackBar(
-                              "Image Should be less than ${video!.lengthSync() /
-                                  1000000 >
-                                  appCtrl.usageControlsVal!.maxFileSize!}");
-                        }
+                    singleChatCtrl.selectedImages
+                        .asMap()
+                        .entries
+                        .forEach((element) async {
+                      File? videoFile = element.value;
+                      singleChatCtrl.isLoading = true;
+                      singleChatCtrl.update();
+                      video = File(videoFile.path);
+                      if (video!.lengthSync() / 1000000 >
+                          appCtrl.usageControlsVal!.maxFileSize!) {
+                        video = null;
 
-                        singleChatCtrl.uploadMultipleImage(
-                            video!);
-                      });
-log("INNG :${singleChatCtrl.imageList}");
-                      singleChatCtrl.onSendMessage(jsonEncode(singleChatCtrl.imageList), MessageType.imageArray);
-                    }else {
-                      singleChatCtrl.selectedImages
-                          .asMap()
-                          .entries
-                          .forEach((element) async {
-                        File? videoFile = element.value;
-                        singleChatCtrl.isLoading = true;
-                        singleChatCtrl.update();
-                        video = File(videoFile.path);
-                        if (video!.lengthSync() / 1000000 >
-                            appCtrl.usageControlsVal!.maxFileSize!) {
-                          video = null;
-                          singleChatCtrl.isLoading = false;
-                          singleChatCtrl.update();
-                          snackBar(
-                              "Image Should be less than ${video!.lengthSync() /
-                                  1000000 >
-                                  appCtrl.usageControlsVal!.maxFileSize!}");
-                        }
-
+                        snackBar(
+                            "Image Should be less than ${video!.lengthSync() / 1000000 > appCtrl.usageControlsVal!.maxFileSize!}");
+                      } else {
                         singleChatCtrl.uploadMultipleFile(
                             video!,
                             element.value.name.contains("mp4")
                                 ? MessageType.video
                                 : MessageType.image);
-                      });
-                    }
+                      }
+                    });
                     selectedImages = [];
+                    singleChatCtrl.selectedImages = [];
+                    singleChatCtrl.isLoading =false;
+
+                    singleChatCtrl.update();
                     update();
                   } else {
                     final broadcastCtrl = Get.find<BroadcastChatController>();
                     broadcastCtrl.selectedImages = value;
-                    broadcastCtrl.selectedImages.asMap().entries.forEach((
-                        element) async {
-                      File? videoFile =  element.value;
+                    broadcastCtrl.selectedImages
+                        .asMap()
+                        .entries
+                        .forEach((element) async {
+                      File? videoFile = element.value;
                       File? video;
                       if (element.value.name.contains("mp4")) {
                         final light.LightCompressor lightCompressor =
-                        light.LightCompressor();
+                            light.LightCompressor();
                         final dynamic response =
-                        await lightCompressor.compressVideo(
+                            await lightCompressor.compressVideo(
                           path: videoFile.path,
                           videoQuality: light.VideoQuality.very_low,
                           isMinBitrateCheckEnabled: false,
                           video: light.Video(videoName: element.value.name),
                           android: light.AndroidConfig(
-                              isSharedStorage: true, saveAt: light.SaveAt.Movies),
+                              isSharedStorage: true,
+                              saveAt: light.SaveAt.Movies),
                           ios: light.IOSConfig(saveInGallery: false),
                         );
 
                         video = File(videoFile!.path);
                         if (response is light.OnSuccess) {
-                          log("videoFile!.path 1: ${getVideoSize(
-                              file: File(response.destinationPath))}}");
+                          log("videoFile!.path 1: ${getVideoSize(file: File(response.destinationPath))}}");
                           video = File(response.destinationPath);
                         }
                       } else {
-
                         image = File(videoFile.path);
-                        if (image!.lengthSync() / 1000000 > appCtrl.usageControlsVal!.maxFileSize!) {
+                        if (image!.lengthSync() / 1000000 >
+                            appCtrl.usageControlsVal!.maxFileSize!) {
                           video = null;
                           snackBar(
-                              "Image Should be less than ${image!.lengthSync() /
-                                  1000000 > appCtrl.usageControlsVal!.maxFileSize!}");
-                          broadcastCtrl.uploadMultipleFile(image!,element.value.name.contains("mp4") ? MessageType.video : MessageType.image);
+                              "Image Should be less than ${image!.lengthSync() / 1000000 > appCtrl.usageControlsVal!.maxFileSize!}");
+                          broadcastCtrl.uploadMultipleFile(
+                              image!,
+                              element.value.name.contains("mp4")
+                                  ? MessageType.video
+                                  : MessageType.image);
                           selectedImages = [];
                           update();
-                        }else{
-
+                        } else {
                           selectedImages = [];
                           update();
                         }
                       }
-
-
                     });
                   }
                 }
@@ -371,73 +354,73 @@ log("INNG :${singleChatCtrl.imageList}");
               if (isGroup) {
                 final chatCtrl = Get.find<GroupChatMessageController>();
                 chatCtrl.selectedImages = value;
-                chatCtrl.selectedImages.asMap().entries.forEach((
-                    element) async {
-                  File? videoFile =  element.value;
-                  File? video;
-                  log("VIDEO FILE $videoFile");
+                chatCtrl.selectedImages
+                    .asMap()
+                    .entries
+                    .forEach((element) async {
+                  File? videoFile = element.value;
+                  chatCtrl.isLoading = true;
+                  chatCtrl.update();
+                  log("videoFile.path :${videoFile.path}");
                   if (element.value.name.contains("mp4")) {
-                    final info = await VideoCompress.compressVideo(
-                      videoFile.path,
-                      quality: VideoQuality.MediumQuality,
-                      deleteOrigin: false,
-                      includeAudio: true,
-                    );
-                    video = File(info!.path!);
+
+                    video = File(videoFile.path);
+                    chatCtrl.uploadMultipleFile(
+                        videoFile, MessageType.video);
                   }
-                  chatCtrl.uploadMultipleFile(video!, MessageType.video);
-                  selectedImages = [];
-                  update();
+
                 });
+                selectedImages = [];
+                chatCtrl.selectedImages = [];
+                chatCtrl.update();
+                update();
               } else if (isSingleChat) {
                 final singleChatCtrl = Get.find<ChatController>();
+                singleChatCtrl.selectedImages = [];
                 singleChatCtrl.selectedImages = value;
                 singleChatCtrl.selectedImages
                     .asMap()
                     .entries
                     .forEach((element) async {
-                  File? videoFile =  element.value;
+                  File? videoFile = element.value;
 
-                  appCtrl.isLoading = true;
-                  appCtrl.update();
-
-
+                  singleChatCtrl.isLoading = true;
+                  singleChatCtrl.update();
+  log("videoFile.path :${videoFile.path}");
                   if (element.value.name.contains("mp4")) {
-                    final info = await VideoCompress.compressVideo(
-                      videoFile.path,
-                      quality: VideoQuality.MediumQuality,
-                      deleteOrigin: false,
-                      includeAudio: true,
-                    );
-                    video = File(info!.path!);
+                    video = File(videoFile.path);
+                    singleChatCtrl.uploadMultipleFile(
+                        videoFile, MessageType.video);
+
                   }
-                  appCtrl.isLoading = false;
-                  appCtrl.update();
-                  singleChatCtrl.uploadMultipleFile(
-                      videoFile, MessageType.video);
+
                 });
                 selectedImages = [];
+                singleChatCtrl.selectedImages = [];
+                singleChatCtrl.update();
+
                 update();
-                Get.back();
               } else {
                 final broadcastCtrl = Get.find<BroadcastChatController>();
                 broadcastCtrl.selectedImages = value;
-                broadcastCtrl.selectedImages.asMap().entries.forEach((
-                    element) async {
+                broadcastCtrl.selectedImages
+                    .asMap()
+                    .entries
+                    .forEach((element) async {
                   File? videoFile = element.value;
                   if (element.value.name.contains("mp4")) {
-                    final info = await VideoCompress.compressVideo(
-                      videoFile.path,
-                      quality: VideoQuality.MediumQuality,
-                      deleteOrigin: false,
-                      includeAudio: true,
-                    );
-                    video = File(info!.path!);
+
+                    video = File(videoFile.path!);
                   }
-                  broadcastCtrl.uploadMultipleFile(videoFile, MessageType.video);
-                  selectedImages = [];
-                  update();
+                  broadcastCtrl.uploadMultipleFile(
+                      videoFile, MessageType.video);
+
                 });
+                selectedImages = [];
+                update();
+                broadcastCtrl.selectedImages = [];
+                broadcastCtrl.update();
+
               }
             });
             Get.back();
